@@ -1,0 +1,35 @@
+[capgd] context_5000.csv (5000x108) -> test_attack_1000.csv (1000)
+  poison rows [0]  eps=50.0->47.5000  steps=10  constraints=none  scaler=metadata  ne=1  simple=True  obj=maximize  cuda:1
+  stats frozen on 4999 clean rows: column_selection_mask(53, 2)  feature_means(53, 2)  scaler_mean(53, 2)  scaler_std(53, 2)  ng_non_constant_mask(53, 2)  ng_num_used_features(53, 1)
+  clean loss 0.21079   accuracy=0.9260  balanced_accuracy=0.6490  mcc=0.4351  roc_auc=0.8759
+  iter    0  loss 0.21079  best 0.21079  step 95.0000
+  iter    1  loss 0.20971  best 0.21079  step 95.0000
+  iter    2  loss 0.21742  best 0.21742  step 95.0000  *
+  iter    3  loss 0.21579  best 0.21742  step 47.5000  halved
+  iter    4  loss 0.21704  best 0.21742  step 47.5000
+  iter    5  loss 0.21966  best 0.21966  step 47.5000  *
+  iter    6  loss 0.21552  best 0.21966  step 23.7500  halved
+  iter    7  loss 0.22034  best 0.22034  step 23.7500  *
+  iter    8  loss 0.21791  best 0.22034  step 11.8750  halved
+  iter    9  loss 0.22046  best 0.22046  step 11.8750  *
+  iter   10  loss 0.22348  best 0.22348  step 11.8750  *
+
+  clean    loss 0.21079  accuracy=0.9260  balanced_accuracy=0.6490  mcc=0.4351  roc_auc=0.8759
+  poisoned loss 0.22348  accuracy=0.9250  balanced_accuracy=0.6384  mcc=0.4197  roc_auc=0.8675
+  delta    loss +0.01269  accuracy=-0.0010  balanced_accuracy=-0.0106  mcc=-0.0154  roc_auc=-0.0084
+  106/108 features moved, max |delta| 47.500 (scaled)  [42s]
+  poisoned row (largest scaled moves, label y=0):
+    h1_temp_min                                       36.7000 ->       340.7000   (+47.500 scaled)
+    icu_admit_source                                   1.0000 ->       238.5000   (+47.500 scaled)
+    resprate_apache                                   14.0000 ->     -2646.0000   (-47.500 scaled)
+    heart_rate_apache                                 90.0000 ->      7120.0000   (+47.500 scaled)
+    d1_sysbp_min                                      85.0000 ->     -5567.5000   (-47.500 scaled)
+    d1_sysbp_noninvasive_max                         171.0000 ->      6916.0000   (+47.500 scaled)
+    d1_sysbp_noninvasive_min                          85.0000 ->      5736.0752   (+47.500 scaled)
+    hematocrit_apache                                 32.6000 ->      1704.6000   (+47.500 scaled)
+
+  -- deployed path (ordinary fit/predict_proba, stats refit) --
+  clean    loss 0.21171  accuracy=0.9290  balanced_accuracy=0.6606  mcc=0.4636  roc_auc=0.8761
+  poisoned loss 0.21947  accuracy=0.9280  balanced_accuracy=0.6501  mcc=0.4492  roc_auc=0.8687
+  delta    loss +0.00776  accuracy=-0.0010  balanced_accuracy=-0.0106  mcc=-0.0144  roc_auc=-0.0075
+  saved -> results/wids/attack/p1_none_eps50

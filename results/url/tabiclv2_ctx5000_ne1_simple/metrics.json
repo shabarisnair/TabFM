@@ -1,0 +1,24 @@
+{
+  "model": "tabiclv2",
+  "model_path": null,
+  "train": "datasets/url/splits/context_5000.csv",
+  "test": "datasets/url/splits/test_attack_1000.csv",
+  "target": "is_phishing",
+  "n_train": 5000,
+  "n_test": 1000,
+  "n_features": 63,
+  "n_estimators": 1,
+  "seed": 0,
+  "simple": true,
+  "device": "cuda:1",
+  "batch_size": 8,
+  "fit_seconds": 0.75,
+  "predict_seconds": 0.52,
+  "metrics": {
+    "accuracy": 0.966,
+    "balanced_accuracy": 0.966,
+    "mcc": 0.93203,
+    "f1": 0.96586,
+    "roc_auc": 0.99519
+  }
+}

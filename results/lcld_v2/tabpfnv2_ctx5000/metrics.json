@@ -1,0 +1,24 @@
+{
+  "model": "tabpfnv2",
+  "model_path": null,
+  "train": "datasets/lcld_v2/splits/context_5000.csv",
+  "test": "datasets/lcld_v2/splits/test_attack_1000.csv",
+  "target": "charged_off",
+  "n_train": 5000,
+  "n_test": 1000,
+  "n_features": 28,
+  "n_estimators": 4,
+  "seed": 0,
+  "simple": false,
+  "device": "cuda:1",
+  "batch_size": 8,
+  "fit_seconds": 0.68,
+  "predict_seconds": 0.84,
+  "metrics": {
+    "accuracy": 0.802,
+    "balanced_accuracy": 0.52236,
+    "mcc": 0.11394,
+    "f1": 0.10811,
+    "roc_auc": 0.72041
+  }
+}

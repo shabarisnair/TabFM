@@ -1,0 +1,2 @@
+03:44:42 wids rs1_it100: dce=+0.1691 dacc=-0.0280 dauc=-0.1078 pre_repair_obj=0.9740 within_eps=False maxL2=0.494 viol=0.0225 1158s
+04:00:10 wids rs2_it100: dce=+0.5086 dacc=-0.0480 dauc=-0.3655 pre_repair_obj=1.3501 within_eps=False maxL2=0.492 viol=0.0557 911s

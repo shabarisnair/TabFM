@@ -1,0 +1,35 @@
+[capgd] context_5000.csv (5000x28) -> test_attack_1000.csv (1000)
+  poison rows [0]  eps=50.0->47.5000  steps=10  constraints=none  scaler=metadata  ne=1  simple=True  obj=maximize  cuda:1
+  stats frozen on 4999 clean rows: column_selection_mask(14, 2)  feature_means(14, 2)  scaler_mean(14, 2)  scaler_std(14, 2)  ng_non_constant_mask(14, 2)  ng_num_used_features(14, 1)
+  clean loss 0.44994   accuracy=0.8040  balanced_accuracy=0.5255  mcc=0.1300  roc_auc=0.7224
+  iter    0  loss 0.44994  best 0.44994  step 95.0000
+  iter    1  loss 0.44864  best 0.44994  step 95.0000
+  iter    2  loss 0.44991  best 0.44994  step 95.0000
+  iter    3  loss 0.45136  best 0.45136  step 95.0000  *
+  iter    4  loss 0.44990  best 0.45136  step 47.5000  halved
+  iter    5  loss 0.45009  best 0.45136  step 47.5000
+  iter    6  loss 0.45111  best 0.45136  step 23.7500  halved
+  iter    7  loss 0.45129  best 0.45136  step 23.7500
+  iter    8  loss 0.45008  best 0.45136  step 11.8750  halved
+  iter    9  loss 0.45216  best 0.45216  step 11.8750  *
+  iter   10  loss 0.45123  best 0.45216  step 5.9375  halved
+
+  clean    loss 0.44994  accuracy=0.8040  balanced_accuracy=0.5255  mcc=0.1300  roc_auc=0.7224
+  poisoned loss 0.45216  accuracy=0.8030  balanced_accuracy=0.5211  mcc=0.1143  roc_auc=0.7167
+  delta    loss +0.00222  accuracy=-0.0010  balanced_accuracy=-0.0045  mcc=-0.0158  roc_auc=-0.0057
+  28/28 features moved, max |delta| 47.500 (scaled)  [12s]
+  poisoned row (largest scaled moves, label y=0):
+    term                                              36.0000 ->      1176.0000   (+47.500 scaled)
+    open_acc                                           6.0000 ->      4233.5000   (+47.500 scaled)
+    dti                                               20.6800 ->     47520.6797   (+47.500 scaled)
+    ratio_pub_rec_bankruptcies_month_since_earliest_cr_line         0.0000 ->         4.3182   (+47.500 scaled)
+    revol_bal                                      15596.0000 -> -137964112.0000   (-47.500 scaled)
+    sub_grade                                          9.0000 ->     -1378.8906   (-40.820 scaled)
+    initial_list_status                                1.0000 ->       -39.8203   (-40.820 scaled)
+    loan_amnt                                       4000.0000 ->  -1587992.1250   (-40.820 scaled)
+
+  -- deployed path (ordinary fit/predict_proba, stats refit) --
+  clean    loss 0.44870  accuracy=0.8020  balanced_accuracy=0.5185  mcc=0.1028  roc_auc=0.7243
+  poisoned loss 0.45067  accuracy=0.8070  balanced_accuracy=0.5236  mcc=0.1410  roc_auc=0.7192
+  delta    loss +0.00196  accuracy=+0.0050  balanced_accuracy=+0.0050  mcc=+0.0382  roc_auc=-0.0052
+  saved -> results/lcld_v2/attack/p1_none_eps50

@@ -1,0 +1,35 @@
+[capgd] context_5000.csv (5000x63) -> test_attack_1000.csv (1000)
+  poison rows [0]  eps=50.0->47.5000  steps=10  constraints=none  scaler=metadata  ne=1  simple=True  obj=maximize  cuda:1
+  stats frozen on 4999 clean rows: column_selection_mask(31, 2)  feature_means(31, 2)  scaler_mean(31, 2)  scaler_std(31, 2)  ng_non_constant_mask(31, 2)  ng_num_used_features(31, 1)
+  clean loss 0.08343   accuracy=0.9720  balanced_accuracy=0.9721  mcc=0.9440  roc_auc=0.9947
+  iter    0  loss 0.08343  best 0.08343  step 95.0000
+  iter    1  loss 0.08490  best 0.08490  step 95.0000  *
+  iter    2  loss 0.08189  best 0.08490  step 47.5000  halved
+  iter    3  loss 0.08479  best 0.08490  step 47.5000
+  iter    4  loss 0.08260  best 0.08490  step 23.7500  halved
+  iter    5  loss 0.09416  best 0.09416  step 23.7500  *
+  iter    6  loss 0.08228  best 0.09416  step 11.8750  halved
+  iter    7  loss 0.08909  best 0.09416  step 11.8750
+  iter    8  loss 0.09548  best 0.09548  step 11.8750  *
+  iter    9  loss 0.09956  best 0.09956  step 11.8750  *
+  iter   10  loss 0.09387  best 0.09956  step 5.9375  halved
+
+  clean    loss 0.08343  accuracy=0.9720  balanced_accuracy=0.9721  mcc=0.9440  roc_auc=0.9947
+  poisoned loss 0.09956  accuracy=0.9750  balanced_accuracy=0.9751  mcc=0.9500  roc_auc=0.9928
+  delta    loss +0.01613  accuracy=+0.0030  balanced_accuracy=+0.0030  mcc=+0.0060  roc_auc=-0.0020
+  62/63 features moved, max |delta| 47.500 (scaled)  [25s]
+  poisoned row (largest scaled moves, label y=0):
+    length_hostname                                   19.0000 ->     -9956.0000   (-47.500 scaled)
+    nb_hyphens                                         0.0000 ->     -2042.5000   (-47.500 scaled)
+    nb_and                                             0.0000 ->      -902.5000   (-47.500 scaled)
+    nb_star                                            0.0000 ->       -47.5000   (-47.500 scaled)
+    nb_percent                                         0.0000 ->     -4560.0000   (-47.500 scaled)
+    nb_www                                             1.0000 ->        96.0000   (+47.500 scaled)
+    nb_dollar                                          0.0000 ->      -285.0000   (-47.500 scaled)
+    nb_semicolumn                                      0.0000 ->      -950.0000   (-47.500 scaled)
+
+  -- deployed path (ordinary fit/predict_proba, stats refit) --
+  clean    loss 0.08312  accuracy=0.9740  balanced_accuracy=0.9741  mcc=0.9481  roc_auc=0.9950
+  poisoned loss 0.08457  accuracy=0.9740  balanced_accuracy=0.9742  mcc=0.9483  roc_auc=0.9951
+  delta    loss +0.00145  accuracy=+0.0000  balanced_accuracy=+0.0001  mcc=+0.0002  roc_auc=+0.0001
+  saved -> results/url_unique/attack/p1_none_eps50

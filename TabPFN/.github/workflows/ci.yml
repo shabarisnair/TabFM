@@ -1,0 +1,421 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+  merge_group:
+  workflow_dispatch:
+
+concurrency:
+  group: pr-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TABPFN_MODEL_CACHE_DIR: ${{ github.workspace }}/model_cache
+  HF_HUB_CACHE: ${{ github.workspace }}/hf_cache
+
+jobs:
+  check_python_linting:
+    name: Ruff Linting & Formatting
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4.3.1
+      - uses: astral-sh/ruff-action@278981a28ce3188b1e39527901f38254bf3aac89 # v4.1.0
+        with:
+          version-file: pyproject.toml
+      - uses: astral-sh/ruff-action@278981a28ce3188b1e39527901f38254bf3aac89 # v4.1.0
+        with:
+          args: "format --check"
+          version-file: pyproject.toml
+
+  test_compatibility:
+    name: Test Package Compatibility
+    # This job will only start after linting succeeds
+    needs: check_python_linting
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        # ubuntu-latest 3.14 highest is not included here because it is executed as a
+        # separate workflow below. This is because we wish to gate the GPU workflow on
+        # it, which requires a separate workflow.
+        include:
+          - os: ubuntu-latest
+            python-version: "3.10"
+            dependency-set: lowest-direct
+          - os: macos-latest
+            python-version: "3.10"
+            dependency-set: lowest-direct
+          - os: windows-latest
+            python-version: "3.10"
+            dependency-set: lowest-direct
+          - os: macos-latest
+            python-version: "3.14"
+            dependency-set: highest
+          - os: windows-latest
+            python-version: "3.14"
+            dependency-set: highest
+    runs-on: ${{ matrix.os }}
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      TABPFN_TOKEN: ${{ secrets.TABPFN_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4.3.1
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b # v7.3.0
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --group ci --resolution ${{ matrix.dependency-set }}
+
+      - name: "Check for forbidden licenses"
+        shell: bash
+        run: |
+          uv run --no-sync licensecheck \
+            --requirements-paths pyproject.toml \
+            --show-only-failing \
+            -0
+
+      # We use a persistent HuggingFace cache to avoid hitting rate limits.
+      - &restore-hf-cache
+        name: Restore HuggingFace cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ github.workspace }}/hf_cache
+          key: hf-cache-${{ hashFiles('hf_cache/**') }}
+          restore-keys: |
+            hf-cache-
+          enableCrossOsArchive: true
+
+      # We separately cache TabPFN model checkpoints. This is required so that PRs from
+      # forks, which can't access HF_TOKEN/TABPFN_TOKEN, already have the checkpoint
+      # files they need.
+      - &restore-model-cache
+        name: Restore model cache
+        id: restore-model-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ github.workspace }}/model_cache
+          key: model-cache-${{ hashFiles('model_cache/**') }}
+          restore-keys: |
+            model-cache-
+          enableCrossOsArchive: true
+
+      - &download-models
+        name: Download models from Hugging Face
+        run: uv run --no-sync python scripts/download_all_models.py
+
+      - &save-model-cache
+        name: Save model cache
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ github.workspace }}/model_cache
+          key: model-cache-${{ hashFiles('model_cache/**') }}
+          enableCrossOsArchive: true
+
+      # Works around `Windows fatal exception: code 0xc000001d`
+      # (STATUS_ILLEGAL_INSTRUCTION), which aborted roughly 1 in 10 Windows jobs
+      # at the suite's first fit/predict on real weights.
+      #
+      # It is not a wheel built for an ISA the runner lacks -- it is the
+      # opposite. The abort only happens on the newer Intel runners (Xeon
+      # Platinum 8573C, Emerald Rapids); the AMD EPYC 7763 runners, with no
+      # AVX-512 at all, never hit it. Emerald Rapids advertises AMX and oneDNN
+      # dispatches AMX kernels for it, but the tile state is not usable on this
+      # runner, so the first tile instruction faults. Capping the ISA is the
+      # only lever available: Linux lets a process request that state with
+      # arch_prctl(ARCH_REQ_XCOMP_PERM, XFEATURE_XTILEDATA), but Windows has no
+      # documented user-space equivalent to opt into.
+      #
+      # Established by re-running the crashing test under each dispatcher cap in
+      # turn on an affected runner (run 30532900721): every oneDNN cap survived,
+      # while capping MKL (MKL_ENABLE_INSTRUCTIONS) or torch's own vectorized
+      # kernels (ATEN_CPU_CAPABILITY) still aborted. AVX512_CORE_FP16 is the
+      # highest oneDNN tier below AMX, so this keeps every AVX-512 kernel and
+      # drops only the AMX ones; capping to AVX2 also works but costs ~3x
+      # runtime. Both torch 2.5.0 (oneDNN v3.5.3) and 2.13.0 (v3.12.0) are
+      # affected, so this is not a regression that ages out on its own -- drop
+      # it once torch ships a oneDNN that honours the Windows AMX opt-in.
+      - name: Cap oneDNN below AMX (Windows only)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: echo "ONEDNN_MAX_CPU_ISA=AVX512_CORE_FP16" >> "$GITHUB_ENV"
+
+      # Kept so that any recurrence names the runner's CPU and the ISA torch
+      # selected for it; that pairing is what made the abort diagnosable.
+      #
+      # GetEnabledXStateFeatures reports which XSAVE state components Windows
+      # has actually enabled. Bits 17 and 18 are the AMX tile config and tile
+      # data components, and they decide who owns the bug: if Windows reports
+      # them disabled, oneDNN dispatched AMX kernels the OS never enabled and
+      # the bug is its detection; if it reports them enabled and a tile
+      # instruction still faults, the bug is under Windows or the hypervisor
+      # and torch can only work around it.
+      - name: Log CPU and torch dispatch info (Windows only)
+        if: runner.os == 'Windows'
+        continue-on-error: true
+        shell: bash
+        run: |
+          pwsh -NoProfile -Command "Get-CimInstance Win32_Processor |
+            Format-List Name, Manufacturer, Description, NumberOfCores,
+            NumberOfLogicalProcessors"
+          uv run --no-sync python -c '
+          import ctypes
+          import torch
+          print("torch", torch.__version__)
+          print("cpu_capability", torch.backends.cpu.get_cpu_capability())
+          print(torch.__config__.parallel_info())
+          print(torch.__config__.show())
+          kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+          kernel32.GetEnabledXStateFeatures.restype = ctypes.c_uint64
+          mask = kernel32.GetEnabledXStateFeatures()
+          print(f"enabled_xstate_features 0x{mask:016x}")
+          components = [
+              (2, "AVX"),
+              (5, "AVX512_KMASK"),
+              (6, "AVX512_ZMM_H"),
+              (7, "AVX512_ZMM"),
+              (17, "AMX_TILE_CONFIG"),
+              (18, "AMX_TILE_DATA"),
+          ]
+          for bit, name in components:
+              print(f"  bit {bit:>2} {name:<16} {bool(mask >> bit & 1)}")
+          '
+
+      - name: Run Tests (all tests)
+        if: ${{ matrix.dependency-set != 'lowest-direct' && github.event_name != 'pull_request' && github.event_name != 'merge_group' }}
+        run: uv run --no-sync pytest tests/
+
+      - name: Run Tests (PR tests only)
+        if: ${{ matrix.dependency-set != 'lowest-direct' && (github.event_name == 'pull_request' || github.event_name == 'merge_group') }}
+        run: uv run --no-sync pytest -m "not slow" tests/
+
+      # We don't support MPS below PyTorch 2.6 (see tabpfn.utils.infer_devices()), thus
+      # disable MPS for the lowest-direct dependency set.
+
+      - name: Run Tests (all tests, MPS disabled)
+        if: ${{ matrix.dependency-set == 'lowest-direct' && github.event_name != 'pull_request' && github.event_name != 'merge_group' }}
+        env:
+          TABPFN_EXCLUDE_DEVICES: mps
+        run: uv run --no-sync pytest tests/
+
+      - name: Run Tests (PR tests only, MPS disabled)
+        if: ${{ matrix.dependency-set == 'lowest-direct' && (github.event_name == 'pull_request' || github.event_name == 'merge_group') }}
+        env:
+          TABPFN_EXCLUDE_DEVICES: mps
+        run: uv run --no-sync pytest -m "not slow" tests/
+
+        # Save even if tests failed: partial downloads avoid future runs hitting the
+        # rate limits.
+      - &save-hf-cache
+        name: Save HuggingFace cache
+        if: always()
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ github.workspace }}/hf_cache
+          key: hf-cache-${{ hashFiles('hf_cache/**') }}
+          enableCrossOsArchive: true
+
+  # -------------------------------------------------------------------
+  # Ubuntu-latest + highest dependencies (used as gate for GPU)
+  # -------------------------------------------------------------------
+  test_ubuntu_latest_314:
+    name: Test Ubuntu-latest (Py 3.14)
+    needs: check_python_linting
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      TABPFN_TOKEN: ${{ secrets.TABPFN_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4.3.1
+
+      - name: Set up Python 3.14
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b # v7.3.0
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --group ci --resolution highest
+        shell: bash
+
+      - name: "Check for forbidden licenses"
+        shell: bash
+        run: |
+          uv run --no-sync licensecheck \
+            --requirements-paths pyproject.toml \
+            --show-only-failing \
+            -0
+
+      - *restore-hf-cache
+      - *restore-model-cache
+      - *download-models
+      - *save-model-cache
+
+      - name: Run Tests
+        run: uv run --no-sync pytest tests/
+
+      - *save-hf-cache
+
+  # -------------------------------------------------------------------
+  # First Party Packages
+  # -------------------------------------------------------------------
+
+  test_first_party_packages:
+    name: Test ${{ matrix.repo-name }}
+    needs: check_python_linting
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        repo-name:
+          - tabpfn-extensions
+          - tabpfn-time-series
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      TABPFN_TOKEN: ${{ secrets.TABPFN_TOKEN }}
+      # Disable xet chunk cache to prevent disk exhaustion from 40+ model downloads.
+      # Xet caches each downloaded file's chunks in ~/.cache/huggingface/xet/,
+      # roughly doubling the effective disk footprint on the runner.
+      HF_HUB_DISABLE_XET: "1"
+
+    steps:
+      - name: Checkout TabPFN at current ref
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4.3.1
+        with:
+          path: TabPFN
+
+      - name: Checkout ${{ matrix.repo-name }}
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4.3.1
+        with:
+          repository: PriorLabs/${{ matrix.repo-name }}
+          path: ${{ matrix.repo-name }}
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b # v7.3.0
+
+      # `tabpfn-time-series[benchmarking]` pulls autogluon-timeseries, which
+      # transitively pulls torch + the full CUDA wheel stack (cuBLAS, cuDNN,
+      # NCCL, etc.). Extracting torch's libtorch_cuda.so alone tips the
+      # ubuntu-latest runner over its ~14 GB free-space budget — see the
+      # `No space left on device` failure at
+      # https://github.com/PriorLabs/TabPFN-private/actions/runs/26626285966/job/78463753025.
+      # Reclaim ~30 GB by deleting Android SDK / Haskell / dotnet / large
+      # preinstalled toolchains we don't use. Skipped for tabpfn-extensions
+      # because its install footprint comfortably fits.
+      - name: Free runner disk space
+        if: matrix.repo-name == 'tabpfn-time-series'
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: false
+          docker-images: true
+          swap-storage: false
+
+      - *restore-hf-cache
+
+      - name: Restore model cache
+        id: restore-model-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ github.workspace }}/model_cache
+          key: model-cache-${{ hashFiles('model_cache/**') }}
+          restore-keys: |
+            model-cache-
+          enableCrossOsArchive: true
+        # We don't save the model cache in this workflow as the main CI workflow already
+        # saves it.
+
+      - name: Download models from Hugging Face
+        run: |
+          cd TabPFN
+          uv run python scripts/download_all_models.py
+          cd ..
+
+      - name: Install dependencies and run tests
+        env:
+          FAST_TEST_MODE: 1 # Configures -extensions to run a smaller set of tests.
+        run: |
+          cd ${{ matrix.repo-name }}
+          uv run --with ../TabPFN --all-extras pytest -m "not uses_tabpfn_client"
+
+      - *save-hf-cache
+
+  # -------------------------------------------------------------------
+  # GPU: To save compute we only want to execute this workflow once
+  # a CPU workflow has passed. Hence, this workflow depends on the
+  # ubuntu-latest 3.14 workflow above.
+  # -------------------------------------------------------------------
+  test_gpu:
+    name: Test on GPU
+    needs:
+      - test_ubuntu_latest_314
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python-version: "3.10"
+            dependency-set: lowest-direct
+          - python-version: "3.14"
+            dependency-set: highest
+
+    runs-on: ubuntu-22.04-4core-gpu
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      TABPFN_TOKEN: ${{ secrets.TABPFN_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4.3.1
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b # v7.3.0
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --group ci --resolution ${{ matrix.dependency-set }}
+
+      - *restore-hf-cache
+      - *restore-model-cache
+      - *download-models
+      - *save-model-cache
+
+      - name: Run GPU Test Suite
+        env:
+          CUDA_VISIBLE_DEVICES: "0"
+          # skip cpu based tests that were run separately
+          TABPFN_EXCLUDE_DEVICES: "cpu,cpu:0,mps"
+        run: uv run --no-sync pytest tests/
+
+      - *save-hf-cache

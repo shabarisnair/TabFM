@@ -1,0 +1,69 @@
+################ PHASE 1: 1 row, 10 iterations ################
+  [ok]   url_unique/p1_full  (31s)  delta    loss +0.00111  accuracy=-0.0020  balanced_accuracy=-0.0020  mcc=-0.0040  roc_auc=-0.0002
+  [ok]   url_unique/p1_none  (32s)  delta    loss +0.00225  accuracy=-0.0010  balanced_accuracy=-0.0010  mcc=-0.0019  roc_auc=-0.0002
+  [ok]   url_unique/p1_none_eps5  (32s)  delta    loss +0.00616  accuracy=+0.0010  balanced_accuracy=+0.0010  mcc=+0.0021  roc_auc=-0.0008
+  [ok]   url_unique/p1_none_eps50  (31s)  delta    loss +0.01613  accuracy=+0.0030  balanced_accuracy=+0.0030  mcc=+0.0060  roc_auc=-0.0020
+  [ok]   wids/p1_full  (51s)  delta    loss +0.00060  accuracy=+0.0010  balanced_accuracy=+0.0056  mcc=+0.0109  roc_auc=-0.0010
+  [ok]   wids/p1_none  (51s)  delta    loss +0.00075  accuracy=+0.0010  balanced_accuracy=+0.0056  mcc=+0.0109  roc_auc=-0.0011
+  [ok]   wids/p1_none_eps5  (50s)  delta    loss +0.00349  accuracy=+0.0020  balanced_accuracy=+0.0011  mcc=+0.0141  roc_auc=-0.0056
+  [ok]   wids/p1_none_eps50  (51s)  delta    loss +0.01269  accuracy=-0.0010  balanced_accuracy=-0.0106  mcc=-0.0154  roc_auc=-0.0084
+  [ok]   lcld_v2/p1_full  (17s)  delta    loss +0.00082  accuracy=+0.0000  balanced_accuracy=-0.0019  mcc=-0.0048  roc_auc=-0.0009
+  [ok]   lcld_v2/p1_none  (17s)  delta    loss +0.00103  accuracy=-0.0010  balanced_accuracy=-0.0025  mcc=-0.0106  roc_auc=+0.0001
+  [ok]   lcld_v2/p1_none_eps5  (17s)  delta    loss +0.00062  accuracy=+0.0060  balanced_accuracy=+0.0057  mcc=+0.0429  roc_auc=-0.0014
+  [ok]   lcld_v2/p1_none_eps50  (17s)  delta    loss +0.00222  accuracy=-0.0010  balanced_accuracy=-0.0045  mcc=-0.0158  roc_auc=-0.0057
+################ PHASE 2b: very high eps, 100 iterations ################
+  [ok]   url_unique/p2_none_eps50_it100  (228s)  delta    loss +0.08204  accuracy=-0.0340  balanced_accuracy=-0.0334  mcc=-0.0645  roc_auc=-0.0058
+  [ok]   wids/p2_none_eps50_it100  (382s)  delta    loss +0.02232  accuracy=-0.0090  balanced_accuracy=-0.0350  mcc=-0.0895  roc_auc=-0.0142
+  [ok]   lcld_v2/p2_none_eps50_it100  (111s)  delta    loss +0.00774  accuracy=+0.0020  balanced_accuracy=-0.0026  mcc=+0.0036  roc_auc=-0.0103
+################ PHASE 2+3: row ablation, 100 iterations ################
+# (the n=1 entries are the requested 100-iteration reruns of phase 1)
+  [ok]   url_unique/abl_rows001_full_it100  (228s)  delta    loss +0.00063  accuracy=-0.0010  balanced_accuracy=-0.0010  mcc=-0.0020  roc_auc=-0.0002
+  [ok]   url_unique/abl_rows001_none_it100  (229s)  delta    loss +0.00470  accuracy=-0.0030  balanced_accuracy=-0.0029  mcc=-0.0058  roc_auc=-0.0006
+  [ok]   url_unique/abl_rows002_full_it100  (228s)  delta    loss +0.00359  accuracy=-0.0010  balanced_accuracy=-0.0010  mcc=-0.0019  roc_auc=-0.0005
+  [ok]   url_unique/abl_rows002_none_it100  (228s)  delta    loss +0.00931  accuracy=-0.0030  balanced_accuracy=-0.0029  mcc=-0.0058  roc_auc=-0.0012
+  [ok]   url_unique/abl_rows004_full_it100  (229s)  delta    loss +0.00431  accuracy=-0.0040  balanced_accuracy=-0.0039  mcc=-0.0079  roc_auc=-0.0006
+  [ok]   url_unique/abl_rows004_none_it100  (228s)  delta    loss +0.01351  accuracy=+0.0000  balanced_accuracy=+0.0002  mcc=+0.0004  roc_auc=-0.0014
+  [ok]   url_unique/abl_rows008_full_it100  (229s)  delta    loss +0.00540  accuracy=-0.0030  balanced_accuracy=-0.0029  mcc=-0.0059  roc_auc=-0.0006
+  [ok]   url_unique/abl_rows008_none_it100  (228s)  delta    loss +0.02135  accuracy=-0.0080  balanced_accuracy=-0.0078  mcc=-0.0156  roc_auc=-0.0023
+  [ok]   url_unique/abl_rows016_full_it100  (229s)  delta    loss +0.00445  accuracy=+0.0000  balanced_accuracy=+0.0000  mcc=+0.0000  roc_auc=-0.0005
+  [ok]   url_unique/abl_rows016_none_it100  (228s)  delta    loss +0.02626  accuracy=-0.0090  balanced_accuracy=-0.0088  mcc=-0.0175  roc_auc=-0.0024
+  [ok]   url_unique/abl_rows032_full_it100  (228s)  delta    loss +0.00485  accuracy=-0.0010  balanced_accuracy=-0.0009  mcc=-0.0019  roc_auc=-0.0007
+  [ok]   url_unique/abl_rows032_none_it100  (229s)  delta    loss +0.42926  accuracy=-0.2150  balanced_accuracy=-0.2114  mcc=-0.3603  roc_auc=-0.0150
+  [ok]   url_unique/abl_rows064_full_it100  (228s)  delta    loss +0.00533  accuracy=+0.0010  balanced_accuracy=+0.0011  mcc=+0.0023  roc_auc=-0.0006
+  [ok]   url_unique/abl_rows064_none_it100  (228s)  delta    loss +1.33197  accuracy=-0.4750  balanced_accuracy=-0.4671  mcc=-0.8743  roc_auc=-0.0192
+  [ok]   url_unique/abl_rows128_full_it100  (229s)  delta    loss +0.00654  accuracy=-0.0030  balanced_accuracy=-0.0028  mcc=-0.0056  roc_auc=-0.0006
+  [ok]   url_unique/abl_rows128_none_it100  (228s)  delta    loss +1.30336  accuracy=-0.4740  balanced_accuracy=-0.4662  mcc=-0.8676  roc_auc=-0.0134
+  [ok]   wids/abl_rows001_full_it100  (382s)  delta    loss +0.00225  accuracy=+0.0010  balanced_accuracy=+0.0056  mcc=+0.0109  roc_auc=-0.0023
+  [ok]   wids/abl_rows001_none_it100  (382s)  delta    loss +0.00184  accuracy=+0.0010  balanced_accuracy=+0.0056  mcc=+0.0109  roc_auc=-0.0022
+  [ok]   wids/abl_rows002_full_it100  (382s)  delta    loss +0.00406  accuracy=+0.0010  balanced_accuracy=+0.0056  mcc=+0.0109  roc_auc=-0.0046
+  [ok]   wids/abl_rows002_none_it100  (382s)  delta    loss +0.00484  accuracy=+0.0010  balanced_accuracy=+0.0056  mcc=+0.0109  roc_auc=-0.0048
+  [ok]   wids/abl_rows004_full_it100  (381s)  delta    loss +0.00701  accuracy=-0.0010  balanced_accuracy=-0.0005  mcc=-0.0067  roc_auc=-0.0066
+  [ok]   wids/abl_rows004_none_it100  (382s)  delta    loss +0.01024  accuracy=-0.0010  balanced_accuracy=-0.0005  mcc=-0.0067  roc_auc=-0.0088
+  [ok]   wids/abl_rows008_full_it100  (382s)  delta    loss +0.01012  accuracy=+0.0020  balanced_accuracy=+0.0061  mcc=+0.0178  roc_auc=-0.0089
+  [ok]   wids/abl_rows008_none_it100  (382s)  delta    loss +0.01556  accuracy=+0.0020  balanced_accuracy=+0.0061  mcc=+0.0178  roc_auc=-0.0138
+  [ok]   wids/abl_rows016_full_it100  (382s)  delta    loss +0.02106  accuracy=-0.0040  balanced_accuracy=-0.0072  mcc=-0.0306  roc_auc=-0.0177
+  [ok]   wids/abl_rows016_none_it100  (382s)  delta    loss +0.02806  accuracy=-0.0030  balanced_accuracy=-0.0167  mcc=-0.0339  roc_auc=-0.0222
+  [ok]   wids/abl_rows032_full_it100  (382s)  delta    loss +0.03064  accuracy=-0.0090  balanced_accuracy=-0.0350  mcc=-0.0895  roc_auc=-0.0245
+  [ok]   wids/abl_rows032_none_it100  (382s)  delta    loss +0.04924  accuracy=-0.0040  balanced_accuracy=-0.0172  mcc=-0.0407  roc_auc=-0.0302
+  [ok]   wids/abl_rows064_full_it100  (382s)  delta    loss +0.03460  accuracy=-0.0130  balanced_accuracy=-0.0622  mcc=-0.1486  roc_auc=-0.0242
+  [ok]   wids/abl_rows064_none_it100  (382s)  delta    loss +0.10238  accuracy=-0.0190  balanced_accuracy=-0.0805  mcc=-0.2091  roc_auc=-0.0746
+  [ok]   wids/abl_rows128_full_it100  (382s)  delta    loss +0.02933  accuracy=-0.0090  balanced_accuracy=-0.0350  mcc=-0.0895  roc_auc=-0.0153
+  [ok]   wids/abl_rows128_none_it100  (382s)  delta    loss +0.14655  accuracy=-0.0120  balanced_accuracy=-0.0767  mcc=-0.1648  roc_auc=-0.0378
+  [ok]   lcld_v2/abl_rows001_full_it100  (111s)  delta    loss +0.00143  accuracy=-0.0010  balanced_accuracy=-0.0025  mcc=-0.0106  roc_auc=-0.0005
+  [ok]   lcld_v2/abl_rows001_none_it100  (111s)  delta    loss +0.00132  accuracy=-0.0010  balanced_accuracy=-0.0025  mcc=-0.0106  roc_auc=-0.0003
+  [ok]   lcld_v2/abl_rows002_full_it100  (111s)  delta    loss +0.00180  accuracy=+0.0000  balanced_accuracy=-0.0019  mcc=-0.0048  roc_auc=-0.0008
+  [ok]   lcld_v2/abl_rows002_none_it100  (111s)  delta    loss +0.00162  accuracy=-0.0010  balanced_accuracy=-0.0025  mcc=-0.0106  roc_auc=-0.0007
+  [ok]   lcld_v2/abl_rows004_full_it100  (111s)  delta    loss +0.00226  accuracy=-0.0010  balanced_accuracy=-0.0025  mcc=-0.0106  roc_auc=-0.0011
+  [ok]   lcld_v2/abl_rows004_none_it100  (111s)  delta    loss +0.00277  accuracy=-0.0020  balanced_accuracy=-0.0051  mcc=-0.0215  roc_auc=-0.0019
+  [ok]   lcld_v2/abl_rows008_full_it100  (111s)  delta    loss +0.00466  accuracy=+0.0010  balanced_accuracy=-0.0013  mcc=+0.0014  roc_auc=-0.0046
+  [ok]   lcld_v2/abl_rows008_none_it100  (110s)  delta    loss +0.00634  accuracy=+0.0010  balanced_accuracy=-0.0013  mcc=+0.0014  roc_auc=-0.0059
+  [ok]   lcld_v2/abl_rows016_full_it100  (111s)  delta    loss +0.00776  accuracy=+0.0000  balanced_accuracy=-0.0019  mcc=-0.0048  roc_auc=-0.0080
+  [ok]   lcld_v2/abl_rows016_none_it100  (111s)  delta    loss +0.00975  accuracy=+0.0030  balanced_accuracy=-0.0000  mcc=+0.0147  roc_auc=-0.0125
+  [ok]   lcld_v2/abl_rows032_full_it100  (111s)  delta    loss +0.00873  accuracy=+0.0000  balanced_accuracy=-0.0019  mcc=-0.0048  roc_auc=-0.0099
+  [ok]   lcld_v2/abl_rows032_none_it100  (111s)  delta    loss +0.03552  accuracy=-0.0010  balanced_accuracy=-0.0083  mcc=-0.0269  roc_auc=-0.0260
+  [ok]   lcld_v2/abl_rows064_full_it100  (111s)  delta    loss +0.01927  accuracy=-0.0040  balanced_accuracy=-0.0121  mcc=-0.0516  roc_auc=-0.0106
+  [ok]   lcld_v2/abl_rows064_none_it100  (111s)  delta    loss +0.07169  accuracy=-0.0010  balanced_accuracy=+0.0051  mcc=+0.0085  roc_auc=-0.0467
+  [ok]   lcld_v2/abl_rows128_full_it100  (111s)  delta    loss +0.01751  accuracy=-0.0020  balanced_accuracy=-0.0012  mcc=-0.0109  roc_auc=-0.0133
+  [ok]   lcld_v2/abl_rows128_none_it100  (111s)  delta    loss +0.10081  accuracy=-0.0020  balanced_accuracy=-0.0032  mcc=-0.0161  roc_auc=-0.0363
+################ DONE ################
+  total 63   ok 63   skipped 0   failed 0   elapsed 210 min

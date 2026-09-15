@@ -1,0 +1,15 @@
+{
+  "python": "3.11.16 (main, Sep  2 2026, 23:39:52) [GCC 15.3.0]",
+  "torch": "2.14.0+cu126",
+  "cuda": "12.6",
+  "cuda_available": true,
+  "numpy": "2.4.6",
+  "sklearn": "1.9.0",
+  "tabpfn": "8.5.0",
+  "tabpfn_path": "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn",
+  "model_path": "/home/ssn899/.cache/tabpfn/tabpfn-v2-classifier-finetuned-zk73skhh.ckpt",
+  "checkpoint_sha256": {
+    "/home/ssn899/.cache/tabpfn/tabpfn-v2-classifier-finetuned-zk73skhh.ckpt": "cf8c519c01eaf1613ee91239006d57b1c806ff5f23ac1aeb1315ba1015210e49"
+  },
+  "gpu_name": "NVIDIA H100 NVL"
+}

@@ -1,0 +1,30 @@
+{
+  "model": "tabpfnv2",
+  "n_estimators_resolved": 1,
+  "random_state": 0,
+  "softmax_temperature": 0.9,
+  "estimators": [
+    {
+      "preprocess_config": {
+        "name": "quantile_uni_coarse",
+        "categorical_name": "ordinal_very_common_categories_shuffled",
+        "append_original": "auto",
+        "max_features_per_estimator": 1000000,
+        "global_transformer_name": "svd",
+        "max_onehot_cardinality": null,
+        "differentiable": false
+      },
+      "add_fingerprint_feature": true,
+      "polynomial_features": "no",
+      "feature_shift_count": 850,
+      "feature_shift_decoder": "shuffle",
+      "outlier_removal_std": 12.0,
+      "_model_index": 0,
+      "passthrough_inf": false,
+      "class_permutation": [
+        1,
+        0
+      ]
+    }
+  ]
+}

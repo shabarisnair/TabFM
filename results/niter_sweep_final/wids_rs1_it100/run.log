@@ -1,0 +1,107 @@
+14:14:59 [x-capgd] datasets/wids/splits/selected/natural/context_5000.csv (5000x108) -> datasets/wids/splits/test_attack_1000.csv (1000 of 1000)  k=1500 (30.0%)  attack_class=None  grid 1x1  cuda:3
+14:15:05   clean  ce=0.20899 auc=0.8795 acc=0.9250 f1=0.4361  max|dp| over 3 repeats=0.00e+00  chunking_exact=True  [5.2s]
+14:15:05   constraints=full (31 relations, dataset 'wids')  scaler=metadata  mutable 108/108  int 60  cat 9
+14:15:05   -- trial run0_sub0
+14:15:10     iter   0  obj 0.10032  best 0.10032  step 0.9500
+14:15:15     iter   1  obj -6.99077  best 0.10032  step 0.9500
+14:15:20     iter   2  obj -0.02833  best 0.10032  step 0.9500
+14:15:25     iter   3  obj -0.25862  best 0.10032  step 0.9500
+14:15:30     iter   4  obj -0.53327  best 0.10032  step 0.9500
+14:15:34     iter   5  obj -0.36036  best 0.10032  step 0.9500
+14:15:39     iter   6  obj -0.47506  best 0.10032  step 0.9500
+14:15:44     iter   7  obj -1.79610  best 0.10032  step 0.9500
+14:15:49     iter   8  obj -0.07652  best 0.10032  step 0.9500
+14:15:54     iter   9  obj -1.99568  best 0.10032  step 0.9500
+14:15:59     iter  10  obj -0.25698  best 0.10032  step 0.9500
+14:16:04     iter  11  obj -0.76067  best 0.10032  step 0.9500
+14:16:09     iter  12  obj -0.56886  best 0.10032  step 0.9500
+14:16:13     iter  13  obj -1.89254  best 0.10032  step 0.9500
+14:16:18     iter  14  obj -0.24259  best 0.10032  step 0.9500
+14:16:23     iter  15  obj -1.26661  best 0.10032  step 0.9500
+14:16:28     iter  16  obj -0.42595  best 0.10032  step 0.9500
+14:16:33     iter  17  obj -0.31331  best 0.10032  step 0.9500
+14:16:38     iter  18  obj -0.63407  best 0.10032  step 0.9500
+14:16:43     iter  19  obj -2.09832  best 0.10032  step 0.9500
+14:16:48     iter  20  obj -0.44259  best 0.10032  step 0.9500
+14:16:52     iter  21  obj -0.88784  best 0.10032  step 0.9500
+14:16:57     iter  22  obj -0.44884  best 0.10032  step 0.4750  halved
+14:17:02     iter  23  obj -43.32339  best 0.10032  step 0.4750
+14:17:07     iter  24  obj -1.53084  best 0.10032  step 0.4750
+14:17:12     iter  25  obj 0.11707  best 0.11707  step 0.4750  *
+14:17:17     iter  26  obj 0.03247  best 0.11707  step 0.4750
+14:17:22     iter  27  obj 0.11679  best 0.11707  step 0.4750
+14:17:27     iter  28  obj -0.18485  best 0.11707  step 0.4750
+14:17:31     iter  29  obj -0.51422  best 0.11707  step 0.4750
+14:17:36     iter  30  obj -0.36720  best 0.11707  step 0.4750
+14:17:41     iter  31  obj -0.15868  best 0.11707  step 0.4750
+14:17:46     iter  32  obj -0.22190  best 0.11707  step 0.4750
+14:17:51     iter  33  obj -0.33807  best 0.11707  step 0.4750
+14:17:56     iter  34  obj -0.98525  best 0.11707  step 0.4750
+14:18:01     iter  35  obj -0.13388  best 0.11707  step 0.4750
+14:18:06     iter  36  obj -0.31536  best 0.11707  step 0.4750
+14:18:10     iter  37  obj -0.04494  best 0.11707  step 0.4750
+14:18:15     iter  38  obj -0.29667  best 0.11707  step 0.4750
+14:18:20     iter  39  obj -0.66524  best 0.11707  step 0.4750
+14:18:25     iter  40  obj -0.63917  best 0.11707  step 0.4750
+14:18:30     iter  41  obj -0.43648  best 0.11707  step 0.2375  halved
+14:18:35     iter  42  obj -2.45195  best 0.11707  step 0.2375
+14:18:40     iter  43  obj -0.01062  best 0.11707  step 0.2375
+14:18:45     iter  44  obj 0.12428  best 0.12428  step 0.2375  *
+14:18:49     iter  45  obj 0.14048  best 0.14048  step 0.2375  *
+14:18:54     iter  46  obj 0.07563  best 0.14048  step 0.2375
+14:18:59     iter  47  obj 0.17151  best 0.17151  step 0.2375  *
+14:19:04     iter  48  obj 0.12823  best 0.17151  step 0.2375
+14:19:09     iter  49  obj 0.09529  best 0.17151  step 0.2375
+14:19:14     iter  50  obj 0.15660  best 0.17151  step 0.2375
+14:19:19     iter  51  obj -0.03439  best 0.17151  step 0.2375
+14:19:24     iter  52  obj 0.10444  best 0.17151  step 0.2375
+14:19:28     iter  53  obj 0.02920  best 0.17151  step 0.2375
+14:19:33     iter  54  obj 0.11353  best 0.17151  step 0.2375
+14:19:38     iter  55  obj 0.02786  best 0.17151  step 0.2375
+14:19:43     iter  56  obj 0.16154  best 0.17151  step 0.2375
+14:19:48     iter  57  obj 0.11948  best 0.17151  step 0.1188  halved
+14:19:53     iter  58  obj -1.60609  best 0.17151  step 0.1188
+14:19:58     iter  59  obj 0.08312  best 0.17151  step 0.1188
+14:20:02     iter  60  obj 0.18765  best 0.18765  step 0.1188  *
+14:20:07     iter  61  obj 0.20692  best 0.20692  step 0.1188  *
+14:20:12     iter  62  obj 0.20127  best 0.20692  step 0.1188
+14:20:17     iter  63  obj 0.23601  best 0.23601  step 0.1188  *
+14:20:22     iter  64  obj 0.19152  best 0.23601  step 0.1188
+14:20:27     iter  65  obj 0.24022  best 0.24022  step 0.1188  *
+14:20:32     iter  66  obj 0.24103  best 0.24103  step 0.1188  *
+14:20:37     iter  67  obj 0.24224  best 0.24224  step 0.1188  *
+14:20:42     iter  68  obj 0.19703  best 0.24224  step 0.1188
+14:20:46     iter  69  obj 0.19564  best 0.24224  step 0.1188
+14:20:51     iter  70  obj 0.27016  best 0.27016  step 0.0594  *  halved
+14:20:56     iter  71  obj 0.31016  best 0.31016  step 0.0594  *
+14:21:01     iter  72  obj 0.33682  best 0.33682  step 0.0594  *
+14:21:06     iter  73  obj 0.35901  best 0.35901  step 0.0594  *
+14:21:11     iter  74  obj 0.36809  best 0.36809  step 0.0594  *
+14:21:16     iter  75  obj 0.40677  best 0.40677  step 0.0594  *
+14:21:21     iter  76  obj 0.35498  best 0.40677  step 0.0594
+14:21:25     iter  77  obj 0.45307  best 0.45307  step 0.0594  *
+14:21:30     iter  78  obj 0.42440  best 0.45307  step 0.0594
+14:21:35     iter  79  obj 0.48119  best 0.48119  step 0.0594  *
+14:21:40     iter  80  obj 0.55736  best 0.55736  step 0.0594  *
+14:21:45     iter  81  obj 0.51057  best 0.55736  step 0.0594
+14:21:50     iter  82  obj 0.61251  best 0.61251  step 0.0594  *
+14:21:55     iter  83  obj 0.35380  best 0.61251  step 0.0594
+14:22:00     iter  84  obj 0.63721  best 0.63721  step 0.0594  *
+14:22:04     iter  85  obj 0.67709  best 0.67709  step 0.0594  *
+14:22:09     iter  86  obj 0.48151  best 0.67709  step 0.0594
+14:22:14     iter  87  obj 0.68846  best 0.68846  step 0.0297  *  halved
+14:22:19     iter  88  obj 0.75691  best 0.75691  step 0.0297  *
+14:22:24     iter  89  obj 0.81047  best 0.81047  step 0.0297  *
+14:22:29     iter  90  obj 0.91253  best 0.91253  step 0.0297  *
+14:22:34     iter  91  obj 1.16487  best 1.16487  step 0.0297  *
+14:22:39     iter  92  obj 1.62788  best 1.62788  step 0.0297  *
+14:22:44     iter  93  obj 1.58506  best 1.62788  step 0.0297
+14:22:48     iter  94  obj 2.12379  best 2.12379  step 0.0297  *
+14:22:53     iter  95  obj 2.49220  best 2.49220  step 0.0297  *
+14:22:58     iter  96  obj 3.59397  best 3.59397  step 0.0297  *
+14:23:03     iter  97  obj 2.19580  best 3.59397  step 0.0297
+14:23:08     iter  98  obj 2.00589  best 3.59397  step 0.0297
+14:23:13     iter  99  obj 3.71276  best 3.71276  step 0.0148  *  halved
+14:23:18     iter 100  obj 4.38447  best 4.38447  step 0.0148  *
+14:23:20      poisoned ce=0.74393 auc=0.5653 acc=0.7410 f1=0.1395  dce=+0.53494 dacc=-0.1840  k=1500  [495.0s]
+14:23:20   mean over 1 trials: dce=+0.53494 dacc=-0.1840 dauc=-0.3142  -> results/niter_sweep_final/wids_rs1_it100

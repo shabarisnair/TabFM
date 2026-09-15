@@ -1,0 +1,45 @@
+name: Submit a new attack
+description: Use this template to submit a new tabular attack.
+title: "[New attack]: "
+labels: ["contribution"]
+body:
+  - type: input
+    id: attack_name
+    attributes:
+      label: Attack Name
+      description: Provide a name for the attack.
+      value: "e.g., BASES"
+
+  - type: textarea
+    id: paper_reference
+    attributes:
+      label: Paper & authors references
+      description: Provide a name of the associated paper with the relevant bibtex
+      value: "e.g., @article{simonetto2024constrained,
+     title={Constrained Adaptive Attack: Effective Adversarial Attack Against Deep Neural Networks for Tabular Data},
+     author={Simonetto, Thibault and Ghamizi, Salah and Cordy, Maxime},
+     journal={arXiv preprint arXiv:2406.00775},
+     year={2024}
+   }"
+  - type: input
+    id: license
+    attributes:
+      label: License
+      description: Specify the license under which the attack code is distributed.
+      placeholder: "e.g., MIT, Apache 2.0, etc."
+
+  - type: textarea
+    id: detailed_description
+    attributes:
+      label: Detailed Description (Optional)
+      description: Provide a detailed description of the attack, if available.
+      placeholder: "A more detailed explanation of the attack."
+
+  - type: textarea
+    id: attack_files
+    attributes:
+      label: Attack files
+      description: Provide the code to the attack.
+      value: "Insert here the URL for the attack code, or attach a (small) zip file directly. You can also open a PR and associate it with this issue instead."
+
+

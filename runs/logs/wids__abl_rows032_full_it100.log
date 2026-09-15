@@ -1,0 +1,127 @@
+[capgd] context_5000.csv (5000x108) -> test_attack_1000.csv (1000)
+  poison 32 rows 0..31  eps=0.5->0.4750  steps=100  constraints=full  scaler=metadata  ne=1  simple=True  obj=maximize  cuda:1
+  mutable 108/108  int 60  cat 9  real 39
+  stats frozen on 4968 clean rows: column_selection_mask(53, 2)  feature_means(53, 2)  scaler_mean(53, 2)  scaler_std(53, 2)  ng_non_constant_mask(53, 2)  ng_num_used_features(53, 1)
+  clean loss 0.21079   accuracy=0.9260  balanced_accuracy=0.6490  mcc=0.4351  roc_auc=0.8759
+  iter    0  loss 0.21079  best 0.21079  step 0.9500
+  iter    1  loss 0.21429  best 0.21429  step 0.9500  *
+  iter    2  loss 0.21627  best 0.21627  step 0.9500  *
+  iter    3  loss 0.21417  best 0.21627  step 0.9500
+  iter    4  loss 0.21552  best 0.21627  step 0.9500
+  iter    5  loss 0.21642  best 0.21642  step 0.9500  *
+  iter    6  loss 0.21770  best 0.21770  step 0.9500  *
+  iter    7  loss 0.21691  best 0.21770  step 0.9500
+  iter    8  loss 0.21671  best 0.21770  step 0.9500
+  iter    9  loss 0.21634  best 0.21770  step 0.9500
+  iter   10  loss 0.21671  best 0.21770  step 0.9500
+  iter   11  loss 0.21735  best 0.21770  step 0.9500
+  iter   12  loss 0.21643  best 0.21770  step 0.9500
+  iter   13  loss 0.21565  best 0.21770  step 0.9500
+  iter   14  loss 0.21655  best 0.21770  step 0.9500
+  iter   15  loss 0.21594  best 0.21770  step 0.9500
+  iter   16  loss 0.21633  best 0.21770  step 0.9500
+  iter   17  loss 0.21752  best 0.21770  step 0.9500
+  iter   18  loss 0.21480  best 0.21770  step 0.9500
+  iter   19  loss 0.21732  best 0.21770  step 0.9500
+  iter   20  loss 0.21657  best 0.21770  step 0.9500
+  iter   21  loss 0.21460  best 0.21770  step 0.9500
+  iter   22  loss 0.21522  best 0.21770  step 0.4750  halved
+  iter   23  loss 0.22025  best 0.22025  step 0.4750  *
+  iter   24  loss 0.21944  best 0.22025  step 0.4750
+  iter   25  loss 0.21950  best 0.22025  step 0.4750
+  iter   26  loss 0.21894  best 0.22025  step 0.4750
+  iter   27  loss 0.21796  best 0.22025  step 0.4750
+  iter   28  loss 0.22018  best 0.22025  step 0.4750
+  iter   29  loss 0.21969  best 0.22025  step 0.4750
+  iter   30  loss 0.21981  best 0.22025  step 0.4750
+  iter   31  loss 0.21984  best 0.22025  step 0.4750
+  iter   32  loss 0.21730  best 0.22025  step 0.4750
+  iter   33  loss 0.21758  best 0.22025  step 0.4750
+  iter   34  loss 0.21767  best 0.22025  step 0.4750
+  iter   35  loss 0.21923  best 0.22025  step 0.4750
+  iter   36  loss 0.21870  best 0.22025  step 0.4750
+  iter   37  loss 0.21783  best 0.22025  step 0.4750
+  iter   38  loss 0.21851  best 0.22025  step 0.4750
+  iter   39  loss 0.21882  best 0.22025  step 0.4750
+  iter   40  loss 0.21861  best 0.22025  step 0.4750
+  iter   41  loss 0.21985  best 0.22025  step 0.2375  halved
+  iter   42  loss 0.22274  best 0.22274  step 0.2375  *
+  iter   43  loss 0.22063  best 0.22274  step 0.2375
+  iter   44  loss 0.22299  best 0.22299  step 0.2375  *
+  iter   45  loss 0.22238  best 0.22299  step 0.2375
+  iter   46  loss 0.22180  best 0.22299  step 0.2375
+  iter   47  loss 0.22180  best 0.22299  step 0.2375
+  iter   48  loss 0.22165  best 0.22299  step 0.2375
+  iter   49  loss 0.22299  best 0.22299  step 0.2375  *
+  iter   50  loss 0.22297  best 0.22299  step 0.2375
+  iter   51  loss 0.22265  best 0.22299  step 0.2375
+  iter   52  loss 0.22345  best 0.22345  step 0.2375  *
+  iter   53  loss 0.22406  best 0.22406  step 0.2375  *
+  iter   54  loss 0.22339  best 0.22406  step 0.2375
+  iter   55  loss 0.22529  best 0.22529  step 0.2375  *
+  iter   56  loss 0.22323  best 0.22529  step 0.2375
+  iter   57  loss 0.22349  best 0.22529  step 0.1187  halved
+  iter   58  loss 0.22975  best 0.22975  step 0.1187  *
+  iter   59  loss 0.22458  best 0.22975  step 0.1187
+  iter   60  loss 0.22893  best 0.22975  step 0.1187
+  iter   61  loss 0.22791  best 0.22975  step 0.1187
+  iter   62  loss 0.22848  best 0.22975  step 0.1187
+  iter   63  loss 0.22739  best 0.22975  step 0.1187
+  iter   64  loss 0.22686  best 0.22975  step 0.1187
+  iter   65  loss 0.22757  best 0.22975  step 0.1187
+  iter   66  loss 0.22824  best 0.22975  step 0.1187
+  iter   67  loss 0.22787  best 0.22975  step 0.1187
+  iter   68  loss 0.22910  best 0.22975  step 0.1187
+  iter   69  loss 0.22977  best 0.22977  step 0.1187  *
+  iter   70  loss 0.22744  best 0.22977  step 0.0594  halved
+  iter   71  loss 0.23179  best 0.23179  step 0.0594  *
+  iter   72  loss 0.23522  best 0.23522  step 0.0594  *
+  iter   73  loss 0.23525  best 0.23525  step 0.0594  *
+  iter   74  loss 0.23655  best 0.23655  step 0.0594  *
+  iter   75  loss 0.23732  best 0.23732  step 0.0594  *
+  iter   76  loss 0.23623  best 0.23732  step 0.0594
+  iter   77  loss 0.23642  best 0.23732  step 0.0594
+  iter   78  loss 0.23793  best 0.23793  step 0.0594  *
+  iter   79  loss 0.23870  best 0.23870  step 0.0594  *
+  iter   80  loss 0.23572  best 0.23870  step 0.0594
+  iter   81  loss 0.23642  best 0.23870  step 0.0594
+  iter   82  loss 0.23842  best 0.23870  step 0.0594
+  iter   83  loss 0.23913  best 0.23913  step 0.0594  *
+  iter   84  loss 0.23811  best 0.23913  step 0.0594
+  iter   85  loss 0.24042  best 0.24042  step 0.0594  *
+  iter   86  loss 0.23802  best 0.24042  step 0.0594
+  iter   87  loss 0.23821  best 0.24042  step 0.0297  halved
+  iter   88  loss 0.24399  best 0.24399  step 0.0297  *
+  iter   89  loss 0.24381  best 0.24399  step 0.0297
+  iter   90  loss 0.24576  best 0.24576  step 0.0297  *
+  iter   91  loss 0.24670  best 0.24670  step 0.0297  *
+  iter   92  loss 0.24830  best 0.24830  step 0.0297  *
+  iter   93  loss 0.24812  best 0.24830  step 0.0148  halved
+  iter   94  loss 0.25067  best 0.25067  step 0.0148  *
+  iter   95  loss 0.25292  best 0.25292  step 0.0148  *
+  iter   96  loss 0.25379  best 0.25379  step 0.0148  *
+  iter   97  loss 0.25281  best 0.25379  step 0.0148
+  iter   98  loss 0.25171  best 0.25379  step 0.0148
+  iter   99  loss 0.25512  best 0.25512  step 0.0074  *  halved
+  iter  100  loss 0.25677  best 0.25677  step 0.0074  *
+  repair (fix_types/fix_immutable): loss 0.25677 -> 0.24143
+
+  clean    loss 0.21079  accuracy=0.9260  balanced_accuracy=0.6490  mcc=0.4351  roc_auc=0.8759
+  poisoned loss 0.24143  accuracy=0.9170  balanced_accuracy=0.6140  mcc=0.3456  roc_auc=0.8514
+  delta    loss +0.03064  accuracy=-0.0090  balanced_accuracy=-0.0350  mcc=-0.0895  roc_auc=-0.0245
+  2826/108 features moved, max |delta| 0.500 (scaled)  [373s]
+  poisoned row (largest scaled moves, label y=0):
+    apache_3j_diagnosis_split0                         8.0000 ->        60.0000   (+0.473 scaled)
+    d1_spo2_max                                      100.0000 ->        59.0000   (-0.471 scaled)
+    d1_mbp_noninvasive_min                            73.0000 ->        31.0000   (-0.467 scaled)
+    d1_calcium_min                                     8.4000 ->         6.1647   (-0.466 scaled)
+    h1_mbp_noninvasive_min                            86.0000 ->        37.0000   (-0.462 scaled)
+    creatinine_apache                                  1.5700 ->         6.5976   (+0.462 scaled)
+    d1_temp_min                                       36.7000 ->        34.0063   (-0.456 scaled)
+    d1_glucose_min                                   149.0000 ->        33.0000   (-0.455 scaled)
+
+  -- deployed path (ordinary fit/predict_proba, stats refit) --
+  clean    loss 0.21171  accuracy=0.9290  balanced_accuracy=0.6606  mcc=0.4636  roc_auc=0.8761
+  poisoned loss 0.22664  accuracy=0.9240  balanced_accuracy=0.6379  mcc=0.4127  roc_auc=0.8697
+  delta    loss +0.01493  accuracy=-0.0050  balanced_accuracy=-0.0228  mcc=-0.0510  roc_auc=-0.0064
+  saved -> results/wids/attack/abl_rows032_full_it100

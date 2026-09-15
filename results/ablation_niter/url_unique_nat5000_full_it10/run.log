@@ -1,0 +1,17 @@
+02:09:44 [x-capgd] datasets/url_unique/splits/selected/natural/context_5000.csv (5000x63) -> datasets/url_unique/splits/test_attack_1000.csv (1000 of 1000)  k=1500 (30.0%)  attack_class=None  grid 1x1  cuda:1
+02:09:49   clean  ce=0.09328 auc=0.9935 acc=0.9650 f1=0.9644  max|dp| over 3 repeats=0.00e+00  chunking_exact=True  [3.2s]
+02:09:49   constraints=full (14 relations, dataset 'url_unique')  scaler=metadata  mutable 63/63  int 58  cat 0
+02:09:49   -- trial run0_sub0
+02:09:51     iter   0  obj 0.09328  best 0.09328  step 0.9500
+02:09:53     iter   1  obj -4.27487  best 0.09328  step 0.9500
+02:09:55     iter   2  obj -0.13647  best 0.09328  step 0.4750  halved
+02:09:58     iter   3  obj -0.28471  best 0.09328  step 0.2375  halved
+02:10:00     iter   4  obj -0.63416  best 0.09328  step 0.1188  halved
+02:10:02     iter   5  obj -0.25049  best 0.09328  step 0.1188
+02:10:04     iter   6  obj -0.04309  best 0.09328  step 0.0594  halved
+02:10:06     iter   7  obj 0.06345  best 0.09328  step 0.0594
+02:10:08     iter   8  obj 0.02049  best 0.09328  step 0.0297  halved
+02:10:11     iter   9  obj 0.08765  best 0.09328  step 0.0297
+02:10:13     iter  10  obj 0.06545  best 0.09328  step 0.0148  halved
+02:10:13      poisoned ce=0.09328 auc=0.9935 acc=0.9650 f1=0.9644  dce=+0.00000 dacc=+0.0000  k=1500  [24.7s]
+02:10:13   mean over 1 trials: dce=+0.00000 dacc=+0.0000 dauc=+0.0000  -> results/ablation_niter/url_unique_nat5000_full_it10

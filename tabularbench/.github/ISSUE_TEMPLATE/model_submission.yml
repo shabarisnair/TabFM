@@ -1,0 +1,64 @@
+name: Submit a new model
+description: Use this template to submit a new model.
+labels: ["contribution"]
+title: "[New model]: "
+body:
+  - type: input
+    id: model_name
+    attributes:
+      label: Model name
+      description: Provide a name for the model.
+      value: "e.g., TabTransformer Cutmix Model"
+
+  - type: textarea
+    id: paper_reference
+    attributes:
+      label: Paper & authors references
+      description: Provide a name of the associated paper with the relevant bibtex
+      value: "e.g., @article{simonetto2024constrained,
+     title={Constrained Adaptive Attack: Effective Adversarial Attack Against Deep Neural Networks for Tabular Data},
+     author={Simonetto, Thibault and Ghamizi, Salah and Cordy, Maxime},
+     journal={arXiv preprint arXiv:2406.00775},
+     year={2024}
+   }"
+
+  - type: textarea
+    id: claim
+    attributes:
+      label: Leaderboard claim(s)
+      description: Add here the claim for your model.
+      value: "* Architecture:
+    
+    * Dataset: 
+    
+    * Eps: 
+    
+    * Clean accuracy:
+    
+    * Robust accuracy:
+    
+    * Robust accuracy under adaptive attacks:
+    
+    * Additional data: true/false
+    
+    * Evaluation method: [CAA/Other...]
+    
+    * Checkpoint and code: (insert here the URL for the checkpoint and the code. If you don't want
+    to share your checkpoint publicly, you can share it for a private submission via an email
+    to tabularbench[AT]gmail.com). You can also create a PR and associate it with this issue.
+"
+
+  - type: textarea
+    id: model_zoo
+    attributes:
+      label: Share my model in the model zoo
+      value: "[x] I want to share my model in the model zoo (check if true).
+      
+      [x] I evaluated the model at least on CAA, and optionally, other attacks (mention here the attack and the robust accuracy).
+      
+      [x] I use an architecture that is included among
+those [here](https://github.com/serval-uni-lu/tabularbench/tree/main/tabularbench/models/tabsurvey). If not, I added the link to the architecture implementation so that it can be added.
+
+[x] I agree to release my model(s) under MIT license (check if true) OR under a custom license, located here: (put the custom license URL here if a custom license is needed. If no URL is specified, we assume that you are fine with MIT.)
+"
+

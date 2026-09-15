@@ -1,0 +1,96 @@
+{
+  "model": "tabpfnv2",
+  "n_estimators_resolved": 4,
+  "random_state": 0,
+  "softmax_temperature": 0.9,
+  "estimators": [
+    {
+      "preprocess_config": {
+        "name": "quantile_uni_coarse",
+        "categorical_name": "ordinal_very_common_categories_shuffled",
+        "append_original": "auto",
+        "max_features_per_estimator": 1000000,
+        "global_transformer_name": "svd",
+        "max_onehot_cardinality": null,
+        "differentiable": false
+      },
+      "add_fingerprint_feature": true,
+      "polynomial_features": "no",
+      "feature_shift_count": 853,
+      "feature_shift_decoder": "shuffle",
+      "outlier_removal_std": 12.0,
+      "_model_index": 0,
+      "passthrough_inf": false,
+      "class_permutation": [
+        0,
+        1
+      ]
+    },
+    {
+      "preprocess_config": {
+        "name": "quantile_uni_coarse",
+        "categorical_name": "ordinal_very_common_categories_shuffled",
+        "append_original": "auto",
+        "max_features_per_estimator": 1000000,
+        "global_transformer_name": "svd",
+        "max_onehot_cardinality": null,
+        "differentiable": false
+      },
+      "add_fingerprint_feature": true,
+      "polynomial_features": "no",
+      "feature_shift_count": 852,
+      "feature_shift_decoder": "shuffle",
+      "outlier_removal_std": 12.0,
+      "_model_index": 0,
+      "passthrough_inf": false,
+      "class_permutation": [
+        0,
+        1
+      ]
+    },
+    {
+      "preprocess_config": {
+        "name": "none",
+        "categorical_name": "numeric",
+        "append_original": false,
+        "max_features_per_estimator": 1000000,
+        "global_transformer_name": null,
+        "max_onehot_cardinality": null,
+        "differentiable": false
+      },
+      "add_fingerprint_feature": true,
+      "polynomial_features": "no",
+      "feature_shift_count": 850,
+      "feature_shift_decoder": "shuffle",
+      "outlier_removal_std": 12.0,
+      "_model_index": 0,
+      "passthrough_inf": false,
+      "class_permutation": [
+        1,
+        0
+      ]
+    },
+    {
+      "preprocess_config": {
+        "name": "none",
+        "categorical_name": "numeric",
+        "append_original": false,
+        "max_features_per_estimator": 1000000,
+        "global_transformer_name": null,
+        "max_onehot_cardinality": null,
+        "differentiable": false
+      },
+      "add_fingerprint_feature": true,
+      "polynomial_features": "no",
+      "feature_shift_count": 851,
+      "feature_shift_decoder": "shuffle",
+      "outlier_removal_std": 12.0,
+      "_model_index": 0,
+      "passthrough_inf": false,
+      "class_permutation": [
+        1,
+        0
+      ]
+    }
+  ]
+}

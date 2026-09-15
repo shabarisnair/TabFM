@@ -1,0 +1,4 @@
+### WiDS
+  wids   it100 rs1: standard dCE=+0.5421 (within_eps=False, maxL2=0.489) | budgeted dCE=+0.5411 (within_eps=True, maxL2=0.474) | CE cost of budget = +0.0010
+  wids   it100 rs2: standard dCE=+2.2959 (within_eps=True, maxL2=0.469) | budgeted dCE=+2.2959 (within_eps=True, maxL2=0.469) | CE cost of budget = +0.0000
+  wids   it100 rs3: standard dCE=+0.5367 (within_eps=False, maxL2=0.490) | budgeted dCE=+0.5367 (within_eps=True, maxL2=0.474) | CE cost of budget = +0.0000

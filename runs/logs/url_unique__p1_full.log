@@ -1,0 +1,37 @@
+[capgd] context_5000.csv (5000x63) -> test_attack_1000.csv (1000)
+  poison rows [0]  eps=0.5->0.4750  steps=10  constraints=full  scaler=metadata  ne=1  simple=True  obj=maximize  cuda:1
+  mutable 63/63  int 58  cat 0  real 5
+  stats frozen on 4999 clean rows: column_selection_mask(31, 2)  feature_means(31, 2)  scaler_mean(31, 2)  scaler_std(31, 2)  ng_non_constant_mask(31, 2)  ng_num_used_features(31, 1)
+  clean loss 0.08343   accuracy=0.9720  balanced_accuracy=0.9721  mcc=0.9440  roc_auc=0.9947
+  iter    0  loss 0.08343  best 0.08343  step 0.9500
+  iter    1  loss 0.08498  best 0.08498  step 0.9500  *
+  iter    2  loss 0.08423  best 0.08498  step 0.4750  halved
+  iter    3  loss 0.08424  best 0.08498  step 0.4750
+  iter    4  loss 0.08517  best 0.08517  step 0.4750  *
+  iter    5  loss 0.08488  best 0.08517  step 0.2375  halved
+  iter    6  loss 0.08510  best 0.08517  step 0.2375
+  iter    7  loss 0.08511  best 0.08517  step 0.1188  halved
+  iter    8  loss 0.08530  best 0.08530  step 0.1188  *
+  iter    9  loss 0.08528  best 0.08530  step 0.0594  halved
+  iter   10  loss 0.08535  best 0.08535  step 0.0594  *
+  repair (fix_types/fix_immutable): loss 0.08535 -> 0.08454
+
+  clean    loss 0.08343  accuracy=0.9720  balanced_accuracy=0.9721  mcc=0.9440  roc_auc=0.9947
+  poisoned loss 0.08454  accuracy=0.9700  balanced_accuracy=0.9701  mcc=0.9400  roc_auc=0.9946
+  delta    loss +0.00111  accuracy=-0.0020  balanced_accuracy=-0.0020  mcc=-0.0040  roc_auc=-0.0002
+  32/63 features moved, max |delta| 0.475 (scaled)  [25s]
+  poisoned row (largest scaled moves, label y=0):
+    avg_word_host                                      7.0000 ->        25.0500   (+0.475 scaled)
+    avg_word_path                                      4.5000 ->       123.2500   (+0.475 scaled)
+    domain_registration_length                        45.0000 ->     14214.0000   (+0.475 scaled)
+    length_url                                        37.0000 ->       810.0000   (+0.475 scaled)
+    shortest_word_host                                 3.0000 ->        21.0000   (+0.474 scaled)
+    nb_eq                                              0.0000 ->         9.0000   (+0.474 scaled)
+    char_repeat                                        4.0000 ->        73.0000   (+0.473 scaled)
+    nb_percent                                         0.0000 ->        45.0000   (+0.469 scaled)
+
+  -- deployed path (ordinary fit/predict_proba, stats refit) --
+  clean    loss 0.08312  accuracy=0.9740  balanced_accuracy=0.9741  mcc=0.9481  roc_auc=0.9950
+  poisoned loss 0.08344  accuracy=0.9740  balanced_accuracy=0.9741  mcc=0.9481  roc_auc=0.9950
+  delta    loss +0.00031  accuracy=+0.0000  balanced_accuracy=+0.0000  mcc=+0.0000  roc_auc=-0.0000
+  saved -> results/url_unique/attack/p1_full

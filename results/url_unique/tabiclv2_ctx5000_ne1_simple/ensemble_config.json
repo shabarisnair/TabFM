@@ -1,0 +1,14 @@
+{
+  "model": "tabiclv2",
+  "n_estimators": 1,
+  "random_state": 0,
+  "norm_methods": [
+    "none"
+  ],
+  "feat_shuffle_method": "none",
+  "class_shuffle_method": "none",
+  "outlier_threshold": Infinity,
+  "softmax_temperature": 0.9,
+  "average_logits": true,
+  "batch_size": 8
+}

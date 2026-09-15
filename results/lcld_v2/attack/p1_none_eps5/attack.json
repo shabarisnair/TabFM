@@ -1,0 +1,111 @@
+{
+  "method": "capgd",
+  "strategy": "test-available",
+  "model": "tabpfnv2",
+  "objective": "maximize",
+  "train": "datasets/lcld_v2/splits/context_5000.csv",
+  "test": "datasets/lcld_v2/splits/test_attack_1000.csv",
+  "target": "charged_off",
+  "n_context": 5000,
+  "n_test": 1000,
+  "n_test_full": 1000,
+  "n_features": 28,
+  "row_index": [
+    0
+  ],
+  "n_rows": 1,
+  "eps": 5.0,
+  "eps_margin": 0.05,
+  "eps_effective": 4.75,
+  "n_iter": 10,
+  "rho": 0.75,
+  "momentum": 0.75,
+  "constraints": "none",
+  "scaler": "metadata",
+  "n_estimators": 1,
+  "simple": true,
+  "test_batch_size": null,
+  "freeze_stats": true,
+  "seed": 0,
+  "device": "cuda:1",
+  "seconds": 11.9,
+  "clean_loss": 0.44993922114372253,
+  "poisoned_loss": 0.45055532455444336,
+  "loss_increase": 0.0006161034107208252,
+  "clean_metrics": {
+    "accuracy": 0.804,
+    "balanced_accuracy": 0.52552,
+    "mcc": 0.13004,
+    "roc_auc": 0.72244
+  },
+  "poisoned_metrics": {
+    "accuracy": 0.81,
+    "balanced_accuracy": 0.53117,
+    "mcc": 0.17295,
+    "roc_auc": 0.72101
+  },
+  "metric_delta": {
+    "accuracy": 0.006,
+    "balanced_accuracy": 0.00565,
+    "mcc": 0.04291,
+    "roc_auc": -0.00143
+  },
+  "n_features_changed": 28,
+  "max_abs_delta_scaled": 4.75,
+  "loss_pre_repair": 0.45055532455444336,
+  "poisoned_rows": {
+    "0": {
+      "loan_amnt": -36523.43359375,
+      "term": 60.9375,
+      "int_rate": -56.84968185424805,
+      "installment": 8281.8544921875,
+      "sub_grade": 140.21875,
+      "emp_length": 3.515625,
+      "home_ownership": 23.75,
+      "annual_inc": 1692688.375,
+      "verification_status": 9.5,
+      "purpose": 10.61328125,
+      "dti": -1018.3823852539062,
+      "open_acc": 78.66015625,
+      "pub_rec": -236.1640625,
+      "revol_bal": -4943050.0,
+      "revol_util": 1020.5555419921875,
+      "total_acc": 688.53125,
+      "initial_list_status": -0.70703125,
+      "application_type": -2.96875,
+      "mort_acc": 143.05078125,
+      "pub_rec_bankruptcies": -57.0,
+      "fico_score": 649.46484375,
+      "month_of_year": -50.25,
+      "ratio_loan_amnt_annual_inc": -1475.3114013671875,
+      "ratio_open_acc_total_acc": 1.1494351625442505,
+      "month_since_earliest_cr_line": 4786.25,
+      "ratio_pub_rec_month_since_earliest_cr_line": -0.846576452255249,
+      "ratio_pub_rec_bankruptcies_month_since_earliest_cr_line": 0.35085228085517883,
+      "ratio_pub_rec_bankruptcies_pub_rec": 2.4140625
+    }
+  },
+  "deployed": {
+    "clean": {
+      "loss": 0.44870463013648987,
+      "accuracy": 0.802,
+      "balanced_accuracy": 0.5185313955914053,
+      "mcc": 0.10280826148961943,
+      "roc_auc": 0.7243142783091326
+    },
+    "poisoned": {
+      "loss": 0.44921693205833435,
+      "accuracy": 0.809,
+      "balanced_accuracy": 0.5267208627545182,
+      "mcc": 0.15987455966363665,
+      "roc_auc": 0.7220764771700035
+    },
+    "delta": {
+      "loss": 0.0005123019218444824,
+      "accuracy": 0.007000000000000006,
+      "balanced_accuracy": 0.008189467163112973,
+      "mcc": 0.05706629817401722,
+      "roc_auc": -0.002237801139129192
+    }
+  }
+}

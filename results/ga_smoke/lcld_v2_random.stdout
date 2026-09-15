@@ -1,0 +1,21 @@
+03:52:02 [label-flip-ga] datasets/lcld_v2/splits/selected/natural/context_1000.csv (1000x28) -> datasets/lcld_v2/splits/test_attack_1000.csv (1000 of 1000)  k=300 (30.0%)  attack_class=None  grid 2x2  cuda:3
+03:52:04   clean  ce=0.45120 auc=0.7175 acc=0.8020 f1=0.0917  max|dp| over 3 repeats=0.00e+00  chunking_exact=True  [1.0s]
+03:52:04   GA: GAConfig(population=672, generations=0, elite=2, tournament=3, crossover_prob=0.9, mutation_rate=0.01, init_density_min=0.05, init_density_max=1.0, seed_full_parent=True, patience=8, batch_size=16, fitness_test_rows=None)
+03:52:04   -- trial run0_sub0
+03:53:08     gen   0  best 0.54549  mean 0.48262  best_so_far 0.54549  flips 299  evals 671
+03:53:09      GA: 299/300 parent rows flipped, 671 evals, 0 generations; flip-whole-parent baseline dce=+0.09322 dacc=+0.0000
+03:53:09      poisoned ce=0.54549 auc=0.6749 acc=0.8030 f1=0.0000  dce=+0.09429 dacc=+0.0010  k=299  [64.4s]
+03:53:09   -- trial run0_sub1
+03:54:13     gen   0  best 0.55262  mean 0.48528  best_so_far 0.55262  flips 291  evals 671
+03:54:13      GA: 291/300 parent rows flipped, 671 evals, 0 generations; flip-whole-parent baseline dce=+0.09992 dacc=+0.0010
+03:54:13      poisoned ce=0.55262 auc=0.6620 acc=0.8030 f1=0.0000  dce=+0.10142 dacc=+0.0010  k=291  [64.4s]
+03:54:13   -- trial run1_sub0
+03:55:17     gen   0  best 0.54599  mean 0.48481  best_so_far 0.54599  flips 299  evals 668
+03:55:17      GA: 299/300 parent rows flipped, 668 evals, 0 generations; flip-whole-parent baseline dce=+0.09322 dacc=+0.0000
+03:55:17      poisoned ce=0.54599 auc=0.6752 acc=0.8020 f1=0.0000  dce=+0.09479 dacc=+0.0000  k=299  [63.9s]
+03:55:17   -- trial run1_sub1
+03:56:21     gen   0  best 0.55272  mean 0.48732  best_so_far 0.55272  flips 299  evals 668
+03:56:21      GA: 299/300 parent rows flipped, 668 evals, 0 generations; flip-whole-parent baseline dce=+0.09992 dacc=+0.0010
+03:56:21      poisoned ce=0.55272 auc=0.6794 acc=0.8030 f1=0.0000  dce=+0.10152 dacc=+0.0010  k=299  [64.1s]
+03:56:21   mean over 4 trials: dce=+0.09801 dacc=+0.0008 dauc=-0.0446  -> results/ga_smoke/lcld_v2_random
+

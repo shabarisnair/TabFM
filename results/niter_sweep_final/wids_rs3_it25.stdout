@@ -1,0 +1,33 @@
+13:40:26 [x-capgd] datasets/wids/splits/selected/natural/context_5000.csv (5000x108) -> datasets/wids/splits/test_attack_1000.csv (1000 of 1000)  k=1500 (30.0%)  attack_class=None  grid 1x1  cuda:3
+13:40:32   clean  ce=0.20899 auc=0.8795 acc=0.9250 f1=0.4361  max|dp| over 3 repeats=0.00e+00  chunking_exact=True  [5.1s]
+13:40:32   constraints=full (31 relations, dataset 'wids')  scaler=metadata  mutable 108/108  int 60  cat 9
+13:40:32   -- trial run0_sub0
+13:40:37     iter   0  obj -0.13841  best -0.13841  step 0.9500
+13:40:42     iter   1  obj -6.88589  best -0.13841  step 0.9500
+13:40:47     iter   2  obj -0.05439  best -0.05439  step 0.9500  *
+13:40:52     iter   3  obj -0.36760  best -0.05439  step 0.9500
+13:40:57     iter   4  obj -0.11936  best -0.05439  step 0.9500
+13:41:02     iter   5  obj -0.54918  best -0.05439  step 0.4750  halved
+13:41:06     iter   6  obj -7.78290  best -0.05439  step 0.4750
+13:41:11     iter   7  obj -0.06393  best -0.05439  step 0.4750
+13:41:16     iter   8  obj -0.38747  best -0.05439  step 0.4750
+13:41:21     iter   9  obj -0.82582  best -0.05439  step 0.2375  halved
+13:41:26     iter  10  obj -7.46150  best -0.05439  step 0.2375
+13:41:31     iter  11  obj 0.01717  best 0.01717  step 0.2375  *
+13:41:36     iter  12  obj 0.00287  best 0.01717  step 0.1188  halved
+13:41:41     iter  13  obj 0.12794  best 0.12794  step 0.1188  *
+13:41:45     iter  14  obj 0.14855  best 0.14855  step 0.1188  *
+13:41:50     iter  15  obj 0.18677  best 0.18677  step 0.1188  *
+13:41:55     iter  16  obj 0.16272  best 0.18677  step 0.0594  halved
+13:42:00     iter  17  obj 0.23702  best 0.23702  step 0.0594  *
+13:42:05     iter  18  obj 0.22758  best 0.23702  step 0.0297  halved
+13:42:10     iter  19  obj 0.26250  best 0.26250  step 0.0297  *
+13:42:15     iter  20  obj 0.28929  best 0.28929  step 0.0297  *
+13:42:20     iter  21  obj 0.30016  best 0.30016  step 0.0297  *
+13:42:24     iter  22  obj 0.33837  best 0.33837  step 0.0297  *
+13:42:29     iter  23  obj 0.31633  best 0.33837  step 0.0148  halved
+13:42:34     iter  24  obj 0.33757  best 0.33837  step 0.0148
+13:42:39     iter  25  obj 0.36277  best 0.36277  step 0.0148  *
+13:42:41      poisoned ce=0.29043 auc=0.8111 acc=0.9090 f1=0.3358  dce=+0.08145 dacc=-0.0160  k=1500  [129.2s]
+13:42:41   mean over 1 trials: dce=+0.08145 dacc=-0.0160 dauc=-0.0684  -> results/niter_sweep_final/wids_rs3_it25
+

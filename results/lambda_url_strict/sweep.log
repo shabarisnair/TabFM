@@ -1,0 +1,5 @@
+03:34:59 url_unique lam1: dce=+0.0346 dacc=-0.0080 dauc=-0.0036 pre_repair_obj=2.3591 within_eps=True maxL2=0.358 viol=0 543s
+03:44:13 url_unique lam0.3: dce=+0.0373 dacc=-0.0020 dauc=-0.0034 pre_repair_obj=5.6166 within_eps=True maxL2=0.380 viol=0 543s
+03:53:30 url_unique lam0.1: dce=+0.0850 dacc=-0.0210 dauc=-0.0103 pre_repair_obj=1.2588 within_eps=True maxL2=0.386 viol=0 545s
+04:02:56 url_unique lam0.03: dce=+0.0762 dacc=-0.0170 dauc=-0.0097 pre_repair_obj=2.4228 within_eps=True maxL2=0.387 viol=0 555s
+04:12:15 url_unique lam0.01: dce=+0.0643 dacc=-0.0170 dauc=-0.0076 pre_repair_obj=1.0343 within_eps=True maxL2=0.413 viol=0 547s
