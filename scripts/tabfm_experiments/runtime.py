@@ -336,7 +336,24 @@ def batched_label_probs(
     arch = clf.models_[0]
     dev = next(arch.parameters()).device
     B = Y_ctx.shape[1]
-    x = torch.cat([X_ctx.detach(), X_test.detach()]).to(dev, torch.float32)
+    # Feed the SAME preprocessed features the normal path feeds. The fitted ensemble
+    # pipeline is not the identity: besides standardising (which the architecture's own
+    # scaler would cancel), it DROPS degenerate/constant columns -- 1 on url_unique,
+    # 2 on wids. Feeding raw X then changes the feature-group packing and the model sees
+    # a structurally different input (max |dp| was 0.60 on url_unique). Using the
+    # pipeline output makes this exactly equal to evaluate_context on all datasets.
+    member = clf.executor_.ensemble_members[0]
+
+    def _to(a):  # the pipeline returns torch tensors or numpy, on either device
+        if isinstance(a, torch.Tensor):
+            return a.detach().to(dev, torch.float32)
+        return torch.as_tensor(np.asarray(a), dtype=torch.float32, device=dev)
+
+    Xtr_p = _to(member.X_train)
+    Xte_p = _to(member.transform_X_test(X_test.detach()))
+    if Xtr_p.shape[0] != X_ctx.shape[0]:
+        raise RuntimeError("fitted pipeline does not match the given context; refit first")
+    x = torch.cat([Xtr_p, Xte_p])
     x = x[:, None, :].expand(-1, B, -1).contiguous()
     with torch.inference_mode():
         out = arch(x, Y_ctx.detach().to(dev, torch.float32), only_return_standard_out=True,

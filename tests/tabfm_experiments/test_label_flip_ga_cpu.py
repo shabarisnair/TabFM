@@ -33,6 +33,24 @@ def test_batched_label_probs_match_evaluate_context():
         assert float((P[:, b] - ref).abs().max()) < 1e-4
 
 
+def test_batched_label_probs_match_when_pipeline_drops_columns():
+    """Regression: the fitted pipeline drops constant/degenerate columns, so feeding raw X
+    changes the feature-group packing and silently desynchronises the batched path."""
+    clf = build_tabpfn_v2("cpu", 0)
+    g = torch.Generator().manual_seed(11)
+    X = torch.randn(40, 5, generator=g)
+    X[:, 2] = 3.0          # constant column -> dropped by the pipeline
+    X[:, 4] = 0.0          # another degenerate column
+    y = (X[:, 0] > 0).float()
+    Xt = torch.randn(12, 5, generator=g)
+    Xt[:, 2] = 3.0
+    Xt[:, 4] = 0.0
+    yt = (Xt[:, 0] > 0).long()
+    _, _, ref = evaluate_context(clf, X, y, Xt, yt, need_grad=False)
+    P = batched_label_probs(clf, X, y[:, None], Xt)[:, 0]
+    assert float((P - ref).abs().max()) < 1e-5, "batched path desynchronised from evaluate_context"
+
+
 def test_batched_probs_independent_of_batch_composition():
     # Justifies the GA cache: a mask's fitness must not depend on which other masks share its batch.
     clf = build_tabpfn_v2("cpu", 0)
