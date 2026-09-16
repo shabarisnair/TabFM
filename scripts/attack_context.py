@@ -37,7 +37,7 @@ import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 import torch  # noqa: E402
 
-from tabfm_experiments.aggregate import summarize_trials  # noqa: E402
+from tabfm_experiments.aggregate import best_per_run, summarize_trials  # noqa: E402
 from tabfm_experiments.capgd import capgd  # noqa: E402,F401  (re-export for old imports)
 from tabfm_experiments.io import (  # noqa: E402
     ensemble_config_record,
@@ -79,9 +79,10 @@ def parse_args(argv=None):
     ap.add_argument("--norm", default="l2", choices=["l2", "linf"])
     ap.add_argument("--eps", type=float, default=0.5)
     ap.add_argument("--eps-margin", type=float, default=0.05)
-    ap.add_argument("--n-iter", type=int, default=100,
-                    help="CAPGD steps. TabularBench uses 10; 100 chosen from the n_iter ablation "
-                         "(results/ablation_niter, docs/context_poisoning.md) -- no saturation below it")
+    ap.add_argument("--n-iter", type=int, default=40,
+                    help="CAPGD steps. TabularBench uses 10; 40 chosen from the n_iter sweep "
+                         "(results/niter_sweep_final, docs/context_poisoning.md): most of the "
+                         "reachable signal on url_unique/wids at 2.5x less cost than 100")
     ap.add_argument("--momentum", type=float, default=0.75)
     ap.add_argument("--rho", type=float, default=0.75)
     ap.add_argument("--n-restarts", type=int, default=1)
@@ -101,7 +102,9 @@ def parse_args(argv=None):
     ap.add_argument("--attack-seed", type=int, default=2)
     ap.add_argument("--test-batch-size", type=int, default=None)
     ap.add_argument("--max-test", type=int, default=None, help="smoke tests only")
-    ap.add_argument("--save-full-context", action="store_true")
+    ap.add_argument("--save-full-context", action="store_true",
+                    help="write <out>/context_poisoned.csv for the single strongest trial "
+                         "(largest CE increase) of the run x subsample grid")
     ap.add_argument("--recompute-layers", action="store_true",
                     help="activation checkpointing for gradient forwards: same results, far less GPU memory, ~25%% slower")
     ga = ap.add_argument_group("label-flip GA (searches k-subsets of the eligible rows; budget = R%% of rows)")
@@ -223,6 +226,7 @@ def main(argv=None):
     train_df = pd.read_csv(a.train) if a.save_full_context else None
     target = [c for c in (train_df.columns if train_df is not None else []) if c not in cols]
     trial_dicts = []
+    best_ctx = None          # strongest trial so far, by CE increase
     for run in range(a.n_runs):
         for sub in range(a.n_row_subsamples):
             tag = f"run{run}_sub{sub}"
@@ -257,18 +261,32 @@ def main(argv=None):
             d = res.to_json()
             write_json(out / "trials" / f"{tag}.json", d)
             trial_dicts.append({k_: v for k_, v in d.items() if k_ not in ("history", "restarts", "ga_history")})
-            if a.save_full_context:
-                df = train_df.copy()
-                if a.attack == "x-capgd":
-                    df[cols] = df[cols].astype("float64")
-                    df.loc[res.attacked_indices, cols] = df.loc[res.attacked_indices, cols].to_numpy() + res.x_delta_raw
-                else:
-                    df[target[0]] = res.y_poisoned
-                df.to_csv(out / "trials" / f"{tag}_context_poisoned.csv", index=False)
+            # Keep only the strongest trial's poisoned context (largest CE increase);
+            # it is written once after the grid. Per-trial deltas are always in the .npz.
+            if a.save_full_context and (best_ctx is None or res.delta["ce"] > best_ctx["delta_ce"]):
+                best_ctx = {"tag": tag, "delta_ce": res.delta["ce"], "delta_accuracy": res.delta["accuracy"],
+                            "attacked_indices": res.attacked_indices,
+                            "x_delta_raw": res.x_delta_raw, "y_poisoned": res.y_poisoned}
             p = res.poisoned
             log.info(f"     poisoned ce={p.ce:.5f} auc={p.roc_auc:.4f} acc={p.accuracy:.4f} f1={p.f1:.4f}  "
                      f"dce={res.delta['ce']:+.5f} dacc={res.delta['accuracy']:+.4f}  "
                      f"k={res.k_actual}  [{res.seconds:.1f}s]")
+
+    if a.save_full_context and best_ctx is not None:
+        df = train_df.copy()
+        if a.attack == "x-capgd":
+            df[cols] = df[cols].astype("float64")
+            idx = best_ctx["attacked_indices"]
+            df.loc[idx, cols] = df.loc[idx, cols].to_numpy() + best_ctx["x_delta_raw"]
+        else:
+            df[target[0]] = best_ctx["y_poisoned"]
+        df.to_csv(out / "context_poisoned.csv", index=False)
+        log.info(f"  best trial {best_ctx['tag']}: dce={best_ctx['delta_ce']:+.5f} "
+                 f"dacc={best_ctx['delta_accuracy']:+.4f}  -> context_poisoned.csv")
+
+    # Per run (= CAPGD randomness) keep the strongest of its row subsamples by CE increase;
+    # the headline aggregate is then across runs only. Flat all-trial stats are kept too.
+    per_run_best = best_per_run(trial_dicts, "delta", "ce")
 
     summary = {
         "attack": a.attack, "train": a.train, "test": a.test, "n_context": n_ctx, "n_test": len(yte),
@@ -277,13 +295,23 @@ def main(argv=None):
         "clean": clean.as_dict(), "clean_max_repeat_abs_dprob": max_dp, "chunking_exact": exact,
         "deterministic_mode": a.deterministic_mode,
         "seeds": {"model_seed": a.model_seed, "row_seed": a.row_seed, "attack_seed": a.attack_seed},
-        "aggregate_delta": summarize_trials(trial_dicts, "delta"),
-        "aggregate_poisoned": summarize_trials(trial_dicts, "poisoned"),
+        "aggregation": (f"best row-subsample per run by delta.ce, then aggregated across "
+                        f"the {a.n_runs} runs"),
+        "per_run_best": per_run_best,
+        "aggregate_delta": summarize_trials(per_run_best, "delta"),
+        "aggregate_poisoned": summarize_trials(per_run_best, "poisoned"),
+        "aggregate_delta_all_trials": summarize_trials(trial_dicts, "delta"),
+        "aggregate_poisoned_all_trials": summarize_trials(trial_dicts, "poisoned"),
+        "best_context_trial": ({k_: best_ctx[k_] for k_ in ("tag", "delta_ce", "delta_accuracy")}
+                               if best_ctx is not None else None),
         "trials": trial_dicts,
     }
     write_json(out / "summary.json", summary)
     agg = summary["aggregate_delta"]["overall"]
-    log.info(f"  mean over {len(trial_dicts)} trials: dce={agg['ce']['mean']:+.5f} dacc={agg['accuracy']['mean']:+.4f} "
+    log.info("  per-run winners: " + ", ".join(
+        f"run{t['run_id']}<-sub{t['subsample_id']} (dce={t['delta']['ce']:+.5f})" for t in per_run_best))
+    log.info(f"  best-subsample-per-run, mean over {len(per_run_best)} runs: "
+             f"dce={agg['ce']['mean']:+.5f} dacc={agg['accuracy']['mean']:+.4f} "
              f"dauc={agg['roc_auc']['mean'] if agg['roc_auc']['mean'] is not None else float('nan'):+.4f}  -> {out}")
 
 

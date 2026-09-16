@@ -205,22 +205,30 @@ def repair_end_budgeted(x_clean, x_adv, spec: FeatureSpec, constraints: Constrai
     """
     x = repair_end(x_clean, x_adv, constraints, fix_equality=fix_equality)
     cs = spec.to_scaled(x_clean)
+    tol = 1e-5
+    # Shrink to a target strictly BELOW eps: the re-rounding that follows can only push
+    # the norm back up (torch.round on categoricals moves away from clean), so shrinking
+    # to exactly eps oscillates forever. Tighten the target each pass until it fits.
+    target = eps * 0.98
     for _ in range(n_iter):
         d = spec.to_scaled(x) - cs
         if norm == "L2":
             n = d.pow(2).sum(dim=-1, keepdim=True).sqrt()
-            over = (n > eps).squeeze(-1)
-            if not bool(over.any()):
-                break
-            d = torch.where(n > eps, d * (eps / (n + 1e-12)), d)
+            if not bool((n > eps + tol).any()):
+                return x
+            d = torch.where(n > eps + tol, d * (target / (n + 1e-12)), d)
         else:  # Linf
-            if not bool((d.abs() > eps).any()):
-                break
-            d = d.clamp(-eps, eps)
+            if not bool((d.abs() > eps + tol).any()):
+                return x
+            d = d.clamp(-target, target)
         x = spec.to_raw(cs + d)
         x = fix_types_raw(x_clean, x, spec.is_int, spec.is_cat)
         x = fix_immutable_raw(x_clean, x, spec.mutable)
-    return x
+        target *= 0.9
+    # Guarantee the invariant: any row still over budget reverts to its clean values.
+    d = spec.to_scaled(x) - cs
+    n = d.pow(2).sum(dim=-1, keepdim=True).sqrt() if norm == "L2" else d.abs().amax(-1, keepdim=True)
+    return torch.where(n > eps + tol, x_clean, x)
 
 
 def equality_post_step(spec: FeatureSpec, constraints: Constraints):

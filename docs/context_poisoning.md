@@ -195,7 +195,7 @@ the restart with the highest repaired CE is kept.
 | `--norm` | `l2` | TabularBench benchmark example (the paper uses both) |
 | `--eps` | 0.5 | scaled units |
 | `--eps-margin` | 0.05 | inherited from TabularBench code; **not stated in the Djilani text** |
-| `--n-iter` | 100 | this project, from the n_iter ablation below (TabularBench uses 10) |
+| `--n-iter` | 40 | this project, from the n_iter sweep below (TabularBench uses 10) |
 | `--momentum` / `--rho` | 0.75 / 0.75 | APGD |
 | `--n-restarts` | 1 | TabularBench |
 | `--eot-iter` | 1 | TabularBench |
@@ -203,7 +203,7 @@ the restart with the highest repaired CE is kept.
 | `--n-row-subsamples` | 5 | this project |
 | `--row-percent` | 5 | this project |
 
-### n_iter ablation (why the default is 100)
+### n_iter ablation (why the default is 40)
 
 **Setup (2026-09-15).**
 - Context `selected/natural/context_5000.csv`, test `test_attack_1000.csv` (all 1000 rows).
@@ -230,9 +230,58 @@ What the sweep showed:
 - **`box` numbers are type-invalid.** On LCLD, every one of the 1500 attacked rows ended with fractional int values (~40% of int cells) and fractional cat values (~40% of cat cells). `full` had none. Don't report `box` as a realistic attack.
 - **LCLD `full` rows often leave the budget.** `within_eps_after_repair` was `False` in 9 of 10 LCLD `full` runs (max scaled L2 up to 3.45), due to equality and type repair.
 
-**Decision.** `--n-iter 100`, the top of the tested range, because the default mode did not saturate below it on LCLD. Saturation may lie beyond 100; this was not tested.
+(The table above is the first, exploratory sweep: single trial per point, `box` included, and
+run *before* budget-aware repair was the default. It is superseded by the sweep below.)
 
-**Cost per trial** on one GPU at 5k rows and 30%: about 107 s on LCLD and 222 s on url_unique. A 5 runs × 5 subsamples grid is therefore about 45 minutes (LCLD) to 1.5 hours (url_unique) per context.
+#### Final sweep (`results/niter_sweep_final/`)
+
+Setup: 3 datasets, `selected/natural/context_5000.csv` vs `test_attack_1000.csv` (all 1000 rows),
+`--row-percent 30`, **3 row seeds per point** (mean reported), best-effort, `--constraints full`
+with budget-aware repair on, iteration points 10/25/50/75/100/150/200.
+
+| dataset | metric | 10 | 25 | 50 | 75 | 100 | 150 | 200 |
+|---|---|---|---|---|---|---|---|---|
+| url_unique | ΔCE | +0.003 | +0.022 | +0.036 | +0.042 | +0.035 | +0.043 | +0.050 |
+| url_unique | Δacc | +0.002 | −0.000 | −0.006 | −0.008 | −0.004 | −0.010 | −0.007 |
+| lcld_v2 | ΔCE | +0.020 | +0.021 | +0.027 | +0.075 | +0.072 | +0.284 | +0.348 |
+| lcld_v2 | Δacc | −0.002 | −0.002 | −0.003 | −0.014 | −0.011 | −0.020 | −0.015 |
+| wids | ΔCE | +0.041 | +0.089 | +0.163 | +0.321 | +0.317 | +0.491 | +1.544 |
+| wids | Δacc | −0.012 | −0.020 | −0.033 | −0.081 | −0.099 | −0.113 | −0.319 |
+
+What it shows:
+- **Accuracy is far more robust than CE.** url_unique CE rises 1.54× for only 0.7 accuracy points;
+  lcld_v2 1.77× for 1.5 points. The attack mostly reduces confidence on rows still classified
+  correctly. Only WiDS shows real accuracy damage.
+- **Vulnerability ranking is stable at every iteration count: wids ≫ lcld_v2 > url_unique.**
+- **No saturation by 200** on lcld_v2 or wids; url_unique plateaus around 50–75 at a low level
+  (repair-bound — int rounding erases most of what CAPGD finds).
+- **Variance is large and grows in absolute terms.** wids at 200 is `[+0.240, +0.220, +4.173]` —
+  the 8.4× headline is one outlier seed. Relative spread (spread/mean) is ~0.3–1.4× at *every*
+  count from 10 to 75, so more iterations do not buy precision.
+- Caveat: the wids 10/25/50/75 cells were produced before the budget-repair convergence fix and
+  include a few over-budget rows (5 of 63 runs), so they are mildly optimistic. wids 100/150/200
+  were fully within budget.
+
+**Decision: `--n-iter 40`.** Interpolating the sweep, 40 gives ΔCE ≈ +0.030 on url_unique (10× the
+value at 10 iterations) and ≈ +0.133 on wids (3.2×), i.e. most of the reachable signal, at **2.5×
+less cost than 100**. It does *not* reduce relative variance — that is inherent to best-effort plus
+CAPGD's chaotic step-halving. **Caveat:** lcld_v2 is flat from 10 to 50 (+0.020 → +0.027) and only
+jumps at 75, so lcld_v2 sits near its floor at 40; raise `--n-iter` if lcld_v2 is the focus.
+
+**Cost.** Per-iteration cost scales almost linearly with the number of feature groups
+(features / 2), measured at context_5000 + 1000 test rows, best-effort:
+
+| dataset | features | feature groups | s/iteration | s/trial @ 40 iters |
+|---|---|---|---|---|
+| lcld_v2 | 28 | 15 | 1.29 | 52 |
+| url_unique | 63 | 32 | 2.31 | 92 |
+| wids | 108 | 55 | 4.88 | 195 |
+
+WiDS is ~3.8× lcld_v2 per iteration for 3.7× the feature groups — it is slow simply because the
+table is wide, and its figure includes the ~25% `--recompute-layers` overhead (3.9 s/iter without).
+Cost is **independent of `--row-percent`**: every iteration is a full forward+backward over the
+entire context + test set regardless of how many rows are attacked. The default x-capgd grid is
+5 runs × 3 subsamples = 15 trials per configuration.
 
 Adaptive step-size checkpoints are `steps_2 = max(int(0.22·n),1)`, `steps_min = max(int(0.06·n),1)`
 and `size_decr = max(int(0.03·n),1)`. Linf and L2 differ in three ways: the step is
@@ -363,6 +412,7 @@ DIR/args.json              resolved CLI args
 DIR/ensemble_config.json   resolved TabPFN ensemble_configs_
 DIR/versions.json          python/torch/cuda/numpy/sklearn/tabpfn, checkpoint path + sha256, GPU name
 DIR/summary.json           clean metrics, clean_max_repeat_abs_dprob, chunking_exact, seeds, k,
+                           aggregation, per_run_best (winning trial per run, in full),
                            trials[] (without histories), aggregate_delta, aggregate_poisoned
 DIR/run.log
 DIR/trials/run{r}_sub{s}.json
@@ -377,12 +427,23 @@ DIR/trials/run{r}_sub{s}.json
 DIR/trials/run{r}_sub{s}_delta.npz
     x-capgd:    row_indices, cell_delta_raw [k, d], feature_names
     label-flip: flipped_indices, y_clean, y_poisoned
-DIR/trials/run{r}_sub{s}_context_poisoned.csv   only with --save-full-context
+DIR/context_poisoned.csv   only with --save-full-context: the single strongest trial
+                           (largest CE increase); the winner is named in summary.json
+                           under best_context_trial
 ```
 
-Aggregates (`aggregate.summarize_trials`) report `overall` (mean/std/min/max over all trials),
-`by_run`, `by_subsample`, and `across_runs` / `across_subsamples` (stats of the group means). Trials
-share row subsets or CAPGD seeds, so they are hierarchical, not iid. Standard deviations use ddof=0.
+**Aggregation rule.** Runs capture CAPGD randomness; row subsamples capture which rows were drawn.
+For each run we keep the **best row subsample by `delta.ce`** (`aggregate.best_per_run`), and the
+headline `aggregate_delta` / `aggregate_poisoned` are computed **across runs only**. This models an
+attacker who tries several row subsets and keeps the strongest. The winners are saved in full under
+`per_run_best`, and the flat mean over every trial is still available as
+`aggregate_delta_all_trials` / `aggregate_poisoned_all_trials`.
+
+Because the per-run figure is a **maximum** over subsamples, it is biased upward relative to the
+flat all-trial mean; compare like with like when quoting numbers.
+
+`aggregate.summarize_trials` reports `overall` (mean/std/min/max), `by_run`, `by_subsample`, and
+`across_runs` / `across_subsamples` (stats of the group means). Standard deviations use ddof=0.
 
 `scripts/infer.py --out DIR` writes `args.json`, `metrics.json` (metrics, `max_repeat_abs_dprob`,
 `chunking_exact`), `predictions.csv`, `ensemble_config.json`, `versions.json` and `run.log`.
@@ -410,7 +471,7 @@ conda run -n tabfm python scripts/attack_context.py --gpu 1 --attack x-capgd \
   --train datasets/url_unique/splits/selected/natural/context_1000.csv \
   --test  datasets/url_unique/splits/test_attack_1000.csv \
   --out   results/attacks/url_unique_nat1000_x \
-  --row-percent 5 --norm l2 --eps 0.5 --n-iter 100 --constraints full --constraint-penalty 1.0 \
+  --row-percent 5 --norm l2 --eps 0.5 --n-iter 40 --constraints full --constraint-penalty 1.0 \
   --n-runs 1 --n-row-subsamples 1
 
 # WiDS (109 features): chunk the test set if memory is tight

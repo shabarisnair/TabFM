@@ -29,6 +29,24 @@ def _collect(trials: list[dict], key: str) -> dict[str, list[float]]:
     return out
 
 
+def best_per_run(trials: list[dict], key: str = "delta", metric: str = "ce") -> list[dict]:
+    """For each run_id, the trial with the largest ``trial[key][metric]``.
+
+    Runs capture CAPGD randomness; row subsamples capture which rows were drawn. Taking
+    the best subsample per run models an attacker who tries several row subsets and keeps
+    the strongest. Ties resolve to the lowest subsample_id. Note this is a maximum, so the
+    mean over the returned list is biased upward relative to a mean over all trials.
+    """
+    best: dict[int, dict] = {}
+    for t in trials:
+        r = int(t["run_id"])
+        cur = best.get(r)
+        if cur is None or (t[key][metric], -int(t["subsample_id"])) > (
+                cur[key][metric], -int(cur["subsample_id"])):
+            best[r] = t
+    return [best[r] for r in sorted(best)]
+
+
 def summarize_trials(trials: list[dict], key: str = "delta") -> dict:
     """Aggregate ``trial[key]`` (a flat metric dict) over trials.
 

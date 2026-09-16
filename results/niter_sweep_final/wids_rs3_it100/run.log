@@ -77,3 +77,31 @@
 14:37:52     iter  72  obj 0.41449  best 0.41449  step 0.0594  *
 14:37:57     iter  73  obj 0.44735  best 0.44735  step 0.0594  *
 14:38:02     iter  74  obj 0.48935  best 0.48935  step 0.0594  *
+14:38:07     iter  75  obj 0.49465  best 0.49465  step 0.0594  *
+14:38:12     iter  76  obj 0.49379  best 0.49465  step 0.0594
+14:38:17     iter  77  obj 0.54528  best 0.54528  step 0.0594  *
+14:38:21     iter  78  obj 0.59248  best 0.59248  step 0.0594  *
+14:38:26     iter  79  obj 0.62892  best 0.62892  step 0.0594  *
+14:38:31     iter  80  obj 0.52796  best 0.62892  step 0.0594
+14:38:36     iter  81  obj 0.66939  best 0.66939  step 0.0594  *
+14:38:41     iter  82  obj 0.66903  best 0.66939  step 0.0594
+14:38:46     iter  83  obj 0.71999  best 0.71999  step 0.0594  *
+14:38:51     iter  84  obj 0.77576  best 0.77576  step 0.0594  *
+14:38:56     iter  85  obj 0.95843  best 0.95843  step 0.0594  *
+14:39:00     iter  86  obj 0.90627  best 0.95843  step 0.0594
+14:39:05     iter  87  obj 0.91830  best 0.95843  step 0.0297  halved
+14:39:10     iter  88  obj 1.91544  best 1.91544  step 0.0297  *
+14:39:15     iter  89  obj 1.93731  best 1.93731  step 0.0297  *
+14:39:20     iter  90  obj 3.01933  best 3.01933  step 0.0297  *
+14:39:25     iter  91  obj 2.23970  best 3.01933  step 0.0297
+14:39:30     iter  92  obj 3.00315  best 3.01933  step 0.0297
+14:39:35     iter  93  obj 4.00936  best 4.00936  step 0.0297  *
+14:39:39     iter  94  obj 3.92941  best 4.00936  step 0.0297
+14:39:44     iter  95  obj 4.50751  best 4.50751  step 0.0297  *
+14:39:49     iter  96  obj 3.72027  best 4.50751  step 0.0297
+14:39:54     iter  97  obj 4.38865  best 4.50751  step 0.0297
+14:39:59     iter  98  obj 4.56447  best 4.56447  step 0.0297  *
+14:40:04     iter  99  obj 5.29025  best 5.29025  step 0.0148  *  halved
+14:40:09     iter 100  obj 6.81334  best 6.81334  step 0.0148  *
+14:40:11      poisoned ce=0.33025 auc=0.7694 acc=0.8710 f1=0.2951  dce=+0.12126 dacc=-0.0540  k=1500  [494.9s]
+14:40:11   mean over 1 trials: dce=+0.12126 dacc=-0.0540 dauc=-0.1101  -> results/niter_sweep_final/wids_rs3_it100

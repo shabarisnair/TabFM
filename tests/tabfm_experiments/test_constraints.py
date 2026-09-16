@@ -64,6 +64,46 @@ def test_repair_end_types_immutable():
     assert torch.allclose(out, torch.tensor([[4.0, 2.0, 0.5]]))
 
 
+def test_budgeted_repair_converges_when_rounding_pushes_out():
+    """Categorical round() moves values AWAY from clean, so shrinking to exactly eps
+    oscillates above the ball (the WiDS failure mode). The repair must still land inside."""
+    from tabfm_experiments.constraints import FeatureSpec, repair_end, repair_end_budgeted
+
+    eps = 0.475
+    # Two categoricals with range 2 => one unit = 0.5 scaled; a single rounded step is
+    # already 0.5 and two are 0.707, so rounding pushes back out of the ball.
+    # An int column is included because fix_types early-returns (and never rounds cats)
+    # when a schema has no int features -- all four real datasets have int features.
+    meta = _meta([("a", "cat", True, 0.0, 2.0), ("b", "cat", True, 0.0, 2.0),
+                  ("c", "int", True, 0.0, 100.0)])
+    spec = FeatureSpec.from_metadata(meta, device="cpu")
+    cons = build_constraints("none", meta, ["a", "b", "c"])
+    x_clean = torch.tensor([[0.0, 0.0, 0.0]])
+    x_adv = torch.tensor([[2.0, 2.0, 50.0]])
+
+    std = repair_end(x_clean, x_adv, cons)
+    n_std = float((spec.to_scaled(std) - spec.to_scaled(x_clean)).pow(2).sum(1).sqrt().max())
+    assert n_std > eps  # the plain repair is out of budget
+
+    bud = repair_end_budgeted(x_clean, x_adv, spec, cons, eps)
+    n_bud = float((spec.to_scaled(bud) - spec.to_scaled(x_clean)).pow(2).sum(1).sqrt().max())
+    assert n_bud <= eps + 1e-5, f"budgeted repair left the ball: {n_bud}"
+    assert torch.equal(bud, bud.round())  # still categorical-valid
+
+
+def test_budgeted_repair_keeps_feasible_perturbations():
+    """A perturbation that already fits must be left alone (no needless shrinking)."""
+    from tabfm_experiments.constraints import FeatureSpec, repair_end_budgeted
+
+    meta = _meta([("a", "int", True, 0.0, 100.0), ("b", "real", True, 0.0, 1.0)])
+    spec = FeatureSpec.from_metadata(meta, device="cpu")
+    cons = build_constraints("none", meta, ["a", "b"])
+    x_clean = torch.tensor([[10.0, 0.5]])
+    x_adv = torch.tensor([[13.0, 0.55]])  # scaled L2 ~0.055, well inside
+    out = repair_end_budgeted(x_clean, x_adv, spec, cons, 0.475)
+    assert torch.allclose(out, torch.tensor([[13.0, 0.55]]))
+
+
 def _real_constraints(name):
     from tabfm_experiments.data import load_split
 

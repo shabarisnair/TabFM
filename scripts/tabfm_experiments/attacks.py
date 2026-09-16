@@ -33,7 +33,7 @@ class XCapgdConfig:
     norm: str = "L2"
     eps: float = 0.5
     eps_margin: float = 0.05
-    n_iter: int = 100  # TabularBench: 10; see the n_iter ablation in docs/context_poisoning.md
+    n_iter: int = 40  # TabularBench: 10; see the n_iter ablation in docs/context_poisoning.md
     momentum: float = 0.75
     rho: float = 0.75
     n_restarts: int = 1
@@ -219,6 +219,11 @@ def run_x_capgd(
     extra = {
         "constraints_mode": mode, "norm": norm, "eps": cfg.eps, "eps_effective": eps,
         "budget_repair": bool(use_budget), "best_restart": best_info["restart"],
+        # Diagnostic: norm of the perturbation BEFORE any end repair. The in-loop
+        # projection should hold this at <= eps regardless of n_iter; if it grows with
+        # n_iter the projection is not binding.
+        "max_l2_delta_scaled_pre_repair": float(
+            (spec.to_scaled(raw_pre_best) - x0).pow(2).sum(1).sqrt().max()),
         "restarts": [{k: v for k, v in r.items() if k != "history"} for r in restarts],
         "n_cells_changed": int((d_raw.abs() > 0).sum()),
         "max_l2_delta_scaled": max_l2,

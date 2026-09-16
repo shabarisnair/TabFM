@@ -12,3 +12,10 @@
 14:14:56 wids rs3_it75: dce=+0.3388 dacc=-0.0440 dauc=-0.2039 pre_repair_obj=0.9782 within_eps=True maxL2=0.474 viol=0.0326 373s
 14:23:21 wids rs1_it100: dce=+0.5349 dacc=-0.1840 dauc=-0.3142 pre_repair_obj=4.3845 within_eps=True maxL2=0.473 viol=0.0386 495s
 14:31:47 wids rs2_it100: dce=+0.2944 dacc=-0.0590 dauc=-0.2181 pre_repair_obj=1.3349 within_eps=True maxL2=0.475 viol=0.0564 495s
+14:40:12 wids rs3_it100: dce=+0.1213 dacc=-0.0540 dauc=-0.1101 pre_repair_obj=6.8133 within_eps=True maxL2=0.468 viol=0.0548 495s
+14:52:41 wids rs1_it150: dce=+0.7704 dacc=-0.2300 dauc=-0.5559 pre_repair_obj=8.5197 within_eps=True maxL2=0.474 viol=0.0272 739s
+15:05:10 wids rs2_it150: dce=+0.3628 dacc=-0.0580 dauc=-0.2593 pre_repair_obj=1.1638 within_eps=True maxL2=0.473 viol=0.0562 739s
+15:17:39 wids rs3_it150: dce=+0.3405 dacc=-0.0520 dauc=-0.2547 pre_repair_obj=1.8418 within_eps=True maxL2=0.475 viol=0.0337 739s
+15:34:12 wids rs1_it200: dce=+0.2399 dacc=-0.0280 dauc=-0.1100 pre_repair_obj=1.8623 within_eps=True maxL2=0.474 viol=0.0219 983s
+15:50:45 wids rs2_it200: dce=+0.2203 dacc=-0.0940 dauc=-0.1593 pre_repair_obj=15.4761 within_eps=True maxL2=0.470 viol=0.0654 983s
+16:07:18 wids rs3_it200: dce=+4.1728 dacc=-0.8360 dauc=-0.5695 pre_repair_obj=25.0570 within_eps=True maxL2=0.471 viol=0.0505 983s

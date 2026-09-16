@@ -1,0 +1,17 @@
+14:44:40 [x-capgd] datasets/lcld_v2/splits/selected/natural/context_5000.csv (5000x28) -> datasets/lcld_v2/splits/test_attack_1000.csv (1000 of 1000)  k=1500 (30.0%)  attack_class=None  grid 1x1  cuda:1
+14:44:43   clean  ce=0.45462 auc=0.7155 acc=0.8060 f1=0.1339  max|dp| over 3 repeats=0.00e+00  chunking_exact=True  [1.8s]
+14:44:43   constraints=full (9 relations, dataset 'lcld_v2')  scaler=metadata  mutable 14/28  int 10  cat 5
+14:44:43   -- trial run0_sub0
+14:44:44     iter   0  obj 0.45188  best 0.45188  step 0.9500
+14:44:45     iter   1  obj 0.39516  best 0.45188  step 0.9500
+14:44:46     iter   2  obj 0.38628  best 0.45188  step 0.4750  halved
+14:44:47     iter   3  obj 0.46132  best 0.46132  step 0.4750  *
+14:44:49     iter   4  obj 0.45452  best 0.46132  step 0.2375  halved
+14:44:50     iter   5  obj 0.46677  best 0.46677  step 0.2375  *
+14:44:51     iter   6  obj 0.45892  best 0.46677  step 0.1187  halved
+14:44:52     iter   7  obj 0.46989  best 0.46989  step 0.1187  *
+14:44:53     iter   8  obj 0.46877  best 0.46989  step 0.0594  halved
+14:44:54     iter   9  obj 0.47566  best 0.47566  step 0.0594  *
+14:44:55     iter  10  obj 0.47024  best 0.47566  step 0.0297  halved
+14:44:56      poisoned ce=0.47723 auc=0.6916 acc=0.8020 f1=0.0660  dce=+0.02261 dacc=-0.0040  k=1500  [12.7s]
+14:44:56   mean over 1 trials: dce=+0.02261 dacc=-0.0040 dauc=-0.0239  -> results/niter_sweep_final/lcld_v2_rs1_it10
