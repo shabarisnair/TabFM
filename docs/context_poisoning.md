@@ -486,3 +486,83 @@ conda run -n tabfm python scripts/attack_context.py --gpu 1 --attack label-flip 
   --test  datasets/lcld_v2/splits/test_attack_1000.csv \
   --out   results/attacks/lcld_bal1000_flip --row-percent 5 --attack-class 1
 ```
+
+---
+
+## 10. Transfer to XGBoost (`scripts/xgb_transfer.py`)
+
+The poison is optimised white-box against TabPFNv2's in-context forward pass. This
+experiment asks whether it still hurts a model that never saw that gradient: the poisoned
+context is handed to XGBoost as an ordinary **training set**, XGBoost is tuned and trained
+on it from scratch, and scored on the same `test_attack_1000.csv`.
+
+### Two validation protocols
+
+A victim that retrains on poisoned data also *validates* on something. Where that
+validation set comes from changes the result, so both are reported:
+
+| | training set | validation set (HPO + early stopping) |
+|---|---|---|
+| **A** | 80% of the given context | the other 20% of the **same** context -- poisoned when the context is |
+| **B** | 100% of the given context | `datasets/<ds>/splits/val_2000.csv`, always **clean** |
+
+A is the attacker who owns the whole pipeline input; B is a defender holding a trusted
+validation set. `--val-ratio` changes A's split (default 0.2).
+
+### What is compared against what
+
+Hyperparameters are re-tuned for **every** context (optuna TPE, objective = validation
+logloss, `--hpo-trials`, default 30). That is deliberate: a victim retraining on poisoned
+data re-tunes too, so the hyperparameters are part of what the poison gets to move. It
+also means some of the measured damage is HPO landing somewhere different, not only the
+trees being worse.
+
+Aggregation matches the TabPFNv2 side exactly. `--attack-dir` rebuilds the **per-run-best**
+poisoned contexts -- the same `run<r>_sub<s>` winners `summary.json` recorded -- from
+`trials/*_delta.npz`, so both models are aggregated over the identical five contexts.
+Rebuilding is exact: `apply_trial_delta` reproduces the attack's own `context_poisoned.csv`
+to 1e-13 (CSV float round-trip) for x-capgd and bit-exactly for label flips.
+
+Each poisoned context `i` is paired against a clean fit with the same seed `i`, so the
+reported delta is per-run and the clean baseline carries matched variability (seed drives
+both the A split and the TPE stream). Clean baselines depend only on
+(train, test, val, protocol, HPO settings), so `--clean-cache-dir` reuses them across all
+eight runs of a dataset.
+
+### Metrics
+
+CE (= test logloss), accuracy, balanced accuracy, MCC, ROC-AUC, F1 -- the same set as the
+TabPFNv2 tables, with balanced accuracy and MCC derived from the confusion counts by
+`metrics.with_derived` (which also back-fills them for results written before those two
+metrics existed). The printed table adds:
+
+* `rel%` -- `100 * delta / |clean|`
+* `transfer%` -- `100 * XGBoost delta / TabPFNv2 delta`; 100 means the poison costs both
+  models the same, 0 means it does not transfer at all
+* `~` on either -- the denominator is near zero or inside its own across-run spread, so the
+  ratio is noise. coil2000's clean model is degenerate (MCC 0, balanced accuracy 0.5000),
+  so its percentage columns are `~` and only the absolute columns mean anything there.
+
+### Commands
+
+```bash
+# one attack run, both protocols, compared against its TabPFNv2 deltas
+conda run -n tabfm python scripts/xgb_transfer.py \
+  --attack-dir results/main_experiments/lcld_v2/label-flip_random_r016 \
+  --out results/xgb_transfer/lcld_v2/label-flip_random_r016
+
+# explicit files (no attack dir); --poisoned-train takes one or more CSVs
+conda run -n tabfm python scripts/xgb_transfer.py --model xgboost \
+  --train datasets/lcld_v2/splits/selected/natural/context_5000.csv \
+  --test  datasets/lcld_v2/splits/test_attack_1000.csv \
+  --val   datasets/lcld_v2/splits/val_2000.csv \
+  --poisoned-train results/.../context_poisoned.csv \
+  --out results/xgb_transfer/one_off
+
+# the whole 32-command grid (CPU only, safe to run alongside the GPU attacks)
+bash scripts/run_xgb_transfer.sh          # DRY_RUN=1 to preview
+```
+
+`--model` currently accepts `xgboost` only. Needs `xgboost` and `optuna` in the `tabfm`
+env. Output is `<out>/summary.json` with per-fit records, per-run paired deltas, the
+aggregates for both protocols, and the TabPFNv2 side for comparison.

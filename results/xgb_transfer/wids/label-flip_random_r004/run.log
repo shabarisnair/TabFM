@@ -1,0 +1,57 @@
+20:18:10 xgboost: train=/home/ssn899/Desktop/TabFM/datasets/wids/splits/selected/natural/context_5000.csv (5000 rows)  test=/home/ssn899/Desktop/TabFM/datasets/wids/splits/test_attack_1000.csv (1000 rows)  target=hospital_death  drop=()
+20:18:10 rebuilt 5 per-run-best contexts from /home/ssn899/Desktop/TabFM/results/main_experiments/wids/label-flip_random_r004: run0_sub0, run1_sub0, run2_sub0, run3_sub0, run4_sub0  (attack=label-flip, R=4.0%, k=200)
+20:18:10 clean val=/home/ssn899/Desktop/TabFM/datasets/wids/splits/val_2000.csv (2000 rows)
+20:18:10 
+== protocol A: validation is an internal split of the given context (poisoned when the context is)
+20:18:10     clean baseline: 5 fits reused from /home/ssn899/Desktop/TabFM/results/xgb_transfer/_clean_cache/clean_21b7476260b26ae8e64af4df.json
+20:18:10     poisoned (5 contexts)
+20:18:10     -- run0_sub0
+20:18:34       seed 0: ce=0.23580 acc=0.9150 bacc=0.6229 mcc=0.3467 (iters=203, 24s)
+20:18:34     -- run1_sub0
+20:18:55       seed 1: ce=0.23448 acc=0.9160 bacc=0.6284 mcc=0.3585 (iters=167, 21s)
+20:18:55     -- run2_sub0
+20:19:07       seed 2: ce=0.22845 acc=0.9210 bacc=0.6312 mcc=0.3879 (iters=50, 12s)
+20:19:07     -- run3_sub0
+20:19:19       seed 3: ce=0.23458 acc=0.9120 bacc=0.6162 mcc=0.3244 (iters=36, 12s)
+20:19:19     -- run4_sub0
+20:19:32       seed 4: ce=0.22982 acc=0.9170 bacc=0.6290 mcc=0.3640 (iters=56, 13s)
+20:19:32 
+  protocol A -- validation is an internal split of the given context (poisoned when the context is)
+20:19:32     metric                          clean          poisoned             delta      rel% |          TabPFN d  TabPFN rel%  transfer%
+20:19:32     -------------------------------------------------------------------------------------------------------------------------------
+20:19:32     ce                    0.2155 ± 0.0025   0.2326 ± 0.0029  +0.0171 ± 0.0040      +7.9 |  +0.0314 ± 0.0008        +15.0        +54
+20:19:32     accuracy              0.9192 ± 0.0033   0.9162 ± 0.0029  -0.0030 ± 0.0052      -0.3 |  -0.0086 ± 0.0022         -0.9        +35
+20:19:32     balanced_accuracy     0.6402 ± 0.0065   0.6256 ± 0.0054  -0.0147 ± 0.0057      -2.3 |  -0.0247 ± 0.0037         -3.8        +59
+20:19:32     mcc                   0.3886 ± 0.0219   0.3563 ± 0.0208  -0.0323 ± 0.0314      -8.3 |  -0.0719 ± 0.0133        -16.6        +45
+20:19:32     roc_auc               0.8712 ± 0.0043   0.8333 ± 0.0045  -0.0379 ± 0.0073      -4.4 |  -0.0564 ± 0.0052         -6.4        +67
+20:19:32     f1                    0.4007 ± 0.0167   0.3682 ± 0.0151  -0.0325 ± 0.0192      -8.1 |  -0.0618 ± 0.0096        -14.2        +53
+20:19:32     transfer% = XGBoost delta / TabPFNv2 delta; 100 means the poison hurts both equally.
+20:19:32     '~' marks a ratio whose denominator is near zero or inside its own spread -- read the absolute columns there.
+20:19:32 
+== protocol B: validation is the separate clean --val file
+20:19:32     clean baseline: 5 fits reused from /home/ssn899/Desktop/TabFM/results/xgb_transfer/_clean_cache/clean_dfe14fbebd0fe6e8ce582d3c.json
+20:19:32     poisoned (5 contexts)
+20:19:32     -- run0_sub0
+20:19:46       seed 0: ce=0.22510 acc=0.9190 bacc=0.6451 mcc=0.3925 (iters=165, 14s)
+20:19:46     -- run1_sub0
+20:20:04       seed 1: ce=0.22650 acc=0.9110 bacc=0.6157 mcc=0.3194 (iters=242, 18s)
+20:20:04     -- run2_sub0
+20:20:17       seed 2: ce=0.23172 acc=0.9180 bacc=0.6295 mcc=0.3697 (iters=67, 12s)
+20:20:17     -- run3_sub0
+20:20:31       seed 3: ce=0.22829 acc=0.9150 bacc=0.6379 mcc=0.3657 (iters=297, 14s)
+20:20:31     -- run4_sub0
+20:20:53       seed 4: ce=0.22602 acc=0.9160 bacc=0.6385 mcc=0.3707 (iters=399, 22s)
+20:20:53 
+  protocol B -- validation is the separate clean --val file
+20:20:53     metric                          clean          poisoned             delta      rel% |          TabPFN d  TabPFN rel%  transfer%
+20:20:53     -------------------------------------------------------------------------------------------------------------------------------
+20:20:53     ce                    0.2139 ± 0.0038   0.2275 ± 0.0023  +0.0136 ± 0.0058      +6.3 |  +0.0314 ± 0.0008        +15.0        +43
+20:20:53     accuracy              0.9188 ± 0.0028   0.9158 ± 0.0028  -0.0030 ± 0.0030      -0.3 |  -0.0086 ± 0.0022         -0.9        +35
+20:20:53     balanced_accuracy     0.6410 ± 0.0048   0.6333 ± 0.0101  -0.0077 ± 0.0135      -1.2 |  -0.0247 ± 0.0037         -3.8        +31
+20:20:53     mcc                   0.3873 ± 0.0188   0.3636 ± 0.0240  -0.0237 ± 0.0301      -6.1 |  -0.0719 ± 0.0133        -16.6        +33
+20:20:53     roc_auc               0.8708 ± 0.0071   0.8481 ± 0.0062  -0.0227 ± 0.0121      -2.6 |  -0.0564 ± 0.0052         -6.4        +40
+20:20:53     f1                    0.4013 ± 0.0135   0.3816 ± 0.0226  -0.0197 ± 0.0298      -4.9 |  -0.0618 ± 0.0096        -14.2        +32
+20:20:53     transfer% = XGBoost delta / TabPFNv2 delta; 100 means the poison hurts both equally.
+20:20:53     '~' marks a ratio whose denominator is near zero or inside its own spread -- read the absolute columns there.
+20:20:53 
+wrote /home/ssn899/Desktop/TabFM/results/xgb_transfer/wids/label-flip_random_r004/summary.json

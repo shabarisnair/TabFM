@@ -1,0 +1,24 @@
+{
+  "model": "xgboost",
+  "train": "/home/ssn899/Desktop/TabFM/datasets/url_unique/splits/selected/natural/context_5000.csv",
+  "test": "/home/ssn899/Desktop/TabFM/datasets/url_unique/splits/test_attack_1000.csv",
+  "val": "/home/ssn899/Desktop/TabFM/datasets/url_unique/splits/val_2000.csv",
+  "val_ratio": 0.2,
+  "poisoned_train": null,
+  "attack_dir": "/home/ssn899/Desktop/TabFM/results/main_experiments/url_unique/x-capgd_random_r064",
+  "out": "/home/ssn899/Desktop/TabFM/results/xgb_transfer/url_unique/x-capgd_random_r064",
+  "target": null,
+  "protocols": [
+    "A",
+    "B"
+  ],
+  "hpo_trials": 30,
+  "no_hpo": false,
+  "n_estimators": 2000,
+  "early_stopping_rounds": 50,
+  "n_jobs": 16,
+  "device": "cpu",
+  "seed": 0,
+  "n_clean_repeats": null,
+  "clean_cache_dir": "/home/ssn899/Desktop/TabFM/results/xgb_transfer/_clean_cache"
+}

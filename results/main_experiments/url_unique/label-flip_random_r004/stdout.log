@@ -115,3 +115,12 @@
 12:40:27     gen  14  best 0.14755  mean 0.14252  best_so_far 0.14755  flips 199  evals 199
 12:40:36     gen  15  best 0.14848  mean 0.14447  best_so_far 0.14848  flips 200  evals 212
 12:40:45     gen  16  best 0.14848  mean 0.14574  best_so_far 0.14848  flips 200  evals 224
+12:40:54     gen  17  best 0.14848  mean 0.14560  best_so_far 0.14848  flips 200  evals 237
+12:41:01     gen  18  best 0.14848  mean 0.14722  best_so_far 0.14848  flips 200  evals 248
+12:41:09     gen  19  best 0.14941  mean 0.14699  best_so_far 0.14941  flips 200  evals 259
+12:41:17     gen  20  best 0.14941  mean 0.14715  best_so_far 0.14941  flips 200  evals 270
+12:41:18      GA: 200/200 flips from pool 5000, 270 evals, 20 gens; influence-topk baseline dce=+0.04065 dacc=-0.0190
+12:41:18      poisoned ce=0.14941 auc=0.9886 acc=0.9480 f1=0.9456  dce=+0.05613 dacc=-0.0170  k=200  [193.6s]
+12:41:18   best trial run4_sub0: dce=+0.05613 dacc=-0.0170  -> context_poisoned.csv
+12:41:18   per-run winners: run0<-sub0 (dce=+0.05342), run1<-sub0 (dce=+0.04983), run2<-sub0 (dce=+0.05365), run3<-sub0 (dce=+0.05122), run4<-sub0 (dce=+0.05613)
+12:41:18   best-subsample-per-run, mean over 5 runs: dce=+0.05285 dacc=-0.0204 dauc=-0.0048  -> /home/ssn899/Desktop/TabFM/results/main_experiments/url_unique/label-flip_random_r004

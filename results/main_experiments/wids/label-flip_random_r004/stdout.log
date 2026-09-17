@@ -1,0 +1,126 @@
+14:21:05 [label-flip] /home/ssn899/Desktop/TabFM/datasets/wids/splits/selected/natural/context_5000.csv (5000x108) -> /home/ssn899/Desktop/TabFM/datasets/wids/splits/test_attack_1000.csv (1000 of 1000)  k=200 (4.0%)  attack_class=None  grid 5x1  cuda:0
+14:21:11   clean  ce=0.20899 auc=0.8795 acc=0.9250 f1=0.4361  max|dp| over 3 repeats=0.00e+00  chunking_exact=True  [5.0s]
+14:21:11   GA: GAConfig(population=16, generations=20, elite=2, tournament=3, crossover_prob=0.9, mutation_rate=None, seed_full=True, patience=8, batch_size=16, fitness_test_rows=None)
+14:21:11   -- trial run0_sub0
+14:21:36     gen   0  best 0.23017  mean 0.21807  best_so_far 0.23017  flips 200  evals 16
+14:21:52     gen   1  best 0.23060  mean 0.22431  best_so_far 0.23060  flips 200  evals 30
+14:22:07     gen   2  best 0.23071  mean 0.22784  best_so_far 0.23071  flips 200  evals 43
+14:22:22     gen   3  best 0.23296  mean 0.23021  best_so_far 0.23296  flips 200  evals 55
+14:22:37     gen   4  best 0.23315  mean 0.23158  best_so_far 0.23315  flips 199  evals 68
+14:22:50     gen   5  best 0.23419  mean 0.23254  best_so_far 0.23419  flips 200  evals 79
+14:23:04     gen   6  best 0.23460  mean 0.23331  best_so_far 0.23460  flips 200  evals 91
+14:23:19     gen   7  best 0.23488  mean 0.23345  best_so_far 0.23488  flips 196  evals 104
+14:23:35     gen   8  best 0.23502  mean 0.23401  best_so_far 0.23502  flips 197  evals 117
+14:23:51     gen   9  best 0.23560  mean 0.23432  best_so_far 0.23560  flips 197  evals 131
+14:24:07     gen  10  best 0.23572  mean 0.23477  best_so_far 0.23572  flips 200  evals 144
+14:24:22     gen  11  best 0.23771  mean 0.23552  best_so_far 0.23771  flips 200  evals 157
+14:24:39     gen  12  best 0.23833  mean 0.23631  best_so_far 0.23833  flips 200  evals 171
+14:24:56     gen  13  best 0.23884  mean 0.23730  best_so_far 0.23884  flips 200  evals 185
+14:25:11     gen  14  best 0.23891  mean 0.23782  best_so_far 0.23891  flips 199  evals 198
+14:25:24     gen  15  best 0.24070  mean 0.23840  best_so_far 0.24070  flips 200  evals 209
+14:25:37     gen  16  best 0.24087  mean 0.23940  best_so_far 0.24087  flips 200  evals 220
+14:25:53     gen  17  best 0.24183  mean 0.23982  best_so_far 0.24183  flips 200  evals 233
+14:26:09     gen  18  best 0.24183  mean 0.23998  best_so_far 0.24183  flips 200  evals 247
+14:26:25     gen  19  best 0.24183  mean 0.24010  best_so_far 0.24183  flips 200  evals 260
+14:26:40     gen  20  best 0.24183  mean 0.24009  best_so_far 0.24183  flips 200  evals 273
+14:26:43      GA: 200/200 flips from pool 5000, 273 evals, 20 gens; influence-topk baseline dce=+0.02118 dacc=-0.0080
+14:26:43      poisoned ce=0.24183 auc=0.8248 acc=0.9130 f1=0.3650  dce=+0.03284 dacc=-0.0120  k=200  [331.3s]
+14:26:43   -- trial run1_sub0
+14:27:08     gen   0  best 0.23017  mean 0.21760  best_so_far 0.23017  flips 200  evals 16
+14:27:24     gen   1  best 0.23017  mean 0.22315  best_so_far 0.23017  flips 200  evals 29
+14:27:39     gen   2  best 0.23017  mean 0.22503  best_so_far 0.23017  flips 200  evals 42
+14:27:51     gen   3  best 0.23069  mean 0.22853  best_so_far 0.23069  flips 200  evals 52
+14:28:06     gen   4  best 0.23367  mean 0.22995  best_so_far 0.23367  flips 199  evals 65
+14:28:22     gen   5  best 0.23367  mean 0.23086  best_so_far 0.23367  flips 199  evals 78
+14:28:35     gen   6  best 0.23367  mean 0.23217  best_so_far 0.23367  flips 199  evals 89
+14:28:48     gen   7  best 0.23619  mean 0.23270  best_so_far 0.23619  flips 196  evals 100
+14:29:03     gen   8  best 0.23619  mean 0.23329  best_so_far 0.23619  flips 196  evals 113
+14:29:19     gen   9  best 0.23670  mean 0.23459  best_so_far 0.23670  flips 199  evals 126
+14:29:32     gen  10  best 0.23670  mean 0.23516  best_so_far 0.23670  flips 199  evals 137
+14:29:43     gen  11  best 0.23728  mean 0.23622  best_so_far 0.23728  flips 197  evals 146
+14:29:58     gen  12  best 0.23806  mean 0.23667  best_so_far 0.23806  flips 199  evals 159
+14:30:15     gen  13  best 0.23806  mean 0.23723  best_so_far 0.23806  flips 199  evals 173
+14:30:29     gen  14  best 0.23806  mean 0.23754  best_so_far 0.23806  flips 199  evals 185
+14:30:46     gen  15  best 0.23891  mean 0.23770  best_so_far 0.23891  flips 200  evals 199
+14:31:01     gen  16  best 0.23891  mean 0.23792  best_so_far 0.23891  flips 200  evals 212
+14:31:17     gen  17  best 0.23891  mean 0.23781  best_so_far 0.23891  flips 200  evals 225
+14:31:34     gen  18  best 0.23904  mean 0.23803  best_so_far 0.23904  flips 199  evals 239
+14:31:46     gen  19  best 0.23923  mean 0.23832  best_so_far 0.23923  flips 199  evals 249
+14:32:00     gen  20  best 0.23959  mean 0.23860  best_so_far 0.23959  flips 198  evals 261
+14:32:02      GA: 198/200 flips from pool 5000, 261 evals, 20 gens; influence-topk baseline dce=+0.02118 dacc=-0.0080
+14:32:02      poisoned ce=0.23959 auc=0.8231 acc=0.9150 f1=0.3704  dce=+0.03060 dacc=-0.0100  k=198  [319.5s]
+14:32:02   -- trial run2_sub0
+14:32:28     gen   0  best 0.23017  mean 0.21844  best_so_far 0.23017  flips 200  evals 16
+14:32:42     gen   1  best 0.23017  mean 0.22294  best_so_far 0.23017  flips 200  evals 28
+14:32:55     gen   2  best 0.23017  mean 0.22555  best_so_far 0.23017  flips 200  evals 39
+14:33:08     gen   3  best 0.23017  mean 0.22906  best_so_far 0.23017  flips 199  evals 50
+14:33:20     gen   4  best 0.23072  mean 0.23017  best_so_far 0.23072  flips 200  evals 60
+14:33:37     gen   5  best 0.23165  mean 0.23046  best_so_far 0.23165  flips 200  evals 74
+14:33:51     gen   6  best 0.23192  mean 0.23104  best_so_far 0.23192  flips 200  evals 86
+14:34:08     gen   7  best 0.23239  mean 0.23143  best_so_far 0.23239  flips 198  evals 100
+14:34:21     gen   8  best 0.23256  mean 0.23168  best_so_far 0.23256  flips 200  evals 111
+14:34:37     gen   9  best 0.23291  mean 0.23207  best_so_far 0.23291  flips 200  evals 125
+14:34:52     gen  10  best 0.23351  mean 0.23222  best_so_far 0.23351  flips 196  evals 137
+14:35:06     gen  11  best 0.23376  mean 0.23284  best_so_far 0.23376  flips 199  evals 149
+14:35:23     gen  12  best 0.23416  mean 0.23333  best_so_far 0.23416  flips 200  evals 163
+14:35:38     gen  13  best 0.23464  mean 0.23366  best_so_far 0.23464  flips 200  evals 176
+14:35:53     gen  14  best 0.23542  mean 0.23406  best_so_far 0.23542  flips 200  evals 189
+14:36:10     gen  15  best 0.23598  mean 0.23462  best_so_far 0.23598  flips 200  evals 203
+14:36:26     gen  16  best 0.23651  mean 0.23532  best_so_far 0.23651  flips 200  evals 216
+14:36:41     gen  17  best 0.23945  mean 0.23622  best_so_far 0.23945  flips 200  evals 229
+14:36:57     gen  18  best 0.23945  mean 0.23671  best_so_far 0.23945  flips 200  evals 242
+14:37:10     gen  19  best 0.23945  mean 0.23778  best_so_far 0.23945  flips 200  evals 253
+14:37:23     gen  20  best 0.24044  mean 0.23848  best_so_far 0.24044  flips 198  evals 264
+14:37:25      GA: 198/200 flips from pool 5000, 264 evals, 20 gens; influence-topk baseline dce=+0.02118 dacc=-0.0080
+14:37:25      poisoned ce=0.24044 auc=0.8138 acc=0.9190 f1=0.3910  dce=+0.03145 dacc=-0.0060  k=198  [322.8s]
+14:37:25   -- trial run3_sub0
+14:37:51     gen   0  best 0.23017  mean 0.21835  best_so_far 0.23017  flips 200  evals 16
+14:38:06     gen   1  best 0.23017  mean 0.22205  best_so_far 0.23017  flips 200  evals 29
+14:38:23     gen   2  best 0.23059  mean 0.22438  best_so_far 0.23059  flips 200  evals 43
+14:38:38     gen   3  best 0.23059  mean 0.22505  best_so_far 0.23059  flips 200  evals 56
+14:38:51     gen   4  best 0.23059  mean 0.22734  best_so_far 0.23059  flips 200  evals 67
+14:39:05     gen   5  best 0.23082  mean 0.22921  best_so_far 0.23082  flips 199  evals 78
+14:39:18     gen   6  best 0.23311  mean 0.23044  best_so_far 0.23311  flips 200  evals 89
+14:39:31     gen   7  best 0.23311  mean 0.23122  best_so_far 0.23311  flips 200  evals 100
+14:39:46     gen   8  best 0.23311  mean 0.23172  best_so_far 0.23311  flips 200  evals 113
+14:40:02     gen   9  best 0.23410  mean 0.23220  best_so_far 0.23410  flips 200  evals 126
+14:40:16     gen  10  best 0.23457  mean 0.23336  best_so_far 0.23457  flips 200  evals 138
+14:40:32     gen  11  best 0.23495  mean 0.23373  best_so_far 0.23495  flips 200  evals 151
+14:40:47     gen  12  best 0.23596  mean 0.23423  best_so_far 0.23596  flips 199  evals 164
+14:41:01     gen  13  best 0.23622  mean 0.23483  best_so_far 0.23622  flips 200  evals 176
+14:41:17     gen  14  best 0.23663  mean 0.23499  best_so_far 0.23663  flips 198  evals 189
+14:41:31     gen  15  best 0.23663  mean 0.23568  best_so_far 0.23663  flips 198  evals 201
+14:41:45     gen  16  best 0.23714  mean 0.23630  best_so_far 0.23714  flips 200  evals 213
+14:42:02     gen  17  best 0.23793  mean 0.23634  best_so_far 0.23793  flips 199  evals 227
+14:42:16     gen  18  best 0.23793  mean 0.23648  best_so_far 0.23793  flips 199  evals 239
+14:42:32     gen  19  best 0.23793  mean 0.23709  best_so_far 0.23793  flips 199  evals 252
+14:42:47     gen  20  best 0.24055  mean 0.23754  best_so_far 0.24055  flips 200  evals 265
+14:42:50      GA: 200/200 flips from pool 5000, 265 evals, 20 gens; influence-topk baseline dce=+0.02118 dacc=-0.0080
+14:42:50      poisoned ce=0.24055 auc=0.8239 acc=0.9170 f1=0.3664  dce=+0.03156 dacc=-0.0080  k=200  [324.4s]
+14:42:50   -- trial run4_sub0
+14:43:15     gen   0  best 0.23017  mean 0.21820  best_so_far 0.23017  flips 200  evals 16
+14:43:31     gen   1  best 0.23017  mean 0.22071  best_so_far 0.23017  flips 200  evals 30
+14:43:48     gen   2  best 0.23017  mean 0.22507  best_so_far 0.23017  flips 200  evals 44
+14:44:02     gen   3  best 0.23061  mean 0.22873  best_so_far 0.23061  flips 196  evals 56
+14:44:15     gen   4  best 0.23144  mean 0.23026  best_so_far 0.23144  flips 196  evals 67
+14:44:32     gen   5  best 0.23262  mean 0.23113  best_so_far 0.23262  flips 198  evals 81
+14:44:48     gen   6  best 0.23286  mean 0.23196  best_so_far 0.23286  flips 194  evals 94
+14:45:03     gen   7  best 0.23437  mean 0.23209  best_so_far 0.23437  flips 197  evals 107
+14:45:20     gen   8  best 0.23437  mean 0.23262  best_so_far 0.23437  flips 197  evals 121
+14:45:34     gen   9  best 0.23437  mean 0.23320  best_so_far 0.23437  flips 197  evals 133
+14:45:47     gen  10  best 0.23560  mean 0.23377  best_so_far 0.23560  flips 198  evals 144
+14:46:03     gen  11  best 0.23560  mean 0.23404  best_so_far 0.23560  flips 198  evals 157
+14:46:20     gen  12  best 0.23578  mean 0.23475  best_so_far 0.23578  flips 197  evals 171
+14:46:34     gen  13  best 0.23691  mean 0.23528  best_so_far 0.23691  flips 199  evals 183
+14:46:48     gen  14  best 0.23691  mean 0.23578  best_so_far 0.23691  flips 199  evals 195
+14:47:02     gen  15  best 0.23691  mean 0.23607  best_so_far 0.23691  flips 199  evals 207
+14:47:18     gen  16  best 0.23719  mean 0.23624  best_so_far 0.23719  flips 198  evals 220
+14:47:35     gen  17  best 0.23797  mean 0.23673  best_so_far 0.23797  flips 200  evals 234
+14:47:51     gen  18  best 0.23929  mean 0.23742  best_so_far 0.23929  flips 197  evals 248
+14:48:07     gen  19  best 0.23929  mean 0.23785  best_so_far 0.23929  flips 197  evals 261
+14:48:22     gen  20  best 0.23969  mean 0.23870  best_so_far 0.23969  flips 198  evals 274
+14:48:25      GA: 198/200 flips from pool 5000, 274 evals, 20 gens; influence-topk baseline dce=+0.02118 dacc=-0.0080
+14:48:25      poisoned ce=0.23969 auc=0.8297 acc=0.9180 f1=0.3788  dce=+0.03070 dacc=-0.0070  k=198  [335.2s]
+14:48:25   best trial run0_sub0: dce=+0.03284 dacc=-0.0120  -> context_poisoned.csv
+14:48:25   per-run winners: run0<-sub0 (dce=+0.03284), run1<-sub0 (dce=+0.03060), run2<-sub0 (dce=+0.03145), run3<-sub0 (dce=+0.03156), run4<-sub0 (dce=+0.03070)
+14:48:25   best-subsample-per-run, mean over 5 runs: dce=+0.03143 dacc=-0.0086 dauc=-0.0564  -> /home/ssn899/Desktop/TabFM/results/main_experiments/wids/label-flip_random_r004

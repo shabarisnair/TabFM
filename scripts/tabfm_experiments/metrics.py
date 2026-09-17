@@ -52,3 +52,27 @@ def binary_metrics(probs: np.ndarray, y: np.ndarray) -> BinaryMetrics:
 def deltas(before: BinaryMetrics, after: BinaryMetrics) -> dict[str, float]:
     """``after - before`` for every metric."""
     return {f.name: getattr(after, f.name) - getattr(before, f.name) for f in fields(BinaryMetrics)}
+
+
+def balanced_accuracy_from_counts(tn: int, fp: int, fn: int, tp: int) -> float:
+    """Mean of the per-class recalls. A class with no support contributes nothing."""
+    rec = [t / (t + f) for t, f in ((tp, fn), (tn, fp)) if (t + f) > 0]
+    return float(np.mean(rec)) if rec else math.nan
+
+
+def mcc_from_counts(tn: int, fp: int, fn: int, tp: int) -> float:
+    """Matthews correlation. 0 when a row/column of the confusion matrix is empty."""
+    den = math.sqrt(float(tp + fp) * (tp + fn) * (tn + fp) * (tn + fn))
+    return 0.0 if den == 0 else (tp * tn - fp * fn) / den
+
+
+def with_derived(m: "BinaryMetrics | dict") -> dict:
+    """Metric dict plus ``balanced_accuracy`` and ``mcc``, both from the stored counts.
+
+    Lets us read the two extra metrics out of results written before they existed.
+    """
+    d = dict(m.as_dict() if isinstance(m, BinaryMetrics) else m)
+    counts = tuple(int(d[k]) for k in ("tn", "fp", "fn", "tp"))
+    d["balanced_accuracy"] = balanced_accuracy_from_counts(*counts)
+    d["mcc"] = mcc_from_counts(*counts)
+    return d

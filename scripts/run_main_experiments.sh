@@ -38,13 +38,24 @@ REPO=/home/ssn899/Desktop/TabFM         # <-- repo root on THIS server
 CONDA_ENV=tabfm                         # <-- conda env name
 OUT_ROOT=$REPO/results/main_experiments # <-- where results are written
 
-# Memory savers (activation checkpointing). Identical loss/gradient, ~25% slower,
+# Memory savers (activation checkpointing). Identical loss/gradient, ~20% slower,
 # but cuts peak GPU memory a lot. Peak memory per run at context_5000 + 1000 test:
 #   wids        ~74 GB  ->  ~10 GB with --recompute-layers
 #   url_unique  ~46 GB  ->  ~10 GB with --recompute-layers
 #   lcld_v2     ~23 GB      coil2000 ~20 GB   (usually fine as-is)
 # Set to "" to disable, "--recompute-layers" to enable.
-MEM_SAVER_WIDS=""     # <-- keep ON unless you have a >80GB GPU to spare
+#
+# This applies to BOTH attacks: the peak is any GRADIENT forward over the context.
+# For label-flip that is the influence-seed scoring run at the top of every trial
+# (MEASURED on wids: 73.7 GiB -> 9.6 GiB), not the GA itself -- the GA's batched
+# fitness forward is no-grad and peaks at only 7.6 GiB at --ga-batch-size 16, and
+# --recompute-layers does not change it. --test-batch-size barely helps the gradient
+# forward (wids 73.7 -> 65.2 GiB) and is ~6x slower, so it is not the lever to reach for.
+#
+# 73.7 GiB fits on an idle 93 GiB card but NOT next to a neighbour: the 2026-09-16
+# wids label-flip runs died with CUDA OOM against an 18.6 GiB co-tenant on GPU 1 and
+# an 81.9 GiB one on GPU 3. Leaving this ON makes the runs immune to that.
+MEM_SAVER_WIDS="--recompute-layers"     # <-- keep ON unless you have a >80GB GPU to spare
 MEM_SAVER_URL=""                        # <-- set to "--recompute-layers" on GPUs <48GB
 MEM_SAVER_LCLD=""
 MEM_SAVER_COIL=""
