@@ -1,4 +1,0 @@
-02:22:58 lcld full rowseed2 it10: dce=+0.0086 dacc=+0.0050 dauc=-0.0146 pre_repair_obj=0.4647 within_eps=False
-02:23:27 lcld full rowseed2 it20: dce=+0.0436 dacc=-0.0100 dauc=-0.0533 pre_repair_obj=0.4879 within_eps=False
-02:24:28 lcld full rowseed2 it50: dce=+0.0555 dacc=-0.0130 dauc=-0.0719 pre_repair_obj=0.5135 within_eps=False
-02:26:21 lcld full rowseed2 it100: dce=+0.1444 dacc=-0.0300 dauc=-0.1339 pre_repair_obj=0.6417 within_eps=False

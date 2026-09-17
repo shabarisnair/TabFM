@@ -1,5 +1,0 @@
-03:47:48 [label-flip] datasets/url_unique/splits/selected/natural/context_1000.csv (1000x63) -> datasets/url_unique/splits/test_attack_1000.csv (1000 of 1000)  k=300 (30.0%)  attack_class=None  grid 1x1  cuda:3
-03:47:51   clean  ce=0.10358 auc=0.9928 acc=0.9620 f1=0.9613  max|dp| over 3 repeats=0.00e+00  chunking_exact=True  [1.4s]
-03:47:51   -- trial run0_sub0
-03:47:51      poisoned ce=0.58163 auc=0.8391 acc=0.7690 f1=0.7279  dce=+0.47805 dacc=-0.1930  k=300  [0.8s]
-03:47:51   mean over 1 trials: dce=+0.47805 dacc=-0.1930 dauc=-0.1537  -> results/ga_smoke/url_unique_influence

@@ -1,6 +1,0 @@
-03:32:37 lcld_v2 rs1_it100: dce=+0.1507 dacc=-0.0270 dauc=-0.1353 pre_repair_obj=0.6835 within_eps=False maxL2=3.465 viol=0 402s
-03:39:22 lcld_v2 rs2_it100: dce=+0.1133 dacc=-0.0170 dauc=-0.1084 pre_repair_obj=0.6026 within_eps=False maxL2=2.956 viol=0 395s
-03:46:06 lcld_v2 rs3_it100: dce=+0.0462 dacc=-0.0060 dauc=-0.0372 pre_repair_obj=0.5312 within_eps=False maxL2=3.004 viol=0.002 395s
-03:52:47 lcld_v2 rs1_it100_nofixeq: dce=+0.0000 dacc=+0.0000 dauc=+0.0000 pre_repair_obj=0.4519 within_eps=True maxL2=0.002 viol=0 393s
-03:59:21 lcld_v2 rs2_it100_nofixeq: dce=+0.0000 dacc=+0.0000 dauc=+0.0000 pre_repair_obj=0.4519 within_eps=True maxL2=0.002 viol=0 386s
-04:05:55 lcld_v2 rs3_it100_nofixeq: dce=-0.0000 dacc=+0.0000 dauc=+0.0000 pre_repair_obj=0.4546 within_eps=True maxL2=0.000 viol=0 385s

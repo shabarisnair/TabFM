@@ -1,3 +1,0 @@
-03:15:51 lcld_v2 rs1_it100: dce=+0.1019 dacc=-0.0150 dauc=-0.0809 pre_repair_obj=0.5853 within_eps=False maxL2=0.624 viol=0 245s
-03:19:57 lcld_v2 rs2_it100: dce=+0.2291 dacc=-0.0400 dauc=-0.1760 pre_repair_obj=0.7471 within_eps=False maxL2=2.920 viol=0.0007 238s
-03:24:10 lcld_v2 rs3_it100: dce=+0.0805 dacc=-0.0120 dauc=-0.0605 pre_repair_obj=0.5392 within_eps=False maxL2=3.419 viol=0 245s
