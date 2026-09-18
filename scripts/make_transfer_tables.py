@@ -30,12 +30,23 @@ from tabfm_experiments.transfer import relative  # noqa: E402
 
 DATASETS = ["coil2000_insurance_policies", "lcld_v2", "url_unique", "wids"]
 ATTACKS = ["x-capgd", "label-flip"]
-RS = ["001", "004", "016", "064"]
 PROTOCOLS = ["A", "B"]
 METRICS = ["ce", "roc_auc", "accuracy", "balanced_accuracy", "mcc"]
 SHORT = {"ce": "CE", "roc_auc": "ROC-AUC", "accuracy": "accuracy",
          "balanced_accuracy": "bal. acc", "mcc": "MCC", "f1": "F1"}
 WEAK = {"mcc": 0.15, "f1": 0.15}       # |clean| below this -> relative % is noise
+
+
+def discover_rs(root: Path, subdirs=None) -> list[str]:
+    """R values that actually have a finished run under ``root``, numerically sorted."""
+    found = set()
+    for ds in sorted(p for p in root.iterdir() if p.is_dir() and not p.name.startswith("_")):
+        if subdirs and ds.name not in subdirs:
+            continue
+        for p in ds.glob("*_random_r*"):
+            if (p / "summary.json").exists():
+                found.add(p.name.rsplit("_r", 1)[1])
+    return sorted(found, key=int)
 
 
 def load(root: Path, ds: str, attack: str, r: str) -> dict | None:
@@ -54,7 +65,7 @@ def cell(p: dict, d: dict, clean_mean: float | None, metric: str) -> tuple[str, 
             fmt_rel(relative(d["mean"], clean_mean), weak))
 
 
-def text_table(ds: str, cells: dict, metrics: list[str]) -> str:
+def text_table(ds: str, cells: dict, metrics: list[str], rs: list[str]) -> str:
     any_s = next(iter(cells.values()))
     out = [f"{ds}   XGBoost transfer   context {any_s['n_context']}x{any_s['n_features']}, "
            f"test {any_s['n_test']}, {len(any_s['contexts'])} poisoned contexts, "
@@ -70,7 +81,7 @@ def text_table(ds: str, cells: dict, metrics: list[str]) -> str:
             row += f"  {'{:.4f} +- {:.4f}'.format(base[m]['mean'], base[m]['std']):>21s} {'-':>18s} {'-':>8s}"
         out += [row]
         for attack in ATTACKS:
-            for r in RS:
+            for r in rs:
                 s = cells.get((attack, r))
                 if s is None:
                     continue
@@ -85,7 +96,7 @@ def text_table(ds: str, cells: dict, metrics: list[str]) -> str:
     return "\n".join(out)
 
 
-def md_table(ds: str, cells: dict, metrics: list[str]) -> str:
+def md_table(ds: str, cells: dict, metrics: list[str], rs: list[str]) -> str:
     any_s = next(iter(cells.values()))
     out = [f"### {ds} -- XGBoost transfer", "",
            f"Context {any_s['n_context']}x{any_s['n_features']}, test {any_s['n_test']}, "
@@ -100,7 +111,7 @@ def md_table(ds: str, cells: dict, metrics: list[str]) -> str:
         out.append(f"| **{prot}** | **(clean)** | - | "
                    + " | ".join(f"**{base[m]['mean']:.4f} ± {base[m]['std']:.4f}**" for m in metrics) + " |")
         for attack in ATTACKS:
-            for r in RS:
+            for r in rs:
                 s = cells.get((attack, r))
                 if s is None:
                     continue
@@ -114,7 +125,7 @@ def md_table(ds: str, cells: dict, metrics: list[str]) -> str:
     return "\n".join(out)
 
 
-def transfer_table(all_cells: dict, metric: str) -> str:
+def transfer_table(all_cells: dict, metric: str, rs: list[str]) -> str:
     """XGBoost delta vs the TabPFNv2 delta it is reproducing, per protocol."""
     out = [f"transfer of the {SHORT[metric]} degradation: XGBoost delta / TabPFNv2 delta", "",
            f"  {'dataset':<28s} {'attack':<11s} {'R%':>4s}  {'TabPFN d':>17s}"
@@ -122,7 +133,7 @@ def transfer_table(all_cells: dict, metric: str) -> str:
     out.append("  " + "-" * (len(out[-1]) - 2))
     for ds in DATASETS:
         for attack in ATTACKS:
-            for r in RS:
+            for r in rs:
                 s = all_cells.get((ds, attack, r))
                 if s is None:
                     continue
@@ -149,14 +160,21 @@ def main(argv=None):
     ap.add_argument("--transfer", action="store_true", help="print the transfer-ratio summary instead")
     ap.add_argument("--metric", default="ce", help="metric for --transfer")
     ap.add_argument("--format", choices=["text", "markdown", "both"], default="both")
+    ap.add_argument("--row-percents", nargs="+", default=None,
+                    help="R values to include (default: every one found under --root)")
     a = ap.parse_args(argv)
+
+    rs = a.row_percents or discover_rs(a.root, a.datasets)
+    if not rs:
+        raise SystemExit(f"no finished runs under {a.root}")
+    print(f"R values: {', '.join(str(int(r)) for r in rs)}%")
 
     a.out.mkdir(parents=True, exist_ok=True)
     all_cells, rows = {}, []
     for ds in a.datasets:
         cells = {}
         for attack in ATTACKS:
-            for r in RS:
+            for r in rs:
                 s = load(a.root, ds, attack, r)
                 if s is not None:
                     cells[(attack, r)] = s
@@ -166,9 +184,9 @@ def main(argv=None):
             continue
         if not a.transfer:
             if a.format in ("text", "both"):
-                print("\n" + text_table(ds, cells, a.metrics) + "\n")
+                print("\n" + text_table(ds, cells, a.metrics, rs) + "\n")
             if a.format in ("markdown", "both"):
-                (a.out / f"{ds}.md").write_text(md_table(ds, cells, a.metrics) + "\n")
+                (a.out / f"{ds}.md").write_text(md_table(ds, cells, a.metrics, rs) + "\n")
         for (attack, r), s in cells.items():
             for prot in PROTOCOLS:
                 pr = s["protocols"][prot]
@@ -187,7 +205,7 @@ def main(argv=None):
                         "transfer_pct": (100.0 * dm / t["mean"]) if abs(t["mean"]) > 1e-12 else None,
                         "n_contexts": len(s["contexts"])})
     if a.transfer:
-        print("\n" + transfer_table(all_cells, a.metric) + "\n")
+        print("\n" + transfer_table(all_cells, a.metric, rs) + "\n")
     if rows:
         with open(a.out / "transfer_results.csv", "w", newline="") as fh:
             w = csv.DictWriter(fh, fieldnames=list(rows[0]))

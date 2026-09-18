@@ -31,10 +31,24 @@ from tabfm_experiments.transfer import agg, relative, tabpfn_run_metrics  # noqa
 
 DATASETS = ["coil2000_insurance_policies", "lcld_v2", "url_unique", "wids"]
 ATTACKS = [("x-capgd", "X_train CAPGD"), ("label-flip", "Y_train label-flip (GA)")]
-RS = ["001", "004", "016", "064"]
 SHORT = {"ce": "CE", "accuracy": "accuracy", "balanced_accuracy": "bal. acc",
          "mcc": "MCC", "roc_auc": "ROC-AUC", "f1": "F1"}
 WEAK = {"mcc": 0.15, "f1": 0.15}       # |clean| below this -> relative % is noise
+
+
+def discover_rs(root: Path, subdirs=None) -> list[str]:
+    """R values that actually have a finished run under ``root``, numerically sorted.
+
+    Discovered rather than hard-coded so that adding an R to the grid needs no edit here.
+    """
+    found = set()
+    for ds in sorted(p for p in root.iterdir() if p.is_dir() and not p.name.startswith("_")):
+        if subdirs and ds.name not in subdirs:
+            continue
+        for p in ds.glob("*_random_r*"):
+            if (p / "summary.json").exists():
+                found.add(p.name.rsplit("_r", 1)[1])
+    return sorted(found, key=int)
 
 
 def load_cell(root: Path, ds: str, attack: str, r: str) -> dict | None:
@@ -57,7 +71,7 @@ def fmt_rel(v: float | None, weak: bool) -> str:
     return "-" if v is None else f"{'~' if weak else ''}{v:+.1f}%"
 
 
-def text_table(ds: str, cells: dict, metrics: list[str]) -> str:
+def text_table(ds: str, cells: dict, metrics: list[str], rs: list[str]) -> str:
     any_cell = next(iter(cells.values()))
     s = any_cell["summary"]
     clean = any_cell["clean"]
@@ -79,7 +93,7 @@ def text_table(ds: str, cells: dict, metrics: list[str]) -> str:
         clean_row += f"  {f'{clean[m]:.4f}':>21s} {'-':>18s} {'-':>8s}"
     out += [clean_row, "  " + "-" * (len(head) - 2)]
     for attack, _ in ATTACKS:
-        for r in RS:
+        for r in rs:
             c = cells.get((attack, r))
             if c is None:
                 continue
@@ -94,7 +108,7 @@ def text_table(ds: str, cells: dict, metrics: list[str]) -> str:
     return "\n".join(out)
 
 
-def md_table(ds: str, cells: dict, metrics: list[str]) -> str:
+def md_table(ds: str, cells: dict, metrics: list[str], rs: list[str]) -> str:
     any_cell = next(iter(cells.values()))
     s, clean = any_cell["summary"], any_cell["clean"]
     out = [
@@ -109,7 +123,7 @@ def md_table(ds: str, cells: dict, metrics: list[str]) -> str:
         "| **(clean baseline)** | - | " + " | ".join(f"**{clean[m]:.4f}**" for m in metrics) + " |",
     ]
     for attack, _ in ATTACKS:
-        for r in RS:
+        for r in rs:
             c = cells.get((attack, r))
             if c is None:
                 continue
@@ -132,14 +146,21 @@ def main(argv=None):
     ap.add_argument("--metrics", nargs="+",
                     default=["ce", "roc_auc", "accuracy", "balanced_accuracy", "mcc"])
     ap.add_argument("--format", choices=["text", "markdown", "both"], default="both")
+    ap.add_argument("--row-percents", nargs="+", default=None,
+                    help="R values to include (default: every one found under --root)")
     a = ap.parse_args(argv)
+
+    rs = a.row_percents or discover_rs(a.root, a.datasets)
+    if not rs:
+        raise SystemExit(f"no finished runs under {a.root}")
+    print(f"R values: {', '.join(str(int(r)) for r in rs)}%")
 
     a.out.mkdir(parents=True, exist_ok=True)
     rows = []
     for ds in a.datasets:
         cells = {}
         for attack, _ in ATTACKS:
-            for r in RS:
+            for r in rs:
                 c = load_cell(a.root, ds, attack, r)
                 if c is not None:
                     cells[(attack, r)] = c
@@ -148,9 +169,9 @@ def main(argv=None):
             continue
         clean = next(iter(cells.values()))["clean"]
         if a.format in ("text", "both"):
-            print("\n" + text_table(ds, cells, a.metrics) + "\n")
+            print("\n" + text_table(ds, cells, a.metrics, rs) + "\n")
         if a.format in ("markdown", "both"):
-            (a.out / f"{ds}.md").write_text(md_table(ds, cells, a.metrics) + "\n")
+            (a.out / f"{ds}.md").write_text(md_table(ds, cells, a.metrics, rs) + "\n")
         for (attack, r), c in cells.items():
             for m in a.metrics:
                 v, weak = rel_cell(c["delta"][m]["mean"], clean[m], m)

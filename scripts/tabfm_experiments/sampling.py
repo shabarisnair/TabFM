@@ -43,3 +43,12 @@ def row_rng(row_seed: int, subsample_id: int) -> np.random.Generator:
 def attack_seed_for(attack_seed: int, run_id: int) -> int:
     """CAPGD random-start stream for run ``r``."""
     return attack_seed + run_id
+
+
+def random_flip_rng(row_seed: int, run_id: int, subsample_id: int = 0) -> np.random.Generator:
+    """Row stream for the test-agnostic random label flip: a fresh draw per (run, subsample).
+
+    Unlike ``row_rng`` (which x-capgd shares across runs so that runs differ only in CAPGD
+    randomness), every run here must flip a *different* random subset.
+    """
+    return np.random.default_rng([row_seed, run_id, subsample_id])

@@ -23,7 +23,21 @@ import numpy as np
 from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, matthews_corrcoef
 
 ATTACKS = ["x-capgd", "label-flip"]
-RS = ["001", "004", "016", "064"]
+
+
+def discover_rs(root: Path, subdirs=None) -> list[str]:
+    """R values that actually have a finished run under ``root``, numerically sorted.
+
+    Discovered rather than hard-coded so that adding an R to the grid needs no edit here.
+    """
+    found = set()
+    for ds in sorted(p for p in root.iterdir() if p.is_dir() and not p.name.startswith("_")):
+        if subdirs and ds.name not in subdirs:
+            continue
+        for p in ds.glob("*_random_r*"):
+            if (p / "summary.json").exists():
+                found.add(p.name.rsplit("_r", 1)[1])
+    return sorted(found, key=int)
 
 
 def vectors_from_counts(tn: int, fp: int, fn: int, tp: int):
@@ -123,6 +137,7 @@ def main(argv=None):
     fails: list[str] = []
     recomputed: dict[tuple, dict] = {}
     n_runs = 0
+    RS = discover_rs(a.root)
     for ds_dir in sorted(p for p in a.root.iterdir() if p.is_dir()):
         for attack in ATTACKS:
             for r in RS:

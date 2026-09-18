@@ -21,9 +21,20 @@ import numpy as np
 from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, matthews_corrcoef
 
 ATTACKS = ["x-capgd", "label-flip"]
-RS = ["001", "004", "016", "064"]
 PROTOCOLS = ["A", "B"]
 METRICS = ["ce", "roc_auc", "accuracy", "balanced_accuracy", "mcc"]
+
+
+def discover_rs(root: Path, subdirs=None) -> list[str]:
+    """R values that actually have a finished run under ``root``, numerically sorted."""
+    found = set()
+    for ds in sorted(p for p in root.iterdir() if p.is_dir() and not p.name.startswith("_")):
+        if subdirs and ds.name not in subdirs:
+            continue
+        for p in ds.glob("*_random_r*"):
+            if (p / "summary.json").exists():
+                found.add(p.name.rsplit("_r", 1)[1])
+    return sorted(found, key=int)
 
 
 def recompute(m: dict) -> dict:
@@ -124,6 +135,7 @@ def main(argv=None):
     fails: list[str] = []
     got: dict = {}
     n = 0
+    RS = discover_rs(a.root)
     for ds_dir in sorted(p for p in a.root.iterdir() if p.is_dir() and not p.name.startswith("_")):
         for attack in ATTACKS:
             for r in RS:

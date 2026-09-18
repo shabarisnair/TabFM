@@ -92,59 +92,77 @@ run () {   # run <dataset_dir> <x-capgd|label-flip> <row_percent>
 # --------------------------------------------------------------------------
 # BLOCK 1of8: coil2000  X_train CAPGD
 # --------------------------------------------------------------------------
-# run coil2000_insurance_policies x-capgd 1
-# run coil2000_insurance_policies x-capgd 4
-# run coil2000_insurance_policies x-capgd 16
-# run coil2000_insurance_policies x-capgd 64
+run coil2000_insurance_policies x-capgd 1
+run coil2000_insurance_policies x-capgd 4
+run coil2000_insurance_policies x-capgd 16
+run coil2000_insurance_policies x-capgd 32
+run coil2000_insurance_policies x-capgd 50
+run coil2000_insurance_policies x-capgd 64
 
-# # --------------------------------------------------------------------------
-# # BLOCK 2of8: coil2000  Y_train label-flip (GA)
-# # --------------------------------------------------------------------------
-# run coil2000_insurance_policies label-flip 1
-# run coil2000_insurance_policies label-flip 4
-# run coil2000_insurance_policies label-flip 16
-# run coil2000_insurance_policies label-flip 64
+# --------------------------------------------------------------------------
+# BLOCK 2of8: coil2000  Y_train label-flip (GA)
+# --------------------------------------------------------------------------
+run coil2000_insurance_policies label-flip 1
+run coil2000_insurance_policies label-flip 4
+run coil2000_insurance_policies label-flip 16
+run coil2000_insurance_policies label-flip 32
+run coil2000_insurance_policies label-flip 50
+run coil2000_insurance_policies label-flip 64
 
 # --------------------------------------------------------------------------
 # BLOCK 3of8: lcld_v2   X_train CAPGD
 # --------------------------------------------------------------------------
-# run lcld_v2 x-capgd 1
-# run lcld_v2 x-capgd 4
-# run lcld_v2 x-capgd 16
-# run lcld_v2 x-capgd 64
+run lcld_v2 x-capgd 1
+run lcld_v2 x-capgd 4
+run lcld_v2 x-capgd 16
+run lcld_v2 x-capgd 32
+run lcld_v2 x-capgd 50
+run lcld_v2 x-capgd 64
 
-# # --------------------------------------------------------------------------
-# # BLOCK 4of8: lcld_v2   Y_train label-flip (GA)
-# # --------------------------------------------------------------------------
-# run lcld_v2 label-flip 1
-# run lcld_v2 label-flip 4
-# run lcld_v2 label-flip 16
-# run lcld_v2 label-flip 64
+# --------------------------------------------------------------------------
+# BLOCK 4of8: lcld_v2   Y_train label-flip (GA)
+# --------------------------------------------------------------------------
+run lcld_v2 label-flip 1
+run lcld_v2 label-flip 4
+run lcld_v2 label-flip 16
+run lcld_v2 label-flip 32
+run lcld_v2 label-flip 50
+run lcld_v2 x-capgd 32
+run lcld_v2 x-capgd 50
+run lcld_v2 label-flip 64
 
-# # --------------------------------------------------------------------------
-# # BLOCK 5of8: url_unique  X_train CAPGD
-# # --------------------------------------------------------------------------
-# run url_unique x-capgd 1
-# run url_unique x-capgd 4
-# run url_unique x-capgd 16
-# run url_unique x-capgd 64
+# --------------------------------------------------------------------------
+# BLOCK 5of8: url_unique  X_train CAPGD
+# --------------------------------------------------------------------------
+run url_unique x-capgd 1
+run url_unique x-capgd 4
+run url_unique x-capgd 16
+run url_unique x-capgd 32
+run url_unique x-capgd 50
+run url_unique x-capgd 64
 
-# # --------------------------------------------------------------------------
-# # BLOCK 6of8: url_unique  Y_train label-flip (GA)
-# # --------------------------------------------------------------------------
-# run url_unique label-flip 1
-# run url_unique label-flip 4
-# run url_unique label-flip 16
-# run url_unique label-flip 64
+# --------------------------------------------------------------------------
+# BLOCK 6of8: url_unique  Y_train label-flip (GA)
+# --------------------------------------------------------------------------
+run url_unique label-flip 1
+run url_unique label-flip 4
+run url_unique label-flip 16
+run url_unique label-flip 32
+run url_unique label-flip 50
+run url_unique label-flip 64
 
 run wids x-capgd 1
 run wids x-capgd 4
 run wids x-capgd 16
+run wids x-capgd 32
+run wids x-capgd 50
 run wids x-capgd 64
 
 run wids label-flip 1
 run wids label-flip 4
 run wids label-flip 16
+run wids label-flip 32
+run wids label-flip 50
 run wids label-flip 64
 
 echo "ALL REQUESTED RUNS FINISHED"

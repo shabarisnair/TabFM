@@ -325,6 +325,55 @@ def run_label_flip_influence(
     )
 
 
+# ------------------------------------------------------ Y_train random (test-agnostic)
+def run_label_flip_random(
+    clf,
+    X_ctx: torch.Tensor,
+    y_ctx: torch.Tensor,
+    X_test: torch.Tensor,
+    y_test: torch.Tensor,
+    rows: np.ndarray,
+    *,
+    run_id: int,
+    subsample_id: int,
+    clean_metrics: BinaryMetrics,
+    k_requested: int,
+    test_batch_size: int | None = None,
+    log=None,
+) -> TrialResult:
+    """Flip the labels of ``rows``, chosen at random by the caller.
+
+    The attack never looks at the test set: ``rows`` come from the context labels and an
+    RNG alone. ``X_test`` / ``y_test`` are used only to score the poisoned context.
+    """
+    t0 = time.time()
+    flip = np.sort(np.asarray(rows, dtype=np.int64))
+    y_np = y_ctx.detach().cpu().numpy().astype(int)
+    y_flip = y_ctx.detach().clone().float()
+    flip_t = torch.as_tensor(flip, dtype=torch.long, device=y_flip.device)
+    y_flip[flip_t] = 1.0 - y_flip[flip_t]
+    y_flip_np = y_flip.cpu().numpy().astype(int)
+    if len(np.unique(y_flip_np)) < 2 and log is not None:
+        log.info("  WARNING: flipped context has a single class")
+    _, _, probs = evaluate_context(clf, X_ctx, y_flip, X_test, y_test, need_grad=False,
+                                   test_batch_size=test_batch_size)
+    poisoned = _metrics(probs, y_test)
+    extra = {
+        "flipped_indices": flip,
+        "n_flipped": int(len(flip)),
+        "flipped_by_class": np.bincount(y_np[flip], minlength=2),
+        "class_counts_clean": np.bincount(y_np, minlength=2),
+        "class_counts_poisoned": np.bincount(y_flip_np, minlength=2),
+        "test_agnostic": True,
+    }
+    return TrialResult(
+        attack="label-flip-random", run_id=run_id, subsample_id=subsample_id,
+        attacked_indices=flip, k_requested=k_requested, k_actual=len(flip),
+        clean=clean_metrics, poisoned=poisoned, delta=deltas(clean_metrics, poisoned),
+        seconds=time.time() - t0, extra=extra, y_poisoned=y_flip_np,
+    )
+
+
 # ------------------------------------------------------ Y_train genetic algorithm
 def run_label_flip_ga(
     clf,

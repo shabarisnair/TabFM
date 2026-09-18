@@ -566,3 +566,47 @@ bash scripts/run_xgb_transfer.sh          # DRY_RUN=1 to preview
 `--model` currently accepts `xgboost` only. Needs `xgboost` and `optuna` in the `tabfm`
 env. Output is `<out>/summary.json` with per-fit records, per-run paired deltas, the
 aggregates for both protocols, and the TabPFNv2 side for comparison.
+
+---
+
+## 11. Test-agnostic random label flips (`--attack label-flip-random`)
+
+Every attack above is **transductive**: it reads `test_attack_1000.csv` and optimises the
+poison against it, so it measures an upper bound on damage to *that* test set. This one
+never looks at the test set. For a given R it flips the labels of a uniformly random R% of
+the context rows, and each run draws a **fresh** random subset:
+
+    rows_run = sample_row_indices(y_ctx, k, rng=random_flip_rng(row_seed, run, 0))
+
+The test set is used only to *score* the poisoned context. `test_cli_is_test_agnostic`
+checks this directly: the same context and seeds with two unrelated test files flip
+exactly the same rows.
+
+**Aggregation.** One draw per run (`--n-row-subsamples` is fixed at 1 and larger values
+are rejected). The usual rule keeps the best subsample per run *by test ΔCE*, which would
+bring the test set back in through the selection. The headline is therefore a plain mean
+over `--n-runs` independent draws (default 5). `summary.json`'s `aggregation` field says so.
+
+`--save-full-context` still writes the single highest-ΔCE draw as `context_poisoned.csv`.
+That choice of *which file to save* uses the test set; no reported number does. The
+per-trial `trials/*_delta.npz` (with `y_poisoned`) is written for every draw, so the
+XGBoost transfer (§10) rebuilds all of them and is unaffected.
+
+**Knobs.** `--attack-class 0|1` restricts the draw to one class. `--row-seed` sets the
+draw stream. Nothing else applies: there is no optimiser and no GA.
+
+**Cost.** One forward per trial (~0.3 s on lcld_v2 5000 × 28), versus ~600 GA evaluations
+for `label-flip`.
+
+**Evaluating on a general test set.** Because the attack is independent of the test set,
+it can be scored on any held-out file — e.g. the full `splits/test.csv` rather than the
+1000-row attack set — without changing what was attacked. Scores on `test_attack_1000.csv`
+remain directly comparable with the tables in the earlier sections.
+
+```bash
+conda run -n tabfm python scripts/attack_context.py --gpu 0 --attack label-flip-random \
+  --row-percent 16 \
+  --train datasets/lcld_v2/splits/selected/natural/context_5000.csv \
+  --test  datasets/lcld_v2/splits/test_attack_1000.csv \
+  --out   results/main_experiments/lcld_v2/label-flip-random_random_r016
+```
