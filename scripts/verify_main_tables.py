@@ -22,7 +22,7 @@ from pathlib import Path
 import numpy as np
 from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, matthews_corrcoef
 
-ATTACKS = ["x-capgd", "label-flip"]
+ATTACKS = ["x-capgd", "label-flip", "label-flip-random"]
 
 
 def discover_rs(root: Path, subdirs=None) -> list[str]:
@@ -116,6 +116,28 @@ def audit_run(d: Path, tol: float, fails: list) -> dict | None:
         dels = [v - clean_ref[m] for v in vals]
         out["poisoned"][m] = (float(np.mean(vals)), float(np.std(vals)))
         out["delta"][m] = (float(np.mean(dels)), float(np.std(dels)))
+
+    # --- 5b. the random flip must draw an independent subset per run --------------------
+    if summary["attack"] == "label-flip-random":
+        check(len(trials) == summary["n_runs"] and summary["n_row_subsamples"] == 1,
+              f"{tag}: {len(trials)} trials for n_runs={summary['n_runs']} x "
+              f"{summary['n_row_subsamples']} subsamples", fails)
+        check("no selection" in summary["aggregation"],
+              f"{tag}: aggregation is {summary['aggregation']!r}, expected a plain mean", fails)
+        draws = []
+        for f in sorted(d.glob("trials/run*_sub*_delta.npz")):
+            with np.load(f) as z:
+                idx = z["flipped_indices"]
+                y0, y1 = z["y_clean"], z["y_poisoned"]
+            check(len(np.unique(idx)) == len(idx), f"{tag} {f.name}: repeated row index", fails)
+            check(np.array_equal(np.flatnonzero(y0 != y1), np.sort(idx)),
+                  f"{tag} {f.name}: y_poisoned does not match flipped_indices", fails)
+            draws.append(tuple(idx.tolist()))
+        # At R=0 every draw is legitimately the empty set, so only require distinctness
+        # when rows are actually being flipped.
+        if draws and len(draws[0]) > 0:
+            check(len(set(draws)) == len(draws),
+                  f"{tag}: two runs drew the identical subset", fails)
 
     # --- 6. cross-check against what attack_context.py wrote ---------------------------
     stored = summary.get("aggregate_delta", {}).get("overall", {})

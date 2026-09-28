@@ -192,7 +192,17 @@ def main(argv=None):
     Xt = torch.tensor(Xte_df.to_numpy(dtype=np.float32), device=device)
     yt = torch.tensor(yte.astype(np.int64), device=device)
     n_ctx = len(ytr)
-    k = k_from_percent(n_ctx, a.row_percent)
+    # k_from_percent floors at 1, so R=0 would still flip a row. R=0 is only meaningful
+    # as a clean baseline, and only the test-agnostic random flip can run with k=0
+    # (CAPGD and the GA both need at least one row to work on).
+    if a.row_percent <= 0:
+        if a.attack != "label-flip-random":
+            raise SystemExit(f"--row-percent 0 is only supported for --attack label-flip-random, "
+                             f"not {a.attack!r}; every run already records the clean baseline "
+                             f"in summary.json['clean']")
+        k = 0
+    else:
+        k = k_from_percent(n_ctx, a.row_percent)
     log.info(f"[{a.attack}] {a.train} ({n_ctx}x{len(cols)}) -> {a.test} ({len(yte)} of {n_test_full})  "
              f"k={k} ({a.row_percent}%)  attack_class={a.attack_class}  grid {a.n_runs}x{a.n_row_subsamples}  {device}")
     n_elig = len(eligible_indices(ytr, a.attack_class))

@@ -30,7 +30,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from tabfm_experiments.transfer import agg, relative, tabpfn_run_metrics  # noqa: E402
 
 DATASETS = ["coil2000_insurance_policies", "lcld_v2", "url_unique", "wids"]
-ATTACKS = [("x-capgd", "X_train CAPGD"), ("label-flip", "Y_train label-flip (GA)")]
+ATTACKS = [("x-capgd", "X_train CAPGD"), ("label-flip", "Y_train label-flip (GA)"),
+           ("label-flip-random", "Y_train label-flip (random, test-agnostic)")]
 SHORT = {"ce": "CE", "accuracy": "accuracy", "balanced_accuracy": "bal. acc",
          "mcc": "MCC", "roc_auc": "ROC-AUC", "f1": "F1"}
 WEAK = {"mcc": 0.15, "f1": 0.15}       # |clean| below this -> relative % is noise

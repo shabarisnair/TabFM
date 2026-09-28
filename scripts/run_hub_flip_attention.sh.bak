@@ -1,0 +1,137 @@
+#!/usr/bin/env bash
+# =============================================================================
+#  Test-agnostic HUB label flipping + full attention recording
+#
+#  2 datasets (url_unique, coil2000) x R in {2,4,6,...,50} % = 50 commands.
+#  R=0 (clean baseline) sits commented out just above the sweep -- it is the
+#  reference every other condition is read against, so run it once.
+#
+#  THE ATTACK (Bilos et al., S6/H.1): flip the labels of the R% of context rows with
+#  the smallest average k-NN distance to the other context rows. The score is computed
+#  from the context features alone -- no test data, no labels, no model -- so the attack
+#  is test-agnostic AND fully deterministic.
+#
+#  N_RUNS=1 ON PURPOSE. The hub score has no random component: the same R always selects
+#  the same rows (ties break on index). Extra runs would re-record identical attention.
+#  Set N_RUNS=3 below only if you switch to a randomised hub variant.
+#
+#  WHAT IS RECORDED, per run, for every one of the 1000 test rows:
+#    predictions.csv  p(class 0), p(class 1), predicted label, correct?
+#    attention.npz
+#      attn_between_rows              [layer, column, head, query_row, top-K]  fp16
+#      attn_between_rows_indices      which context row each top-K weight refers to
+#      attn_between_rows_target_full  [layer, head, query_row, context_row]    fp16
+#                                     the y-slot column, untruncated
+#      attn_between_features          [layer, query_row, head, column, column] fp16
+#    ALL 12 layers, ALL 6 heads, BOTH attention directions.
+#
+#  WHY top-K: the full between-row map over every column is 23 GiB (url) / 32 GiB (coil)
+#  per condition. K=256 keeps 99.4% of the attention mass (measured at L9/H4), and the
+#  target column -- the one the readout vote reads -- is stored exactly anyway.
+#  For the untruncated version drop --topk and pass --force (~380 GiB total).
+#
+#  HOW TO USE
+#    1. Edit the CONFIG block.
+#    2. bash scripts/run_hub_flip_attention.sh        (DRY_RUN=1 to preview)
+#  Re-running is safe: a condition whose summary.json exists AND parses is skipped.
+# =============================================================================
+
+# ----------------------------- CONFIG: EDIT ME -------------------------------
+GPU=3
+REPO=/home/ssn899/Desktop/TabFM
+CONDA_ENV=tabfm
+OUT_ROOT=/hdd1/ssn899/TabFM/results/hub_flip_attention
+
+N_RUNS=1                 # deterministic attack; see the note above
+HUB_METRIC=knn           # knn = mean distance to the k nearest others (the paper's rule)
+HUB_K=10                 # neighbours used by that score
+TOPK=256                 # context rows kept per (layer, column, head, query)
+COLUMNS=all              # record every column's between-row attention
+EXTRA="--full-target-col"   # plus the exact, untruncated target column
+MAX_GB=40                # per-condition write guard inside the script
+
+PY=(conda run --no-capture-output -n "$CONDA_ENV" python)
+# -----------------------------------------------------------------------------
+
+set -u
+cd "$REPO" || { echo "REPO not found: $REPO"; exit 1; }
+
+done_ok () { [[ -f "$1" ]] && "${PY[@]}" -c "import json,sys; json.load(open(sys.argv[1]))" "$1" >/dev/null 2>&1; }
+
+run () {   # run <dataset_dir> <row_percent>
+  local ds=$1 rp=$2
+  local out; out="$OUT_ROOT/$ds/$(printf 'r%03d' "$rp")"
+
+  if done_ok "$out/summary.json"; then
+    echo "[skip] $ds r$rp (already done)"; return 0
+  fi
+
+  local cmd=("${PY[@]}" "$REPO/scripts/hub_flip_attention.py"
+             --gpu "$GPU" --dataset "$ds" --row-percent "$rp"
+             --out "$OUT_ROOT" --n-runs "$N_RUNS"
+             --hub-metric "$HUB_METRIC" --hub-k "$HUB_K"
+             --columns "$COLUMNS" --topk "$TOPK" --max-gb "$MAX_GB" $EXTRA)
+
+  if [[ -n "${DRY_RUN:-}" ]]; then printf '%q ' "${cmd[@]}"; echo; return 0; fi
+
+  mkdir -p "$out"
+  if ! mkdir "$out/.lock" 2>/dev/null; then
+    echo "[busy] $ds r$rp (another process holds $out/.lock)"; return 0
+  fi
+  echo "[$(date +'%F %T')] START $ds r$rp"
+  "${cmd[@]}" > "$out/stdout.log" 2>&1
+  local rc=$?
+  rmdir "$out/.lock" 2>/dev/null
+  if [[ $rc -eq 0 ]]; then
+    echo "[$(date +'%F %T')] DONE  $ds r$rp"
+  else
+    echo "[$(date +'%F %T')] FAIL  $ds r$rp (rc=$rc, see $out/stdout.log)"
+  fi
+  return 0
+}
+
+# ============================== COMMANDS =====================================
+
+# MEASURED per condition (GPU 3, 1000 test rows, --topk 256 --full-target-col):
+#   url_unique   13 s,  3.2 GiB        coil2000   ~20 s,  ~4.2 GiB
+# 50 commands => roughly 15 minutes of GPU and ~185 GiB on disk.
+#
+# R=0 (the clean baseline) is NOT in the sweep below, because you asked for exactly
+# the 50 commands 2..50. Every comparison needs it, so uncomment these two if you
+# have not already produced results/hub_flip_attention/<ds>/r000:
+# run url_unique 0
+# run coil2000_insurance_policies 0
+
+
+# --------------------------------------------------------------------------
+# BLOCK 2of2: coil2000_insurance_policies
+#   85 features -> 44 column tokens
+# --------------------------------------------------------------------------
+run coil2000_insurance_policies 0
+run coil2000_insurance_policies 2
+run coil2000_insurance_policies 4
+run coil2000_insurance_policies 6
+run coil2000_insurance_policies 8
+run coil2000_insurance_policies 10
+run coil2000_insurance_policies 12
+run coil2000_insurance_policies 14
+run coil2000_insurance_policies 16
+run coil2000_insurance_policies 18
+run coil2000_insurance_policies 20
+run coil2000_insurance_policies 22
+run coil2000_insurance_policies 24
+run coil2000_insurance_policies 26
+run coil2000_insurance_policies 28
+run coil2000_insurance_policies 30
+run coil2000_insurance_policies 32
+run coil2000_insurance_policies 34
+run coil2000_insurance_policies 36
+run coil2000_insurance_policies 38
+run coil2000_insurance_policies 40
+run coil2000_insurance_policies 42
+run coil2000_insurance_policies 44
+run coil2000_insurance_policies 46
+run coil2000_insurance_policies 48
+run coil2000_insurance_policies 50
+
+echo "ALL REQUESTED RUNS FINISHED"

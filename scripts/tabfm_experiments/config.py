@@ -42,6 +42,10 @@ DATASETS: dict[str, DatasetInfo] = {
     "wids": DatasetInfo("wids", "hospital_death", natural_size=10000),
     # No relation constraints (get_relation_constraints returns [] for this name).
     "coil2000_insurance_policies": DatasetInfo("coil2000_insurance_policies", "MobileHomePolicy", natural_size=5000),
+    # Also unconstrained: get_relation_constraints returns [] for this name.
+    "heloc": DatasetInfo("heloc", "RiskPerformance", natural_size=5000),
+    # 690 raw rows: prepared with a plain 70/30 split, no contexts/val/selection.
+    "credit-approval": DatasetInfo("credit-approval", "class", natural_size=457),
 }
 
 
