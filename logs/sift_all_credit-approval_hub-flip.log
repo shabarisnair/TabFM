@@ -1,0 +1,38 @@
+23:52:24 [credit-approval] hub-flip R=30%  context 457x15  k=137 flipped, keeping 320
+23:52:24   lr=5  iters=20  chunk=256  layers=all  init_logit=4.0  mass_penalty=0
+23:52:24   given class counts [189, 268]
+23:52:25     iter  0  loss 0.009553  X mean 0.9820 [0.9820, 0.9820] sd 0.0000  |grad|max 1.54e-04  prop 0.2482  bala 0.4088  glob 0.2555
+23:52:26     iter  1  loss 0.388195  X mean 0.2706 [0.2690, 0.2967] sd 0.0026  |grad|max 8.70e-03  prop 0.4453  bala 0.4161  glob 0.4526
+23:52:26     iter  2  loss 0.444462  X mean 0.3832 [0.0025, 0.9453] sd 0.4461  |grad|max 6.11e-03  prop 0.2920  bala 0.3285  glob 0.2993
+23:52:26     iter  3  loss 0.708997  X mean 0.3835 [0.0000, 0.9991] sd 0.4575  |grad|max 1.07e-01  prop 0.3139  bala 0.3504  glob 0.3139
+23:52:26     iter  4  loss 0.660065  X mean 0.3934 [0.0000, 1.0000] sd 0.4587  |grad|max 1.13e-01  prop 0.3431  bala 0.3358  glob 0.3577
+23:52:26     iter  5  loss 0.756263  X mean 0.4147 [0.0000, 1.0000] sd 0.4773  |grad|max 3.83e-02  prop 0.3431  bala 0.3285  glob 0.3504
+23:52:26     iter  6  loss 0.667549  X mean 0.4265 [0.0000, 1.0000] sd 0.4818  |grad|max 2.46e-01  prop 0.3285  bala 0.3285  glob 0.3504
+23:52:26     iter  7  loss 0.878776  X mean 0.4328 [0.0000, 1.0000] sd 0.4844  |grad|max 2.16e-01  prop 0.3212  bala 0.3431  glob 0.3431
+23:52:26     iter  8  loss 1.065830  X mean 0.4338 [0.0000, 1.0000] sd 0.4872  |grad|max 8.75e-02  prop 0.3285  bala 0.3504  glob 0.3358
+23:52:27     iter  9  loss 0.727480  X mean 0.4385 [0.0000, 1.0000] sd 0.4909  |grad|max 1.25e-01  prop 0.3285  bala 0.3577  glob 0.3358
+23:52:27     iter 10  loss 0.629209  X mean 0.4437 [0.0000, 1.0000] sd 0.4921  |grad|max 1.38e-01  prop 0.3358  bala 0.3650  glob 0.3431
+23:52:27     iter 11  loss 0.910783  X mean 0.4487 [0.0000, 1.0000] sd 0.4931  |grad|max 2.31e-01  prop 0.3431  bala 0.3650  glob 0.3431
+23:52:27     iter 12  loss 1.270518  X mean 0.4512 [0.0000, 1.0000] sd 0.4956  |grad|max 5.24e-01  prop 0.3431  bala 0.3723  glob 0.3431
+23:52:27     iter 13  loss 0.456192  X mean 0.4544 [0.0000, 1.0000] sd 0.4952  |grad|max 5.74e-02  prop 0.3431  bala 0.3796  glob 0.3431
+23:52:27     iter 14  loss 0.450342  X mean 0.4599 [0.0000, 1.0000] sd 0.4964  |grad|max 1.90e-02  prop 0.3504  bala 0.3869  glob 0.3431
+23:52:27     iter 15  loss 0.458946  X mean 0.4622 [0.0000, 1.0000] sd 0.4975  |grad|max 9.83e-03  prop 0.3431  bala 0.3796  glob 0.3431
+23:52:27     iter 16  loss 0.465133  X mean 0.4632 [0.0000, 1.0000] sd 0.4980  |grad|max 5.92e-03  prop 0.3431  bala 0.3796  glob 0.3431
+23:52:27     iter 17  loss 0.506081  X mean 0.4637 [0.0000, 1.0000] sd 0.4983  |grad|max 6.32e-02  prop 0.3431  bala 0.3796  glob 0.3431
+23:52:28     iter 18  loss 0.465477  X mean 0.4645 [0.0000, 1.0000] sd 0.4981  |grad|max 3.69e-02  prop 0.3431  bala 0.3796  glob 0.3358
+23:52:28     iter 19  loss 0.516505  X mean 0.4662 [0.0000, 1.0000] sd 0.4976  |grad|max 5.65e-02  prop 0.3431  bala 0.3796  glob 0.3431
+23:52:28 
+  extraction from iteration -1, sizes [250, 320] (full budget = n - k = 320):
+23:52:28     balanced      m=250   purity 0.7560  poison kept 61    NCR 81.4%  removed 76/137 (precision 0.3671)
+23:52:28     balanced      m=320   purity 0.7344  poison kept 85    NCR 88.6%  removed 52/137 (precision 0.3796)
+23:52:28 
+  TabPFNv2 on the held-out test set (196 rows):
+23:52:28     clean                  ce 0.3282  roc_auc 0.9324  accuracy 0.8571  balanced_accuracy 0.8616  mcc 0.7205
+23:52:28     poisoned               ce 0.6428  roc_auc 0.7728  accuracy 0.6990  balanced_accuracy 0.7167  mcc 0.4602
+23:52:28     oracle                 ce 0.3193  roc_auc 0.9417  accuracy 0.8673  balanced_accuracy 0.8691  mcc 0.7353
+23:52:28     m=250   balanced ce 0.6478  roc_auc 0.7530  accuracy 0.6837  balanced_accuracy 0.6867  mcc 0.3719
+23:52:28                pure-m   ce 0.3270  roc_auc 0.9408  accuracy 0.8582  balanced_accuracy 0.8599  mcc 0.7177
+23:52:28     m=320   balanced ce 0.6828  roc_auc 0.7242  accuracy 0.6684  balanced_accuracy 0.6726  mcc 0.3445
+23:52:28                pure-m   ce 0.3193  roc_auc 0.9417  accuracy 0.8673  balanced_accuracy 0.8691  mcc 0.7353
+23:52:28 
+  [3s]  wrote /home/ssn899/Desktop/TabFM/results/sift/credit-approval/hub-flip_r030_lr5_it20/summary.json

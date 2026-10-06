@@ -9,8 +9,13 @@ without any change.
 The attack is deterministic (n_runs=1), so every std is 0 by construction. R=0 is the
 clean baseline that every delta is measured against.
 
+Several --root paths are merged into one table set. The sweep was run in two places
+(the attention-recording runs went to /hdd1 for space), and a dataset lives under
+exactly one of them, so merging is a plain union -- an overlap is an error, not a
+silent pick.
+
     python scripts/make_hub_tables.py
-    python scripts/make_hub_tables.py --root /hdd1/ssn899/TabFM/results/hub_flip_attention
+    python scripts/make_hub_tables.py --root results/hub_flip /hdd1/ssn899/TabFM/results/hub_flip_attention
 """
 
 from __future__ import annotations
@@ -26,19 +31,31 @@ SHORT = {"ce": "CE", "roc_auc": "ROC-AUC", "accuracy": "accuracy",
 WEAK = {"mcc": 0.15}              # |clean| below this -> the relative % is noise
 
 
-def load(root: Path) -> dict:
+def load(roots: list[Path]) -> dict:
     out: dict[str, dict[int, dict]] = {}
-    for ds in sorted(p for p in root.iterdir() if p.is_dir() and not p.name.startswith("_")):
-        for d in sorted(ds.glob("r*")):
-            f = d / "summary.json"
-            if not f.exists():
+    seen: dict[str, Path] = {}
+    for root in roots:
+        if not root.is_dir():
+            raise SystemExit(f"--root not a directory: {root}")
+        for ds in sorted(p for p in root.iterdir() if p.is_dir() and not p.name.startswith("_")):
+            cells = {}
+            for d in sorted(ds.glob("r*")):
+                f = d / "summary.json"
+                if not f.exists():
+                    continue
+                s = json.loads(f.read_text())
+                runs = s.get("metrics_per_run") or []
+                if not runs:
+                    continue
+                cells[int(round(s["row_percent"]))] = {
+                    "summary": s, "m": runs[0], "n_runs": len(runs)}
+            if not cells:
                 continue
-            s = json.loads(f.read_text())
-            runs = s.get("metrics_per_run") or []
-            if not runs:
-                continue
-            out.setdefault(ds.name, {})[int(round(s["row_percent"]))] = {
-                "summary": s, "m": runs[0], "n_runs": len(runs)}
+            if ds.name in seen:
+                raise SystemExit(f"{ds.name} appears under both {seen[ds.name]} and {root}; "
+                                 "pass only the root you want for it")
+            seen[ds.name] = root
+            out[ds.name] = cells
     return out
 
 
@@ -48,15 +65,17 @@ def fmt_rel(v, weak):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--root", type=Path,
-                    default=Path("/hdd1/ssn899/TabFM/results/hub_flip_attention"))
+    ap.add_argument("--root", type=Path, nargs="+",
+                    default=[Path("results/hub_flip"),
+                             Path("/hdd1/ssn899/TabFM/results/hub_flip_attention")],
+                    help="one or more sweep roots; datasets are unioned across them")
     ap.add_argument("--out", type=Path, default=Path("results/tables/hub_flip"))
     ap.add_argument("--metrics", nargs="+", default=METRICS)
     a = ap.parse_args(argv)
 
     data = load(a.root)
     if not data:
-        raise SystemExit(f"no summary.json found under {a.root}")
+        raise SystemExit("no summary.json found under " + ", ".join(map(str, a.root)))
     a.out.mkdir(parents=True, exist_ok=True)
     rows = []
 
@@ -67,7 +86,7 @@ def main(argv=None):
         clean = cells[0]["m"]
         rs = [r for r in sorted(cells) if r != 0]
         s0 = cells[0]["summary"]
-        expected = set(range(2, 51, 2))
+        expected = set(range(2, max(rs) + 1, 2)) if rs else set()
         missing = sorted(expected - set(rs))
         head = (f"{ds}   hub-flip (test-agnostic, {s0['hub_metric']} k={s0['hub_k']})   "
                 f"context {s0['n_context']}x{s0['n_features']}, test {s0['n_test']}, "

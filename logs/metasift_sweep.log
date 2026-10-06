@@ -1,0 +1,15 @@
+[2026-09-28 21:06:15] START default  (warmup 1, res 1, v_lr 0.0005, model_lr 0.0001)
+[2026-09-28 21:06:32] DONE  default
+[2026-09-28 21:06:32] START more_epochs  (warmup 1, res 5, v_lr 0.0005, model_lr 0.0001)
+[2026-09-28 21:07:14] DONE  more_epochs
+[2026-09-28 21:07:14] START vlr_hi  (warmup 1, res 5, v_lr 0.01, model_lr 0.0001)
+[2026-09-28 21:07:57] DONE  vlr_hi
+[2026-09-28 21:07:57] START vlr_hi_long  (warmup 1, res 20, v_lr 0.01, model_lr 0.0001)
+[2026-09-28 21:10:15] DONE  vlr_hi_long
+[2026-09-28 21:10:15] START warm5_vlr_hi  (warmup 5, res 20, v_lr 0.01, model_lr 0.0001)
+[2026-09-28 21:12:40] DONE  warm5_vlr_hi
+[2026-09-28 21:12:40] START fastmodel  (warmup 1, res 5, v_lr 0.01, model_lr 0.001)
+[2026-09-28 21:13:22] DONE  fastmodel
+[2026-09-28 21:13:22] START fastmodel_long  (warmup 1, res 20, v_lr 0.01, model_lr 0.001)
+[2026-09-28 21:15:39] DONE  fastmodel_long
+ALL META-SIFT CONFIGS FINISHED

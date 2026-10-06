@@ -1,0 +1,71 @@
+Random seed set as 0
+21:54:18 [credit-approval] hub-flip R=30%  457x15, 137 flipped
+21:54:18   given class counts [189, 268]
+21:54:18   meta-sift: 5 sifters, warmup 1, res_epochs 5, top_k 6, v_lr 0.01, meta_lr 0.1, model_lr 0.001
+21:54:18   subset sizes: [250, 320]  (full budget = n - k = 320)
+-----------Training sifter number: 0-----------
+Warmup Epoch 0 
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:00<00:00,  9.28it/s]100%|██████████| 4/4 [00:00<00:00, 17.88it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 33.75it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 33.23it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 35.17it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 34.79it/s]
+-----------Training sifter number: 1-----------
+Warmup Epoch 0 
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 31.13it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 30.85it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 31.46it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 33.91it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 30.72it/s]
+-----------Training sifter number: 2-----------
+Warmup Epoch 0 
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 30.50it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 39.90it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 35.62it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 36.50it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 35.04it/s]
+-----------Training sifter number: 3-----------
+Warmup Epoch 0 
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 35.74it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 35.10it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 30.71it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 35.03it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 31.48it/s]
+-----------Training sifter number: 4-----------
+Warmup Epoch 0 
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 31.81it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 30.80it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 34.93it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 36.44it/s]
+  0%|          | 0/4 [00:00<?, ?it/s]100%|██████████| 4/4 [00:00<00:00, 37.18it/s]
+  0%|          | 0/3 [00:00<?, ?it/s]4it [00:00, 34.08it/s]               
+  0%|          | 0/3 [00:00<?, ?it/s]4it [00:00, 44.01it/s]               
+  0%|          | 0/3 [00:00<?, ?it/s]4it [00:00, 40.84it/s]               
+  0%|          | 0/3 [00:00<?, ?it/s]4it [00:00, 49.27it/s]               
+  0%|          | 0/3 [00:00<?, ?it/s]4it [00:00, 41.36it/s]               
+21:54:28 
+  weight direction check: AUC(low weight -> poisoned) = 0.6328 (0.5 = no signal, <0.5 = INVERTED)
+21:54:28   weight spread: mean 0.4087 sd 0.1783 min 0.0000 max 0.4922
+21:54:28 
+  Meta-Sift selection (their get_sifter_result, class-proportional):
+21:54:28     m=250   selected 251   purity 0.7809  poison in it 55  NCR 73.1%
+21:54:28     m=320   selected 321   purity 0.7508  poison in it 80  NCR 83.1%
+21:54:28 
+  same weights, extracted with OUR rules (like-for-like with sift_context.py):
+21:54:28     balanced      m=250   purity 0.7760  poison in it 56   NCR 74.7%
+21:54:28     balanced      m=320   purity 0.7500  poison in it 80   NCR 83.4%
+21:54:28     proportional  m=250   purity 0.7800  poison in it 55   NCR 73.4%
+21:54:28     proportional  m=320   purity 0.7531  poison in it 79   NCR 82.4%
+21:54:28     global        m=250   purity 0.7960  poison in it 51   NCR 68.0%
+21:54:28     global        m=320   purity 0.7469  poison in it 81   NCR 84.4%
+21:54:29 
+  TabPFNv2 on the held-out test set (196 rows):
+21:54:29     clean                  ce 0.3282  roc_auc 0.9324  accuracy 0.8571  balanced_accuracy 0.8616  mcc 0.7205
+21:54:29     poisoned               ce 0.6428  roc_auc 0.7728  accuracy 0.6990  balanced_accuracy 0.7167  mcc 0.4602
+21:54:29     oracle                 ce 0.3193  roc_auc 0.9417  accuracy 0.8673  balanced_accuracy 0.8691  mcc 0.7353
+21:54:29     m=250   balanced ce 0.8573  roc_auc 0.7523  accuracy 0.6888  balanced_accuracy 0.6809  mcc 0.3681
+21:54:29                pure-m   ce 0.3270  roc_auc 0.9408  accuracy 0.8582  balanced_accuracy 0.8599  mcc 0.7177
+21:54:29     m=320   balanced ce 0.6558  roc_auc 0.7673  accuracy 0.7041  balanced_accuracy 0.7025  mcc 0.4043
+21:54:29                pure-m   ce 0.3193  roc_auc 0.9417  accuracy 0.8673  balanced_accuracy 0.8691  mcc 0.7353
+21:54:29 
+  wrote /home/ssn899/Desktop/TabFM/results/meta_sift/credit-approval/hub-flip_r030_tuned/summary.json

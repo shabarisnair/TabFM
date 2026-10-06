@@ -1,0 +1,45 @@
+=== url_unique / label-flip-random  (GPU 3) ===
+[2026-09-28 03:39:16] START url_unique/label-flip-random_r005
+[2026-09-28 03:51:59] DONE  url_unique/label-flip-random_r005
+[2026-09-28 03:51:59] START url_unique/label-flip-random_r010
+[2026-09-28 04:04:43] DONE  url_unique/label-flip-random_r010
+[2026-09-28 04:04:43] START url_unique/label-flip-random_r020
+[2026-09-28 04:17:23] DONE  url_unique/label-flip-random_r020
+[2026-09-28 04:17:23] START url_unique/label-flip-random_r030
+[2026-09-28 04:30:00] DONE  url_unique/label-flip-random_r030
+[2026-09-28 04:30:00] START url_unique/label-flip-random_r040
+[2026-09-28 04:42:35] DONE  url_unique/label-flip-random_r040
+=== url_unique / hub-flip  (GPU 3) ===
+[2026-09-28 04:42:35] START url_unique/hub-flip_r005
+[2026-09-28 04:45:13] DONE  url_unique/hub-flip_r005
+[2026-09-28 04:45:13] START url_unique/hub-flip_r010
+[2026-09-28 04:47:51] DONE  url_unique/hub-flip_r010
+[2026-09-28 04:47:51] START url_unique/hub-flip_r020
+[2026-09-28 04:50:27] DONE  url_unique/hub-flip_r020
+[2026-09-28 04:50:27] START url_unique/hub-flip_r030
+[2026-09-28 04:53:04] DONE  url_unique/hub-flip_r030
+[2026-09-28 04:53:04] START url_unique/hub-flip_r040
+[2026-09-28 04:55:39] DONE  url_unique/hub-flip_r040
+=== lcld_v2 / label-flip-random  (GPU 3) ===
+[2026-09-28 04:55:39] START lcld_v2/label-flip-random_r005
+[2026-09-28 05:01:51] DONE  lcld_v2/label-flip-random_r005
+[2026-09-28 05:01:51] START lcld_v2/label-flip-random_r010
+[2026-09-28 05:08:02] DONE  lcld_v2/label-flip-random_r010
+[2026-09-28 05:08:02] START lcld_v2/label-flip-random_r020
+[2026-09-28 05:14:11] DONE  lcld_v2/label-flip-random_r020
+[2026-09-28 05:14:11] START lcld_v2/label-flip-random_r030
+[2026-09-28 05:20:19] DONE  lcld_v2/label-flip-random_r030
+[2026-09-28 05:20:19] START lcld_v2/label-flip-random_r040
+[2026-09-28 05:26:26] DONE  lcld_v2/label-flip-random_r040
+=== lcld_v2 / hub-flip  (GPU 3) ===
+[2026-09-28 05:26:26] START lcld_v2/hub-flip_r005
+[2026-09-28 05:27:45] DONE  lcld_v2/hub-flip_r005
+[2026-09-28 05:27:45] START lcld_v2/hub-flip_r010
+[2026-09-28 05:29:04] DONE  lcld_v2/hub-flip_r010
+[2026-09-28 05:29:04] START lcld_v2/hub-flip_r020
+[2026-09-28 05:30:22] DONE  lcld_v2/hub-flip_r020
+[2026-09-28 05:30:22] START lcld_v2/hub-flip_r030
+[2026-09-28 05:31:40] DONE  lcld_v2/hub-flip_r030
+[2026-09-28 05:31:40] START lcld_v2/hub-flip_r040
+[2026-09-28 05:32:58] DONE  lcld_v2/hub-flip_r040
+ALL REQUESTED RUNS FINISHED

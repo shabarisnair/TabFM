@@ -1,0 +1,21 @@
+22:21:40 [url_unique] hub-flip R=30%  context 5000x63, 1500 flipped, full budget 3500, sizes [250, 3500]
+22:21:40   checkpoint iclad_mixedprior_unsup.pth; model takes up to 512 features, max_train_len 10000, ensemble 32 -> no feature or row subsampling at this size
+22:21:42 
+  [with_label] AUC(anomaly score -> flipped) = 0.0387   mean score: flipped 0.1789 vs clean 0.3358
+22:21:42     balanced      m=250   purity 0.0760  poison kept 231   NCR 308.0%
+22:21:42     balanced      m=3500  purity 0.5729  poison kept 1495  NCR 142.4%
+22:21:44 
+  [features_only] AUC(anomaly score -> flipped) = 0.0533   mean score: flipped 0.1972 vs clean 0.3398
+22:21:44     balanced      m=250   purity 0.1920  poison kept 202   NCR 269.3%
+22:21:44     balanced      m=3500  purity 0.5731  poison kept 1494  NCR 142.3%
+22:21:46 
+  TabPFNv2 on the held-out test set (1000 rows):
+22:21:46     clean                  ce 0.0933  roc_auc 0.9935  accuracy 0.9650  balanced_accuracy 0.9650  mcc 0.9300
+22:21:46     poisoned               ce 1.1253  roc_auc 0.7083  accuracy 0.6680  balanced_accuracy 0.6696  mcc 0.3455
+22:21:46     oracle                 ce 0.0908  roc_auc 0.9939  accuracy 0.9710  balanced_accuracy 0.9710  mcc 0.9420
+22:21:47     m=250   balanced ce 2.7658  roc_auc 0.2215  accuracy 0.3960  balanced_accuracy 0.3898  mcc -0.3495
+22:21:47                pure-m   ce 0.1751  roc_auc 0.9812  accuracy 0.9368  balanced_accuracy 0.9368  mcc 0.8737
+22:21:49     m=3500  balanced ce 1.7576  roc_auc 0.5387  accuracy 0.5360  balanced_accuracy 0.5351  mcc 0.0707
+22:21:49                pure-m   ce 0.0908  roc_auc 0.9939  accuracy 0.9710  balanced_accuracy 0.9710  mcc 0.9420
+22:21:49 
+  wrote /home/ssn899/Desktop/TabFM/results/iclad/url_unique/hub-flip_r030_default/summary.json

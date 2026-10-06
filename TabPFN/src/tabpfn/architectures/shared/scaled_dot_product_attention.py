@@ -40,6 +40,7 @@ def scaled_dot_product_attention(
     *,
     quantized_kv: QuantizedKVCacheEntry | None = None,
     backend: AttentionBackend | None | Literal["auto"] = "auto",
+    attn_mask: torch.Tensor | None = None,
 ) -> torch.Tensor:
     """Attention dispatch: run a registered backend, or the torch SDPA path.
 
@@ -53,7 +54,18 @@ def scaled_dot_product_attention(
     Dequantization happens exactly once, here: whoever takes the call
     receives dense ``k``/``v`` — unless it is a backend declaring
     ``consumes_quantized_kv = True``, which receives the entry as stored.
+
+    ``attn_mask`` is a LOCAL ADDITION for this repo (see
+    scripts/tabfm_experiments/sift.py): a float tensor added to the attention
+    logits before the softmax, broadcastable to ``(B, H, S_q, S_k)``. It may
+    carry gradients. None of the registered fast backends accept a mask, so a
+    masked call is routed to the standard torch path, where FlashAttention is
+    ineligible and torch falls back to the memory-efficient kernel (which does
+    support a grad-carrying mask). Passing None leaves every code path exactly
+    as it was.
     """
+    if attn_mask is not None:
+        backend = None  # force the torch path; the fast backends take no mask
     if isinstance(backend, str):  # "auto"
         backend = find_attention_backend(
             q_BSHD, k_BSJD, v_BSJD, quantized_kv=quantized_kv
@@ -68,7 +80,7 @@ def scaled_dot_product_attention(
 
     if backend is not None:
         return backend.run(q_BSHD, k_BSJD, v_BSJD, quantized_kv=quantized_kv)
-    return _torch_sdpa(q_BSHD, k_BSJD, v_BSJD, _backends_override)
+    return _torch_sdpa(q_BSHD, k_BSJD, v_BSJD, _backends_override, attn_mask=attn_mask)
 
 
 # MATH is the reference implementation. Keeping it as a final fallback
@@ -117,11 +129,26 @@ def _flash_backward_num_iterations(
     return (q_BHSD.shape[0] + max_sub_batch - 1) // max_sub_batch
 
 
+def _mask_for_chunk(
+    attn_mask: torch.Tensor | None, i: int, sub_batch: int
+) -> torch.Tensor | None:
+    """Slice an attention mask to match a batch chunk of q/k/v.
+
+    A mask whose batch dimension is 1 broadcasts over the whole batch, so every
+    chunk gets it whole; slicing it would silently hand chunk 1 an empty tensor.
+    """
+    if attn_mask is None or attn_mask.shape[0] == 1:
+        return attn_mask
+    return attn_mask[i * sub_batch : (i + 1) * sub_batch]
+
+
 def _torch_sdpa(
     q_BSHD: torch.Tensor,
     k_BSJD: torch.Tensor | None,
     v_BSJD: torch.Tensor | None,
     _backends_override: list[SDPBackend] | None = None,
+    *,
+    attn_mask: torch.Tensor | None = None,
 ) -> torch.Tensor:
     """The standard path: torch SDPA, hardened for tabpfn's shapes.
 
@@ -186,7 +213,7 @@ def _torch_sdpa(
                     q_BHSD[i * sub_batch : (i + 1) * sub_batch].contiguous(),
                     keys[i * sub_batch : (i + 1) * sub_batch].contiguous(),
                     values[i * sub_batch : (i + 1) * sub_batch].contiguous(),
-                    attn_mask=None,
+                    attn_mask=_mask_for_chunk(attn_mask, i, sub_batch),
                     **enable_gqa,
                 )
             )

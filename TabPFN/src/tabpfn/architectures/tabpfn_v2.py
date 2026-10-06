@@ -221,14 +221,27 @@ class AlongColumnAttention(Attention):
             k_BcNHD = self.k_projection(x_BcRE[:, :N]).view(Bc, N, -1, self.head_dim)
             v_BcNHD = self.v_projection(x_BcRE[:, :N]).view(Bc, N, -1, self.head_dim)
 
+            # LOCAL ADDITION for this repo (scripts/tabfm_experiments/sift.py):
+            # an optional additive pre-softmax bias over the CONTEXT keys, so a
+            # context row's influence can be scaled continuously and
+            # differentiably. ``train`` applies where context rows are the
+            # queries, ``test`` where the query rows are. Absent (the normal
+            # case) both are None and every call is byte-for-byte as before.
+            _bias = getattr(self, "row_attn_bias", None)
+            _m_train = None if _bias is None else _bias.get("train")
+            _m_test = None if _bias is None else _bias.get("test")
+
             if single_eval_pos == R:
-                output_BcSHD = scaled_dot_product_attention(q_BcRHD, k_BcNHD, v_BcNHD)
+                output_BcSHD = scaled_dot_product_attention(
+                    q_BcRHD, k_BcNHD, v_BcNHD, attn_mask=_m_train
+                )
             else:
                 out_train_BcNHD = scaled_dot_product_attention(
-                    q_BcRHD[:, :N], k_BcNHD, v_BcNHD
+                    q_BcRHD[:, :N], k_BcNHD, v_BcNHD, attn_mask=_m_train
                 )
                 out_test_BcMHD = scaled_dot_product_attention(
-                    q_BcRHD[:, N:], k_BcNHD[:, :, :1], v_BcNHD[:, :, :1]
+                    q_BcRHD[:, N:], k_BcNHD[:, :, :1], v_BcNHD[:, :, :1],
+                    attn_mask=_m_test,
                 )
                 output_BcSHD = torch.cat([out_train_BcNHD, out_test_BcMHD], dim=1)
 
@@ -737,7 +750,14 @@ class TabPFNV2(Architecture):
         """
         y_RB1 = _prepare_targets(y, num_rows, batch_size)
         nan_indicator_RB1 = _generate_nan_and_inf_indicator(y_RB1)
-        y_RB1, feature_means = _impute_nan_and_inf_with_mean(y_RB1, num_train_labels)
+        # LOCAL ADDITION: every test row carries a NaN target that is imputed with the
+        # TRAINING LABEL MEAN, so a context row influences the test rows through that
+        # statistic no matter what the attention does. When row weights are set
+        # (scripts/tabfm_experiments/sift.py) the mean is weighted by them, closing that
+        # channel; unset -- the normal case -- nothing changes.
+        y_RB1, feature_means = _impute_nan_and_inf_with_mean(
+            y_RB1, num_train_labels, row_weights=getattr(self, "row_weights", None)
+        )
 
         unique_ys: list[torch.Tensor] = []
         if self.use_multiclass_target_encoding:
@@ -1171,21 +1191,45 @@ def _generate_nan_and_inf_indicator(x: torch.Tensor) -> torch.Tensor:
     ).to(x.dtype)
 
 
+def _weighted_nanmean_over_rows(
+    x: torch.Tensor, row_weights: torch.Tensor
+) -> torch.Tensor:
+    """Mean over dim 0, weighting row i by ``row_weights[i]`` and skipping non-finite.
+
+    LOCAL ADDITION for this repo (scripts/tabfm_experiments/sift.py). Differentiable in
+    ``row_weights``, so a row that is being weighted out of the context also stops
+    contributing to the statistic the test rows are imputed with.
+    """
+    finite = torch.isfinite(x)
+    w = row_weights.reshape(-1, *([1] * (x.dim() - 1))).to(x.dtype) * finite.to(x.dtype)
+    num = (torch.where(finite, x, torch.zeros_like(x)) * w).sum(0)
+    return num / w.sum(0).clamp_min(1e-12)
+
+
 def _impute_nan_and_inf_with_mean(
     x: torch.Tensor,
     num_train_rows: int,
     feature_means: torch.Tensor | None = None,
+    row_weights: torch.Tensor | None = None,
 ) -> tuple[torch.Tensor, torch.Tensor]:
     """Replace NaN/Inf cells with the per-feature mean of the (finite) training rows.
 
     When ``feature_means`` is given (the cached-inference path) it is used directly
     instead of being recomputed from the training rows.
 
+    ``row_weights`` (LOCAL ADDITION) makes that mean a weighted one over the training
+    rows. None -- the normal case -- leaves the computation exactly as it was.
+
     Returns:
         A tuple of ``(imputed tensor, feature_means)``.
     """
     if feature_means is None:
-        feature_means = torch_nanmean(x[:num_train_rows], axis=0, include_inf=True)
+        if row_weights is not None:
+            feature_means = _weighted_nanmean_over_rows(
+                x[:num_train_rows], row_weights[:num_train_rows]
+            )
+        else:
+            feature_means = torch_nanmean(x[:num_train_rows], axis=0, include_inf=True)
     nan_mask = torch.logical_or(torch.isnan(x), torch.isinf(x))
     imputed = torch.where(nan_mask, feature_means.unsqueeze(0).expand_as(x), x)
     return imputed, feature_means

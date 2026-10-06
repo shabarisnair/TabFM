@@ -1,0 +1,67 @@
+=== coil2000_insurance_policies / label-flip-random  (GPU 0) ===
+[2026-09-28 03:38:34] START coil2000_insurance_policies/label-flip-random_r005
+[2026-09-28 03:55:56] DONE  coil2000_insurance_policies/label-flip-random_r005
+[2026-09-28 03:55:56] START coil2000_insurance_policies/label-flip-random_r010
+[2026-09-28 04:13:16] DONE  coil2000_insurance_policies/label-flip-random_r010
+[2026-09-28 04:13:16] START coil2000_insurance_policies/label-flip-random_r020
+[2026-09-28 04:30:32] DONE  coil2000_insurance_policies/label-flip-random_r020
+[2026-09-28 04:30:32] START coil2000_insurance_policies/label-flip-random_r030
+[2026-09-28 04:47:44] DONE  coil2000_insurance_policies/label-flip-random_r030
+[2026-09-28 04:47:44] START coil2000_insurance_policies/label-flip-random_r040
+[2026-09-28 05:04:54] DONE  coil2000_insurance_policies/label-flip-random_r040
+=== coil2000_insurance_policies / hub-flip  (GPU 0) ===
+[2026-09-28 05:04:54] START coil2000_insurance_policies/hub-flip_r005
+[2026-09-28 05:08:27] DONE  coil2000_insurance_policies/hub-flip_r005
+[2026-09-28 05:08:27] START coil2000_insurance_policies/hub-flip_r010
+[2026-09-28 05:12:00] DONE  coil2000_insurance_policies/hub-flip_r010
+[2026-09-28 05:12:00] START coil2000_insurance_policies/hub-flip_r020
+[2026-09-28 05:15:33] DONE  coil2000_insurance_policies/hub-flip_r020
+[2026-09-28 05:15:33] START coil2000_insurance_policies/hub-flip_r030
+[2026-09-28 05:19:04] DONE  coil2000_insurance_policies/hub-flip_r030
+[2026-09-28 05:19:04] START coil2000_insurance_policies/hub-flip_r040
+[2026-09-28 05:22:35] DONE  coil2000_insurance_policies/hub-flip_r040
+=== heloc / label-flip-random  (GPU 0) ===
+[2026-09-28 05:22:35] START heloc/label-flip-random_r005
+[2026-09-28 05:28:03] DONE  heloc/label-flip-random_r005
+[2026-09-28 05:28:03] START heloc/label-flip-random_r010
+[2026-09-28 05:33:31] DONE  heloc/label-flip-random_r010
+[2026-09-28 05:33:31] START heloc/label-flip-random_r020
+[2026-09-28 05:38:57] DONE  heloc/label-flip-random_r020
+[2026-09-28 05:38:57] START heloc/label-flip-random_r030
+[2026-09-28 05:44:22] DONE  heloc/label-flip-random_r030
+[2026-09-28 05:44:22] START heloc/label-flip-random_r040
+[2026-09-28 05:49:46] DONE  heloc/label-flip-random_r040
+=== heloc / hub-flip  (GPU 0) ===
+[2026-09-28 05:49:46] START heloc/hub-flip_r005
+[2026-09-28 05:50:57] DONE  heloc/hub-flip_r005
+[2026-09-28 05:50:57] START heloc/hub-flip_r010
+[2026-09-28 05:52:07] DONE  heloc/hub-flip_r010
+[2026-09-28 05:52:07] START heloc/hub-flip_r020
+[2026-09-28 05:53:17] DONE  heloc/hub-flip_r020
+[2026-09-28 05:53:17] START heloc/hub-flip_r030
+[2026-09-28 05:54:26] DONE  heloc/hub-flip_r030
+[2026-09-28 05:54:26] START heloc/hub-flip_r040
+[2026-09-28 05:55:35] DONE  heloc/hub-flip_r040
+=== credit-approval / label-flip-random  (GPU 0) ===
+[2026-09-28 05:55:35] START credit-approval/label-flip-random_r005
+[2026-09-28 05:55:56] DONE  credit-approval/label-flip-random_r005
+[2026-09-28 05:55:56] START credit-approval/label-flip-random_r010
+[2026-09-28 05:56:17] DONE  credit-approval/label-flip-random_r010
+[2026-09-28 05:56:17] START credit-approval/label-flip-random_r020
+[2026-09-28 05:56:37] DONE  credit-approval/label-flip-random_r020
+[2026-09-28 05:56:37] START credit-approval/label-flip-random_r030
+[2026-09-28 05:56:58] DONE  credit-approval/label-flip-random_r030
+[2026-09-28 05:56:58] START credit-approval/label-flip-random_r040
+[2026-09-28 05:57:19] DONE  credit-approval/label-flip-random_r040
+=== credit-approval / hub-flip  (GPU 0) ===
+[2026-09-28 05:57:19] START credit-approval/hub-flip_r005
+[2026-09-28 05:57:27] DONE  credit-approval/hub-flip_r005
+[2026-09-28 05:57:27] START credit-approval/hub-flip_r010
+[2026-09-28 05:57:36] DONE  credit-approval/hub-flip_r010
+[2026-09-28 05:57:36] START credit-approval/hub-flip_r020
+[2026-09-28 05:57:44] DONE  credit-approval/hub-flip_r020
+[2026-09-28 05:57:44] START credit-approval/hub-flip_r030
+[2026-09-28 05:57:52] DONE  credit-approval/hub-flip_r030
+[2026-09-28 05:57:52] START credit-approval/hub-flip_r040
+[2026-09-28 05:58:01] DONE  credit-approval/hub-flip_r040
+ALL REQUESTED RUNS FINISHED

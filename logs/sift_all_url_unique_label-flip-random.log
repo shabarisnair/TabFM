@@ -1,0 +1,38 @@
+22:55:25 [url_unique] label-flip-random R=30%  context 5000x63  k=1500 flipped, keeping 3500
+22:55:25   lr=5  iters=20  chunk=256  layers=all  init_logit=4.0  mass_penalty=0
+22:55:25   given class counts [2476, 2524]
+22:56:25     iter  0  loss 0.011261  X mean 0.9820 [0.9820, 0.9820] sd 0.0000  |grad|max 6.12e-06  prop 0.3173  bala 0.3193  glob 0.3127
+22:57:24     iter  1  loss 0.455149  X mean 0.2749 [0.2705, 0.2820] sd 0.0028  |grad|max 5.07e-04  prop 0.8893  bala 0.8927  glob 0.8920
+22:58:24     iter  2  loss 0.656010  X mean 0.0958 [0.0025, 0.9402] sd 0.2581  |grad|max 1.42e-01  prop 0.2940  bala 0.2927  glob 0.2907
+22:59:23     iter  3  loss 1.074557  X mean 0.0867 [0.0000, 0.9991] sd 0.2125  |grad|max 1.37e-01  prop 0.3720  bala 0.3707  glob 0.3707
+23:00:22     iter  4  loss 0.918556  X mean 0.1784 [0.0000, 1.0000] sd 0.3127  |grad|max 3.73e-02  prop 0.3807  bala 0.3840  glob 0.3867
+23:01:22     iter  5  loss 1.239963  X mean 0.2330 [0.0000, 1.0000] sd 0.3961  |grad|max 1.06e-01  prop 0.3853  bala 0.3860  glob 0.3907
+23:02:22     iter  6  loss 1.401486  X mean 0.2478 [0.0000, 1.0000] sd 0.4169  |grad|max 4.83e-02  prop 0.3887  bala 0.3893  glob 0.3940
+23:03:21     iter  7  loss 1.420319  X mean 0.2548 [0.0000, 1.0000] sd 0.4254  |grad|max 3.08e-02  prop 0.3920  bala 0.3933  glob 0.3967
+23:04:21     iter  8  loss 1.533486  X mean 0.2581 [0.0000, 1.0000] sd 0.4309  |grad|max 1.11e-01  prop 0.3927  bala 0.3920  glob 0.3947
+23:05:20     iter  9  loss 1.563924  X mean 0.2603 [0.0000, 1.0000] sd 0.4340  |grad|max 2.42e-01  prop 0.3913  bala 0.3920  glob 0.3947
+23:06:20     iter 10  loss 1.511164  X mean 0.2624 [0.0000, 1.0000] sd 0.4366  |grad|max 1.83e-01  prop 0.3900  bala 0.3913  glob 0.3953
+23:07:19     iter 11  loss 1.559869  X mean 0.2634 [0.0000, 1.0000] sd 0.4377  |grad|max 6.26e-02  prop 0.3900  bala 0.3920  glob 0.3953
+23:08:19     iter 12  loss 1.556759  X mean 0.2647 [0.0000, 1.0000] sd 0.4391  |grad|max 1.03e-01  prop 0.3900  bala 0.3920  glob 0.3940
+23:09:18     iter 13  loss 1.575116  X mean 0.2659 [0.0000, 1.0000] sd 0.4403  |grad|max 5.38e-02  prop 0.3893  bala 0.3913  glob 0.3927
+23:10:18     iter 14  loss 1.535988  X mean 0.2670 [0.0000, 1.0000] sd 0.4411  |grad|max 1.74e-01  prop 0.3900  bala 0.3927  glob 0.3920
+23:11:17     iter 15  loss 1.504230  X mean 0.2677 [0.0000, 1.0000] sd 0.4419  |grad|max 6.03e-02  prop 0.3900  bala 0.3927  glob 0.3947
+23:12:17     iter 16  loss 1.547208  X mean 0.2687 [0.0000, 1.0000] sd 0.4424  |grad|max 3.79e-02  prop 0.3907  bala 0.3933  glob 0.3933
+23:13:16     iter 17  loss 1.495828  X mean 0.2695 [0.0000, 1.0000] sd 0.4427  |grad|max 4.60e-02  prop 0.3893  bala 0.3920  glob 0.3933
+23:14:16     iter 18  loss 1.414848  X mean 0.2701 [0.0000, 1.0000] sd 0.4429  |grad|max 8.01e-02  prop 0.3873  bala 0.3893  glob 0.3920
+23:15:15     iter 19  loss 1.494573  X mean 0.2702 [0.0000, 1.0000] sd 0.4432  |grad|max 6.13e-02  prop 0.3860  bala 0.3880  glob 0.3920
+23:15:15 
+  extraction from iteration -1, sizes [250, 3500] (full budget = n - k = 3500):
+23:15:15     balanced      m=250   purity 0.8440  poison kept 39    NCR 52.0%  removed 1461/1500 (precision 0.3076)
+23:15:15     balanced      m=3500  purity 0.7383  poison kept 916   NCR 87.2%  removed 584/1500 (precision 0.3893)
+23:15:17 
+  TabPFNv2 on the held-out test set (1000 rows):
+23:15:17     clean                  ce 0.0933  roc_auc 0.9935  accuracy 0.9650  balanced_accuracy 0.9650  mcc 0.9300
+23:15:17     poisoned               ce 0.4102  roc_auc 0.9825  accuracy 0.9470  balanced_accuracy 0.9469  mcc 0.8940
+23:15:17     oracle                 ce 0.0899  roc_auc 0.9942  accuracy 0.9700  balanced_accuracy 0.9700  mcc 0.9400
+23:15:17     m=250   balanced ce 0.3883  roc_auc 0.9084  accuracy 0.8230  balanced_accuracy 0.8220  mcc 0.6498
+23:15:17                pure-m   ce 0.1717  roc_auc 0.9829  accuracy 0.9382  balanced_accuracy 0.9382  mcc 0.8768
+23:15:20     m=3500  balanced ce 0.3658  roc_auc 0.9701  accuracy 0.9120  balanced_accuracy 0.9117  mcc 0.8244
+23:15:20                pure-m   ce 0.0899  roc_auc 0.9942  accuracy 0.9700  balanced_accuracy 0.9700  mcc 0.9400
+23:15:20 
+  [1188s]  wrote /home/ssn899/Desktop/TabFM/results/sift/url_unique/label-flip-random_r030_lr5_it20/summary.json
