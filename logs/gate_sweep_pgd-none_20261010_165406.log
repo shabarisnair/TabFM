@@ -1,0 +1,8 @@
+4 runs on GPU(s) 0 1 2; results in /home/ssn899/Desktop/TabFM/results/gate; W&B project TFM_experiments
+[2026-10-10 16:54:06] START GPU 1  gate_gas-drift_hub-flip-local_R20_pgd-none_lr0.05_it300
+[2026-10-10 16:54:06] START GPU 0  gate_gas-drift_hub-flip-local_R10_pgd-none_lr0.05_it300
+[2026-10-10 16:54:06] START GPU 2  gate_url_unique_hub-flip-local_R10_pgd-none_lr0.05_it300
+[2026-10-10 17:13:02] DONE  GPU 2  gate_url_unique_hub-flip-local_R10_pgd-none_lr0.05_it300
+[2026-10-10 17:27:14] DONE  GPU 1  gate_gas-drift_hub-flip-local_R20_pgd-none_lr0.05_it300
+[2026-10-10 17:27:48] DONE  GPU 0  gate_gas-drift_hub-flip-local_R10_pgd-none_lr0.05_it300
+[2026-10-10 17:27:48] START GPU 0  gate_url_unique_hub-flip-local_R20_pgd-none_lr0.05_it300

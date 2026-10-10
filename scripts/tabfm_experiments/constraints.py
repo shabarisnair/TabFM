@@ -26,11 +26,25 @@ KNOWN_TYPES = {"real", "int", "cat"}
 
 
 # --------------------------------------------------------------------- relations
+# Per-semester curricular-unit relations that hold on every one of the 4424 clean
+# rows (re-checked by scripts/prepare_students_dropout.py). The 2nd-semester
+# without_evaluations <= enrolled is deliberately absent: 3 rows violate it.
+STUDENTS_DROPOUT_RELATIONS: tuple[tuple[str, str], ...] = (
+    ("Curricular_units_1st_sem_approved", "Curricular_units_1st_sem_enrolled"),
+    ("Curricular_units_1st_sem_credited", "Curricular_units_1st_sem_enrolled"),
+    ("Curricular_units_1st_sem_without_evaluations", "Curricular_units_1st_sem_enrolled"),
+    ("Curricular_units_1st_sem_approved", "Curricular_units_1st_sem_evaluations"),
+    ("Curricular_units_2nd_sem_approved", "Curricular_units_2nd_sem_enrolled"),
+    ("Curricular_units_2nd_sem_credited", "Curricular_units_2nd_sem_enrolled"),
+    ("Curricular_units_2nd_sem_approved", "Curricular_units_2nd_sem_evaluations"),
+)
+
+
 def get_relation_constraints(dataset_name: str, metadata_df: pd.DataFrame | None = None) -> list:
     """Relation constraints from the TabularBench sample factories.
 
     url / url_unique and wids use 0-based ``Feature(i)`` indices into X *after*
-    dropping the target (metadata order); lcld uses feature names.
+    dropping the target (metadata order); lcld and students_dropout use feature names.
     """
     name = dataset_name.lower()
     if name in ("url", "url_unique"):
@@ -45,6 +59,8 @@ def get_relation_constraints(dataset_name: str, metadata_df: pd.DataFrame | None
         from tabularbench.datasets.samples import wids
 
         return wids.get_relation_constraints(metadata_df)
+    if name == "students_dropout":
+        return [Feature(lhs) <= Feature(rhs) for lhs, rhs in STUDENTS_DROPOUT_RELATIONS]
     return []
 
 

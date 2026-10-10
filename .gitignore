@@ -3,3 +3,4 @@
 /temp/
 /results/
 /runs/
+/.wandb_api_key

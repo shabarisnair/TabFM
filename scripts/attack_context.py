@@ -66,11 +66,14 @@ def parse_args(argv=None):
     ap.add_argument("--model", default="tabpfnv2")
     ap.add_argument("--method", default=None, help=argparse.SUPPRESS)
     ap.add_argument("--attack", default="x-capgd",
-                    choices=["x-capgd", "label-flip", "label-flip-influence", "label-flip-random"],
+                    choices=["x-capgd", "label-flip", "label-flip-influence", "label-flip-random",
+                             "label-flip-bernoulli"],
                     help="label-flip = genetic search over k-subsets of rows (default Y-attack, "
                          "seeded with influence top-k); label-flip-influence = single-shot influence ranking; "
-                         "label-flip-random = flip a uniformly random R%% of rows, a fresh draw per run "
-                         "(test-agnostic: the test set is only used for scoring)")
+                         "label-flip-random = flip a uniformly random subset of exactly R%% of rows; "
+                         "label-flip-bernoulli = flip each row independently with probability R%%, so the "
+                         "number flipped varies run to run. Both draw afresh per run and are "
+                         "test-agnostic: the test set is only used for scoring")
     ap.add_argument("--gpu", default="1", help="GPU index or 'cpu'")
     ap.add_argument("--row-percent", type=float, default=5.0)
     ap.add_argument("--attack-class", type=int, choices=[0, 1], default=None)
@@ -136,7 +139,7 @@ def parse_args(argv=None):
     # label-flip-influence: deterministic, so 1 x 1.
     if a.attack == "x-capgd":
         default_runs, default_subs = 5, 3
-    elif a.attack in ("label-flip", "label-flip-random"):
+    elif a.attack in ("label-flip", *RANDOM_FLIPS):
         default_runs, default_subs = 5, 1
     else:  # label-flip-influence
         default_runs, default_subs = 1, 1
@@ -148,10 +151,15 @@ def parse_args(argv=None):
         raise SystemExit("--n-runs, --n-row-subsamples, --n-iter, --n-restarts, --eot-iter must be >= 1")
     # The per-run aggregate keeps the best subsample BY TEST CE. For a test-agnostic attack
     # that selection would let the test set back in, so each run is exactly one random draw.
-    if a.attack == "label-flip-random" and a.n_row_subsamples != 1:
-        raise SystemExit("label-flip-random is test-agnostic: use --n-runs for more random draws; "
+    if a.attack in RANDOM_FLIPS and a.n_row_subsamples != 1:
+        raise SystemExit(f"{a.attack} is test-agnostic: use --n-runs for more random draws; "
                          "--n-row-subsamples > 1 would pick the best draw by test CE")
     return a
+
+
+# The two test-agnostic random flips. They differ only in how rows are chosen -- a
+# fixed-size subset vs an independent per-row draw -- and share every other rule.
+RANDOM_FLIPS = ("label-flip-random", "label-flip-bernoulli")
 
 
 def main(argv=None):
@@ -166,7 +174,8 @@ def main(argv=None):
         build_tabpfn_v2, chunking_is_exact, device_from_gpu, evaluate_context, max_repeat_prob_delta,
     )
     from tabfm_experiments.sampling import (
-        attack_seed_for, eligible_indices, k_from_percent, random_flip_rng, row_rng, sample_row_indices,
+        attack_seed_for, bernoulli_row_indices, eligible_indices, k_from_percent, random_flip_rng,
+        row_rng, sample_row_indices,
     )
 
     out = a.out
@@ -196,8 +205,8 @@ def main(argv=None):
     # as a clean baseline, and only the test-agnostic random flip can run with k=0
     # (CAPGD and the GA both need at least one row to work on).
     if a.row_percent <= 0:
-        if a.attack != "label-flip-random":
-            raise SystemExit(f"--row-percent 0 is only supported for --attack label-flip-random, "
+        if a.attack not in RANDOM_FLIPS:
+            raise SystemExit(f"--row-percent 0 is only supported for the random flips {RANDOM_FLIPS}, "
                              f"not {a.attack!r}; every run already records the clean baseline "
                              f"in summary.json['clean']")
         k = 0
@@ -259,13 +268,21 @@ def main(argv=None):
                                   clean_metrics=clean, k_requested=k, test_batch_size=a.test_batch_size, log=log)
                 np.savez_compressed(out / "trials" / f"{tag}_delta.npz", row_indices=res.attacked_indices,
                                     cell_delta_raw=res.x_delta_raw, feature_names=np.array(cols))
-            elif a.attack == "label-flip-random":
+            elif a.attack in RANDOM_FLIPS:
                 # Test-agnostic: the rows depend only on the context labels and the RNG.
-                rows = sample_row_indices(ytr, k, attack_class=a.attack_class,
-                                          rng=random_flip_rng(a.row_seed, run, sub))
+                rng = random_flip_rng(a.row_seed, run, sub)
+                if a.attack == "label-flip-random":
+                    rows = sample_row_indices(ytr, k, attack_class=a.attack_class, rng=rng)
+                else:
+                    # Each row independently with probability R. The count is
+                    # Binomial(n, R): k is only its expectation, the realised count is
+                    # recorded per trial as k_actual.
+                    rows = bernoulli_row_indices(ytr, a.row_percent / 100.0,
+                                                 attack_class=a.attack_class, rng=rng)
                 res = run_label_flip_random(clf, Xc, yc, Xt, yt, rows, run_id=run, subsample_id=sub,
                                             clean_metrics=clean, k_requested=k,
-                                            test_batch_size=a.test_batch_size, log=log)
+                                            test_batch_size=a.test_batch_size, log=log,
+                                            attack_name=a.attack)
                 np.savez_compressed(out / "trials" / f"{tag}_delta.npz", flipped_indices=res.attacked_indices,
                                     y_clean=ytr.astype(np.int64), y_poisoned=res.y_poisoned)
             elif a.attack == "label-flip-influence":
@@ -321,12 +338,14 @@ def main(argv=None):
     summary = {
         "attack": a.attack, "train": a.train, "test": a.test, "n_context": n_ctx, "n_test": len(yte),
         "n_test_full": n_test_full, "n_features": len(cols), "k": k, "row_percent": a.row_percent,
+        "row_sampling": ("independent per-row draw with probability R (k is the expected count)"
+                         if a.attack == "label-flip-bernoulli" else "fixed-size subset of k rows"),
         "attack_class": a.attack_class, "n_runs": a.n_runs, "n_row_subsamples": a.n_row_subsamples,
         "clean": clean.as_dict(), "clean_max_repeat_abs_dprob": max_dp, "chunking_exact": exact,
         "deterministic_mode": a.deterministic_mode,
         "seeds": {"model_seed": a.model_seed, "row_seed": a.row_seed, "attack_seed": a.attack_seed},
         "aggregation": (f"mean over {a.n_runs} independent random draws (test-agnostic; no selection)"
-                        if a.attack == "label-flip-random" else
+                        if a.attack in RANDOM_FLIPS else
                         f"best row-subsample per run by delta.ce, then aggregated across "
                         f"the {a.n_runs} runs"),
         "per_run_best": per_run_best,
@@ -342,7 +361,7 @@ def main(argv=None):
     agg = summary["aggregate_delta"]["overall"]
     log.info("  per-run winners: " + ", ".join(
         f"run{t['run_id']}<-sub{t['subsample_id']} (dce={t['delta']['ce']:+.5f})" for t in per_run_best))
-    how = ("random draws (no selection)" if a.attack == "label-flip-random"
+    how = ("random draws (no selection)" if a.attack in RANDOM_FLIPS
            else "runs (best subsample per run)")
     log.info(f"  mean over {len(per_run_best)} {how}: "
              f"dce={agg['ce']['mean']:+.5f} dacc={agg['accuracy']['mean']:+.4f} "

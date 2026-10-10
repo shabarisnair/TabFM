@@ -35,6 +35,27 @@ def sample_row_indices(
     return np.sort(rng.choice(elig, size=k, replace=False))
 
 
+def bernoulli_row_indices(
+    y: np.ndarray, rate: float, *, attack_class: int | None, rng: np.random.Generator
+) -> np.ndarray:
+    """Each eligible row is selected INDEPENDENTLY with probability ``rate`` (sorted).
+
+    Unlike ``sample_row_indices``, the number of rows is not fixed -- it is
+    Binomial(n_eligible, rate), so at n=5000 and rate=0.3 it is 1500 +- 32 (one sd). The
+    rate is what is controlled, not the count, which is how label noise is usually
+    modelled: every label is corrupted with some probability, independently.
+
+    One uniform is drawn per eligible row, in row order, so a given generator state
+    always yields the same rows.
+    """
+    if not 0.0 <= rate <= 1.0:
+        raise ValueError(f"rate must be in [0, 1], got {rate}")
+    elig = eligible_indices(y, attack_class)
+    if len(elig) == 0:
+        raise ValueError(f"no rows with y == {attack_class} in the context")
+    return np.sort(elig[rng.random(len(elig)) < rate])
+
+
 def row_rng(row_seed: int, subsample_id: int) -> np.random.Generator:
     """Row-subset stream for subsample ``s``: ``Generator(row_seed + s)``."""
     return np.random.default_rng(row_seed + subsample_id)

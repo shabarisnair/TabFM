@@ -340,8 +340,13 @@ def run_label_flip_random(
     k_requested: int,
     test_batch_size: int | None = None,
     log=None,
+    attack_name: str = "label-flip-random",
 ) -> TrialResult:
     """Flip the labels of ``rows``, chosen at random by the caller.
+
+    ``attack_name`` records which random scheme chose ``rows`` -- a fixed-size subset
+    ("label-flip-random") or an independent per-row draw ("label-flip-bernoulli"). The
+    flip itself is identical either way.
 
     The attack never looks at the test set: ``rows`` come from the context labels and an
     RNG alone. ``X_test`` / ``y_test`` are used only to score the poisoned context.
@@ -367,7 +372,7 @@ def run_label_flip_random(
         "test_agnostic": True,
     }
     return TrialResult(
-        attack="label-flip-random", run_id=run_id, subsample_id=subsample_id,
+        attack=attack_name, run_id=run_id, subsample_id=subsample_id,
         attacked_indices=flip, k_requested=k_requested, k_actual=len(flip),
         clean=clean_metrics, poisoned=poisoned, delta=deltas(clean_metrics, poisoned),
         seconds=time.time() - t0, extra=extra, y_poisoned=y_flip_np,

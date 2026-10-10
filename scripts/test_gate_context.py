@@ -1,0 +1,646 @@
+#!/usr/bin/env python
+"""Correctness tests for gate_context.py (feature-only context gating).
+
+Every check is against an INDEPENDENT reference: a hand-computed value, a second
+implementation, a stored result from an earlier experiment, finite differences, or a
+property that must hold exactly. None compares the code under test with itself.
+
+  A. update rules  pgd_step / adam_step / gate_stats / lowest_gated against
+                   hand-computed values
+  A2. validation   draw_validation: hand-computed class counts, nested draws for a fixed
+      draw         seed, random within a class; on the real context its class counts
+                   equal prepare_multiclass_splits.stratified_exact's (a second
+                   implementation of the same quota rule)
+  B. the gate      u_null equals nan_oracle_experiment's independent capture;
+                   g = 1 and g = None are bit-identical to no hook (no-grad and
+                   gradient paths);
+                   the gated encoder input is exactly g*u + (1-g)*u_null row by row;
+                   query rows and the label encoder input are untouched;
+                   encoder rows follow context rows (swap test);
+                   g = 0 on the poisoned rows reproduces the oracle experiment's stored
+                   feat-gate probabilities, and g = 1 its poisoned ones;
+                   the hook refuses a mismatched layout
+  C. gradient      central finite differences (small steps: the loss is strongly curved
+                   in g) along two directions and on the five largest coordinates;
+                   chunked == unchunked gradient
+  D. end-to-end    main() with pgd and adam (W&B offline); check_run() then checks:
+                   - every output exists;
+                   - log.csv, the top-k files and the test metrics are consistent;
+                   - test scores appear on exactly the test iterations;
+                   - the poisoned rows match poison();
+                   - iteration 0 matches runtime.evaluate_context on the validation set;
+                   - the iteration-0 hard evaluation is the random removal;
+                   - the best gates' hard evaluation matches runtime.evaluate_context
+                     on independently chosen kept rows;
+                   - re-scoring the saved best gates reproduces the saved probabilities;
+                   - the validation-set-as-context and poisoned-plus-validation
+                     references match runtime.evaluate_context on those contexts;
+                   - the W&B summary was written.
+                   Also, the references match stored results: ungated vs the
+                   multiclass grid; oracle gate and oracle removal vs
+                   nan_oracle_experiment.
+  E. validation    --val-from-context: refused with --val, when the draw would miss a
+     from the      class, and when it would take the whole context; a short run whose
+     context       split is disjoint and covers the context file, whose poison is
+                   poison() on the remaining rows, and which passes every check of D
+                   rebuilt from the file and the saved split; the W&B run carries its
+                   group and the draw's size and seed.
+
+    python scripts/test_gate_context.py --gpu 1          (about 9 min)
+    python scripts/test_gate_context.py --gpu 1 --sections draw valsplit
+"""
+
+from __future__ import annotations
+
+import argparse
+import contextlib
+import csv
+import json
+import shutil
+import struct
+import sys
+import tempfile
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import numpy as np  # noqa: E402
+import torch  # noqa: E402
+
+import gate_context as G  # noqa: E402
+
+ROOT = Path(__file__).resolve().parents[1]
+FAILS: list[str] = []
+
+
+def check(name: str, cond: bool, detail: str = "") -> None:
+    print(f"  {'PASS' if cond else 'FAIL'}  {name:<66s} {detail}")
+    if not cond:
+        FAILS.append(name)
+
+
+# ======================================================================== A. update rules
+def test_update_rules():
+    print("\nA. update rules")
+    # pinned: row 1 (g=1, wants up) and row 4 (g=0, wants down); free |grad| max = 0.2
+    g = torch.tensor([1.0, 1.0, 1.0, 0.5, 0.0])
+    grad = torch.tensor([0.2, -0.4, 0.1, 0.05, 0.3])
+    G.pgd_step(g, grad, 0.05, "linf")
+    want = torch.tensor([0.95, 1.0, 0.975, 0.4875, 0.0])
+    check("pgd linf: hand-computed step, pinned rows ignored by the scale",
+          torch.allclose(g, want, atol=1e-7), f"{g.tolist()}")
+
+    g = torch.tensor([1.0, 0.6, 0.02])
+    G.pgd_step(g, torch.tensor([0.5, -0.1, 0.1]), 0.2, "none")
+    check("pgd none: g - lr*grad, clipped to [0, 1]",
+          torch.allclose(g, torch.tensor([0.9, 0.62, 0.0]), atol=1e-7), f"{g.tolist()}")
+
+    g = torch.tensor([1.0, 0.0, 0.3])
+    G.pgd_step(g, torch.tensor([-1.0, 2.0, 0.0]), 0.05, "linf")
+    check("pgd linf: no movable gradient -> no change",
+          torch.equal(g, torch.tensor([1.0, 0.0, 0.3])))
+
+    g = torch.ones(4, requires_grad=True)
+    opt = torch.optim.Adam([g], lr=0.05)
+    G.adam_step(g, torch.tensor([1e-4, -1e-4, 3e-6, 0.0]), opt)
+    # Adam's first step is lr * sign(grad) (up to eps); the clip holds row 1 at 1.
+    check("adam: first step = lr*sign(grad), then clipped",
+          torch.allclose(g.detach(), torch.tensor([0.95, 1.0, 0.95, 1.0]), atol=2e-4),
+          f"{g.detach().tolist()}")
+    for _ in range(100):
+        G.adam_step(g, torch.tensor([1.0, -1.0, 1.0, 1.0]), opt)
+    check("adam: gates stay in [0, 1]", bool(((g >= 0) & (g <= 1)).all()), f"{g.detach().tolist()}")
+
+    # gate_stats: AUROC against a brute-force pair count
+    rng = np.random.default_rng(0)
+    gv = rng.uniform(size=200).round(1)  # with ties
+    pois = rng.uniform(size=200) < 0.3
+    removed = np.array([0, 5, 7, 9])
+    s = G.gate_stats(gv, pois, removed)
+    sp, sn = 1 - gv[pois], 1 - gv[~pois]
+    auc = ((sp[:, None] > sn[None]).sum() + 0.5 * (sp[:, None] == sn[None]).sum()) / (len(sp) * len(sn))
+    check("gate_stats: AUROC = brute-force pair count (with ties)",
+          abs(s["auroc_poisoned"] - auc) < 1e-12, f"{s['auroc_poisoned']:.6f} vs {auc:.6f}")
+    hits = sum(bool(pois[i]) for i in removed)
+    check("gate_stats: means, share below 0.5, precision/recall of the removed rows",
+          abs(s["g_mean_poisoned"] - gv[pois].mean()) < 1e-12
+          and abs(s["frac_g_below_0.5"] - (gv < 0.5).mean()) < 1e-12
+          and s["precision_at_R"] == hits / 4 and s["recall_at_R"] == hits / pois.sum(),
+          f"precision {s['precision_at_R']:.3f} recall {s['recall_at_R']:.4f}")
+    s1 = G.gate_stats(np.ones(50), np.arange(50) < 10, np.arange(3))
+    check("gate_stats: all gates equal -> AUROC 0.5, AP = poisoned share",
+          s1["auroc_poisoned"] == 0.5 and abs(s1["ap_poisoned"] - 0.2) < 1e-12)
+    check("gate_stats: no poisoned rows -> no detection keys",
+          "auroc_poisoned" not in G.gate_stats(np.ones(5), np.zeros(5, bool), np.arange(2)))
+
+    # lowest_gated: the k smallest gates; ties go to the smaller tie key
+    gv = np.array([0.9, 0.2, 1.0, 0.2, 0.5, 1.0], dtype=np.float32)
+    tie = np.array([5, 4, 3, 2, 1, 0])
+    check("lowest_gated: smallest gates, ties by tie order (hand-computed)",
+          G.lowest_gated(gv, 3, tie).tolist() == [1, 3, 4]
+          and G.lowest_gated(gv, 5, tie).tolist() == [0, 1, 3, 4, 5], f"{G.lowest_gated(gv, 5, tie).tolist()}")
+    tie = np.random.default_rng(1).permutation(1000)
+    check("lowest_gated: all gates equal -> the rows whose tie key is < k",
+          np.array_equal(G.lowest_gated(np.ones(1000, np.float32), 50, tie), np.flatnonzero(tie < 50)))
+    check("lowest_gated: k = 0 -> nothing removed", len(G.lowest_gated(gv, 0, np.arange(6))) == 0)
+
+
+# ====================================================== A2. validation drawn from the context
+def test_draw_validation():
+    print("\nA2. validation drawn from the context")
+    # 100 rows, classes 0/1/2 with shares 0.5/0.3/0.2, interleaved as in a real file
+    y = np.repeat([0, 1, 2], [50, 30, 20])[np.random.default_rng(7).permutation(100)]
+    # n = 10: shares 5/3/2 exactly.  n = 12: shares 6/3.6/2.4 -> floors 6/3/2, and the one
+    # leftover row goes to the largest remainder, class 1 (0.6).
+    for n, want in ((10, [5, 3, 2]), (12, [6, 4, 2])):
+        v = G.draw_validation(y, n, seed=0)
+        got = np.bincount(y[v], minlength=3).tolist()
+        check(f"draw_validation n={n}: class counts {want} (hand-computed)", got == want, f"{got}")
+        check(f"draw_validation n={n}: {n} distinct sorted row indices in range",
+              len(v) == n and bool(np.all(np.diff(v) > 0)) and v.min() >= 0 and v.max() < 100)
+    draws = [set(G.draw_validation(y, n, seed=0).tolist()) for n in (10, 20, 40, 80)]
+    check("draw_validation: one seed gives nested draws (10 in 20 in 40 in 80)",
+          all(a <= b for a, b in zip(draws, draws[1:])))
+    check("draw_validation: another seed gives another draw",
+          set(G.draw_validation(y, 20, seed=1).tolist()) != draws[1])
+    first = {int(i) for c, q in ((0, 5), (1, 3), (2, 2)) for i in np.flatnonzero(y == c)[:q]}
+    check("draw_validation: random rows within a class, not the first ones in the file",
+          draws[0] != first)
+
+    # the real gas-drift context: same class counts as stratified_exact, nested 100..500
+    from prepare_multiclass_splits import stratified_exact
+    from tabfm_experiments.data import load_split
+    yc = np.asarray(load_split(G.find_split("gas-drift", "context_"))[1]).astype(int)
+    same, sets = True, []
+    for n in (100, 200, 300, 400, 500):
+        v = G.draw_validation(yc, n, seed=0)
+        ref = stratified_exact(np.arange(len(yc)), yc, n, np.random.default_rng(0))
+        same &= np.array_equal(np.bincount(yc[v], minlength=6), np.bincount(yc[ref], minlength=6))
+        sets.append(set(v.tolist()))
+    check("draw_validation on gas-drift: class counts == stratified_exact's, n = 100..500", bool(same))
+    check("draw_validation on gas-drift: nested, n = 100 in 200 in ... in 500",
+          all(a <= b for a, b in zip(sets, sets[1:])))
+
+
+# ============================================================================ B. the gate
+def encoder_inputs(clf, Xc, yc_t, Xq, *, g=None, null=None, need_grad=False):
+    """(feature-encoder input as the encoder sees it, target-encoder input, probs)."""
+    from tabfm_experiments.runtime import _forward, _install_recompute
+    feat, targ = [], []
+    with torch.enable_grad() if need_grad else torch.no_grad():
+        clf.fit_with_differentiable_input(Xc, yc_t)
+        _install_recompute(clf)
+        gate = G.feature_gate(clf, g, null) if g is not None else contextlib.nullcontext()
+        with gate:  # capture hooks registered after the gate run after it
+            arch = clf.models_[0]
+            hs = [arch.feature_group_embedder.register_forward_pre_hook(
+                      lambda m, a: feat.append(a[0].detach().clone())),
+                  arch.target_embedder.register_forward_pre_hook(
+                      lambda m, a: targ.append(a[0].detach().clone()))]
+            try:
+                p = _forward(clf, Xq, need_grad=need_grad)
+            finally:
+                for h in hs:
+                    h.remove()
+    assert len(feat) == 1 and len(targ) == 1, (len(feat), len(targ))
+    return feat[0], targ[0], p.detach()
+
+
+def setup(device, paths=None, dataset="gas-drift", row_percent=20):
+    """Data, poison and a classifier, loaded exactly as gate_context.main loads them."""
+    from tabfm_experiments.multiclass_attacks import poison
+    from tabfm_experiments.runtime import build_tabpfn_v2
+    ctx, val, test = paths or (G.find_split(dataset, p) for p in ("context_", "val_", "test_attack_"))
+    Xc, yc = G.load(ctx, device)
+    Xv, yv = G.load(val, device)
+    Xt, yt = G.load(test, device)
+    info = json.loads((G.DATASETS_DIR / dataset / "splits" / "split_info.json").read_text())
+    K = int(info.get("n_classes") or len(np.unique(yc)))
+    rows, y_pois = poison("hub-flip-local", Xc, yc, K, row_percent, run_id=0, row_seed=1)
+    clf = build_tabpfn_v2(device, 0, recompute_layers=True, n_classes=K)
+    return dict(clf=clf, Xc=Xc, yc=yc, Xv=Xv, yv=yv, Xt=Xt, yt=yt, K=K, rows=rows, y_pois=y_pois,
+                yp_t=torch.tensor(y_pois, dtype=torch.float32, device=device), paths=(ctx, val, test))
+
+
+def test_gate(S, device):
+    print("\nB. the gate")
+    clf, Xc, yp_t, Xt, n = S["clf"], S["Xc"], S["yp_t"], S["Xt"], len(S["yc"])
+    null = G.capture_null_input(clf, Xc, yp_t)
+    S["null"] = null
+    half = null.shape[1] // 2
+    check("u_null: 64 groups x [2 values | 2 indicators] = [0, 0, -2, -2]",
+          tuple(null.shape) == (64, 4) and bool((null[:, :half] == 0).all())
+          and bool((null[:, half:] == -2).all()), f"{tuple(null.shape)}")
+    from nan_oracle_experiment import null_feature_input
+    ref = null_feature_input(clf, Xc.cpu().numpy(), S["y_pois"].astype(np.float32),
+                             Xt.cpu().numpy(), device)
+    check("u_null == nan_oracle_experiment's independent capture",
+          torch.equal(null.cpu(), ref.cpu()))
+
+    Xq = Xt[:300]
+    ones = torch.ones(n, device=device)
+    for need_grad in (False, True):
+        path = "gradient path" if need_grad else "no-grad path"
+        f0, t0, p0 = encoder_inputs(clf, Xc, yp_t, Xq, need_grad=need_grad)
+        f1, t1, p1 = encoder_inputs(clf, Xc, yp_t, Xq, g=ones, null=null, need_grad=need_grad)
+        check(f"g = 1: encoder input and probs bit-identical to no hook ({path})",
+              torch.equal(f0, f1) and torch.equal(p0, p1),
+              f"max|dp| {float((p0 - p1).abs().max()):.1e}")
+
+        rng = np.random.default_rng(1)
+        gv = rng.choice([0.0, 0.3, 0.77, 1.0], size=n).astype(np.float32)
+        g = torch.tensor(gv, device=device)
+        f2, t2, _ = encoder_inputs(clf, Xc, yp_t, Xq, g=g, null=null, need_grad=need_grad)
+        gi = g[:, None, None].to(f0.device)
+        want = gi * f0[:n] + (1 - gi) * null.to(f0.device)
+        check(f"gated rows == g*u + (1-g)*u_null exactly ({path})",
+              torch.equal(f2[:n], want), f"max diff {float((f2[:n] - want).abs().max()):.1e}")
+        check(f"query rows and label-encoder input untouched ({path})",
+              torch.equal(f2[n:], f0[n:]) and torch.equal(t2, t0))
+
+        a, b = 17, 3001
+        Xs, ys = Xc.clone(), yp_t.clone()
+        Xs[[a, b]], ys[[a, b]] = Xc[[b, a]], yp_t[[b, a]]
+        f3, _, _ = encoder_inputs(clf, Xs, ys, Xq, need_grad=need_grad)
+        perm = torch.arange(f0.shape[0])
+        perm[[a, b]] = perm[[b, a]]
+        diff = float((f3 - f0[perm]).abs().max())
+        gap = float((f0[a] - f0[b]).abs().max())
+        check(f"encoder row i = context row i: swapping rows {a},{b} swaps them ({path})",
+              diff < 1e-4 < gap, f"swap residual {diff:.1e} vs row gap {gap:.2f}")
+
+    yt_t = torch.as_tensor(S["yt"], device=device)
+    p_none = G.evaluate(clf, Xc, yp_t, Xt, yt_t, None, null, need_grad=False, batch_size=None)[2]
+    p_ones = G.evaluate(clf, Xc, yp_t, Xt, yt_t, ones, null, need_grad=False, batch_size=None)[2]
+    check("evaluate with g = None == evaluate with g = 1 (bit-identical)", np.array_equal(p_none, p_ones))
+
+    # g = 0 on exactly the poisoned rows vs the stored, independently gated oracle run
+    z = np.load(ROOT / "results/nan_oracle/gas-drift/part1/probs.npz")
+    oracle = torch.ones(n, device=device)
+    oracle[torch.as_tensor(S["rows"])] = 0.0
+    for name, gate, key in (("g = 0 on poisoned rows", oracle, "R20__feat-gate"),
+                            ("g = 1", ones, "R20__poisoned")):
+        p = G.evaluate(clf, Xc, yp_t, Xt, yt_t, gate, null, need_grad=False, batch_size=None)[2]
+        d = float(np.abs(p - z[key]).max())
+        check(f"{name} reproduces nan_oracle_experiment {key}", d < 1e-4, f"max|dp| {d:.1e}")
+
+    # the gradient path and the no-grad path agree for an interior gate
+    g = torch.tensor(np.random.default_rng(2).uniform(0.2, 0.8, n), dtype=torch.float32,
+                     device=device, requires_grad=True)
+    _, _, pa = G.evaluate(clf, Xc, yp_t, Xt[:200], yt_t[:200], g, null, need_grad=True, batch_size=None)
+    _, _, pb = G.evaluate(clf, Xc, yp_t, Xt[:200], yt_t[:200], g, null, need_grad=False, batch_size=None)
+    check("gradient path probs == no-grad path probs (interior g)",
+          float(np.abs(pa - pb).max()) < 1e-4, f"max|dp| {float(np.abs(pa - pb).max()):.1e}")
+
+    try:
+        G.evaluate(clf, Xc, yp_t, Xt[:10], yt_t[:10], torch.ones(n + 50, device=device), null,
+                   need_grad=False, batch_size=None)
+        refused = False
+    except RuntimeError:
+        refused = True
+    check("hook refuses a gate longer than the context", refused)
+
+
+# ========================================================================== C. gradient
+def test_gradient(S, device):
+    print("\nC. gradient")
+    clf, Xc, yp_t, null, n = S["clf"], S["Xc"], S["yp_t"], S["null"], len(S["yc"])
+    Xq, yq = S["Xv"][:200], torch.as_tensor(S["yv"][:200], device=device)
+    g0 = torch.tensor(np.random.default_rng(3).uniform(0.2, 0.8, n), dtype=torch.float32,
+                      device=device, requires_grad=True)
+    _, grad, _ = G.evaluate(clf, Xc, yp_t, Xq, yq, g0, null, need_grad=True, batch_size=None)
+
+    def L(gv):
+        return G.evaluate(clf, Xc, yp_t, Xq, yq, gv, null, need_grad=False, batch_size=None)[0]
+
+    # The loss is strongly curved in g (one row: the central difference is -0.07 at
+    # h = 0.1 but -0.21 at h <= 0.003, which is autograd's value), so the steps must be
+    # small. Measured convergence: h from 0.1 down to 3e-4.
+    gd = g0.detach()
+    top = torch.argsort(grad.abs(), descending=True)
+    rnd = torch.zeros(n, device=device)
+    signs = torch.randint(0, 2, (200,), generator=torch.Generator().manual_seed(0)) * 2.0 - 1.0
+    rnd[top[:200]] = signs.to(device)  # random signs: not aligned with the gradient
+    for name, d, h in (("sign(grad)", torch.sign(grad), 1e-4),
+                       ("random signs on the 200 largest rows", rnd, 1e-3)):
+        fd = (L(gd + h * d) - L(gd - h * d)) / (2 * h)
+        an = float((grad * d).sum())
+        rel = abs(fd - an) / abs(an)
+        check(f"directional derivative, {name}: finite diff == autograd",
+              rel < 0.02, f"fd {fd:.5e}  autograd {an:.5e}  rel {rel:.1e}")
+    for i in top[:5].tolist():
+        e = torch.zeros(n, device=device)
+        e[i] = 1e-3
+        fd = (L(gd + e) - L(gd - e)) / 2e-3
+        an = float(grad[i])
+        rel = abs(fd - an) / abs(an)
+        check(f"d CE / d g[{i}]: finite diff (h = 1e-3) == autograd", rel < 0.02,
+              f"fd {fd:.4e}  autograd {an:.4e}  rel {rel:.1e}")
+
+    _, grad_c, _ = G.evaluate(clf, Xc, yp_t, Xq, yq, g0, null, need_grad=True, batch_size=80)
+    rel = float((grad_c - grad).abs().max() / grad.abs().max())
+    check("chunked (80/80/40) gradient == unchunked gradient", rel < 1e-3, f"rel max diff {rel:.1e}")
+
+
+# ======================================================================= D. end-to-end
+def wandb_records(path: Path):
+    """The protobuf records of a W&B run file (run-<id>.wandb), read independently of W&B.
+
+    wandb 0.30 keeps history, summary and artifacts in this file (offline runs write no
+    wandb-summary.json). Framing is LevelDB's log format: a 7-byte file header, then
+    32 KiB blocks of [crc32c u32][length u16][type u8][payload]; type 1 = whole record,
+    2/3/4 = first/middle/last fragment."""
+    from wandb.proto import wandb_internal_pb2 as pb
+    data, pos, buf = path.read_bytes(), 7, b""
+    while pos < len(data):
+        left = 32768 - pos % 32768
+        if left < 7:  # block trailer
+            pos += left
+            continue
+        _, n, t = struct.unpack("<IHB", data[pos:pos + 7])
+        pos += 7
+        payload, pos = data[pos:pos + n], pos + n
+        if t == 0 and n == 0:  # zero padding to the end of the block
+            pos += left - 7
+            continue
+        if t in (2, 3):
+            buf = payload if t == 2 else buf + payload
+            continue
+        r = pb.Record()
+        r.ParseFromString(buf + payload if t == 4 else payload)
+        buf = b""
+        yield r
+
+
+def check_run(out: Path, S, device, *, optimizer: str, lr: float, steps: int, test_every: int,
+              tag: str, row_percent: float = 20) -> dict:
+    """Checks on one finished gate_context run, against independent recomputation."""
+    from tabfm_experiments.metrics import multiclass_metrics
+    from tabfm_experiments.runtime import evaluate_context
+    from tabfm_experiments.sampling import k_from_percent
+
+    names = (["config.json", "run.log", "log.csv", "test_metrics.json", "test_probs.npz",
+              "poison.npz", "gates/final.npz"] + [f"gates/top{k}.npz" for k in (1, 2, 3)]
+             + [f"plots/{m}.png" for m in G.METRICS]
+             + ["plots/gates.png", "plots/detection.png", "plots/gate_hist_best.png"])
+    missing = [s for s in names if not (out / s).is_file() or (out / s).stat().st_size == 0]
+    check(f"{tag} every output file exists and is non-empty", not missing, f"{missing}")
+
+    rows = list(csv.DictReader(open(out / "log.csv")))
+    check(f"{tag} log.csv has steps+1 rows; iteration 0 is ungated",
+          len(rows) == steps + 1 and float(rows[0]["g_mean"]) == 1.0
+          and float(rows[0]["auroc_poisoned"]) == 0.5)
+    want_test = {it for it in range(steps + 1) if it % test_every == 0 or it == steps}
+    got_test = {int(r["iter"]) for r in rows if r["test_soft_ce"] != ""}
+    check(f"{tag} test scores logged on exactly the test iterations", got_test == want_test,
+          f"{sorted(got_test)}")
+    dg = float(rows[0]["max_abs_dg"])
+    check(f"{tag} first update moves the largest gate by lr",
+          abs(dg - lr) < (1e-6 if optimizer == "pgd" else 1e-3), f"{dg:.6f}")
+
+    order = sorted(rows, key=lambda r: (-float(r["val_accuracy"]), float(r["val_ce"]), int(r["iter"])))
+    ok = True
+    for k in (1, 2, 3):
+        zk = np.load(out / f"gates/top{k}.npz")
+        ok &= int(zk["iteration"]) == int(order[k - 1]["iter"])
+        ok &= abs(float(zk["g"].mean()) - float(order[k - 1]["g_mean"])) < 1e-5
+    check(f"{tag} top-3 files = log rows sorted by (val acc desc, val ce asc, iter)", ok,
+          f"{[int(r['iter']) for r in order[:3]]}")
+
+    pz = np.load(out / "poison.npz")
+    check(f"{tag} poisoned rows/labels match poison(); labels differ only there",
+          np.array_equal(pz["poisoned_rows"], S["rows"]) and np.array_equal(pz["y_poisoned"], S["y_pois"])
+          and set(np.flatnonzero(pz["y_poisoned"] != pz["y_clean"])) == set(S["rows"].tolist()))
+
+    clf, Xc, yp_t, Xt = S["clf"], S["Xc"], S["yp_t"], S["Xt"]
+    yv_t, yt_t = torch.as_tensor(S["yv"], device=device), torch.as_tensor(S["yt"], device=device)
+    ce_ref, _, _ = evaluate_context(clf, Xc, yp_t, S["Xv"], yv_t, need_grad=False)
+    d = abs(float(ce_ref) - float(rows[0]["val_ce"]))
+    check(f"{tag} iteration-0 validation CE == runtime.evaluate_context", d < 1e-5, f"diff {d:.1e}")
+
+    tm = json.loads((out / "test_metrics.json").read_text())
+    tp = np.load(out / "test_probs.npz")
+    ok = all(abs(multiclass_metrics(tp[k], S["yt"], S["K"])[m] - tm["metrics"][k][m]) < 1e-9
+             for k in tp.files if k != "y_test" for m in G.METRICS)
+    check(f"{tag} test_metrics.json == metrics recomputed from test_probs.npz", ok)
+
+    _, _, p0 = evaluate_context(clf, Xc, yp_t, Xt, yt_t, need_grad=False)
+    m0 = multiclass_metrics(p0.cpu().numpy(), S["yt"], S["K"])
+    check(f"{tag} iteration-0 soft test scores == runtime.evaluate_context, ungated",
+          all(abs(float(rows[0][f"test_soft_{m}"]) - m0[m]) < 1e-6 for m in G.METRICS))
+
+    n, tie = len(S["yc"]), pz["tie_order"]
+    k = k_from_percent(n, row_percent)
+    rand_keep = np.flatnonzero(tie >= k)  # all gates equal: the k smallest tie keys go
+    _, _, pr = evaluate_context(clf, Xc[rand_keep], yp_t[rand_keep], Xt, yt_t, need_grad=False)
+    mr = multiclass_metrics(pr.cpu().numpy(), S["yt"], S["K"])
+    check(f"{tag} iteration-0 hard test scores == a random R% removal (independent)",
+          all(abs(float(rows[0][f"test_hard_{m}"]) - mr[m]) < 1e-6 for m in G.METRICS)
+          and np.abs(tp["poisoned_random_removal"] - pr.cpu().numpy()).max() < 1e-6)
+
+    z1 = np.load(out / "gates/top1.npz")
+    g1 = z1["g"]
+    drop = sorted(range(n), key=lambda i: (g1[i], tie[i]))[:k]  # independent of lowest_gated
+    keep = np.setdiff1d(np.arange(n), drop)
+    _, _, ph = evaluate_context(clf, Xc[keep], yp_t[keep], Xt, yt_t, need_grad=False)
+    d = float(np.abs(tp["poisoned_best_gate_hard"] - ph.cpu().numpy()).max())
+    check(f"{tag} best gates, hard: == evaluate_context without the k lowest-gated rows",
+          d < 1e-6, f"max|dp| {d:.1e}")
+    p = G.evaluate(clf, Xc, yp_t, Xt, yt_t, torch.tensor(g1, device=device), S["null"],
+                   need_grad=False, batch_size=None)[2]
+    d = float(np.abs(p - tp["poisoned_best_gate_soft"]).max())
+    check(f"{tag} best gates, soft: re-scoring gates/top1.npz reproduces the saved probs",
+          d < 1e-6, f"max|dp| {d:.1e}")
+    check(f"{tag} test_metrics best iteration == top-1 file", tm["best_iteration"] == int(z1["iteration"]))
+
+    # the two references that use the clean validation rows as context, recomputed
+    yv_f = torch.as_tensor(S["yv"], dtype=torch.float32, device=device)
+    for name, Xr, yr in (("val_as_context", S["Xv"], yv_f),
+                         ("poisoned_plus_val", torch.cat([Xc, S["Xv"]]), torch.cat([yp_t, yv_f]))):
+        _, _, pr = evaluate_context(clf, Xr, yr, Xt, yt_t, need_grad=False)
+        d = float(np.abs(tp[name] - pr.cpu().numpy()).max()) if name in tp.files else float("inf")
+        check(f"{tag} reference {name} == evaluate_context on {len(yr)} context rows",
+              d < 1e-6, f"max|dp| {d:.1e}")
+    vs = tm.get("vs_val_as_context", {})
+    m = tm["metrics"]
+    check(f"{tag} vs_val_as_context == best soft gates - validation set as context",
+          set(vs) == set(G.METRICS) and all(
+              abs(vs[k] - (m["poisoned_best_gate_soft"][k] - m["val_as_context"][k])) < 1e-12
+              for k in G.METRICS), f"{vs}")
+
+    # the newest local run (a --force rerun leaves the earlier run's folder in place);
+    # folder names start with the start time, so name order is time order
+    runs = sorted((out / "wandb").glob("*run-*/run-*.wandb"), key=lambda f: f.parent.name.split("run-", 1)[1])
+    hist, summ, arts, name = [], {}, [], None
+    for r in (wandb_records(runs[-1]) if runs else []):
+        kind = r.WhichOneof("record_type")
+        if kind == "run":
+            name = r.run.display_name
+        elif kind == "history":
+            hist.append({i.key or "/".join(i.nested_key): i.value_json for i in r.history.item})
+        elif kind == "summary":
+            summ.update({i.key or "/".join(i.nested_key): i.value_json for i in r.summary.update})
+        elif kind == "artifact" and r.artifact.type == "gate-run":  # (the overlay charts'
+            arts.append({c.path for c in r.artifact.manifest.contents})  # tables are artifacts too)
+    by_step = {}
+    for h in hist:  # a step can arrive in more than one record (e.g. the final images)
+        by_step.setdefault(int(h["_step"]), {}).update(h)
+
+    def same(step, wkey, ckey):  # the W&B value equals the log.csv value
+        return wkey in by_step.get(step, {}) and float(by_step[step][wkey]) == float(rows[step][ckey])
+
+    every = [(f"{m}/val", f"val_{m}") for m in G.METRICS] + [
+        (f"detection/{w}", c) for c, w in G.DETECTION.items()]
+    ok = sorted(by_step) == list(range(steps + 1)) and all(
+        same(it, w, c) for it in range(steps + 1) for w, c in every)
+    check(f"{tag} W&B every iteration: all 5 val metrics + detection precision/recall/auroc/ap",
+          ok, f"{len(by_step)} steps x {len(every)} keys, equal to log.csv")
+    tests = [(f"{m}/{s}", f"{s}_{m}") for s in ("test_soft", "test_hard") for m in G.METRICS]
+    got = {it for it, h in by_step.items() if any(w in h for w, _ in tests)}
+    ok = got == want_test and all(same(it, w, c) for it in want_test for w, c in tests)
+    check(f"{tag} W&B test iterations only: all 5 metrics, soft and hard", ok, f"steps {sorted(got)}")
+    # validation every iteration + two test curves + the flat validation-as-context line
+    n_pts = (steps + 1) + 2 * len(want_test) + 2
+    last = by_step.get(steps, {})
+    ok = (len(runs) >= 1 and name == out.name
+          and all(last.get(f"overlay/{m}_table/nrows") == str(n_pts) for m in G.METRICS)
+          and summ.get("best_iteration") == str(tm["best_iteration"])
+          and len(arts) == 1 and set(names) <= arts[0])
+    check(f"{tag} W&B: run name, overlay charts ({n_pts} points each), summary, artifact files", ok,
+          f"{len(runs)} run file(s)")
+    return tm
+
+
+def test_end_to_end(S, device, gpu):
+    print("\nD. end-to-end")
+    tmp = Path(tempfile.mkdtemp(prefix="gate_test_"))
+    try:
+        for optimizer in ("pgd", "adam"):
+            steps, lr, test_every = 3, 0.05, 2
+            out = G.main(["--gpu", gpu, "--row-percent", "20", "--steps", str(steps),
+                          "--optimizer", optimizer, "--lr", str(lr), "--test-every", str(test_every),
+                          "--out", str(tmp), "--plot-every", "2", "--wandb-mode", "offline"])
+            tag = f"[{optimizer}]"
+            tm = check_run(out, S, device, optimizer=optimizer, lr=lr, steps=steps,
+                           test_every=test_every, tag=tag)
+
+            # the references against stored results of earlier, independent runs
+            grid = json.loads((ROOT / "results/multiclass/gas-drift/hub-flip-local_r020/summary.json")
+                              .read_text())["runs"][0]["metrics"]
+            pm = tm["metrics"]["poisoned_no_gate"]
+            check(f"{tag} ungated test metrics == stored multiclass grid (R=20)",
+                  abs(pm["ce"] - grid["ce"]) < 1e-4 and pm["accuracy"] == grid["accuracy"],
+                  f"ce diff {abs(pm['ce'] - grid['ce']):.1e}")
+            z = np.load(ROOT / "results/nan_oracle/gas-drift/part1/probs.npz")
+            tp = np.load(out / "test_probs.npz")
+            for name, key in (("poisoned_oracle_gate", "R20__feat-gate"),
+                              ("poisoned_oracle_removal", "R20__remove")):
+                d = float(np.abs(tp[name] - z[key]).max())
+                check(f"{tag} {name} == stored nan_oracle_experiment {key}", d < 1e-4, f"max|dp| {d:.1e}")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+# ======================================================= E. validation drawn from the context
+def wandb_run_info(out: Path) -> tuple[str, dict]:
+    """(group, config) of the newest local W&B run under out, read from its run file."""
+    runs = sorted((out / "wandb").glob("*run-*/run-*.wandb"), key=lambda f: f.parent.name.split("run-", 1)[1])
+    group, config = None, {}
+    for r in (wandb_records(runs[-1]) if runs else []):
+        kind = r.WhichOneof("record_type")
+        if kind == "run":
+            group = r.run.run_group
+            config.update({i.key: json.loads(i.value_json) for i in r.run.config.update})
+        elif kind == "config":
+            config.update({i.key: json.loads(i.value_json) for i in r.config.update})
+    return group, config
+
+
+def test_val_split(device, gpu):
+    print("\nE. validation drawn from the context")
+    from prepare_multiclass_splits import stratified_exact
+    from tabfm_experiments.multiclass_attacks import poison
+    from tabfm_experiments.runtime import build_tabpfn_v2
+
+    tmp = Path(tempfile.mkdtemp(prefix="gate_valsplit_test_"))
+    try:
+        base = ["--gpu", gpu, "--row-percent", "20", "--out", str(tmp), "--wandb-mode", "disabled"]
+        for extra, why in ((["--val-from-context", "100", "--val", str(G.find_split("gas-drift", "val_"))],
+                            "together with --val"),
+                           (["--val-from-context", "4"], "when the draw misses a class (6 classes, 4 rows)"),
+                           (["--val-from-context", "5000"], "when it would take the whole context")):
+            try:
+                G.main(base + ["--steps", "0"] + extra)
+                refused = None
+            except SystemExit as e:  # argparse exits with code 2; the script's guards with a message
+                refused = e.code
+            check(f"--val-from-context refused {why}", isinstance(refused, str), f"{refused!r}")
+
+        V, steps, lr, test_every = 100, 3, 0.05, 2
+        out = G.main(base[:-2] + ["--val-from-context", str(V), "--val-seed", "0", "--steps", str(steps),
+                                  "--test-every", str(test_every), "--plot-every", "2",
+                                  "--wandb-mode", "offline", "--wandb-group", "valsplit-test"])
+        tag = "[val from context]"
+        sp = np.load(out / "split.npz")
+        vr, cr = sp["val_rows"], sp["context_rows"]
+        X_all, y_all = G.load(G.find_split("gas-drift", "context_"), device)
+        n_all = len(y_all)
+        check(f"{tag} split: {V} validation + {n_all - V} context rows, disjoint, covering the file",
+              len(vr) == V and len(cr) == n_all - V and len(np.intersect1d(vr, cr)) == 0
+              and np.array_equal(np.union1d(vr, cr), np.arange(n_all)))
+        ref = stratified_exact(np.arange(n_all), y_all, V, np.random.default_rng(0))
+        check(f"{tag} validation class counts == stratified_exact's quotas",
+              np.array_equal(np.bincount(y_all[vr], minlength=6), np.bincount(y_all[ref], minlength=6)))
+
+        # everything check_run needs, rebuilt from the file and the saved split
+        Xc, yc = X_all[torch.as_tensor(cr, device=device)], y_all[cr]
+        Xt, yt = G.load(G.find_split("gas-drift", "test_attack_"), device)
+        rows, y_pois = poison("hub-flip-local", Xc, yc, 6, 20, run_id=0, row_seed=1)
+        clf = build_tabpfn_v2(device, 0, recompute_layers=True, n_classes=6)
+        yp_t = torch.tensor(y_pois, dtype=torch.float32, device=device)
+        S = dict(clf=clf, Xc=Xc, yc=yc, Xv=X_all[torch.as_tensor(vr, device=device)], yv=y_all[vr],
+                 Xt=Xt, yt=yt, K=6, rows=rows, y_pois=y_pois, yp_t=yp_t)
+        S["null"] = G.capture_null_input(clf, Xc, yp_t)
+        check_run(out, S, device, optimizer="pgd", lr=lr, steps=steps, test_every=test_every, tag=tag)
+
+        cfg = json.loads((out / "config.json").read_text())
+        check(f"{tag} config: {n_all - V} context rows and {V} validation rows",
+              cfg["n_context"] == n_all - V and cfg["n_val"] == V, f"{cfg['n_context']} / {cfg['n_val']}")
+        group, wcfg = wandb_run_info(out)
+        args = wcfg.get("args", {})
+        check(f"{tag} W&B run: group, and the draw's size and seed in its config",
+              group == "valsplit-test" and args.get("val_from_context") == V and args.get("val_seed") == 0,
+              f"group {group!r}, val_from_context {args.get('val_from_context')}")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+SECTIONS = ("rules", "draw", "gate", "gradient", "e2e", "valsplit")
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--gpu", default="1")
+    ap.add_argument("--sections", nargs="+", default=list(SECTIONS), choices=SECTIONS)
+    a = ap.parse_args(argv)
+    device = f"cuda:{a.gpu}" if a.gpu != "cpu" else "cpu"
+    if "rules" in a.sections:
+        test_update_rules()
+    if "draw" in a.sections:
+        test_draw_validation()
+    if {"gate", "gradient", "e2e"} & set(a.sections):
+        S = setup(device)
+        test_gate(S, device)  # also captures S["null"], which the later sections use
+        if "gradient" in a.sections:
+            test_gradient(S, device)
+        if "e2e" in a.sections:
+            test_end_to_end(S, device, a.gpu)
+    if "valsplit" in a.sections:
+        test_val_split(device, a.gpu)
+    print(f"\n{'ALL PASSED' if not FAILS else f'{len(FAILS)} FAILED: {FAILS}'}")
+    return 1 if FAILS else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

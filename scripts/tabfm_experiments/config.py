@@ -46,6 +46,13 @@ DATASETS: dict[str, DatasetInfo] = {
     "heloc": DatasetInfo("heloc", "RiskPerformance", natural_size=5000),
     # 690 raw rows: prepared with a plain 70/30 split, no contexts/val/selection.
     "credit-approval": DatasetInfo("credit-approval", "class", natural_size=457),
+    # Multiclass. Both need clf.n_classes_ and the metrics generalised past binary
+    # before they can run; see each encoding_codebook.json for the full caveats.
+    # 6 classes, unconstrained, but 128 raw columns spanning six orders of magnitude.
+    "gas-drift": DatasetInfo("gas-drift", "Class", natural_size=5000),
+    # 3 classes, 7 name-based relation constraints, only 4424 rows: natural_size is
+    # provisional, the split protocol for a table this small is still undecided.
+    "students_dropout": DatasetInfo("students_dropout", "AcademicOutcome", natural_size=2000),
 }
 
 

@@ -22,7 +22,7 @@ from pathlib import Path
 import numpy as np
 from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, matthews_corrcoef
 
-ATTACKS = ["x-capgd", "label-flip", "label-flip-random"]
+ATTACKS = ["x-capgd", "label-flip", "label-flip-random", "label-flip-bernoulli"]
 
 
 def discover_rs(root: Path, subdirs=None) -> list[str]:
@@ -118,7 +118,7 @@ def audit_run(d: Path, tol: float, fails: list) -> dict | None:
         out["delta"][m] = (float(np.mean(dels)), float(np.std(dels)))
 
     # --- 5b. the random flip must draw an independent subset per run --------------------
-    if summary["attack"] == "label-flip-random":
+    if summary["attack"] in ("label-flip-random", "label-flip-bernoulli"):
         check(len(trials) == summary["n_runs"] and summary["n_row_subsamples"] == 1,
               f"{tag}: {len(trials)} trials for n_runs={summary['n_runs']} x "
               f"{summary['n_row_subsamples']} subsamples", fails)
@@ -138,6 +138,21 @@ def audit_run(d: Path, tol: float, fails: list) -> dict | None:
         if draws and len(draws[0]) > 0:
             check(len(set(draws)) == len(draws),
                   f"{tag}: two runs drew the identical subset", fails)
+
+        # The Bernoulli flip must actually BE per-row Bernoulli: every count plausible
+        # under Binomial(n, R), and -- with more than one run -- not all identical, which
+        # is what a fixed-size subset would give.
+        if summary["attack"] == "label-flip-bernoulli" and draws:
+            n_ctx, rate = summary["n_context"], summary["row_percent"] / 100.0
+            mu, sd = n_ctx * rate, math.sqrt(n_ctx * rate * (1 - rate))
+            for cnt in (len(dr) for dr in draws):
+                check(abs(cnt - mu) <= 6 * sd + 1,
+                      f"{tag}: {cnt} rows flipped, implausible under Binomial({n_ctx}, {rate}) "
+                      f"(mean {mu:.0f}, sd {sd:.1f})", fails)
+            if 0 < rate < 1 and len(draws) > 1 and sd >= 1:
+                check(len({len(dr) for dr in draws}) > 1,
+                      f"{tag}: every run flipped the same number of rows -- looks like a "
+                      f"fixed-size subset, not a Bernoulli draw", fails)
 
     # --- 6. cross-check against what attack_context.py wrote ---------------------------
     stored = summary.get("aggregate_delta", {}).get("overall", {})

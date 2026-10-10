@@ -1,0 +1,812 @@
+#!/usr/bin/env python
+"""Context gating: learn one gate g_i in [0, 1] per context row, on its FEATURES only.
+
+TabPFNv2 turns every row into feature-group inputs u_i = [values | missing indicators]
+(groups x 4 on gas-drift) and feeds them to a linear encoder, feature_group_embedder,
+before any attention layer. While the gate is active, context row i's input becomes
+
+    u_i(g) = g_i * u_i + (1 - g_i) * u_null
+
+u_null is the input TabPFN builds for a row whose features are ALL missing (values 0,
+indicators -2 on gas-drift). It is captured from TabPFN itself, not hard-coded.
+
+- g_i = 1 leaves the row unchanged.
+- g_i = 0 makes its features entirely missing while its label stays in the context.
+  This is the "feat-gate" oracle of nan_oracle_experiment.py, which recovered all of
+  the loss from hub-flip poisoning.
+- Labels and query rows are never touched.
+- The encoder is linear, so the gate interpolates the row's embedding.
+- Every statistic TabPFN fits (imputation means, scaler, constant-feature masks) is
+  computed before the encoder, from the ungated rows, so none of them moves with g.
+
+The validation set is a separate clean file (--val) by default. With --val-from-context
+N it is instead a class-stratified random draw of N rows from the CLEAN context (seed
+--val-seed); the remaining rows are the context, and only they are poisoned and gated.
+One seed gives nested draws: the N = 200 draw contains the N = 100 one.
+
+The gates are learned on the whole clean validation set. Every gate starts at 1 (no
+row is known to be poisoned), and the objective is
+
+    min_{g in [0,1]^n}  CE_val(g)
+
+solved with one of
+
+    pgd    g <- clip(g - eta * grad, 0, 1)
+           --pgd-scale linf: eta = lr / max|grad_i| over the rows that can move (not
+           pinned at 0 or 1 by the clip), so the largest change of any gate is lr.
+           --pgd-scale none: eta = lr.
+    adam   torch.optim.Adam on g, then clip(g, 0, 1) after every step.
+
+No limit on how many rows may be gated (the R% condition) is enforced during learning.
+
+Test-set curves, to see where over-fitting starts. The test set is scored at iteration
+0, every --test-every iterations, and at the last iteration, in two ways:
+
+    soft   the current soft gates, exactly as in training.
+    hard   the P% of context rows with the smallest gates are discarded, and TabPFN runs
+           normally on the rest with no gate (P = --remove-percent, default R).
+           Ties among equal gates are broken by a fixed random order (--tie-seed). So
+           at iteration 0, where every gate is 1, this is a random P% removal.
+
+The test set never influences the gates or the choice of the best iteration.
+
+The top-k gate vectors by validation accuracy are kept (ties -> lower validation CE,
+then the earlier iteration). After training, the best one is scored on the test set,
+soft and hard, next to these references:
+- the clean context;
+- the poisoned context, ungated;
+- a random P% removal;
+- two oracles that know the poisoned rows: g = 0 on exactly those rows, and those rows
+  removed;
+- the clean validation set alone as the context (val_as_context): gating only earns its
+  keep if it beats simply using the clean rows;
+- the poisoned context with the validation rows added (poisoned_plus_val).
+vs_val_as_context in test_metrics.json is (best soft gates) - (val_as_context) per metric.
+
+The poisoned-row mask is used only for these references and for the gate diagnostics,
+never for learning.
+
+Everything is logged to local files and to Weights & Biases (--wandb-project, optional
+--wandb-group). The API key is read from the WANDB_API_KEY environment variable. W&B
+sections, x-axis = iteration:
+    <metric>/val                  every iteration (the gates' training objective)
+    <metric>/test_soft, <metric>/test_hard   every --test-every iterations
+    detection/precision_at_R, recall_at_R, auroc, ap   every iteration
+    gates/..., optim/...          every iteration
+    overlay/<metric>              at the end: validation and both test curves together,
+                                  with val_as_context as a flat line
+
+    python scripts/gate_context.py --gpu 1 --dataset gas-drift --attack hub-flip-local \
+        --row-percent 20 --optimizer pgd --lr 0.05 --steps 300 --run-name my_run
+
+Outputs go to results/gate/<dataset>/<attack>_r<R>/<run-name>/:
+
+    config.json        arguments, data sizes, the captured u_null
+    run.log            the console log
+    log.csv            one row per iteration; iteration t = after t updates (0 = ungated).
+                       Columns:
+                         val_<metric>   at this iteration's gates
+                         test_soft_<metric>, test_hard_<metric>
+                                        only on test iterations
+                         g_mean, g_min, frac_g_below_0.5
+                         g_mean_poisoned, g_mean_clean
+                         precision_at_R, recall_at_R, auroc_poisoned, ap_poisoned
+                                        detection diagnostics, every iteration, only when
+                                        R > 0 (see gate_stats). precision_at_R is the
+                                        share of the rows the hard evaluation discards
+                                        that are poisoned.
+                         grad_max_abs   max |d CE / d g| at this iteration's gates
+                         max_abs_dg     largest gate change in the update that follows
+    plots/<metric>.png each metric vs iteration (ce is the loss): validation, test soft,
+                       test hard; dashed = oracle references
+    plots/gates.png, plots/detection.png   gate and detection diagnostics vs iteration
+    plots/gate_hist_best.png   the best gates, clean vs poisoned rows
+    gates/top<k>.npz   the top-k gate vectors (g) with their log row; gates/final.npz
+    test_metrics.json  final test-set metrics of the best gates and the references
+    test_probs.npz     the matching test-set probabilities
+    poison.npz         poisoned rows, clean and poisoned labels, the tie-break order
+                       (row indices into the context as gated, i.e. after any split)
+    split.npz          with --val-from-context: val_rows and context_rows, row indices
+                       into the context file
+    wandb/             the local W&B run files
+"""
+
+from __future__ import annotations
+
+import argparse
+import contextlib
+import csv
+import json
+import math
+import re
+import shutil
+import sys
+import time
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import numpy as np  # noqa: E402
+import torch  # noqa: E402
+import torch.nn.functional as F  # noqa: E402
+
+from tabfm_experiments.config import DATASETS_DIR, Seeds  # noqa: E402
+from tabfm_experiments.data import load_split  # noqa: E402
+from tabfm_experiments.io import jsonable, setup_logger, write_json  # noqa: E402
+from tabfm_experiments.metrics import MULTICLASS_METRICS, multiclass_metrics  # noqa: E402
+from tabfm_experiments.multiclass_attacks import ATTACKS, poison  # noqa: E402
+from tabfm_experiments.runtime import (  # noqa: E402
+    _forward, _install_recompute, build_tabpfn_v2, check_all_classes_present, device_from_gpu,
+)
+from tabfm_experiments.sampling import k_from_percent  # noqa: E402
+
+METRICS = MULTICLASS_METRICS  # ce (the loss), accuracy, balanced_accuracy, mcc, roc_auc
+
+
+# ---- the gate ------------------------------------------------------------------------
+
+def capture_null_input(clf, Xc: torch.Tensor, yc: torch.Tensor) -> torch.Tensor:
+    """The feature-encoder input TabPFN builds for a row whose features are ALL missing.
+
+    One all-NaN query row is scored against the context and its slice of the encoder
+    input is read back, so padding and constant-column handling are TabPFN's own.
+    Shape (feature groups, 2 * features per group) = [values | missing indicators].
+    """
+    seen = []
+    with torch.no_grad():
+        clf.fit_with_differentiable_input(Xc, yc)
+        handle = clf.models_[0].feature_group_embedder.register_forward_pre_hook(
+            lambda module, args: seen.append(args[0].detach().clone()))
+        try:
+            _forward(clf, torch.full((1, Xc.shape[1]), float("nan"), device=Xc.device),
+                     need_grad=False)
+        finally:
+            handle.remove()
+    if len(seen) != 1 or seen[0].shape[0] != len(Xc) + 1:
+        raise RuntimeError(f"expected one encoder call with {len(Xc) + 1} rows, "
+                           f"got {[tuple(s.shape) for s in seen]}")
+    # The no-grad forward runs in inference mode; cloning outside it gives a normal
+    # tensor that the gradient forwards can use.
+    return seen[0][-1].clone()
+
+
+@contextlib.contextmanager
+def feature_gate(clf, g: torch.Tensor, null_x: torch.Tensor):
+    """While active, context row i's feature-encoder input u_i becomes
+    g_i * u_i + (1 - g_i) * null_x. Query rows and the label encoder are untouched.
+
+    The encoder sees all rows of a forward in ONE call, context rows first and in input
+    order (test_gate_context.py checks this); the hook refuses any other layout.
+    """
+    if len(clf.models_) != 1:
+        raise RuntimeError("the gate assumes a single loaded model (n_estimators=1)")
+    n, calls = len(g), []
+
+    def hook(module, args):
+        u = args[0]  # (rows, feature groups, 2 * features per group)
+        if u.shape[0] <= n or u.shape[1:] != null_x.shape:
+            raise RuntimeError(f"feature-encoder input {tuple(u.shape)} is not {n} context rows "
+                               f"+ query rows, each {tuple(null_x.shape)}")
+        calls.append(u.shape[0])
+        gi = g.to(u.dtype)[:, None, None]
+        gated = gi * u[:n] + (1 - gi) * null_x.to(u.dtype)
+        return (torch.cat([gated, u[n:]]),) + tuple(args[1:])
+
+    handle = clf.models_[0].feature_group_embedder.register_forward_pre_hook(hook)
+    try:
+        yield
+    finally:
+        handle.remove()
+    if len(calls) != 1:
+        raise RuntimeError(f"feature encoder ran {len(calls)} times in one forward; the gate expects 1")
+
+
+def evaluate(clf, Xc, yc, Xq, yq, g, null_x, *, need_grad: bool, batch_size: int | None):
+    """Mean CE of the query rows under the gated context, its gradient d CE / d g (if
+    need_grad, else None) and the query probabilities [n_q, K] as numpy. g = None scores
+    the context as it is, with no gate.
+
+    Query rows are scored in chunks of batch_size. Each chunk refits on the full context
+    and contributes sum CE / n_q, which is exact because query rows never attend to each
+    other. Same pattern as runtime.evaluate_context.
+    """
+    n_q = len(yq)
+    bs = min(batch_size or n_q, n_q)
+    total, grad, probs = 0.0, (torch.zeros_like(g) if need_grad else None), []
+    for st in range(0, n_q, bs):
+        with torch.enable_grad() if need_grad else torch.no_grad():
+            clf.fit_with_differentiable_input(Xc, yc)
+            _install_recompute(clf)
+            with feature_gate(clf, g, null_x) if g is not None else contextlib.nullcontext():
+                p = _forward(clf, Xq[st:st + bs], need_grad=need_grad)
+            loss = F.nll_loss(torch.log(p.clamp_min(1e-12)), yq[st:st + bs].to(p.device),
+                              reduction="sum") / n_q
+        if need_grad:
+            grad += torch.autograd.grad(loss, g)[0]
+        total += float(loss.detach())
+        probs.append(p.detach().float().cpu())
+    return total, grad, torch.cat(probs).numpy()
+
+
+def lowest_gated(g: np.ndarray, k: int, tie_order: np.ndarray) -> np.ndarray:
+    """Sorted indices of the k rows with the smallest gates.
+
+    Ties among equal gates are broken by tie_order, a fixed random permutation, so the
+    choice is random but reproducible. At iteration 0, where every gate is 1, these are
+    k random rows.
+    """
+    return np.sort(np.lexsort((tie_order, g))[:k])  # primary key g, then tie_order
+
+
+# ---- the update ----------------------------------------------------------------------
+
+def pgd_step(g: torch.Tensor, grad: torch.Tensor, lr: float, scale: str) -> None:
+    """In place: g <- clip(g - eta * grad, 0, 1). See the module docstring for eta."""
+    with torch.no_grad():
+        if scale == "linf":
+            pinned = ((g <= 0) & (grad > 0)) | ((g >= 1) & (grad < 0))  # the clip undoes their step
+            free = grad[~pinned].abs()
+            if free.numel() == 0 or float(free.max()) == 0.0:
+                return
+            eta = lr / free.max()
+        else:
+            eta = lr
+        g.sub_(eta * grad).clamp_(0.0, 1.0)
+
+
+def adam_step(g: torch.Tensor, grad: torch.Tensor, opt: torch.optim.Optimizer) -> None:
+    """In place: one Adam step on g, then clip to [0, 1]."""
+    g.grad = grad
+    opt.step()
+    with torch.no_grad():
+        g.clamp_(0.0, 1.0)
+    g.grad = None
+
+
+# ---- bookkeeping ---------------------------------------------------------------------
+
+def gate_stats(g: np.ndarray, poisoned: np.ndarray, removed: np.ndarray) -> dict:
+    """Gate summary. With poisoned rows present, also how well the gates detect them:
+      precision_at_R  share of the removed rows (the hard evaluation's lowest-gated P%)
+                      that are poisoned
+      recall_at_R     share of the poisoned rows among the removed rows (equal to the
+                      precision when as many rows are removed as were poisoned)
+      auroc_poisoned  AUROC of 1 - g against the poisoned mask (0.5 = chance)
+      ap_poisoned     average precision of 1 - g (chance = the poisoned share)
+    Diagnostics only: the poisoned mask never reaches the optimisation."""
+    s = {"g_mean": float(g.mean()), "g_min": float(g.min()),
+         "frac_g_below_0.5": float((g < 0.5).mean())}
+    if poisoned.any() and not poisoned.all():
+        from sklearn.metrics import average_precision_score, roc_auc_score
+        hits = int(poisoned[removed].sum())
+        s.update({"g_mean_poisoned": float(g[poisoned].mean()),
+                  "g_mean_clean": float(g[~poisoned].mean()),
+                  "precision_at_R": hits / len(removed) if len(removed) else math.nan,
+                  "recall_at_R": hits / int(poisoned.sum()),
+                  "auroc_poisoned": float(roc_auc_score(poisoned, 1 - g)),
+                  "ap_poisoned": float(average_precision_score(poisoned, 1 - g))})
+    return s
+
+
+def prefixed(prefix: str, m: dict) -> dict:
+    return {f"{prefix}_{k}": v for k, v in m.items()}
+
+
+DETECTION = {"precision_at_R": "precision_at_R", "recall_at_R": "recall_at_R",
+             "auroc_poisoned": "auroc", "ap_poisoned": "ap"}  # log.csv name -> W&B name
+OPTIM = ("grad_max_abs", "max_abs_dg", "time_s")
+
+
+def wandb_keys(row: dict) -> dict:
+    """log.csv names -> W&B names. Each metric gets its own section, so its validation
+    curve and its two test curves sit side by side (accuracy/val, accuracy/test_soft,
+    accuracy/test_hard). The other sections are detection/, gates/ and optim/."""
+    out = {}
+    for key, v in row.items():
+        if key == "iter":
+            continue
+        for split in ("val", "test_soft", "test_hard"):
+            if key.startswith(split + "_") and key[len(split) + 1:] in METRICS:
+                out[f"{key[len(split) + 1:]}/{split}"] = v
+                break
+        else:
+            if key in DETECTION:
+                out[f"detection/{DETECTION[key]}"] = v
+            elif key in OPTIM:
+                out[f"optim/{key}"] = v
+            else:
+                out[f"gates/{key}"] = v
+    return out
+
+
+def save_gate(path: Path, g: np.ndarray, row: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(path, g=g.astype(np.float32), iteration=row["iter"],
+                        log_row=json.dumps(jsonable(row)))
+
+
+def plot_curves(rows: list[dict], refs: dict, best_iter: int, plot_dir: Path,
+                baseline: tuple[str, dict] | None = None) -> None:
+    """One figure per metric (validation every iteration, test soft and hard on the test
+    iterations, oracle references dashed, the test score of `baseline` = (label, metrics)
+    dash-dotted) plus the gate diagnostics."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    plot_dir.mkdir(parents=True, exist_ok=True)
+    styles = {  # split: (colour, marker, label)
+        "val": ("#2a78d6", None, "validation (optimised)"),
+        "test_soft": ("#eb6834", "o", "test, soft gates"),
+        "test_hard": ("#1baf7a", "s", "test, lowest-gated P% removed"),
+    }
+    ref_labels = {"val": "validation, oracle gate", "test_soft": "test, oracle gate",
+                  "test_hard": "test, poisoned rows removed"}
+    for m in METRICS:
+        fig, ax = plt.subplots(figsize=(7, 4.2))
+        for split, (colour, marker, label) in styles.items():
+            pts = [(r["iter"], r[f"{split}_{m}"]) for r in rows
+                   if f"{split}_{m}" in r and not math.isnan(r[f"{split}_{m}"])]
+            if pts:
+                ax.plot(*zip(*pts), color=colour, marker=marker, ms=3, lw=1.3, label=label)
+            if f"{split}_{m}" in refs:
+                ax.axhline(refs[f"{split}_{m}"], color=colour, ls="--", lw=1, label=ref_labels[split])
+        if baseline is not None:
+            ax.axhline(baseline[1][m], color="#c4378f", ls="-.", lw=1.2, label=baseline[0])
+        ax.axvline(best_iter, color="0.5", ls=":", lw=1, label=f"best (iteration {best_iter})")
+        ax.set(xlabel="iteration (gate updates)", ylabel=m,
+               title=("cross-entropy (the loss)" if m == "ce" else m) + " vs iteration")
+        ax.grid(alpha=0.3)
+        ax.legend(fontsize=7)
+        fig.tight_layout()
+        fig.savefig(plot_dir / f"{m}.png", dpi=120)
+        plt.close(fig)
+
+    for name, keys, title in (
+            ("gates", ("g_mean", "g_min", "frac_g_below_0.5", "g_mean_poisoned", "g_mean_clean"),
+             "gates vs iteration"),
+            ("detection", tuple(DETECTION), "detection of the poisoned rows vs iteration")):
+        keys = [k for k in keys if k in rows[0]]
+        if not keys:  # no poisoned rows: nothing to detect
+            continue
+        fig, ax = plt.subplots(figsize=(7, 4.2))
+        for k in keys:
+            ax.plot([r["iter"] for r in rows], [r[k] for r in rows], label=k)
+        ax.axvline(best_iter, color="0.5", ls=":", lw=1)
+        ax.set(xlabel="iteration (gate updates)", ylim=(-0.02, 1.02), title=title)
+        ax.grid(alpha=0.3)
+        ax.legend(fontsize=7)
+        fig.tight_layout()
+        fig.savefig(plot_dir / f"{name}.png", dpi=120)
+        plt.close(fig)
+
+
+def plot_gate_hist(g: np.ndarray, poisoned: np.ndarray, path: Path, title: str) -> None:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    bins = np.linspace(0, 1, 41)
+    fig, ax = plt.subplots(figsize=(6.4, 4))
+    ax.hist(g[~poisoned], bins=bins, alpha=0.6, color="#2a78d6", label=f"clean rows ({(~poisoned).sum()})")
+    if poisoned.any():
+        ax.hist(g[poisoned], bins=bins, alpha=0.6, color="#eb6834", label=f"poisoned rows ({poisoned.sum()})")
+    ax.set(xlabel="gate g", ylabel="rows (log scale)", yscale="log", title=title)
+    ax.legend(fontsize=8)
+    fig.tight_layout()
+    fig.savefig(path, dpi=120)
+    plt.close(fig)
+
+
+@contextlib.contextmanager
+def wandb_run(a, run_name: str, out: Path, config: dict):
+    """The W&B run for the whole training (None with --wandb-mode disabled). It is
+    marked failed if the training raises."""
+    if a.wandb_mode == "disabled":
+        yield None
+        return
+    import wandb
+    run = wandb.init(project=a.wandb_project, entity=a.wandb_entity, group=a.wandb_group,
+                     name=run_name, mode=a.wandb_mode, dir=str(out), config=jsonable(config))
+    try:
+        yield run
+    except BaseException:
+        run.finish(exit_code=1)
+        raise
+    run.finish()
+
+
+def wandb_upload(run, out: Path, run_name: str, summary: dict, rows: list[dict],
+                 baseline: tuple[str, dict] | None = None) -> None:
+    """Final summary, one interactive chart per metric with the validation and both test
+    curves on the same axes (and `baseline` = (label, test metrics) as a flat line), the
+    plots as images, and every output file as one artifact."""
+    import wandb
+    run.summary.update(jsonable(summary))
+    charts = {}
+    for m in METRICS:
+        series = []
+        for split, label in (("val", "validation (optimised)"), ("test_soft", "test, soft gates"),
+                             ("test_hard", "test, lowest-gated removed")):
+            pts = [(r["iter"], r[f"{split}_{m}"]) for r in rows
+                   if f"{split}_{m}" in r and not math.isnan(r[f"{split}_{m}"])]
+            if pts:
+                series.append((label, pts))
+        if baseline is not None:
+            series.append((baseline[0], [(rows[0]["iter"], baseline[1][m]), (rows[-1]["iter"], baseline[1][m])]))
+        charts[f"overlay/{m}"] = wandb.plot.line_series(
+            xs=[[x for x, _ in pts] for _, pts in series], ys=[[y for _, y in pts] for _, pts in series],
+            keys=[label for label, _ in series], title=f"{m}: validation vs test", xname="iteration")
+    charts |= {f"plots/{p.stem}": wandb.Image(str(p)) for p in sorted((out / "plots").glob("*.png"))}
+    run.log(charts)
+    art = wandb.Artifact(re.sub(r"[^A-Za-z0-9._-]", "-", f"gate-run-{run_name}"), type="gate-run")
+    for p in sorted(out.rglob("*")):
+        if p.is_file() and "wandb" not in p.relative_to(out).parts:
+            art.add_file(str(p), name=str(p.relative_to(out)))
+    run.log_artifact(art)
+
+
+# ---- data ----------------------------------------------------------------------------
+
+def find_split(dataset: str, prefix: str) -> Path:
+    """The dataset's only <prefix>*.csv listed in its split_info.json."""
+    d = DATASETS_DIR / dataset / "splits"
+    names = [s for s in json.loads((d / "split_info.json").read_text())["splits"] if s.startswith(prefix)]
+    if len(names) != 1:
+        raise SystemExit(f"expected one {prefix}*.csv in {d}, found {names}; pass it explicitly "
+                         "(--context / --val / --test)")
+    return d / names[0]
+
+
+def load(path: Path, device: str) -> tuple[torch.Tensor, np.ndarray]:
+    X, y, _ = load_split(path)
+    return torch.tensor(X.to_numpy(np.float32), device=device), np.asarray(y).astype(int)
+
+
+def draw_validation(y: np.ndarray, n: int, seed: int) -> np.ndarray:
+    """Sorted indices of a class-stratified random draw of n rows.
+
+    Class quotas by largest remainder: floor every class's share, then the leftover rows
+    go to the largest fractional parts (the rule of prepare_multiclass_splits). Within a
+    class the rows follow one random order fixed by the seed and independent of n, so
+    for one seed a larger draw contains every smaller one whenever no class's quota
+    shrinks as n grows.
+    """
+    if not 0 < n <= len(y):
+        raise ValueError(f"cannot draw {n} rows from {len(y)}")
+    classes, counts = np.unique(y, return_counts=True)
+    share = n * counts / counts.sum()
+    quota = np.floor(share).astype(int)
+    quota[np.argsort(-(share - quota), kind="stable")[: n - int(quota.sum())]] += 1
+    rng = np.random.default_rng(seed)
+    order = [rng.permutation(np.flatnonzero(y == c)) for c in classes]
+    return np.sort(np.concatenate([o[:q] for o, q in zip(order, quota)]))
+
+
+# ---- main ----------------------------------------------------------------------------
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--gpu", default="1", help="GPU index, or 'cpu'")
+    # data and poisoning
+    ap.add_argument("--dataset", default="gas-drift")
+    ap.add_argument("--context", type=Path, default=None, help="default: the dataset's context_*.csv")
+    ap.add_argument("--val", type=Path, default=None,
+                    help="clean validation set, all of it optimised on; default: the dataset's val_*.csv")
+    ap.add_argument("--val-from-context", type=int, default=None, metavar="N",
+                    help="instead of --val, draw N class-stratified random rows of the CLEAN context "
+                         "as the validation set; the other rows are the context that is poisoned and gated")
+    ap.add_argument("--val-seed", type=int, default=0,
+                    help="seed of the --val-from-context draw; one seed gives nested draws across N")
+    ap.add_argument("--test", type=Path, default=None, help="default: the dataset's test_attack_*.csv")
+    ap.add_argument("--n-classes", type=int, default=None,
+                    help="default: n_classes in split_info.json, else the classes in the context")
+    ap.add_argument("--attack", default="hub-flip-local", choices=ATTACKS)
+    ap.add_argument("--row-percent", type=float, default=20.0,
+                    help="R, percent of context rows poisoned (0 = clean context)")
+    ap.add_argument("--run-id", type=int, default=0, help="poison draw, for the stochastic attacks")
+    ap.add_argument("--row-seed", type=int, default=Seeds.row_seed)
+    ap.add_argument("--hub-metric", default="knn", choices=["knn", "all"])
+    ap.add_argument("--hub-k", type=int, default=10)
+    ap.add_argument("--target-k", type=int, default=10)
+    # optimisation
+    ap.add_argument("--optimizer", default="pgd", choices=["pgd", "adam"])
+    ap.add_argument("--lr", type=float, default=None,
+                    help="pgd with --pgd-scale linf: largest change of any gate per step; "
+                         "pgd with none: plain step size; adam: Adam's learning rate "
+                         "(default: 0.05 for pgd, 0.01 for adam)")
+    ap.add_argument("--steps", type=int, default=300, help="number of gate updates")
+    ap.add_argument("--pgd-scale", default="linf", choices=["linf", "none"])
+    ap.add_argument("--adam-beta1", type=float, default=0.9)
+    ap.add_argument("--adam-beta2", type=float, default=0.999)
+    ap.add_argument("--adam-eps", type=float, default=1e-8)
+    ap.add_argument("--g-init", type=float, default=1.0,
+                    help="initial value of every gate (one value for all rows)")
+    ap.add_argument("--top-k", type=int, default=3, help="how many best gate vectors to keep")
+    # test-set curves
+    ap.add_argument("--test-every", type=int, default=5,
+                    help="score the test set (soft and hard) every N iterations; 0 = only at the end")
+    ap.add_argument("--remove-percent", type=float, default=None,
+                    help="P: the hard evaluation discards the P%% lowest-gated rows (default: R)")
+    ap.add_argument("--tie-seed", type=int, default=0,
+                    help="seed of the random order that breaks ties among equal gates")
+    # runtime
+    ap.add_argument("--batch-size", type=int, default=None,
+                    help="query rows per forward (each chunk re-runs the full context, so this "
+                         "saves little memory); default: all at once")
+    ap.add_argument("--model-seed", type=int, default=Seeds.model_seed)
+    ap.add_argument("--no-recompute", action="store_true",
+                    help="disable activation checkpointing (faster, much more GPU memory)")
+    ap.add_argument("--plot-every", type=int, default=10, help="redraw the plots every N iterations")
+    ap.add_argument("--out", type=Path, default=Path("results/gate"))
+    ap.add_argument("--run-name", default=None,
+                    help="output folder and W&B run name; default: "
+                         "<dataset>_<attack>_R<R>_<optimizer>[-<pgd-scale>]_lr<lr>_it<steps>")
+    ap.add_argument("--force", action="store_true", help="overwrite a finished run")
+    # Weights & Biases
+    ap.add_argument("--wandb-project", default="TFM_experiments")
+    ap.add_argument("--wandb-entity", default=None, help="default: the API key's default entity")
+    ap.add_argument("--wandb-group", default=None, help="W&B run group (e.g. one per sweep)")
+    ap.add_argument("--wandb-mode", default="online", choices=["online", "offline", "disabled"])
+    a = ap.parse_args(argv)
+    if a.lr is None:
+        a.lr = 0.05 if a.optimizer == "pgd" else 0.01
+    if a.remove_percent is None:
+        a.remove_percent = a.row_percent
+    if not 0 <= a.g_init <= 1:
+        raise SystemExit("--g-init must be in [0, 1]")
+    if a.steps < 0 or a.top_k < 1 or a.test_every < 0:
+        raise SystemExit("--steps and --test-every must be >= 0, --top-k >= 1")
+    if a.val_from_context is not None:
+        if a.val is not None:
+            raise SystemExit("--val-from-context draws the validation set from the context; "
+                             "do not also pass --val")
+        if a.val_from_context < 1:
+            raise SystemExit("--val-from-context must be >= 1")
+
+    run_name = a.run_name or (f"{a.dataset}_{a.attack}_R{a.row_percent:g}"
+                              + (f"_V{a.val_from_context}s{a.val_seed}" if a.val_from_context else "")
+                              + f"_{a.optimizer}" + (f"-{a.pgd_scale}" if a.optimizer == "pgd" else "")
+                              + f"_lr{a.lr:g}_it{a.steps}")
+    out = a.out / a.dataset / f"{a.attack}_r{int(round(a.row_percent)):03d}" / run_name
+    if (out / "test_metrics.json").exists() and not a.force:
+        print(f"[skip] {out}/test_metrics.json exists (use --force)")
+        return None
+    out.mkdir(parents=True, exist_ok=True)
+    shutil.rmtree(out / "gates", ignore_errors=True)  # no stale top-k files from an earlier run
+    log = setup_logger(out, "gate_context").info
+    device = device_from_gpu(a.gpu)
+
+    # -- data: poison the context labels; the features are never changed ------------------
+    ctx_p = a.context or find_split(a.dataset, "context_")
+    test_p = a.test or find_split(a.dataset, "test_attack_")
+    Xc, yc = load(ctx_p, device)
+    Xt, yt = load(test_p, device)
+    info_p = DATASETS_DIR / a.dataset / "splits" / "split_info.json"
+    k_info = json.loads(info_p.read_text()).get("n_classes") if info_p.exists() else None
+    K = int(a.n_classes or k_info or len(np.unique(yc)))
+    if a.val_from_context is None:
+        val_p = a.val or find_split(a.dataset, "val_")
+        Xv, yv = load(val_p, device)
+        validation = {"source": "file", "path": val_p}
+    else:  # carve the validation rows out of the clean context, before any poisoning
+        val_p, n_file = None, len(yc)
+        if a.val_from_context >= n_file:
+            raise SystemExit(f"--val-from-context {a.val_from_context} leaves no context: "
+                             f"{ctx_p.name} has {n_file} rows")
+        val_rows = draw_validation(yc, a.val_from_context, a.val_seed)
+        if len(np.unique(yc[val_rows])) < K:
+            raise SystemExit(f"--val-from-context {a.val_from_context} misses a class (class counts "
+                             f"{np.bincount(yc[val_rows], minlength=K).tolist()}); draw more rows")
+        ctx_rows = np.setdiff1d(np.arange(n_file), val_rows)
+        np.savez_compressed(out / "split.npz", val_rows=val_rows, context_rows=ctx_rows,
+                            val_seed=a.val_seed)
+        Xv, yv = Xc[torch.as_tensor(val_rows, device=device)], yc[val_rows]
+        Xc, yc = Xc[torch.as_tensor(ctx_rows, device=device)], yc[ctx_rows]
+        validation = {"source": "class-stratified random draw from the clean context",
+                      "n": a.val_from_context, "seed": a.val_seed, "n_context_file": n_file,
+                      "nested_across_n": True, "rows": "split.npz"}
+    for y in (yc, yv, yt):
+        check_all_classes_present(y, K)
+    n = len(yc)
+
+    rows, y_pois = poison(a.attack, Xc, yc, K, a.row_percent, run_id=a.run_id, row_seed=a.row_seed,
+                          hub_metric=a.hub_metric, hub_k=a.hub_k, target_k=a.target_k)
+    check_all_classes_present(y_pois, K)
+    poisoned = np.zeros(n, dtype=bool)
+    poisoned[rows] = True
+    k_remove = k_from_percent(n, a.remove_percent) if a.remove_percent > 0 else 0
+    tie_order = np.random.default_rng(a.tie_seed).permutation(n)
+    np.savez_compressed(out / "poison.npz", poisoned_rows=rows, y_clean=yc.astype(np.int16),
+                        y_poisoned=y_pois.astype(np.int16), tie_order=tie_order)
+
+    def as_t(y, dtype):
+        return torch.as_tensor(y, dtype=dtype, device=device)
+
+    yc_t, yp_t = as_t(yc, torch.float32), as_t(y_pois, torch.float32)
+    yv_t, yt_t = as_t(yv, torch.long), as_t(yt, torch.long)
+
+    log(f"[{a.dataset}] {a.attack} R={a.row_percent:g}%: {len(rows)} of {n} context rows poisoned; "
+        f"{Xc.shape[1]} features, K={K}")
+    val_txt = val_p.name if val_p is not None else f"drawn from the clean context, seed {a.val_seed}"
+    log(f"  context {ctx_p}\n  validation {len(yv)} rows ({val_txt}, all optimised on), "
+        f"test {len(yt)} rows ({test_p.name}), scored every {a.test_every} iterations")
+    log(f"  {a.optimizer}, lr {a.lr:g}, {a.steps} steps"
+        + (f", scale {a.pgd_scale}" if a.optimizer == "pgd" else
+           f", betas ({a.adam_beta1:g}, {a.adam_beta2:g}), eps {a.adam_eps:g}")
+        + f", every gate starts at {a.g_init:g}; hard evaluation discards {k_remove} rows "
+          f"({a.remove_percent:g}%)")
+    log(f"  run {run_name}  ->  {out}")
+    config = {"args": vars(a), "run_name": run_name, "context": ctx_p, "val": val_p, "test": test_p,
+              "n_classes": K, "n_context": n, "n_features": Xc.shape[1], "n_poisoned": len(rows),
+              "n_val": len(yv), "n_test": len(yt), "k_remove": k_remove, "validation": validation,
+              "gated": "features only (feature_group_embedder input); labels untouched"}
+
+    with wandb_run(a, run_name, out, config) as run:
+        # -- model and the all-missing encoder input ----------------------------------------
+        clf = build_tabpfn_v2(device, a.model_seed, recompute_layers=not a.no_recompute, n_classes=K)
+        null_x = capture_null_input(clf, Xc, yp_t)
+        half = null_x.shape[1] // 2
+        config["u_null"] = {"shape": list(null_x.shape),
+                            "value_part_unique": torch.unique(null_x[:, :half]).tolist(),
+                            "indicator_part_unique": torch.unique(null_x[:, half:]).tolist()}
+        log(f"  u_null {config['u_null']['shape']}: values {config['u_null']['value_part_unique']}, "
+            f"indicators {config['u_null']['indicator_part_unique']}")
+        write_json(out / "config.json", config)
+        if run is not None:
+            run.config.update({"u_null": config["u_null"]})
+
+        def metrics(p, y):
+            m = multiclass_metrics(p, y, K)
+            return {k: float(m[k]) for k in METRICS}
+
+        def soft(Xq, yq, yq_t, g, y_ctx=yp_t):
+            """Scores of the query rows with the (gated) context; g = None: no gate."""
+            p = evaluate(clf, Xc, y_ctx, Xq, yq_t, g, null_x, need_grad=False, batch_size=a.batch_size)[2]
+            return metrics(p, yq), p
+
+        def as_context(X_ctx, y_ctx):
+            """Test scores of plain TabPFN, no gate, on the context (X_ctx, y_ctx)."""
+            p = evaluate(clf, X_ctx, as_t(y_ctx, torch.float32), Xt, yt_t, None, null_x,
+                         need_grad=False, batch_size=a.batch_size)[2]
+            return metrics(p, yt), p
+
+        def hard(drop):
+            """Test scores of plain TabPFN on the poisoned context without the rows `drop`."""
+            keep = np.setdiff1d(np.arange(n), drop)
+            if len(np.unique(y_pois[keep])) < K:  # a class vanished: TabPFN would misalign classes
+                log(f"  [warn] removing {len(drop)} rows drops a whole class; hard scores skipped")
+                return {k: math.nan for k in METRICS}, None
+            return as_context(Xc[keep], y_pois[keep])
+
+        # -- references, all independent of the learned gates --------------------------------
+        oracle = as_t(~poisoned, torch.float32)
+        final, probs = {}, {}
+        final["clean_context"], probs["clean_context"] = soft(Xt, yt, yt_t, None, y_ctx=yc_t)
+        final["poisoned_no_gate"], probs["poisoned_no_gate"] = soft(Xt, yt, yt_t, None)
+        final["poisoned_random_removal"], probs["poisoned_random_removal"] = hard(
+            lowest_gated(np.ones(n, dtype=np.float32), k_remove, tie_order))
+        refs = {}
+        if poisoned.any():
+            final["poisoned_oracle_gate"], probs["poisoned_oracle_gate"] = soft(Xt, yt, yt_t, oracle)
+            final["poisoned_oracle_removal"], probs["poisoned_oracle_removal"] = hard(rows)
+            refs |= prefixed("val", soft(Xv, yv, yv_t, oracle)[0])
+            refs |= prefixed("test_soft", final["poisoned_oracle_gate"])
+            refs |= prefixed("test_hard", final["poisoned_oracle_removal"])
+        # the clean validation rows used directly: alone, and added to the poisoned context
+        final["val_as_context"], probs["val_as_context"] = as_context(Xv, yv)
+        final["poisoned_plus_val"], probs["poisoned_plus_val"] = as_context(
+            torch.cat([Xc, Xv]), np.concatenate([y_pois, yv]))
+        baseline = ("test, validation set as the context", final["val_as_context"])
+        for name, m in final.items():
+            log(f"  reference  test {name:<26}" + "  ".join(f"{k} {m[k]:.4f}" for k in METRICS))
+
+        # -- training ------------------------------------------------------------------
+        g = torch.full((n,), float(a.g_init), device=device, requires_grad=True)
+        opt = (torch.optim.Adam([g], lr=a.lr, betas=(a.adam_beta1, a.adam_beta2), eps=a.adam_eps)
+               if a.optimizer == "adam" else None)
+        fields = (["iter"] + [f"{s}_{k}" for s in ("val", "test_soft", "test_hard") for k in METRICS]
+                  + list(gate_stats(np.ones(n), poisoned, np.arange(k_remove)))
+                  + ["grad_max_abs", "max_abs_dg", "time_s"])
+
+        def rank_key(entry):  # top-k order: higher accuracy, then lower CE, then earlier iteration
+            r = entry[0]
+            return (-r["val_accuracy"], r["val_ce"], r["iter"])
+
+        log_rows, top = [], []  # top: [(log row, gate vector)], best first
+        with open(out / "log.csv", "w", newline="") as fh:
+            writer = csv.DictWriter(fh, fieldnames=fields, restval="")
+            writer.writeheader()
+            for it in range(a.steps + 1):
+                t0 = time.time()
+                g_now = g.detach().cpu().numpy().copy()
+                removed = lowest_gated(g_now, k_remove, tie_order)
+                ce, grad, p_val = evaluate(clf, Xc, yp_t, Xv, yv_t, g, null_x, need_grad=it < a.steps,
+                                           batch_size=a.batch_size)
+                row = {"iter": it} | prefixed("val", metrics(p_val, yv))
+                if abs(ce - row["val_ce"]) > 1e-4:  # the loss and the metric are independent paths
+                    raise AssertionError(f"loss {ce:.6f} != metric CE {row['val_ce']:.6f}")
+                if a.test_every and (it % a.test_every == 0 or it == a.steps):
+                    row |= prefixed("test_soft", soft(Xt, yt, yt_t, g)[0])
+                    row |= prefixed("test_hard", hard(removed)[0])
+                row |= gate_stats(g_now, poisoned, removed)
+
+                if grad is not None:  # every iteration but the last: update the gates
+                    row["grad_max_abs"] = float(grad.abs().max())
+                    if a.optimizer == "pgd":
+                        pgd_step(g, grad, a.lr, a.pgd_scale)
+                    else:
+                        adam_step(g, grad, opt)
+                    row["max_abs_dg"] = float((g.detach().cpu() - torch.from_numpy(g_now)).abs().max())
+                row["time_s"] = time.time() - t0
+                writer.writerow(row)
+                fh.flush()
+                log_rows.append(row)
+                if run is not None:
+                    run.log(wandb_keys(row), step=it)
+
+                top = sorted(top + [(row, g_now)], key=rank_key)[:a.top_k]
+                if any(r is row for r, _ in top):  # this iteration entered the top-k
+                    for k, (r, gk) in enumerate(top, 1):
+                        save_gate(out / "gates" / f"top{k}.npz", gk, r)
+
+                test_txt = (f" | test soft acc {row['test_soft_accuracy']:.4f} "
+                            f"hard acc {row['test_hard_accuracy']:.4f}" if "test_soft_ce" in row else "")
+                det_txt = (f" | poisoned g {row['g_mean_poisoned']:.3f} clean g {row['g_mean_clean']:.3f}"
+                           f" auroc {row['auroc_poisoned']:.3f}" if "auroc_poisoned" in row else "")
+                log(f"it {it:4d}  val ce {row['val_ce']:.4f} acc {row['val_accuracy']:.4f}{test_txt}"
+                    f"{det_txt}  [{row['time_s']:.1f}s]")
+                if a.plot_every and (it % a.plot_every == 0 or it == a.steps):
+                    plot_curves(log_rows, refs, top[0][0]["iter"], out / "plots", baseline)
+
+        # -- the best gates on the test set, soft and hard ----------------------------------
+        save_gate(out / "gates" / "final.npz", g.detach().cpu().numpy(), log_rows[-1])
+        best_row, g_best = top[0]
+        final["poisoned_best_gate_soft"], probs["poisoned_best_gate_soft"] = soft(
+            Xt, yt, yt_t, as_t(g_best, torch.float32))
+        final["poisoned_best_gate_hard"], probs["poisoned_best_gate_hard"] = hard(
+            lowest_gated(g_best, k_remove, tie_order))
+        log(f"best: iteration {best_row['iter']}  val acc {best_row['val_accuracy']:.4f} "
+            f"ce {best_row['val_ce']:.4f}; top-k iterations {[r['iter'] for r, _ in top]}")
+        for name in ("poisoned_best_gate_soft", "poisoned_best_gate_hard"):
+            log(f"  test {name:<26}" + "  ".join(f"{k} {final[name][k]:.4f}" for k in METRICS))
+
+        recovery = {}  # share of the poisoned -> oracle gap that the best gates close
+        for mode, ref in (("soft", "poisoned_oracle_gate"), ("hard", "poisoned_oracle_removal")):
+            if ref in final:
+                recovery[mode] = {}
+                for k in METRICS:
+                    gap = final[ref][k] - final["poisoned_no_gate"][k]
+                    got = final[f"poisoned_best_gate_{mode}"][k] - final["poisoned_no_gate"][k]
+                    recovery[mode][k] = got / gap if abs(gap) > 1e-12 else None
+        # > 0 on accuracy-type metrics (< 0 on ce): the gates beat the clean rows used directly
+        vs_val = {k: final["poisoned_best_gate_soft"][k] - final["val_as_context"][k] for k in METRICS}
+        summary = {
+            "best_iteration": best_row["iter"],
+            "ranked_on": "validation accuracy, ties -> lower validation CE, then earlier",
+            "best_val_row": best_row, "top_k_iterations": [r["iter"] for r, _ in top],
+            "best_gate_stats": gate_stats(g_best, poisoned, lowest_gated(g_best, k_remove, tie_order)),
+            "k_removed_in_hard_evaluation": k_remove,
+            "metrics": {name: (multiclass_metrics(probs[name], yt, K) if probs[name] is not None
+                               else final[name]) for name in final},
+            "recovery_vs_oracle": recovery,
+            "vs_val_as_context": vs_val,
+        }
+        write_json(out / "test_metrics.json", summary)
+        np.savez_compressed(out / "test_probs.npz", y_test=yt.astype(np.int16),
+                            **{k: v.astype(np.float32) for k, v in probs.items() if v is not None})
+        plot_curves(log_rows, refs, best_row["iter"], out / "plots", baseline)
+        plot_gate_hist(g_best, poisoned, out / "plots" / "gate_hist_best.png",
+                       f"best gates (iteration {best_row['iter']})")
+        if run is not None:
+            wandb_upload(run, out, run_name, {
+                "best_iteration": best_row["iter"], "top_k_iterations": summary["top_k_iterations"],
+                "final": final, "recovery_vs_oracle": recovery, "vs_val_as_context": vs_val,
+                "best_gate_stats": summary["best_gate_stats"]}, log_rows, baseline)
+        log(f"  wrote {out}")
+    return out
+
+
+if __name__ == "__main__":
+    main()

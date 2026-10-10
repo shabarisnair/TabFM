@@ -55,12 +55,17 @@ def device_from_gpu(gpu: str | int) -> str:
 
 
 def build_tabpfn_v2(device: str, model_seed: int, deterministic_mode: str = "best-effort",
-                    recompute_layers: bool = False):
+                    recompute_layers: bool = False, n_classes: int = 2):
     """TabPFNv2 classifier with the fixed, non-random differentiable configuration.
 
     ``recompute_layers`` turns on activation checkpointing for gradient forwards only
     (TabPFN's ``force_recompute_layer``): same loss and gradient, far less memory
     (WiDS 5k context + 1000 test rows: 73.8 GiB -> 9.6 GiB), ~25% slower per step.
+
+    ``n_classes`` is the number of classes of the TASK (labels must be 0..n_classes-1).
+    In differentiable mode TabPFN cannot infer it from a float label tensor, and it uses
+    the label value directly as the output-logit index, slicing the output to
+    n_classes_. The default of 2 keeps every binary experiment exactly as it was.
     """
     from tabpfn import TabPFNClassifier
     from tabpfn.constants import ModelVersion
@@ -81,7 +86,9 @@ def build_tabpfn_v2(device: str, model_seed: int, deterministic_mode: str = "bes
         inference_config=inference_config(),
     )
     # fit_with_differentiable_input cannot infer this from a float y tensor
-    clf.n_classes_ = 2
+    if not 2 <= int(n_classes) <= 10:
+        raise ValueError(f"n_classes must be in [2, 10] (TabPFNv2's limit), got {n_classes}")
+    clf.n_classes_ = int(n_classes)
     clf.tabfm_recompute_layers = bool(recompute_layers)
     return clf
 
@@ -97,6 +104,40 @@ def check_feature_width(clf, n_features: int) -> None:
     if schema is not None and len(schema.features) != n_features:
         raise ValueError(f"classifier was first fitted on {len(schema.features)} features but got "
                          f"{n_features}; build a new classifier (build_tabpfn_v2) per feature width")
+
+
+def check_label_range(clf, *label_tensors) -> None:
+    """Refuse labels outside 0..n_classes_-1.
+
+    The output is sliced to the first n_classes_ logits, so a label at or above it would
+    not raise -- it would be silently dropped from the softmax and the run would score a
+    different, smaller problem. The binary runtime fixed n_classes_ = 2, so a multiclass
+    table fed to it used to produce exactly that, without any error.
+    """
+    k = int(clf.n_classes_)
+    for t in label_tensors:
+        if t is None or t.numel() == 0:
+            continue
+        lo, hi = int(t.min().item()), int(t.max().item())
+        if lo < 0 or hi >= k:
+            raise ValueError(f"labels span {lo}..{hi} but the classifier was built with "
+                             f"n_classes={k}; build it with build_tabpfn_v2(..., n_classes=K)")
+
+
+def check_all_classes_present(y_ctx, n_classes: int) -> None:
+    """Every class 0..n_classes-1 must appear in the context.
+
+    TabPFN densifies context labels by counting how many PRESENT classes lie below each
+    one. With a class missing, labels above it shift down by one while the output slice
+    still reads logit i as class i, so predictions are silently assigned to the wrong
+    classes. Call this before scoring any multiclass context.
+    """
+    present = np.unique(np.asarray(y_ctx.detach().cpu() if isinstance(y_ctx, torch.Tensor)
+                                   else y_ctx).astype(int))
+    missing = sorted(set(range(int(n_classes))) - set(present.tolist()))
+    if missing:
+        raise ValueError(f"context is missing classes {missing}; TabPFN would misalign the "
+                         f"remaining classes' predictions (see check_all_classes_present)")
 
 
 def chunking_is_exact(X_ctx: torch.Tensor, X_test: torch.Tensor) -> bool:
@@ -150,6 +191,7 @@ def evaluate_context(
     contributes ``sum_ce_chunk / n_test`` to the loss and its gradient.
     """
     check_feature_width(clf, X_ctx.shape[1])
+    check_label_range(clf, y_ctx, y_test)
     n_test = X_test.shape[0]
     bs = min(test_batch_size or n_test, n_test)
     if bs < n_test and not chunking_is_exact(X_ctx, X_test):
