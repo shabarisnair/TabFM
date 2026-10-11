@@ -51,8 +51,13 @@ Test-set curves, to see where over-fitting starts. The test set is scored at ite
 The test set never influences the gates or the choice of the best iteration.
 
 The top-k gate vectors by validation accuracy are kept (ties -> lower validation CE,
-then the earlier iteration). After training, the best one is scored on the test set,
-soft and hard, next to these references:
+then the earlier iteration). With --val-holdout FRAC, a class-stratified FRAC of the
+validation rows is held out as a validation-test set instead: the gates are fitted on
+the rest, the held-out rows are scored on the test iterations, and the top-k are the test
+iterations with the highest validation-test accuracy (ties -> lower validation-test CE,
+then earlier). selection_rules in test_metrics.json also records which iteration other
+stopping rules would pick, with the test scores logged there. After training, the best
+gates are scored on the test set, soft and hard, next to these references:
 - the clean context;
 - the poisoned context, ungated;
 - a random P% removal;
@@ -61,6 +66,7 @@ soft and hard, next to these references:
 - the clean validation set alone as the context (val_as_context): gating only earns its
   keep if it beats simply using the clean rows;
 - the poisoned context with the validation rows added (poisoned_plus_val).
+Both use every validation row, held-out ones included.
 vs_val_as_context in test_metrics.json is (best soft gates) - (val_as_context) per metric.
 
 The poisoned-row mask is used only for these references and for the gate diagnostics,
@@ -85,7 +91,10 @@ Outputs go to results/gate/<dataset>/<attack>_r<R>/<run-name>/:
     run.log            the console log
     log.csv            one row per iteration; iteration t = after t updates (0 = ungated).
                        Columns:
-                         val_<metric>   at this iteration's gates
+                         val_<metric>   at this iteration's gates (the fitted rows)
+                         valtest_<metric>
+                                        the held-out rows (--val-holdout), only on
+                                        test iterations
                          test_soft_<metric>, test_hard_<metric>
                                         only on test iterations
                          g_mean, g_min, frac_g_below_0.5
@@ -107,7 +116,8 @@ Outputs go to results/gate/<dataset>/<attack>_r<R>/<run-name>/:
     poison.npz         poisoned rows, clean and poisoned labels, the tie-break order
                        (row indices into the context as gated, i.e. after any split)
     split.npz          with --val-from-context: val_rows and context_rows, row indices
-                       into the context file
+                       into the context file; with --val-holdout also val_fit_rows and
+                       val_holdout_rows (into the context file, or into the val file)
     wandb/             the local W&B run files
 """
 
@@ -299,13 +309,14 @@ OPTIM = ("grad_max_abs", "max_abs_dg", "time_s")
 
 def wandb_keys(row: dict) -> dict:
     """log.csv names -> W&B names. Each metric gets its own section, so its validation
-    curve and its two test curves sit side by side (accuracy/val, accuracy/test_soft,
-    accuracy/test_hard). The other sections are detection/, gates/ and optim/."""
+    curve, its validation-test curve (with --val-holdout) and its two test curves sit side
+    by side (accuracy/val, accuracy/valtest, accuracy/test_soft, accuracy/test_hard). The
+    other sections are detection/, gates/ and optim/."""
     out = {}
     for key, v in row.items():
         if key == "iter":
             continue
-        for split in ("val", "test_soft", "test_hard"):
+        for split in ("val", "valtest", "test_soft", "test_hard"):
             if key.startswith(split + "_") and key[len(split) + 1:] in METRICS:
                 out[f"{key[len(split) + 1:]}/{split}"] = v
                 break
@@ -337,10 +348,12 @@ def plot_curves(rows: list[dict], refs: dict, best_iter: int, plot_dir: Path,
     plot_dir.mkdir(parents=True, exist_ok=True)
     styles = {  # split: (colour, marker, label)
         "val": ("#2a78d6", None, "validation (optimised)"),
+        "valtest": ("#c4378f", "^", "validation-test (held out)"),
         "test_soft": ("#eb6834", "o", "test, soft gates"),
         "test_hard": ("#1baf7a", "s", "test, lowest-gated P% removed"),
     }
-    ref_labels = {"val": "validation, oracle gate", "test_soft": "test, oracle gate",
+    ref_labels = {"val": "validation, oracle gate", "valtest": "validation-test, oracle gate",
+                  "test_soft": "test, oracle gate",
                   "test_hard": "test, poisoned rows removed"}
     for m in METRICS:
         fig, ax = plt.subplots(figsize=(7, 4.2))
@@ -352,7 +365,7 @@ def plot_curves(rows: list[dict], refs: dict, best_iter: int, plot_dir: Path,
             if f"{split}_{m}" in refs:
                 ax.axhline(refs[f"{split}_{m}"], color=colour, ls="--", lw=1, label=ref_labels[split])
         if baseline is not None:
-            ax.axhline(baseline[1][m], color="#c4378f", ls="-.", lw=1.2, label=baseline[0])
+            ax.axhline(baseline[1][m], color="#4d4d4d", ls="-.", lw=1.2, label=baseline[0])
         ax.axvline(best_iter, color="0.5", ls=":", lw=1, label=f"best (iteration {best_iter})")
         ax.set(xlabel="iteration (gate updates)", ylabel=m,
                title=("cross-entropy (the loss)" if m == "ce" else m) + " vs iteration")
@@ -426,8 +439,8 @@ def wandb_upload(run, out: Path, run_name: str, summary: dict, rows: list[dict],
     charts = {}
     for m in METRICS:
         series = []
-        for split, label in (("val", "validation (optimised)"), ("test_soft", "test, soft gates"),
-                             ("test_hard", "test, lowest-gated removed")):
+        for split, label in (("val", "validation (optimised)"), ("valtest", "validation-test (held out)"),
+                             ("test_soft", "test, soft gates"), ("test_hard", "test, lowest-gated removed")):
             pts = [(r["iter"], r[f"{split}_{m}"]) for r in rows
                    if f"{split}_{m}" in r and not math.isnan(r[f"{split}_{m}"])]
             if pts:
@@ -483,6 +496,50 @@ def draw_validation(y: np.ndarray, n: int, seed: int) -> np.ndarray:
     return np.sort(np.concatenate([o[:q] for o, q in zip(order, quota)]))
 
 
+def split_holdout(y: np.ndarray, frac: float, seed: int) -> tuple[np.ndarray, np.ndarray]:
+    """(fit, holdout): sorted positions in y of a class-stratified random split that holds
+    out round(frac * len(y)) rows (half up), drawn as in draw_validation."""
+    n_hold = int(math.floor(frac * len(y) + 0.5))
+    if not 0 < n_hold < len(y):
+        raise ValueError(f"holding out {frac:g} of {len(y)} rows leaves one side empty")
+    hold = draw_validation(y, n_hold, seed)
+    return np.setdiff1d(np.arange(len(y)), hold), hold
+
+
+def selection_rules(rows: list[dict], holdout: bool) -> dict:
+    """The iteration each stopping rule picks, with the scores logged there.
+
+    The candidates are the test iterations, the only ones with test (and validation-test)
+    scores; rows are log rows, in iteration order.
+      valtest_acc      highest validation-test accuracy, ties -> lower validation-test CE,
+                       then earlier: how the best gates are chosen with --val-holdout
+      valtest_ce       lowest validation-test CE, ties -> earlier
+      val_acc          highest accuracy on the fitted validation rows, ties -> lower CE,
+                       then earlier: the rule without a holdout, on the test iterations
+      val_first_max    the first test iteration at or after the one where accuracy on the
+                       fitted rows first reaches its maximum
+      last             the last iteration
+      test_acc_oracle  highest test accuracy, ties -> lower test CE, then earlier. It looks
+                       at the test set: a ceiling to compare against, not a usable rule.
+    """
+    cand = [r for r in rows if "test_soft_ce" in r]
+    best = lambda key: min(cand, key=key)  # noqa: E731
+    picked = {}
+    if holdout:
+        picked["valtest_acc"] = best(lambda r: (-r["valtest_accuracy"], r["valtest_ce"], r["iter"]))
+        picked["valtest_ce"] = best(lambda r: (r["valtest_ce"], r["iter"]))
+    picked["val_acc"] = best(lambda r: (-r["val_accuracy"], r["val_ce"], r["iter"]))
+    top = max(r["val_accuracy"] for r in rows)
+    first = next(r["iter"] for r in rows if r["val_accuracy"] == top)
+    picked["val_first_max"] = best(lambda r: (r["iter"] < first, r["iter"]))
+    picked["last"] = max(cand, key=lambda r: r["iter"])
+    picked["test_acc_oracle"] = best(lambda r: (-r["test_soft_accuracy"], r["test_soft_ce"], r["iter"]))
+    splits = ("val", "valtest", "test_soft", "test_hard") if holdout else ("val", "test_soft", "test_hard")
+    return {rule: {"iteration": r["iter"]} | {s: {m: r[f"{s}_{m}"] for m in METRICS if f"{s}_{m}" in r}
+                                             for s in splits}
+            for rule, r in picked.items()}
+
+
 # ---- main ----------------------------------------------------------------------------
 
 def main(argv=None):
@@ -499,6 +556,10 @@ def main(argv=None):
                          "as the validation set; the other rows are the context that is poisoned and gated")
     ap.add_argument("--val-seed", type=int, default=0,
                     help="seed of the --val-from-context draw; one seed gives nested draws across N")
+    ap.add_argument("--val-holdout", type=float, default=0.0, metavar="FRAC",
+                    help="hold out this fraction of the validation rows (class-stratified) as a "
+                         "validation-test set: the gates are fitted on the rest, it is scored on the "
+                         "test iterations, and the best iteration is the one with its highest accuracy")
     ap.add_argument("--test", type=Path, default=None, help="default: the dataset's test_attack_*.csv")
     ap.add_argument("--n-classes", type=int, default=None,
                     help="default: n_classes in split_info.json, else the classes in the context")
@@ -564,9 +625,15 @@ def main(argv=None):
                              "do not also pass --val")
         if a.val_from_context < 1:
             raise SystemExit("--val-from-context must be >= 1")
+    if not 0 <= a.val_holdout < 1:
+        raise SystemExit("--val-holdout must be in [0, 1)")
+    if a.val_holdout > 0 and a.test_every == 0:
+        raise SystemExit("--val-holdout needs --test-every > 0: the held-out rows are scored, and the "
+                         "best iteration chosen, on the test iterations")
 
     run_name = a.run_name or (f"{a.dataset}_{a.attack}_R{a.row_percent:g}"
                               + (f"_V{a.val_from_context}s{a.val_seed}" if a.val_from_context else "")
+                              + (f"_H{round(100 * a.val_holdout)}" if a.val_holdout else "")
                               + f"_{a.optimizer}" + (f"-{a.pgd_scale}" if a.optimizer == "pgd" else "")
                               + f"_lr{a.lr:g}_it{a.steps}")
     out = a.out / a.dataset / f"{a.attack}_r{int(round(a.row_percent)):03d}" / run_name
@@ -586,6 +653,7 @@ def main(argv=None):
     info_p = DATASETS_DIR / a.dataset / "splits" / "split_info.json"
     k_info = json.loads(info_p.read_text()).get("n_classes") if info_p.exists() else None
     K = int(a.n_classes or k_info or len(np.unique(yc)))
+    split = {}  # row indices, saved to split.npz
     if a.val_from_context is None:
         val_p = a.val or find_split(a.dataset, "val_")
         Xv, yv = load(val_p, device)
@@ -600,13 +668,29 @@ def main(argv=None):
             raise SystemExit(f"--val-from-context {a.val_from_context} misses a class (class counts "
                              f"{np.bincount(yc[val_rows], minlength=K).tolist()}); draw more rows")
         ctx_rows = np.setdiff1d(np.arange(n_file), val_rows)
-        np.savez_compressed(out / "split.npz", val_rows=val_rows, context_rows=ctx_rows,
-                            val_seed=a.val_seed)
+        split |= {"val_rows": val_rows, "context_rows": ctx_rows, "val_seed": a.val_seed}
         Xv, yv = Xc[torch.as_tensor(val_rows, device=device)], yc[val_rows]
         Xc, yc = Xc[torch.as_tensor(ctx_rows, device=device)], yc[ctx_rows]
         validation = {"source": "class-stratified random draw from the clean context",
                       "n": a.val_from_context, "seed": a.val_seed, "n_context_file": n_file,
                       "nested_across_n": True, "rows": "split.npz"}
+    Xv_all, yv_all = Xv, yv  # every clean validation row; the baselines use all of them
+    holdout = a.val_holdout > 0
+    if holdout:  # fit the gates on part of the validation rows, choose the iteration on the rest
+        fit_pos, hold_pos = split_holdout(yv, a.val_holdout, a.val_seed)
+        for pos, what in ((fit_pos, "fitted"), (hold_pos, "held-out")):
+            if len(np.unique(yv[pos])) < K:
+                raise SystemExit(f"--val-holdout {a.val_holdout:g}: the {what} validation rows miss a class "
+                                 f"({np.bincount(yv[pos], minlength=K).tolist()}); use more validation rows")
+        base = split.get("val_rows", np.arange(len(yv)))  # context-file rows, or val-file rows
+        split |= {"val_fit_rows": base[fit_pos], "val_holdout_rows": base[hold_pos],
+                  "holdout_fraction": a.val_holdout}
+        Xh, yh = Xv[torch.as_tensor(hold_pos, device=device)], yv[hold_pos]
+        Xv, yv = Xv[torch.as_tensor(fit_pos, device=device)], yv[fit_pos]
+        validation |= {"holdout_fraction": a.val_holdout, "n_fit": len(fit_pos),
+                       "n_holdout": len(hold_pos), "rows": "split.npz"}
+    if split:
+        np.savez_compressed(out / "split.npz", **split)
     for y in (yc, yv, yt):
         check_all_classes_present(y, K)
     n = len(yc)
@@ -626,11 +710,14 @@ def main(argv=None):
 
     yc_t, yp_t = as_t(yc, torch.float32), as_t(y_pois, torch.float32)
     yv_t, yt_t = as_t(yv, torch.long), as_t(yt, torch.long)
+    yh_t = as_t(yh, torch.long) if holdout else None
 
     log(f"[{a.dataset}] {a.attack} R={a.row_percent:g}%: {len(rows)} of {n} context rows poisoned; "
         f"{Xc.shape[1]} features, K={K}")
     val_txt = val_p.name if val_p is not None else f"drawn from the clean context, seed {a.val_seed}"
-    log(f"  context {ctx_p}\n  validation {len(yv)} rows ({val_txt}, all optimised on), "
+    val_txt += (f"; {len(yv)} fitted, {len(yh)} held out as validation-test, which picks the best "
+                "iteration" if holdout else ", all optimised on")
+    log(f"  context {ctx_p}\n  validation {len(yv_all)} rows ({val_txt}), "
         f"test {len(yt)} rows ({test_p.name}), scored every {a.test_every} iterations")
     log(f"  {a.optimizer}, lr {a.lr:g}, {a.steps} steps"
         + (f", scale {a.pgd_scale}" if a.optimizer == "pgd" else
@@ -640,7 +727,7 @@ def main(argv=None):
     log(f"  run {run_name}  ->  {out}")
     config = {"args": vars(a), "run_name": run_name, "context": ctx_p, "val": val_p, "test": test_p,
               "n_classes": K, "n_context": n, "n_features": Xc.shape[1], "n_poisoned": len(rows),
-              "n_val": len(yv), "n_test": len(yt), "k_remove": k_remove, "validation": validation,
+              "n_val": len(yv_all), "n_test": len(yt), "k_remove": k_remove, "validation": validation,
               "gated": "features only (feature_group_embedder input); labels untouched"}
 
     with wandb_run(a, run_name, out, config) as run:
@@ -692,12 +779,14 @@ def main(argv=None):
             final["poisoned_oracle_gate"], probs["poisoned_oracle_gate"] = soft(Xt, yt, yt_t, oracle)
             final["poisoned_oracle_removal"], probs["poisoned_oracle_removal"] = hard(rows)
             refs |= prefixed("val", soft(Xv, yv, yv_t, oracle)[0])
+            if holdout:
+                refs |= prefixed("valtest", soft(Xh, yh, yh_t, oracle)[0])
             refs |= prefixed("test_soft", final["poisoned_oracle_gate"])
             refs |= prefixed("test_hard", final["poisoned_oracle_removal"])
         # the clean validation rows used directly: alone, and added to the poisoned context
-        final["val_as_context"], probs["val_as_context"] = as_context(Xv, yv)
+        final["val_as_context"], probs["val_as_context"] = as_context(Xv_all, yv_all)
         final["poisoned_plus_val"], probs["poisoned_plus_val"] = as_context(
-            torch.cat([Xc, Xv]), np.concatenate([y_pois, yv]))
+            torch.cat([Xc, Xv_all]), np.concatenate([y_pois, yv_all]))
         baseline = ("test, validation set as the context", final["val_as_context"])
         for name, m in final.items():
             log(f"  reference  test {name:<26}" + "  ".join(f"{k} {m[k]:.4f}" for k in METRICS))
@@ -706,13 +795,16 @@ def main(argv=None):
         g = torch.full((n,), float(a.g_init), device=device, requires_grad=True)
         opt = (torch.optim.Adam([g], lr=a.lr, betas=(a.adam_beta1, a.adam_beta2), eps=a.adam_eps)
                if a.optimizer == "adam" else None)
-        fields = (["iter"] + [f"{s}_{k}" for s in ("val", "test_soft", "test_hard") for k in METRICS]
+        scored = ("val",) + (("valtest",) if holdout else ()) + ("test_soft", "test_hard")
+        fields = (["iter"] + [f"{s}_{k}" for s in scored for k in METRICS]
                   + list(gate_stats(np.ones(n), poisoned, np.arange(k_remove)))
                   + ["grad_max_abs", "max_abs_dg", "time_s"])
 
+        sel = "valtest" if holdout else "val"  # the split the best iteration is chosen on
+
         def rank_key(entry):  # top-k order: higher accuracy, then lower CE, then earlier iteration
             r = entry[0]
-            return (-r["val_accuracy"], r["val_ce"], r["iter"])
+            return (-r[f"{sel}_accuracy"], r[f"{sel}_ce"], r["iter"])
 
         log_rows, top = [], []  # top: [(log row, gate vector)], best first
         with open(out / "log.csv", "w", newline="") as fh:
@@ -730,6 +822,8 @@ def main(argv=None):
                 if a.test_every and (it % a.test_every == 0 or it == a.steps):
                     row |= prefixed("test_soft", soft(Xt, yt, yt_t, g)[0])
                     row |= prefixed("test_hard", hard(removed)[0])
+                    if holdout:
+                        row |= prefixed("valtest", soft(Xh, yh, yh_t, g)[0])
                 row |= gate_stats(g_now, poisoned, removed)
 
                 if grad is not None:  # every iteration but the last: update the gates
@@ -746,12 +840,14 @@ def main(argv=None):
                 if run is not None:
                     run.log(wandb_keys(row), step=it)
 
-                top = sorted(top + [(row, g_now)], key=rank_key)[:a.top_k]
+                if f"{sel}_ce" in row:  # with a holdout, only the test iterations compete
+                    top = sorted(top + [(row, g_now)], key=rank_key)[:a.top_k]
                 if any(r is row for r, _ in top):  # this iteration entered the top-k
                     for k, (r, gk) in enumerate(top, 1):
                         save_gate(out / "gates" / f"top{k}.npz", gk, r)
 
-                test_txt = (f" | test soft acc {row['test_soft_accuracy']:.4f} "
+                test_txt = ((f" | valtest acc {row['valtest_accuracy']:.4f}" if "valtest_ce" in row else "")
+                            + f" | test soft acc {row['test_soft_accuracy']:.4f} "
                             f"hard acc {row['test_hard_accuracy']:.4f}" if "test_soft_ce" in row else "")
                 det_txt = (f" | poisoned g {row['g_mean_poisoned']:.3f} clean g {row['g_mean_clean']:.3f}"
                            f" auroc {row['auroc_poisoned']:.3f}" if "auroc_poisoned" in row else "")
@@ -784,7 +880,9 @@ def main(argv=None):
         vs_val = {k: final["poisoned_best_gate_soft"][k] - final["val_as_context"][k] for k in METRICS}
         summary = {
             "best_iteration": best_row["iter"],
-            "ranked_on": "validation accuracy, ties -> lower validation CE, then earlier",
+            "ranked_on": ("validation-test (held-out) accuracy, ties -> lower validation-test CE, then "
+                          "earlier; test iterations only" if holdout else
+                          "validation accuracy, ties -> lower validation CE, then earlier"),
             "best_val_row": best_row, "top_k_iterations": [r["iter"] for r, _ in top],
             "best_gate_stats": gate_stats(g_best, poisoned, lowest_gated(g_best, k_remove, tie_order)),
             "k_removed_in_hard_evaluation": k_remove,
@@ -792,6 +890,7 @@ def main(argv=None):
                                else final[name]) for name in final},
             "recovery_vs_oracle": recovery,
             "vs_val_as_context": vs_val,
+            "selection_rules": selection_rules(log_rows, holdout),
         }
         write_json(out / "test_metrics.json", summary)
         np.savez_compressed(out / "test_probs.npz", y_test=yt.astype(np.int16),
@@ -803,6 +902,7 @@ def main(argv=None):
             wandb_upload(run, out, run_name, {
                 "best_iteration": best_row["iter"], "top_k_iterations": summary["top_k_iterations"],
                 "final": final, "recovery_vs_oracle": recovery, "vs_val_as_context": vs_val,
+                "selection_rules": summary["selection_rules"],
                 "best_gate_stats": summary["best_gate_stats"]}, log_rows, baseline)
         log(f"  wrote {out}")
     return out

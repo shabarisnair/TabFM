@@ -6,3 +6,5 @@
 [2026-10-10 17:27:14] DONE  GPU 1  gate_gas-drift_hub-flip-local_R20_pgd-none_lr0.05_it300
 [2026-10-10 17:27:48] DONE  GPU 0  gate_gas-drift_hub-flip-local_R10_pgd-none_lr0.05_it300
 [2026-10-10 17:27:48] START GPU 0  gate_url_unique_hub-flip-local_R20_pgd-none_lr0.05_it300
+[2026-10-10 17:53:58] DONE  GPU 0  gate_url_unique_hub-flip-local_R20_pgd-none_lr0.05_it300
+ALL REQUESTED RUNS FINISHED

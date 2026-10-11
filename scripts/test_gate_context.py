@@ -11,6 +11,9 @@ property that must hold exactly. None compares the code under test with itself.
       draw         seed, random within a class; on the real context its class counts
                    equal prepare_multiclass_splits.stratified_exact's (a second
                    implementation of the same quota rule)
+  A3. holdout and  split_holdout: hand-computed class counts and rounding, disjoint,
+      stopping     seeded; selection_rules on a hand-made log: the iteration each
+      rules        stopping rule picks and the test scores it reports
   B. the gate      u_null equals nan_oracle_experiment's independent capture;
                    g = 1 and g = None are bit-identical to no hook (no-grad and
                    gradient paths);
@@ -44,7 +47,12 @@ property that must hold exactly. None compares the code under test with itself.
      context       split is disjoint and covers the context file, whose poison is
                    poison() on the remaining rows, and which passes every check of D
                    rebuilt from the file and the saved split; the W&B run carries its
-                   group and the draw's size and seed.
+                   group and the draw's size and seed. --val-holdout: refused without test
+                   iterations or with nothing left to fit; a short run whose 50 validation
+                   rows split 40 fitted / 10 held out, whose held-out scores sit exactly on
+                   the test iterations and match runtime.evaluate_context, whose best
+                   iteration is the held-out accuracy rule's, and which passes every check
+                   of D with the baselines on all 50 rows.
 
     python scripts/test_gate_context.py --gpu 1          (about 9 min)
     python scripts/test_gate_context.py --gpu 1 --sections draw valsplit
@@ -180,6 +188,59 @@ def test_draw_validation():
     check("draw_validation on gas-drift: class counts == stratified_exact's, n = 100..500", bool(same))
     check("draw_validation on gas-drift: nested, n = 100 in 200 in ... in 500",
           all(a <= b for a, b in zip(sets, sets[1:])))
+
+
+# =================================== A3. holdout split of the validation set; stopping rules
+def test_holdout_and_rules():
+    print("\nA3. validation-test holdout and stopping rules")
+    # 50 rows, 30/20: a 20% holdout is 10 rows, exactly 6/4; the other 40 rows are 24/16
+    y = np.repeat([0, 1], [30, 20])[np.random.default_rng(3).permutation(50)]
+    fit, hold = G.split_holdout(y, 0.2, seed=0)
+    check("split_holdout 50 rows, 20%: holdout 6/4, fit 24/16 (hand-computed)",
+          np.bincount(y[hold]).tolist() == [6, 4] and np.bincount(y[fit]).tolist() == [24, 16],
+          f"hold {np.bincount(y[hold]).tolist()} fit {np.bincount(y[fit]).tolist()}")
+    check("split_holdout: disjoint, together all 50 rows, sorted",
+          len(np.intersect1d(fit, hold)) == 0 and np.array_equal(np.union1d(fit, hold), np.arange(50))
+          and bool(np.all(np.diff(fit) > 0)) and bool(np.all(np.diff(hold) > 0)))
+    # 53 rows, 32/21: 0.2 * 53 = 10.6 -> 11 rows; shares 6.64 / 4.36 -> floors 6/4, the
+    # leftover row to the larger remainder (class 0) -> 7/4
+    y53 = np.repeat([0, 1], [32, 21])[np.random.default_rng(4).permutation(53)]
+    _, h53 = G.split_holdout(y53, 0.2, seed=0)
+    check("split_holdout 53 rows: 11 held out, 7/4 (hand-computed rounding)",
+          np.bincount(y53[h53]).tolist() == [7, 4], f"{np.bincount(y53[h53]).tolist()}")
+    check("split_holdout: same seed -> same rows, another seed -> other rows",
+          np.array_equal(G.split_holdout(y, 0.2, seed=0)[1], hold)
+          and not np.array_equal(G.split_holdout(y, 0.2, seed=1)[1], hold))
+
+    # stopping rules on a hand-made log: test (and validation-test) scored at 0, 2, 4, 6
+    def r(it, va, vc, hold=None, test=None):
+        row = {"iter": it, "val_accuracy": va, "val_ce": vc}
+        if hold:
+            row |= {"valtest_accuracy": hold[0], "valtest_ce": hold[1],
+                    "test_soft_accuracy": test[0], "test_soft_ce": test[1],
+                    "test_hard_accuracy": test[0] - 0.1, "test_hard_ce": test[1] + 0.1}
+        return row
+    log = [r(0, 0.80, 0.50, (0.70, 0.20), (0.75, 0.55)),
+           r(1, 0.90, 0.40),
+           r(2, 0.95, 0.30, (0.90, 0.35), (0.89, 0.40)),
+           r(3, 1.00, 0.20),                       # validation accuracy first at its max
+           r(4, 1.00, 0.10, (0.90, 0.30), (0.88, 0.35)),
+           r(5, 1.00, 0.05),
+           r(6, 1.00, 0.04, (0.80, 0.50), (0.84, 0.45))]
+    got = {k: v["iteration"] for k, v in G.selection_rules(log, holdout=True).items()}
+    # valtest_acc: 0.90 at 2 and 4, lower CE wins -> 4.  valtest_ce: lowest 0.20 -> 0.
+    # val_acc (test iterations only): 1.00 at 4 and 6, lower CE -> 6.  val_first_max:
+    # first max at 3 -> next scored iteration 4.  last: 6.  test_acc_oracle: 0.89 -> 2.
+    want = {"valtest_acc": 4, "valtest_ce": 0, "val_acc": 6, "val_first_max": 4, "last": 6,
+            "test_acc_oracle": 2}
+    check("selection_rules: each rule's iteration (hand-computed)", got == want, f"{got}")
+    rules = G.selection_rules(log, holdout=True)
+    check("selection_rules: test scores of the chosen iteration, soft and hard",
+          rules["valtest_acc"]["test_soft"] == {"accuracy": 0.88, "ce": 0.35}
+          and abs(rules["valtest_acc"]["test_hard"]["accuracy"] - 0.78) < 1e-12,
+          f"{rules['valtest_acc']}")
+    check("selection_rules without a holdout: no valtest rules",
+          set(G.selection_rules(log, holdout=False)) == {"val_acc", "val_first_max", "last", "test_acc_oracle"})
 
 
 # ============================================================================ B. the gate
@@ -373,8 +434,11 @@ def wandb_records(path: Path):
 
 
 def check_run(out: Path, S, device, *, optimizer: str, lr: float, steps: int, test_every: int,
-              tag: str, row_percent: float = 20) -> dict:
-    """Checks on one finished gate_context run, against independent recomputation."""
+              tag: str, row_percent: float = 20, holdout: bool = False) -> dict:
+    """Checks on one finished gate_context run, against independent recomputation.
+
+    S["Xv"], S["yv"] are the rows the gates were fitted on. With holdout, S["Xh"], S["yh"]
+    are the held-out validation-test rows and S["Xv_all"], S["yv_all"] all validation rows."""
     from tabfm_experiments.metrics import multiclass_metrics
     from tabfm_experiments.runtime import evaluate_context
     from tabfm_experiments.sampling import k_from_percent
@@ -394,17 +458,23 @@ def check_run(out: Path, S, device, *, optimizer: str, lr: float, steps: int, te
     got_test = {int(r["iter"]) for r in rows if r["test_soft_ce"] != ""}
     check(f"{tag} test scores logged on exactly the test iterations", got_test == want_test,
           f"{sorted(got_test)}")
+    if holdout:
+        got_h = {int(r["iter"]) for r in rows if r.get("valtest_ce", "") != ""}
+        check(f"{tag} validation-test scores logged on exactly the test iterations", got_h == want_test,
+              f"{sorted(got_h)}")
     dg = float(rows[0]["max_abs_dg"])
     check(f"{tag} first update moves the largest gate by lr",
           abs(dg - lr) < (1e-6 if optimizer == "pgd" else 1e-3), f"{dg:.6f}")
 
-    order = sorted(rows, key=lambda r: (-float(r["val_accuracy"]), float(r["val_ce"]), int(r["iter"])))
+    sel = "valtest" if holdout else "val"  # the split the best iteration is chosen on
+    cand = [r for r in rows if r.get(f"{sel}_ce", "") != ""]
+    order = sorted(cand, key=lambda r: (-float(r[f"{sel}_accuracy"]), float(r[f"{sel}_ce"]), int(r["iter"])))
     ok = True
     for k in (1, 2, 3):
         zk = np.load(out / f"gates/top{k}.npz")
         ok &= int(zk["iteration"]) == int(order[k - 1]["iter"])
         ok &= abs(float(zk["g"].mean()) - float(order[k - 1]["g_mean"])) < 1e-5
-    check(f"{tag} top-3 files = log rows sorted by (val acc desc, val ce asc, iter)", ok,
+    check(f"{tag} top-3 files = log rows sorted by ({sel} acc desc, {sel} ce asc, iter)", ok,
           f"{[int(r['iter']) for r in order[:3]]}")
 
     pz = np.load(out / "poison.npz")
@@ -417,6 +487,12 @@ def check_run(out: Path, S, device, *, optimizer: str, lr: float, steps: int, te
     ce_ref, _, _ = evaluate_context(clf, Xc, yp_t, S["Xv"], yv_t, need_grad=False)
     d = abs(float(ce_ref) - float(rows[0]["val_ce"]))
     check(f"{tag} iteration-0 validation CE == runtime.evaluate_context", d < 1e-5, f"diff {d:.1e}")
+    if holdout:
+        ce_h, _, _ = evaluate_context(clf, Xc, yp_t, S["Xh"], torch.as_tensor(S["yh"], device=device),
+                                      need_grad=False)
+        d = abs(float(ce_h) - float(rows[0]["valtest_ce"]))
+        check(f"{tag} iteration-0 validation-test CE == runtime.evaluate_context on the held-out rows",
+              d < 1e-5, f"diff {d:.1e}")
 
     tm = json.loads((out / "test_metrics.json").read_text())
     tp = np.load(out / "test_probs.npz")
@@ -454,9 +530,10 @@ def check_run(out: Path, S, device, *, optimizer: str, lr: float, steps: int, te
     check(f"{tag} test_metrics best iteration == top-1 file", tm["best_iteration"] == int(z1["iteration"]))
 
     # the two references that use the clean validation rows as context, recomputed
-    yv_f = torch.as_tensor(S["yv"], dtype=torch.float32, device=device)
-    for name, Xr, yr in (("val_as_context", S["Xv"], yv_f),
-                         ("poisoned_plus_val", torch.cat([Xc, S["Xv"]]), torch.cat([yp_t, yv_f]))):
+    Xv_all = S.get("Xv_all", S["Xv"])  # every validation row, fitted on or held out
+    yv_f = torch.as_tensor(S.get("yv_all", S["yv"]), dtype=torch.float32, device=device)
+    for name, Xr, yr in (("val_as_context", Xv_all, yv_f),
+                         ("poisoned_plus_val", torch.cat([Xc, Xv_all]), torch.cat([yp_t, yv_f]))):
         _, _, pr = evaluate_context(clf, Xr, yr, Xt, yt_t, need_grad=False)
         d = float(np.abs(tp[name] - pr.cpu().numpy()).max()) if name in tp.files else float("inf")
         check(f"{tag} reference {name} == evaluate_context on {len(yr)} context rows",
@@ -467,6 +544,18 @@ def check_run(out: Path, S, device, *, optimizer: str, lr: float, steps: int, te
           set(vs) == set(G.METRICS) and all(
               abs(vs[k] - (m["poisoned_best_gate_soft"][k] - m["val_as_context"][k])) < 1e-12
               for k in G.METRICS), f"{vs}")
+    sr = tm.get("selection_rules", {})
+    want_rules = {"val_acc", "val_first_max", "last", "test_acc_oracle"} | (
+        {"valtest_acc", "valtest_ce"} if holdout else set())
+    ok = set(sr) == want_rules and all(
+        abs(v["test_soft"]["accuracy"] - float(rows[v["iteration"]]["test_soft_accuracy"])) < 1e-12
+        and abs(v["test_hard"]["accuracy"] - float(rows[v["iteration"]]["test_hard_accuracy"])) < 1e-12
+        for v in sr.values())
+    check(f"{tag} selection_rules: every rule, its test scores == log.csv at its iteration", ok,
+          f"{ {k: v['iteration'] for k, v in sr.items()} }")
+    if holdout:
+        check(f"{tag} best iteration == the validation-test accuracy rule's",
+              tm["best_iteration"] == sr.get("valtest_acc", {}).get("iteration"))
 
     # the newest local run (a --force rerun leaves the earlier run's folder in place);
     # folder names start with the start time, so name order is time order
@@ -495,12 +584,13 @@ def check_run(out: Path, S, device, *, optimizer: str, lr: float, steps: int, te
         same(it, w, c) for it in range(steps + 1) for w, c in every)
     check(f"{tag} W&B every iteration: all 5 val metrics + detection precision/recall/auroc/ap",
           ok, f"{len(by_step)} steps x {len(every)} keys, equal to log.csv")
-    tests = [(f"{m}/{s}", f"{s}_{m}") for s in ("test_soft", "test_hard") for m in G.METRICS]
+    splits = ("test_soft", "test_hard") + (("valtest",) if holdout else ())
+    tests = [(f"{m}/{s}", f"{s}_{m}") for s in splits for m in G.METRICS]
     got = {it for it, h in by_step.items() if any(w in h for w, _ in tests)}
     ok = got == want_test and all(same(it, w, c) for it in want_test for w, c in tests)
-    check(f"{tag} W&B test iterations only: all 5 metrics, soft and hard", ok, f"steps {sorted(got)}")
-    # validation every iteration + two test curves + the flat validation-as-context line
-    n_pts = (steps + 1) + 2 * len(want_test) + 2
+    check(f"{tag} W&B test iterations only: all 5 metrics on {', '.join(splits)}", ok, f"steps {sorted(got)}")
+    # validation every iteration + the test-iteration curves + the flat validation-as-context line
+    n_pts = (steps + 1) + len(splits) * len(want_test) + 2
     last = by_step.get(steps, {})
     ok = (len(runs) >= 1 and name == out.name
           and all(last.get(f"overlay/{m}_table/nrows") == str(n_pts) for m in G.METRICS)
@@ -611,6 +701,42 @@ def test_val_split(device, gpu):
         check(f"{tag} W&B run: group, and the draw's size and seed in its config",
               group == "valsplit-test" and args.get("val_from_context") == V and args.get("val_seed") == 0,
               f"group {group!r}, val_from_context {args.get('val_from_context')}")
+
+        # ---- a 20% validation-test holdout: fit on 80%, choose the iteration on 20% ----------
+        for extra, why in ((["--val-holdout", "0.2", "--test-every", "0"], "without test iterations"),
+                           (["--val-holdout", "1"], "with nothing left to fit on")):
+            try:
+                G.main(base + ["--steps", "0", "--val-from-context", "50"] + extra)
+                refused = None
+            except SystemExit as e:
+                refused = e.code
+            check(f"--val-holdout refused {why}", isinstance(refused, str), f"{refused!r}")
+
+        V, steps, test_every = 50, 3, 1
+        out = G.main(base[:-2] + ["--val-from-context", str(V), "--val-seed", "0", "--val-holdout", "0.2",
+                                  "--steps", str(steps), "--test-every", str(test_every), "--plot-every", "2",
+                                  "--wandb-mode", "offline", "--wandb-group", "valsplit-test"])
+        tag = "[holdout]"
+        sp = np.load(out / "split.npz")
+        vr, fr, hr, cr = sp["val_rows"], sp["val_fit_rows"], sp["val_holdout_rows"], sp["context_rows"]
+        check(f"{tag} split: 50 validation rows = 40 fitted + 10 held out, disjoint",
+              len(vr) == 50 and len(fr) == 40 and len(hr) == 10 and len(np.intersect1d(fr, hr)) == 0
+              and np.array_equal(np.union1d(fr, hr), vr) and len(np.intersect1d(vr, cr)) == 0)
+        check(f"{tag} held-out rows cover every class", len(np.unique(y_all[hr])) == 6,
+              f"{np.bincount(y_all[hr], minlength=6).tolist()}")
+        sel = lambda r: X_all[torch.as_tensor(r, device=device)]  # noqa: E731
+        Xc, yc = sel(cr), y_all[cr]
+        rows, y_pois = poison("hub-flip-local", Xc, yc, 6, 20, run_id=0, row_seed=1)
+        yp_t = torch.tensor(y_pois, dtype=torch.float32, device=device)
+        S = dict(clf=clf, Xc=Xc, yc=yc, Xv=sel(fr), yv=y_all[fr], Xh=sel(hr), yh=y_all[hr],
+                 Xv_all=sel(vr), yv_all=y_all[vr], Xt=Xt, yt=yt, K=6, rows=rows, y_pois=y_pois, yp_t=yp_t)
+        S["null"] = G.capture_null_input(clf, Xc, yp_t)
+        check_run(out, S, device, optimizer="pgd", lr=lr, steps=steps, test_every=test_every, tag=tag,
+                  holdout=True)
+        cfg = json.loads((out / "config.json").read_text())
+        check(f"{tag} config: 40 fitted and 10 held-out validation rows",
+              cfg["validation"].get("n_fit") == 40 and cfg["validation"].get("n_holdout") == 10,
+              f"{cfg['validation']}")
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
@@ -629,6 +755,7 @@ def main(argv=None):
         test_update_rules()
     if "draw" in a.sections:
         test_draw_validation()
+        test_holdout_and_rules()
     if {"gate", "gradient", "e2e"} & set(a.sections):
         S = setup(device)
         test_gate(S, device)  # also captures S["null"], which the later sections use

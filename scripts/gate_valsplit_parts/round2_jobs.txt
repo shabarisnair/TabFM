@@ -1,0 +1,101 @@
+# Round 2 of the gate-valsplit sweep, written by make_round2_jobs.py.
+# <part> <dataset> <R> <V> <seed> <strategy>   (strategy: full | holdout)
+# part 1: 6 runs, ~75 min
+1 gas-drift 10 50 0 full
+1 gas-drift 20 300 0 holdout
+1 heloc 20 50 0 full
+1 heloc 20 500 0 holdout
+1 students_dropout 20 50 0 full
+1 students_dropout 20 500 0 holdout
+# part 2: 8 runs, ~74 min
+2 gas-drift 10 50 0 holdout
+2 gas-drift 20 400 0 holdout
+2 heloc 20 50 0 holdout
+2 students_dropout 10 50 0 full
+2 students_dropout 10 100 0 full
+2 students_dropout 20 50 0 holdout
+2 credit-approval 10 50 0 full
+2 credit-approval 10 200 0 full
+# part 3: 8 runs, ~74 min
+3 gas-drift 10 100 0 holdout
+3 gas-drift 20 500 0 holdout
+3 heloc 20 100 0 full
+3 students_dropout 10 50 0 holdout
+3 students_dropout 10 100 0 holdout
+3 students_dropout 20 100 0 full
+3 credit-approval 10 50 0 holdout
+3 credit-approval 10 200 0 holdout
+# part 4: 8 runs, ~75 min
+4 gas-drift 10 200 0 holdout
+4 url_unique 10 50 0 full
+4 url_unique 20 50 0 holdout
+4 heloc 10 300 0 full
+4 heloc 20 200 0 holdout
+4 students_dropout 10 300 0 full
+4 students_dropout 20 200 0 holdout
+4 credit-approval 20 100 0 full
+# part 5: 8 runs, ~75 min
+5 gas-drift 10 300 0 holdout
+5 url_unique 10 50 0 holdout
+5 url_unique 20 100 0 holdout
+5 heloc 10 300 0 holdout
+5 heloc 20 300 0 full
+5 students_dropout 10 300 0 holdout
+5 students_dropout 20 300 0 full
+5 credit-approval 20 100 0 holdout
+# part 6: 8 runs, ~75 min
+6 gas-drift 10 400 0 holdout
+6 url_unique 10 100 0 holdout
+6 url_unique 20 200 0 holdout
+6 heloc 10 400 0 full
+6 heloc 20 300 0 holdout
+6 students_dropout 10 400 0 full
+6 students_dropout 20 300 0 holdout
+6 credit-approval 20 200 0 full
+# part 7: 8 runs, ~75 min
+7 gas-drift 10 500 0 holdout
+7 url_unique 10 200 0 holdout
+7 url_unique 20 300 0 holdout
+7 heloc 10 400 0 holdout
+7 heloc 20 400 0 full
+7 students_dropout 10 400 0 holdout
+7 students_dropout 20 400 0 full
+7 credit-approval 20 200 0 holdout
+# part 8: 7 runs, ~74 min
+8 gas-drift 20 50 0 full
+8 url_unique 10 300 0 holdout
+8 url_unique 20 400 0 holdout
+8 heloc 10 500 0 full
+8 heloc 20 400 0 holdout
+8 students_dropout 10 500 0 full
+8 students_dropout 20 400 0 holdout
+# part 9: 7 runs, ~74 min
+9 gas-drift 20 50 0 holdout
+9 url_unique 10 400 0 holdout
+9 url_unique 20 500 0 holdout
+9 heloc 10 500 0 holdout
+9 heloc 20 500 0 full
+9 students_dropout 10 500 0 holdout
+9 students_dropout 20 500 0 full
+# part 10: 10 runs, ~75 min
+10 gas-drift 20 100 0 holdout
+10 url_unique 10 500 0 holdout
+10 heloc 10 50 0 full
+10 heloc 10 100 0 full
+10 heloc 10 200 0 full
+10 heloc 20 100 0 holdout
+10 students_dropout 10 200 0 full
+10 students_dropout 20 100 0 holdout
+10 credit-approval 10 100 0 full
+10 credit-approval 20 50 0 full
+# part 11: 10 runs, ~75 min
+11 gas-drift 20 200 0 holdout
+11 url_unique 20 50 0 full
+11 heloc 10 50 0 holdout
+11 heloc 10 100 0 holdout
+11 heloc 10 200 0 holdout
+11 heloc 20 200 0 full
+11 students_dropout 10 200 0 holdout
+11 students_dropout 20 200 0 full
+11 credit-approval 10 100 0 holdout
+11 credit-approval 20 50 0 holdout
