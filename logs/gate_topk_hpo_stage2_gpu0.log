@@ -1,0 +1,3 @@
+scripts/gate_topk_parts/hpo/stage2.txt: 36 runs
+36 runs on GPU(s) 0; results in /home/ssn899/Desktop/TabFM/results/gate_topk; W&B online, project TFM_experiments, group gate-topk
+[2026-10-12 00:29:05] START GPU 0  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid_std1_lr5_init0_it300

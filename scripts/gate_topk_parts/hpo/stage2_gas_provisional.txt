@@ -1,0 +1,15 @@
+# HPO stage 2 (surrogate), PROVISIONAL, gas-drift only, at gas-drift's best ratio lr/std = 20:
+# plain sigmoid at both spreads (it depends on the absolute score scale) and the centred sigmoid
+# <part> <dataset> <R> <ste> <init_std> <lr> <init_seed>
+1 gas-drift 20 sigmoid 0.01 0.2 0
+1 gas-drift 20 sigmoid 0.01 0.2 1
+1 gas-drift 20 sigmoid 0.01 0.2 2
+1 gas-drift 20 sigmoid 0.01 0.2 3
+1 gas-drift 20 sigmoid 1 20 0
+1 gas-drift 20 sigmoid 1 20 1
+1 gas-drift 20 sigmoid 1 20 2
+1 gas-drift 20 sigmoid 1 20 3
+1 gas-drift 20 sigmoid-centered 0.01 0.2 0
+1 gas-drift 20 sigmoid-centered 0.01 0.2 1
+1 gas-drift 20 sigmoid-centered 0.01 0.2 2
+1 gas-drift 20 sigmoid-centered 0.01 0.2 3

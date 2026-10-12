@@ -1,0 +1,19 @@
+scripts/gate_topk_parts/hpo/stage2_gas_provisional.txt: 12 runs
+12 runs on GPU(s) 2; results in /home/ssn899/Desktop/TabFM/results/gate_topk; W&B online, project TFM_experiments, group gate-topk
+[busy] gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid_std0.01_lr0.2_init0_it300 (another process holds /home/ssn899/Desktop/TabFM/results/gate_topk/gas-drift/hub-flip-local_r020/gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid_std0.01_lr0.2_init0_it300/.lock; delete it if that process died)
+[2026-10-11 22:15:23] START GPU 2  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid_std0.01_lr0.2_init1_it300
+[2026-10-11 22:42:25] DONE  GPU 2  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid_std0.01_lr0.2_init1_it300
+[busy] gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid_std0.01_lr0.2_init2_it300 (another process holds /home/ssn899/Desktop/TabFM/results/gate_topk/gas-drift/hub-flip-local_r020/gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid_std0.01_lr0.2_init2_it300/.lock; delete it if that process died)
+[busy] gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid_std0.01_lr0.2_init3_it300 (another process holds /home/ssn899/Desktop/TabFM/results/gate_topk/gas-drift/hub-flip-local_r020/gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid_std0.01_lr0.2_init3_it300/.lock; delete it if that process died)
+[2026-10-11 22:42:25] START GPU 2  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid_std1_lr20_init0_it300
+[2026-10-11 23:09:26] DONE  GPU 2  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid_std1_lr20_init0_it300
+[busy] gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid_std1_lr20_init1_it300 (another process holds /home/ssn899/Desktop/TabFM/results/gate_topk/gas-drift/hub-flip-local_r020/gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid_std1_lr20_init1_it300/.lock; delete it if that process died)
+[busy] gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid_std1_lr20_init2_it300 (another process holds /home/ssn899/Desktop/TabFM/results/gate_topk/gas-drift/hub-flip-local_r020/gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid_std1_lr20_init2_it300/.lock; delete it if that process died)
+[2026-10-11 23:09:27] START GPU 2  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid_std1_lr20_init3_it300
+[2026-10-11 23:36:28] DONE  GPU 2  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid_std1_lr20_init3_it300
+[busy] gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid-centered_std0.01_lr0.2_init0_it300 (another process holds /home/ssn899/Desktop/TabFM/results/gate_topk/gas-drift/hub-flip-local_r020/gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid-centered_std0.01_lr0.2_init0_it300/.lock; delete it if that process died)
+[busy] gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid-centered_std0.01_lr0.2_init1_it300 (another process holds /home/ssn899/Desktop/TabFM/results/gate_topk/gas-drift/hub-flip-local_r020/gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid-centered_std0.01_lr0.2_init1_it300/.lock; delete it if that process died)
+[2026-10-11 23:36:28] START GPU 2  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid-centered_std0.01_lr0.2_init2_it300
+[2026-10-12 00:03:29] DONE  GPU 2  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid-centered_std0.01_lr0.2_init2_it300
+[busy] gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid-centered_std0.01_lr0.2_init3_it300 (another process holds /home/ssn899/Desktop/TabFM/results/gate_topk/gas-drift/hub-flip-local_r020/gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_sigmoid-centered_std0.01_lr0.2_init3_it300/.lock; delete it if that process died)
+ALL REQUESTED RUNS FINISHED

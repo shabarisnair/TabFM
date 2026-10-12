@@ -1,0 +1,39 @@
+# HPO stage 2 (R=20%): surrogate at the stage-1 ratio lr/std = 5 (identity at ratio 5 is in stage 1):
+# plain sigmoid at both spreads (it depends on the score scale) and the centred sigmoid; 4 restarts each
+# <part> <dataset> <R> <ste> <init_std> <lr> <init_seed>
+1 gas-drift 20 sigmoid 1 5 0
+1 gas-drift 20 sigmoid 1 5 1
+1 gas-drift 20 sigmoid 1 5 2
+1 gas-drift 20 sigmoid 1 5 3
+1 gas-drift 20 sigmoid 0.01 0.05 0
+1 gas-drift 20 sigmoid 0.01 0.05 1
+1 gas-drift 20 sigmoid 0.01 0.05 2
+1 gas-drift 20 sigmoid 0.01 0.05 3
+1 gas-drift 20 sigmoid-centered 1 5 0
+1 gas-drift 20 sigmoid-centered 1 5 1
+1 gas-drift 20 sigmoid-centered 1 5 2
+1 gas-drift 20 sigmoid-centered 1 5 3
+1 url_unique 20 sigmoid 1 5 0
+1 url_unique 20 sigmoid 1 5 1
+1 url_unique 20 sigmoid 1 5 2
+1 url_unique 20 sigmoid 1 5 3
+1 url_unique 20 sigmoid 0.01 0.05 0
+1 url_unique 20 sigmoid 0.01 0.05 1
+1 url_unique 20 sigmoid 0.01 0.05 2
+1 url_unique 20 sigmoid 0.01 0.05 3
+1 url_unique 20 sigmoid-centered 1 5 0
+1 url_unique 20 sigmoid-centered 1 5 1
+1 url_unique 20 sigmoid-centered 1 5 2
+1 url_unique 20 sigmoid-centered 1 5 3
+1 students_dropout 20 sigmoid 1 5 0
+1 students_dropout 20 sigmoid 1 5 1
+1 students_dropout 20 sigmoid 1 5 2
+1 students_dropout 20 sigmoid 1 5 3
+1 students_dropout 20 sigmoid 0.01 0.05 0
+1 students_dropout 20 sigmoid 0.01 0.05 1
+1 students_dropout 20 sigmoid 0.01 0.05 2
+1 students_dropout 20 sigmoid 0.01 0.05 3
+1 students_dropout 20 sigmoid-centered 1 5 0
+1 students_dropout 20 sigmoid-centered 1 5 1
+1 students_dropout 20 sigmoid-centered 1 5 2
+1 students_dropout 20 sigmoid-centered 1 5 3
