@@ -1,0 +1,6 @@
+# HPO, refinement run here after the stage-1 workers: gas-drift at ratio 0.2
+# <part> <dataset> <R> <ste> <init_std> <lr> <init_seed>
+1 gas-drift 20 identity 1 0.2 0
+1 gas-drift 20 identity 1 0.2 1
+1 gas-drift 20 identity 1 0.2 2
+1 gas-drift 20 identity 1 0.2 3

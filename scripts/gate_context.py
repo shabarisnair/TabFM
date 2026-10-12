@@ -39,6 +39,17 @@ solved with one of
 
 No limit on how many rows may be gated (the R% condition) is enforced during learning.
 
+--gate topk replaces the soft gates by exactly k = remove-percent (default R) of the rows
+switched off. Each row has a free score S_i (N(0, --score-init-std^2) at the start, seed
+--init-seed; one seed is one restart). Every iteration the gate is the hard mask
+x = topk_mask(S): 0 for the k lowest scores, 1 for the rest. The gradient of the loss with
+respect to that 0/1 gate reaches the scores through a straight-through estimator (--ste):
+d loss/dS = d loss/dx * surrogate'(S), surrogate = S itself (identity), sigmoid(S), or a
+sigmoid centred on the keep/remove boundary. The scores then take the PGD step (no clip):
+--pgd-scale linf moves the largest score by lr. log.csv adds score_std and mask_flips (rows
+that entered or left the mask with the update); detection AUROC is computed from -S.
+--select-on ce ranks iterations by CE on the validation(-test) rows instead of accuracy.
+
 Test-set curves, to see where over-fitting starts. The test set is scored at iteration
 0, every --test-every iterations, and at the last iteration, in two ways:
 
@@ -273,28 +284,87 @@ def adam_step(g: torch.Tensor, grad: torch.Tensor, opt: torch.optim.Optimizer) -
     g.grad = None
 
 
+# ---- the top-k gate ------------------------------------------------------------------
+
+def init_scores(n: int, std: float, seed: int, device) -> torch.Tensor:
+    """N(0, std^2) scores, drawn on the CPU from torch.Generator().manual_seed(seed), so a
+    restart is the same on every device."""
+    return (torch.randn(n, generator=torch.Generator().manual_seed(seed)) * std).to(device)
+
+
+def topk_mask(scores: torch.Tensor, k_remove: int) -> torch.Tensor:
+    """0 for the k_remove rows with the lowest scores, 1 for the rest; ties go to the
+    earlier row (stable sort)."""
+    mask = torch.ones_like(scores)
+    if k_remove > 0:
+        mask[torch.argsort(scores, stable=True)[:k_remove]] = 0.0
+    return mask
+
+
+def ste_grad(grad_g: torch.Tensor, scores: torch.Tensor, kind: str, *, k_remove: int,
+             temp: float = 1.0) -> torch.Tensor:
+    """d loss / d scores by the straight-through estimator: the forward pass used the hard
+    mask, the backward pass treats it as surrogate(scores), whose derivative scales the
+    gate gradient:
+      identity          the scores themselves: d/dS = 1
+      sigmoid           sigmoid(S): largest at S = 0
+      sigmoid-centered  sigmoid((S - tau) / w), tau midway between the k_remove-th lowest
+                        score and the next, w = temp * std(S): largest at the keep/remove
+                        boundary
+    """
+    if kind == "identity":
+        return grad_g
+    if kind == "sigmoid":
+        s = torch.sigmoid(scores)
+        return grad_g * s * (1 - s)
+    if kind == "sigmoid-centered":
+        srt = torch.sort(scores).values
+        tau = (srt[k_remove - 1] + srt[k_remove]) / 2
+        w = temp * scores.std()
+        s = torch.sigmoid((scores - tau) / w)
+        return grad_g * s * (1 - s) / w
+    raise ValueError(f"unknown straight-through surrogate {kind!r}")
+
+
+def score_step(scores: torch.Tensor, grad: torch.Tensor, lr: float, scale: str) -> None:
+    """In place: scores <- scores - eta * grad, unbounded. linf: eta = lr / max|grad|, so
+    the largest score change is lr; none: eta = lr."""
+    with torch.no_grad():
+        if scale == "linf":
+            m = float(grad.abs().max())
+            if m == 0.0:
+                return
+            eta = lr / m
+        else:
+            eta = lr
+        scores.sub_(eta * grad)
+
+
 # ---- bookkeeping ---------------------------------------------------------------------
 
-def gate_stats(g: np.ndarray, poisoned: np.ndarray, removed: np.ndarray) -> dict:
+def gate_stats(g: np.ndarray, poisoned: np.ndarray, removed: np.ndarray,
+               scores: np.ndarray | None = None) -> dict:
     """Gate summary. With poisoned rows present, also how well the gates detect them:
       precision_at_R  share of the removed rows (the hard evaluation's lowest-gated P%)
                       that are poisoned
       recall_at_R     share of the poisoned rows among the removed rows (equal to the
                       precision when as many rows are removed as were poisoned)
-      auroc_poisoned  AUROC of 1 - g against the poisoned mask (0.5 = chance)
-      ap_poisoned     average precision of 1 - g (chance = the poisoned share)
+      auroc_poisoned  AUROC of 1 - g against the poisoned mask (0.5 = chance); of -scores
+                      when scores are given (top-k gates, whose g is only 0 or 1)
+      ap_poisoned     average precision of the same (chance = the poisoned share)
     Diagnostics only: the poisoned mask never reaches the optimisation."""
     s = {"g_mean": float(g.mean()), "g_min": float(g.min()),
          "frac_g_below_0.5": float((g < 0.5).mean())}
     if poisoned.any() and not poisoned.all():
         from sklearn.metrics import average_precision_score, roc_auc_score
         hits = int(poisoned[removed].sum())
+        rank = -scores if scores is not None else 1 - g  # higher = more likely poisoned
         s.update({"g_mean_poisoned": float(g[poisoned].mean()),
                   "g_mean_clean": float(g[~poisoned].mean()),
                   "precision_at_R": hits / len(removed) if len(removed) else math.nan,
                   "recall_at_R": hits / int(poisoned.sum()),
-                  "auroc_poisoned": float(roc_auc_score(poisoned, 1 - g)),
-                  "ap_poisoned": float(average_precision_score(poisoned, 1 - g))})
+                  "auroc_poisoned": float(roc_auc_score(poisoned, rank)),
+                  "ap_poisoned": float(average_precision_score(poisoned, rank))})
     return s
 
 
@@ -304,7 +374,7 @@ def prefixed(prefix: str, m: dict) -> dict:
 
 DETECTION = {"precision_at_R": "precision_at_R", "recall_at_R": "recall_at_R",
              "auroc_poisoned": "auroc", "ap_poisoned": "ap"}  # log.csv name -> W&B name
-OPTIM = ("grad_max_abs", "max_abs_dg", "time_s")
+OPTIM = ("grad_max_abs", "max_abs_dg", "mask_flips", "time_s")
 
 
 def wandb_keys(row: dict) -> dict:
@@ -330,10 +400,11 @@ def wandb_keys(row: dict) -> dict:
     return out
 
 
-def save_gate(path: Path, g: np.ndarray, row: dict) -> None:
+def save_gate(path: Path, g: np.ndarray, row: dict, scores: np.ndarray | None = None) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    extra = {} if scores is None else {"scores": scores.astype(np.float32)}
     np.savez_compressed(path, g=g.astype(np.float32), iteration=row["iter"],
-                        log_row=json.dumps(jsonable(row)))
+                        log_row=json.dumps(jsonable(row)), **extra)
 
 
 def plot_curves(rows: list[dict], refs: dict, best_iter: int, plot_dir: Path,
@@ -394,17 +465,19 @@ def plot_curves(rows: list[dict], refs: dict, best_iter: int, plot_dir: Path,
         plt.close(fig)
 
 
-def plot_gate_hist(g: np.ndarray, poisoned: np.ndarray, path: Path, title: str) -> None:
+def plot_gate_hist(g: np.ndarray, poisoned: np.ndarray, path: Path, title: str,
+                   xlabel: str = "gate g") -> None:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    bins = np.linspace(0, 1, 41)
+    in_unit = g.min() >= 0 and g.max() <= 1
+    bins = np.linspace(0, 1, 41) if in_unit else np.linspace(g.min(), g.max(), 41)
     fig, ax = plt.subplots(figsize=(6.4, 4))
     ax.hist(g[~poisoned], bins=bins, alpha=0.6, color="#2a78d6", label=f"clean rows ({(~poisoned).sum()})")
     if poisoned.any():
         ax.hist(g[poisoned], bins=bins, alpha=0.6, color="#eb6834", label=f"poisoned rows ({poisoned.sum()})")
-    ax.set(xlabel="gate g", ylabel="rows (log scale)", yscale="log", title=title)
+    ax.set(xlabel=xlabel, ylabel="rows (log scale)", yscale="log", title=title)
     ax.legend(fontsize=8)
     fig.tight_layout()
     fig.savefig(path, dpi=120)
@@ -582,6 +655,21 @@ def main(argv=None):
     ap.add_argument("--adam-beta1", type=float, default=0.9)
     ap.add_argument("--adam-beta2", type=float, default=0.999)
     ap.add_argument("--adam-eps", type=float, default=1e-8)
+    ap.add_argument("--gate", default="soft", choices=["soft", "topk"],
+                    help="soft: one gate in [0, 1] per row; topk: one free score per row, the forward "
+                         "pass masks exactly the remove-percent rows with the lowest scores (gate 0, "
+                         "the rest 1), and the gradient reaches the scores straight through (--ste)")
+    ap.add_argument("--ste", default="identity", choices=["identity", "sigmoid", "sigmoid-centered"],
+                    help="topk: surrogate of the hard mask in the backward pass (see ste_grad)")
+    ap.add_argument("--ste-temp", type=float, default=1.0,
+                    help="topk, sigmoid-centered: surrogate width in standard deviations of the scores")
+    ap.add_argument("--score-init-std", type=float, default=1.0,
+                    help="topk: the scores start as N(0, std^2)")
+    ap.add_argument("--init-seed", type=int, default=0,
+                    help="topk: seed of the initial scores; one seed = one restart")
+    ap.add_argument("--select-on", default="acc", choices=["acc", "ce"],
+                    help="rank iterations on the validation (or validation-test) rows by accuracy "
+                         "(ties: lower CE) or by CE (ties: higher accuracy); then the earlier one")
     ap.add_argument("--g-init", type=float, default=1.0,
                     help="initial value of every gate (one value for all rows)")
     ap.add_argument("--top-k", type=int, default=3, help="how many best gate vectors to keep")
@@ -625,6 +713,14 @@ def main(argv=None):
                              "do not also pass --val")
         if a.val_from_context < 1:
             raise SystemExit("--val-from-context must be >= 1")
+    if a.gate == "topk":
+        if a.optimizer != "pgd":
+            raise SystemExit("--gate topk moves its scores with the PGD step (--pgd-scale linf or none), "
+                             "not with Adam")
+        if a.remove_percent <= 0:
+            raise SystemExit("--gate topk masks the remove-percent rows; it must be > 0")
+        if a.score_init_std <= 0:
+            raise SystemExit("--score-init-std must be > 0")
     if not 0 <= a.val_holdout < 1:
         raise SystemExit("--val-holdout must be in [0, 1)")
     if a.val_holdout > 0 and a.test_every == 0:
@@ -634,6 +730,8 @@ def main(argv=None):
     run_name = a.run_name or (f"{a.dataset}_{a.attack}_R{a.row_percent:g}"
                               + (f"_V{a.val_from_context}s{a.val_seed}" if a.val_from_context else "")
                               + (f"_H{round(100 * a.val_holdout)}" if a.val_holdout else "")
+                              + (f"_topk-{a.ste}-std{a.score_init_std:g}-init{a.init_seed}"
+                                 if a.gate == "topk" else "")
                               + f"_{a.optimizer}" + (f"-{a.pgd_scale}" if a.optimizer == "pgd" else "")
                               + f"_lr{a.lr:g}_it{a.steps}")
     out = a.out / a.dataset / f"{a.attack}_r{int(round(a.row_percent)):03d}" / run_name
@@ -728,6 +826,10 @@ def main(argv=None):
     config = {"args": vars(a), "run_name": run_name, "context": ctx_p, "val": val_p, "test": test_p,
               "n_classes": K, "n_context": n, "n_features": Xc.shape[1], "n_poisoned": len(rows),
               "n_val": len(yv_all), "n_test": len(yt), "k_remove": k_remove, "validation": validation,
+              "gate": ({"type": "topk", "ste": a.ste, "score_init_std": a.score_init_std,
+                        "init_seed": a.init_seed, "k_remove": k_remove, "select_on": a.select_on}
+                       | ({"ste_temp": a.ste_temp} if a.ste == "sigmoid-centered" else {})
+                       if a.gate == "topk" else {"type": "soft", "select_on": a.select_on}),
               "gated": "features only (feature_group_embedder input); labels untouched"}
 
     with wandb_run(a, run_name, out, config) as run:
@@ -792,27 +894,41 @@ def main(argv=None):
             log(f"  reference  test {name:<26}" + "  ".join(f"{k} {m[k]:.4f}" for k in METRICS))
 
         # -- training ------------------------------------------------------------------
-        g = torch.full((n,), float(a.g_init), device=device, requires_grad=True)
+        topk = a.gate == "topk"
+        if topk:  # free scores; the gate is the hard top-k mask of them, rebuilt every iteration
+            if not 0 < k_remove < n:
+                raise SystemExit(f"--gate topk needs 0 < rows masked < {n}, got {k_remove}")
+            scores = init_scores(n, a.score_init_std, a.init_seed, device)
+            g = topk_mask(scores, k_remove)
+        else:
+            scores = None
+            g = torch.full((n,), float(a.g_init), device=device, requires_grad=True)
         opt = (torch.optim.Adam([g], lr=a.lr, betas=(a.adam_beta1, a.adam_beta2), eps=a.adam_eps)
                if a.optimizer == "adam" else None)
         scored = ("val",) + (("valtest",) if holdout else ()) + ("test_soft", "test_hard")
         fields = (["iter"] + [f"{s}_{k}" for s in scored for k in METRICS]
                   + list(gate_stats(np.ones(n), poisoned, np.arange(k_remove)))
+                  + (["score_std", "mask_flips"] if topk else [])
                   + ["grad_max_abs", "max_abs_dg", "time_s"])
 
         sel = "valtest" if holdout else "val"  # the split the best iteration is chosen on
 
-        def rank_key(entry):  # top-k order: higher accuracy, then lower CE, then earlier iteration
+        def rank_key(entry):  # top-k order (--select-on): accuracy then CE, or CE then accuracy
             r = entry[0]
+            if a.select_on == "ce":
+                return (r[f"{sel}_ce"], -r[f"{sel}_accuracy"], r["iter"])
             return (-r[f"{sel}_accuracy"], r[f"{sel}_ce"], r["iter"])
 
-        log_rows, top = [], []  # top: [(log row, gate vector)], best first
+        log_rows, top = [], []  # top: [(log row, gate vector, scores or None)], best first
         with open(out / "log.csv", "w", newline="") as fh:
             writer = csv.DictWriter(fh, fieldnames=fields, restval="")
             writer.writeheader()
             for it in range(a.steps + 1):
                 t0 = time.time()
+                if topk:
+                    g = topk_mask(scores, k_remove).requires_grad_(it < a.steps)
                 g_now = g.detach().cpu().numpy().copy()
+                s_now = scores.detach().cpu().numpy().copy() if topk else None
                 removed = lowest_gated(g_now, k_remove, tie_order)
                 ce, grad, p_val = evaluate(clf, Xc, yp_t, Xv, yv_t, g, null_x, need_grad=it < a.steps,
                                            batch_size=a.batch_size)
@@ -824,9 +940,17 @@ def main(argv=None):
                     row |= prefixed("test_hard", hard(removed)[0])
                     if holdout:
                         row |= prefixed("valtest", soft(Xh, yh, yh_t, g)[0])
-                row |= gate_stats(g_now, poisoned, removed)
+                row |= gate_stats(g_now, poisoned, removed, scores=s_now)
+                if topk:
+                    row["score_std"] = float(s_now.std())
 
-                if grad is not None:  # every iteration but the last: update the gates
+                if grad is not None and topk:  # straight through to the scores, then a new mask
+                    gs = ste_grad(grad, scores, a.ste, k_remove=k_remove, temp=a.ste_temp)
+                    row["grad_max_abs"] = float(gs.abs().max())
+                    score_step(scores, gs, a.lr, a.pgd_scale)
+                    row["max_abs_dg"] = float(np.abs(scores.detach().cpu().numpy() - s_now).max())
+                    row["mask_flips"] = int((topk_mask(scores, k_remove).cpu().numpy() != g_now).sum())
+                elif grad is not None:  # every iteration but the last: update the gates
                     row["grad_max_abs"] = float(grad.abs().max())
                     if a.optimizer == "pgd":
                         pgd_step(g, grad, a.lr, a.pgd_scale)
@@ -841,30 +965,33 @@ def main(argv=None):
                     run.log(wandb_keys(row), step=it)
 
                 if f"{sel}_ce" in row:  # with a holdout, only the test iterations compete
-                    top = sorted(top + [(row, g_now)], key=rank_key)[:a.top_k]
-                if any(r is row for r, _ in top):  # this iteration entered the top-k
-                    for k, (r, gk) in enumerate(top, 1):
-                        save_gate(out / "gates" / f"top{k}.npz", gk, r)
+                    top = sorted(top + [(row, g_now, s_now)], key=rank_key)[:a.top_k]
+                if any(r is row for r, *_ in top):  # this iteration entered the top-k
+                    for k, (r, gk, sk) in enumerate(top, 1):
+                        save_gate(out / "gates" / f"top{k}.npz", gk, r, scores=sk)
 
                 test_txt = ((f" | valtest acc {row['valtest_accuracy']:.4f}" if "valtest_ce" in row else "")
                             + f" | test soft acc {row['test_soft_accuracy']:.4f} "
                             f"hard acc {row['test_hard_accuracy']:.4f}" if "test_soft_ce" in row else "")
                 det_txt = (f" | poisoned g {row['g_mean_poisoned']:.3f} clean g {row['g_mean_clean']:.3f}"
-                           f" auroc {row['auroc_poisoned']:.3f}" if "auroc_poisoned" in row else "")
+                           f" auroc {row['auroc_poisoned']:.3f}"
+                           + (f" precision {row['precision_at_R']:.3f} flips {row.get('mask_flips', 0)}"
+                              if topk else "") if "auroc_poisoned" in row else "")
                 log(f"it {it:4d}  val ce {row['val_ce']:.4f} acc {row['val_accuracy']:.4f}{test_txt}"
                     f"{det_txt}  [{row['time_s']:.1f}s]")
                 if a.plot_every and (it % a.plot_every == 0 or it == a.steps):
                     plot_curves(log_rows, refs, top[0][0]["iter"], out / "plots", baseline)
 
         # -- the best gates on the test set, soft and hard ----------------------------------
-        save_gate(out / "gates" / "final.npz", g.detach().cpu().numpy(), log_rows[-1])
-        best_row, g_best = top[0]
+        save_gate(out / "gates" / "final.npz", g.detach().cpu().numpy(), log_rows[-1],
+                  scores=scores.detach().cpu().numpy() if topk else None)
+        best_row, g_best, s_best = top[0]
         final["poisoned_best_gate_soft"], probs["poisoned_best_gate_soft"] = soft(
             Xt, yt, yt_t, as_t(g_best, torch.float32))
         final["poisoned_best_gate_hard"], probs["poisoned_best_gate_hard"] = hard(
             lowest_gated(g_best, k_remove, tie_order))
         log(f"best: iteration {best_row['iter']}  val acc {best_row['val_accuracy']:.4f} "
-            f"ce {best_row['val_ce']:.4f}; top-k iterations {[r['iter'] for r, _ in top]}")
+            f"ce {best_row['val_ce']:.4f}; top-k iterations {[r['iter'] for r, *_ in top]}")
         for name in ("poisoned_best_gate_soft", "poisoned_best_gate_hard"):
             log(f"  test {name:<26}" + "  ".join(f"{k} {final[name][k]:.4f}" for k in METRICS))
 
@@ -880,11 +1007,13 @@ def main(argv=None):
         vs_val = {k: final["poisoned_best_gate_soft"][k] - final["val_as_context"][k] for k in METRICS}
         summary = {
             "best_iteration": best_row["iter"],
-            "ranked_on": ("validation-test (held-out) accuracy, ties -> lower validation-test CE, then "
-                          "earlier; test iterations only" if holdout else
-                          "validation accuracy, ties -> lower validation CE, then earlier"),
-            "best_val_row": best_row, "top_k_iterations": [r["iter"] for r, _ in top],
-            "best_gate_stats": gate_stats(g_best, poisoned, lowest_gated(g_best, k_remove, tie_order)),
+            "ranked_on": (("validation-test (held-out)" if holdout else "validation")
+                          + (" CE, ties -> higher accuracy" if a.select_on == "ce" else
+                             " accuracy, ties -> lower CE")
+                          + ", then earlier" + ("; test iterations only" if holdout else "")),
+            "best_val_row": best_row, "top_k_iterations": [r["iter"] for r, *_ in top],
+            "best_gate_stats": gate_stats(g_best, poisoned, lowest_gated(g_best, k_remove, tie_order),
+                                          scores=s_best),
             "k_removed_in_hard_evaluation": k_remove,
             "metrics": {name: (multiclass_metrics(probs[name], yt, K) if probs[name] is not None
                                else final[name]) for name in final},
@@ -896,8 +1025,9 @@ def main(argv=None):
         np.savez_compressed(out / "test_probs.npz", y_test=yt.astype(np.int16),
                             **{k: v.astype(np.float32) for k, v in probs.items() if v is not None})
         plot_curves(log_rows, refs, best_row["iter"], out / "plots", baseline)
-        plot_gate_hist(g_best, poisoned, out / "plots" / "gate_hist_best.png",
-                       f"best gates (iteration {best_row['iter']})")
+        plot_gate_hist(s_best if topk else g_best, poisoned, out / "plots" / "gate_hist_best.png",
+                       f"best {'scores' if topk else 'gates'} (iteration {best_row['iter']})",
+                       xlabel="score S (the lowest rows are masked)" if topk else "gate g")
         if run is not None:
             wandb_upload(run, out, run_name, {
                 "best_iteration": best_row["iter"], "top_k_iterations": summary["top_k_iterations"],

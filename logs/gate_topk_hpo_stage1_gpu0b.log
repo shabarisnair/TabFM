@@ -1,0 +1,12 @@
+scripts/gate_topk_parts/hpo/stage1.txt: 36 runs
+36 runs on GPU(s) 0; results in /home/ssn899/Desktop/TabFM/results/gate_topk; W&B online, project TFM_experiments, group gate-topk
+[busy] gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr0.05_init0_it300 (another process holds /home/ssn899/Desktop/TabFM/results/gate_topk/gas-drift/hub-flip-local_r020/gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr0.05_init0_it300/.lock; delete it if that process died)
+[2026-10-11 19:03:34] START GPU 0  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr0.05_init1_it300
+[2026-10-11 20:00:53] DONE  GPU 0  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr0.05_init1_it300
+[skip] gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr0.05_init2_it300 (already done)
+[skip] gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr0.05_init3_it300 (already done)
+[skip] gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr1_init0_it300 (already done)
+[busy] gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr1_init1_it300 (another process holds /home/ssn899/Desktop/TabFM/results/gate_topk/gas-drift/hub-flip-local_r020/gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr1_init1_it300/.lock; delete it if that process died)
+[busy] gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr1_init2_it300 (another process holds /home/ssn899/Desktop/TabFM/results/gate_topk/gas-drift/hub-flip-local_r020/gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr1_init2_it300/.lock; delete it if that process died)
+[busy] gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr1_init3_it300 (another process holds /home/ssn899/Desktop/TabFM/results/gate_topk/gas-drift/hub-flip-local_r020/gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr1_init3_it300/.lock; delete it if that process died)
+[2026-10-11 20:00:53] START GPU 0  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std0.01_lr0.2_init0_it300

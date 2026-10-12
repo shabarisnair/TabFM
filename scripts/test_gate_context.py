@@ -243,6 +243,56 @@ def test_holdout_and_rules():
           set(G.selection_rules(log, holdout=False)) == {"val_acc", "val_first_max", "last", "test_acc_oracle"})
 
 
+# ============================================================ A4. top-k gates: the pieces
+def test_topk_pieces():
+    print("\nA4. top-k gates: mask, straight-through gradients, score step, detection")
+    s = torch.tensor([0.3, -1.0, 2.0, -1.0, 0.5])
+    check("topk_mask: the 2 lowest scores masked; the tie at -1.0 keeps both (hand-computed)",
+          G.topk_mask(s, 2).tolist() == [1, 0, 1, 0, 1], f"{G.topk_mask(s, 2).tolist()}")
+    check("topk_mask: 3 lowest -> rows 1, 3, 0; 0 -> nothing masked",
+          G.topk_mask(s, 3).tolist() == [0, 0, 1, 0, 1] and G.topk_mask(s, 0).tolist() == [1] * 5)
+    check("topk_mask: all scores equal -> the first rows go (stable ties)",
+          G.topk_mask(torch.zeros(4), 2).tolist() == [0, 0, 1, 1])
+
+    grad = torch.tensor([1.0, 1.0, 2.0])
+    S = torch.tensor([0.0, 2.0, -2.0])
+    check("ste_grad identity: the gate gradient itself",
+          torch.equal(G.ste_grad(grad, S, "identity", k_remove=1), grad))
+    # sigmoid'(0) = 0.25; sigmoid'(+-2) = 0.8807971 * 0.1192029 = 0.1049936
+    got = G.ste_grad(grad, S, "sigmoid", k_remove=1)
+    check("ste_grad sigmoid: grad * sigmoid'(S) (hand-computed)",
+          torch.allclose(got, torch.tensor([0.25, 0.1049936, 0.2099872]), atol=1e-6), f"{got.tolist()}")
+    # centred on the boundary between the lowest score (-1) and the next (0): tau = -0.5,
+    # width = std([-1, 0, 1, 2]) = 1.2909944; rows -1 and 0 sit 0.5 either side of it:
+    # sigmoid'(0.5 / 1.2909944) / 1.2909944 = 0.2408569 / 1.2909944 = 0.1865674
+    Sc = torch.tensor([-1.0, 0.0, 1.0, 2.0])
+    got = G.ste_grad(torch.ones(4), Sc, "sigmoid-centered", k_remove=1)
+    check("ste_grad sigmoid-centered: peak at the keep/remove boundary (hand-computed)",
+          abs(float(got[0]) - 0.1865674) < 1e-5 and abs(float(got[1]) - 0.1865674) < 1e-5
+          and float(got[1]) > float(got[2]) > float(got[3]), f"{got.tolist()}")
+
+    sc = torch.zeros(3)
+    G.score_step(sc, torch.tensor([1.0, -2.0, 0.5]), 0.2, "linf")
+    check("score_step linf: largest change = lr, no clipping (hand-computed)",
+          torch.allclose(sc, torch.tensor([-0.1, 0.2, -0.05])), f"{sc.tolist()}")
+    sc = torch.zeros(3)
+    G.score_step(sc, torch.tensor([1.0, -2.0, 0.5]), 0.2, "none")
+    check("score_step none: plain step lr * grad", torch.allclose(sc, torch.tensor([-0.2, 0.4, -0.1])))
+    sc = torch.ones(3)
+    G.score_step(sc, torch.zeros(3), 0.2, "linf")
+    check("score_step: zero gradient -> no change", torch.equal(sc, torch.ones(3)))
+
+    # detection from the scores, not from the (binary) mask
+    pois = np.array([True, True, False, False, False])
+    scores = np.array([-3.0, 2.0, 1.0, -2.0, 3.0])
+    mask = G.topk_mask(torch.tensor(scores), 2).numpy()
+    st = G.gate_stats(mask, pois, np.flatnonzero(mask == 0), scores=scores)
+    # -scores: poisoned 3, -2; clean -1, 2, -3 -> 4 of 6 pairs ordered right
+    check("gate_stats with scores: AUROC of -scores = 4/6, precision of the masked rows = 1/2",
+          abs(st["auroc_poisoned"] - 4 / 6) < 1e-12 and st["precision_at_R"] == 0.5,
+          f"auroc {st['auroc_poisoned']:.4f} precision {st['precision_at_R']}")
+
+
 # ============================================================================ B. the gate
 def encoder_inputs(clf, Xc, yc_t, Xq, *, g=None, null=None, need_grad=False):
     """(feature-encoder input as the encoder sees it, target-encoder input, probs)."""
@@ -741,7 +791,114 @@ def test_val_split(device, gpu):
         shutil.rmtree(tmp, ignore_errors=True)
 
 
-SECTIONS = ("rules", "draw", "gate", "gradient", "e2e", "valsplit")
+# ======================================================================== F. top-k gates
+def test_topk(device, gpu):
+    print("\nF. top-k gates (exactly R% of the rows masked, straight-through scores)")
+    from tabfm_experiments.metrics import multiclass_metrics
+    from tabfm_experiments.multiclass_attacks import poison
+    from tabfm_experiments.runtime import build_tabpfn_v2, evaluate_context
+    from tabfm_experiments.sampling import k_from_percent
+    from sklearn.metrics import roc_auc_score
+
+    tmp = Path(tempfile.mkdtemp(prefix="gate_topk_test_"))
+    try:
+        base = ["--gpu", gpu, "--row-percent", "20", "--out", str(tmp), "--val-from-context", "50",
+                "--val-holdout", "0.2", "--gate", "topk"]
+        for extra, why in ((["--optimizer", "adam"], "with Adam"),
+                           (["--remove-percent", "0"], "with nothing to remove")):
+            try:
+                G.main(base + ["--steps", "0", "--wandb-mode", "disabled"] + extra)
+                refused = None
+            except SystemExit as e:
+                refused = e.code
+            check(f"--gate topk refused {why}", isinstance(refused, str), f"{refused!r}")
+
+        steps, test_every, lr, std, seed = 4, 2, 0.2, 1.0, 3
+        out = G.main(base + ["--ste", "sigmoid", "--score-init-std", str(std), "--init-seed", str(seed),
+                             "--lr", str(lr), "--select-on", "ce", "--steps", str(steps),
+                             "--test-every", str(test_every), "--plot-every", "2",
+                             "--wandb-mode", "offline", "--wandb-group", "topk-test"])
+        tag = "[topk]"
+        rows = list(csv.DictReader(open(out / "log.csv")))
+        sp = np.load(out / "split.npz")
+        X_all, y_all = G.load(G.find_split("gas-drift", "context_"), device)
+        cr = sp["context_rows"]
+        n = len(cr)
+        k = k_from_percent(n, 20)
+        Xc, yc = X_all[torch.as_tensor(cr, device=device)], y_all[cr]
+        prows, y_pois = poison("hub-flip-local", Xc, yc, 6, 20, run_id=0, row_seed=1)
+        pois = np.zeros(n, bool)
+        pois[prows] = True
+
+        check(f"{tag} every iteration masks exactly k = {k} of {n} rows",
+              len(rows) == steps + 1 and all(abs(float(r["g_mean"]) - (1 - k / n)) < 1e-6
+                                             and abs(float(r["frac_g_below_0.5"]) - k / n) < 1e-6 for r in rows))
+        # the documented initialisation: N(0, std^2) drawn on the CPU from Generator(seed)
+        s0 = (torch.randn(n, generator=torch.Generator().manual_seed(seed)) * std).numpy()
+        m0 = np.ones(n)
+        m0[np.argsort(s0, kind="stable")[:k]] = 0
+        check(f"{tag} iteration 0 = the k lowest initial scores (kept share of poisoned rows, precision)",
+              abs(float(rows[0]["g_mean_poisoned"]) - m0[pois].mean()) < 1e-6
+              and abs(float(rows[0]["precision_at_R"]) - pois[m0 == 0].mean()) < 1e-9,
+              f"{rows[0]['g_mean_poisoned']} vs {m0[pois].mean():.6f}")
+        check(f"{tag} each update moves the largest score by lr; mask flips come in pairs",
+              all(abs(float(r["max_abs_dg"]) - lr) < 1e-5 for r in rows[:-1])
+              and all(int(float(r["mask_flips"])) % 2 == 0 for r in rows[:-1]),
+              f"{[r['mask_flips'] for r in rows[:-1]]}")
+
+        fz = np.load(out / "gates/final.npz")
+        mf = np.ones(n)
+        mf[np.argsort(fz["scores"], kind="stable")[:k]] = 0
+        check(f"{tag} final.npz: mask == the k lowest of its scores", np.array_equal(fz["g"], mf))
+
+        tm = json.loads((out / "test_metrics.json").read_text())
+        cand = [r for r in rows if r["valtest_ce"] != ""]
+        best = min(cand, key=lambda r: (float(r["valtest_ce"]), -float(r["valtest_accuracy"]), int(r["iter"])))
+        z1 = np.load(out / "gates/top1.npz")
+        check(f"{tag} best iteration = lowest validation-test CE (ties: accuracy, earlier) = top-1 file",
+              tm["best_iteration"] == int(best["iter"]) == int(z1["iteration"]),
+              f"{tm['best_iteration']} / {best['iter']} / {int(z1['iteration'])}")
+        m1 = np.ones(n)
+        m1[np.argsort(z1["scores"], kind="stable")[:k]] = 0
+        bs = tm["best_gate_stats"]
+        check(f"{tag} best gates: mask from its scores; precision@R and score AUROC recomputed",
+              np.array_equal(z1["g"], m1) and abs(bs["precision_at_R"] - pois[m1 == 0].mean()) < 1e-9
+              and abs(bs["auroc_poisoned"] - roc_auc_score(pois, -z1["scores"])) < 1e-9,
+              f"precision {bs['precision_at_R']:.3f} auroc {bs['auroc_poisoned']:.3f}")
+
+        clf = build_tabpfn_v2(device, 0, recompute_layers=True, n_classes=6)
+        Xt, yt = G.load(G.find_split("gas-drift", "test_attack_"), device)
+        yt_t = torch.as_tensor(yt, device=device)
+        yp_t = torch.tensor(y_pois, dtype=torch.float32, device=device)
+        tp = np.load(out / "test_probs.npz")
+        keep = np.flatnonzero(m1 == 1)
+        _, _, ph = evaluate_context(clf, Xc[keep], yp_t[keep], Xt, yt_t, need_grad=False)
+        d = float(np.abs(tp["poisoned_best_gate_hard"] - ph.cpu().numpy()).max())
+        check(f"{tag} best gates, hard: == evaluate_context without the masked rows", d < 1e-6, f"max|dp| {d:.1e}")
+        null = G.capture_null_input(clf, Xc, yp_t)
+        p = G.evaluate(clf, Xc, yp_t, Xt, yt_t, torch.tensor(m1, dtype=torch.float32, device=device), null,
+                       need_grad=False, batch_size=None)[2]
+        d = float(np.abs(p - tp["poisoned_best_gate_soft"]).max())
+        check(f"{tag} best gates, masked: re-scoring the top-1 mask reproduces the saved probs", d < 1e-6,
+              f"max|dp| {d:.1e}")
+        ok = all(abs(multiclass_metrics(tp[key], yt, 6)[m] - tm["metrics"][key][m]) < 1e-9
+                 for key in tp.files if key != "y_test" for m in G.METRICS)
+        check(f"{tag} test_metrics.json == metrics recomputed from test_probs.npz", ok)
+
+        cfg = json.loads((out / "config.json").read_text())
+        group, wcfg = wandb_run_info(out)
+        args = wcfg.get("args", {})
+        check(f"{tag} config and W&B: gate, surrogate, init std and seed, select-on, group",
+              cfg["gate"] == {"type": "topk", "ste": "sigmoid", "score_init_std": std, "init_seed": seed,
+                              "k_remove": k, "select_on": "ce"}
+              and group == "topk-test" and args.get("gate") == "topk" and args.get("ste") == "sigmoid"
+              and args.get("score_init_std") == std and args.get("init_seed") == seed,
+              f"{cfg.get('gate')} group {group!r}")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+SECTIONS = ("rules", "draw", "gate", "gradient", "e2e", "valsplit", "topk")
 
 
 def main(argv=None):
@@ -756,6 +913,8 @@ def main(argv=None):
     if "draw" in a.sections:
         test_draw_validation()
         test_holdout_and_rules()
+    if "topk" in a.sections:
+        test_topk_pieces()
     if {"gate", "gradient", "e2e"} & set(a.sections):
         S = setup(device)
         test_gate(S, device)  # also captures S["null"], which the later sections use
@@ -765,6 +924,8 @@ def main(argv=None):
             test_end_to_end(S, device, a.gpu)
     if "valsplit" in a.sections:
         test_val_split(device, a.gpu)
+    if "topk" in a.sections:
+        test_topk(device, a.gpu)
     print(f"\n{'ALL PASSED' if not FAILS else f'{len(FAILS)} FAILED: {FAILS}'}")
     return 1 if FAILS else 0
 

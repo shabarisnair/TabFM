@@ -1,0 +1,47 @@
+# HPO, sent to the second server (5 GPUs): stage-1 runs on url_unique and students_dropout,
+# the refinement ratios 0.2 and 5 on url_unique and students_dropout, and ratio 5 on gas-drift
+# <dataset> <R> <ste> <init_std> <lr> <init_seed>
+url_unique 20 identity 1 0.05 0
+url_unique 20 identity 1 0.05 1
+url_unique 20 identity 1 0.05 2
+url_unique 20 identity 1 0.05 3
+url_unique 20 identity 1 1 0
+url_unique 20 identity 1 1 1
+url_unique 20 identity 1 1 2
+url_unique 20 identity 1 1 3
+url_unique 20 identity 0.01 0.2 0
+url_unique 20 identity 0.01 0.2 1
+url_unique 20 identity 0.01 0.2 2
+url_unique 20 identity 0.01 0.2 3
+url_unique 20 identity 1 0.2 0
+url_unique 20 identity 1 0.2 1
+url_unique 20 identity 1 0.2 2
+url_unique 20 identity 1 0.2 3
+url_unique 20 identity 1 5 0
+url_unique 20 identity 1 5 1
+url_unique 20 identity 1 5 2
+url_unique 20 identity 1 5 3
+students_dropout 20 identity 1 0.05 0
+students_dropout 20 identity 1 0.05 1
+students_dropout 20 identity 1 0.05 2
+students_dropout 20 identity 1 0.05 3
+students_dropout 20 identity 1 1 0
+students_dropout 20 identity 1 1 1
+students_dropout 20 identity 1 1 2
+students_dropout 20 identity 1 1 3
+students_dropout 20 identity 0.01 0.2 0
+students_dropout 20 identity 0.01 0.2 1
+students_dropout 20 identity 0.01 0.2 2
+students_dropout 20 identity 0.01 0.2 3
+students_dropout 20 identity 1 0.2 0
+students_dropout 20 identity 1 0.2 1
+students_dropout 20 identity 1 0.2 2
+students_dropout 20 identity 1 0.2 3
+students_dropout 20 identity 1 5 0
+students_dropout 20 identity 1 5 1
+students_dropout 20 identity 1 5 2
+students_dropout 20 identity 1 5 3
+gas-drift 20 identity 1 5 0
+gas-drift 20 identity 1 5 1
+gas-drift 20 identity 1 5 2
+gas-drift 20 identity 1 5 3
