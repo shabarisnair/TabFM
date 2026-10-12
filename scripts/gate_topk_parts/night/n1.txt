@@ -1,0 +1,14 @@
+# Night round 1: gradient start, budget warm-up, cosine step (identity surrogate, R=20%, V=500)
+# <part> <dataset> <R> <ste> <init_std> <lr> <init_seed> [<tag> <extra args...>]
+1 gas-drift 20 identity 0 1 0 g-c --score-init gradient
+1 gas-drift 20 identity 0 1 0 g-cos --score-init gradient --lr-schedule cosine
+1 gas-drift 20 identity 0 1 0 g-w3 --score-init gradient --budget-warmup 0.3
+1 gas-drift 20 identity 0 1 0 g-w3-cos --score-init gradient --budget-warmup 0.3 --lr-schedule cosine
+1 gas-drift 20 identity 0 5 0 g-w3-cos --score-init gradient --budget-warmup 0.3 --lr-schedule cosine
+1 gas-drift 20 identity 1 5 0 r-w3-cos --budget-warmup 0.3 --lr-schedule cosine
+1 url_unique 20 identity 0 1 0 g-c --score-init gradient
+1 url_unique 20 identity 0 1 0 g-cos --score-init gradient --lr-schedule cosine
+1 url_unique 20 identity 0 1 0 g-w3 --score-init gradient --budget-warmup 0.3
+1 url_unique 20 identity 0 1 0 g-w3-cos --score-init gradient --budget-warmup 0.3 --lr-schedule cosine
+1 url_unique 20 identity 0 5 0 g-w3-cos --score-init gradient --budget-warmup 0.3 --lr-schedule cosine
+1 url_unique 20 identity 1 5 0 r-w3-cos --budget-warmup 0.3 --lr-schedule cosine

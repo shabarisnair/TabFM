@@ -122,13 +122,15 @@ Outputs go to results/gate/<dataset>/<attack>_r<R>/<run-name>/:
     plots/gates.png, plots/detection.png   gate and detection diagnostics vs iteration
     plots/gate_hist_best.png   the best gates, clean vs poisoned rows
     gates/top<k>.npz   the top-k gate vectors (g) with their log row; gates/final.npz
+    gates/masks.npz    --gate topk: the masked rows of every iteration (masked [steps+1, n])
     test_metrics.json  final test-set metrics of the best gates and the references
     test_probs.npz     the matching test-set probabilities
     poison.npz         poisoned rows, clean and poisoned labels, the tie-break order
                        (row indices into the context as gated, i.e. after any split)
     split.npz          with --val-from-context: val_rows and context_rows, row indices
                        into the context file; with --val-holdout also val_fit_rows and
-                       val_holdout_rows (into the context file, or into the val file)
+                       val_holdout_rows (into the context file, or into the val file);
+                       with --fit-subsample also val_fit_subsample_rows, the rows fitted
     wandb/             the local W&B run files
 """
 
@@ -324,6 +326,28 @@ def ste_grad(grad_g: torch.Tensor, scores: torch.Tensor, kind: str, *, k_remove:
         s = torch.sigmoid((scores - tau) / w)
         return grad_g * s * (1 - s) / w
     raise ValueError(f"unknown straight-through surrogate {kind!r}")
+
+
+def budget_at(t: int, k: int, warmup: int) -> int:
+    """Rows masked at iteration t: a cubic ramp from 0 to k over the first `warmup`
+    iterations, k * (1 - (1 - t / warmup)^3), then k (the sparsity schedule of gradual and
+    movement pruning). warmup <= 0: k from the start."""
+    if warmup <= 0 or t >= warmup:
+        return k
+    return int(round(k * (1 - (1 - t / warmup) ** 3)))
+
+
+def lr_at(t: int, steps: int, lr: float, schedule: str, min_frac: float) -> float:
+    """Step size of update t: constant, or decayed to min_frac * lr at the last update
+    along a cosine or a straight line."""
+    if schedule == "constant":
+        return lr
+    frac = t / steps
+    if schedule == "cosine":
+        return lr * (min_frac + (1 - min_frac) * 0.5 * (1 + math.cos(math.pi * frac)))
+    if schedule == "linear":
+        return lr * (1 - (1 - min_frac) * frac)
+    raise ValueError(f"unknown step schedule {schedule!r}")
 
 
 def score_step(scores: torch.Tensor, grad: torch.Tensor, lr: float, scale: str) -> None:
@@ -633,6 +657,12 @@ def main(argv=None):
                     help="hold out this fraction of the validation rows (class-stratified) as a "
                          "validation-test set: the gates are fitted on the rest, it is scored on the "
                          "test iterations, and the best iteration is the one with its highest accuracy")
+    ap.add_argument("--fit-subsample", type=float, default=1.0, metavar="FRAC",
+                    help="fit on a class-stratified random FRAC of the fitted validation rows only "
+                         "(bagging: restarts with different --fit-subsample-seed see different rows); "
+                         "1 = all of them")
+    ap.add_argument("--fit-subsample-seed", type=int, default=None,
+                    help="seed of the --fit-subsample draw (default: --init-seed)")
     ap.add_argument("--test", type=Path, default=None, help="default: the dataset's test_attack_*.csv")
     ap.add_argument("--n-classes", type=int, default=None,
                     help="default: n_classes in split_info.json, else the classes in the context")
@@ -667,6 +697,34 @@ def main(argv=None):
                     help="topk: the scores start as N(0, std^2)")
     ap.add_argument("--init-seed", type=int, default=0,
                     help="topk: seed of the initial scores; one seed = one restart")
+    ap.add_argument("--score-init", default="random", choices=["random", "gradient", "file"],
+                    help="topk: random = N(0, std^2); gradient = -(d CE / d g at g = 1 on the fitted "
+                         "validation rows) scaled to unit spread, plus N(0, std^2) noise, so the first "
+                         "mask is the rows whose masking lowers the loss most; file = the per-row values "
+                         "of --score-init-path (e.g. soft gates; low = masked first), plus the noise")
+    ap.add_argument("--score-init-path", type=Path, default=None,
+                    help="topk, --score-init file: an .npz with 'scores' or 'g', one value per context row")
+    ap.add_argument("--ste-probe", type=float, default=0.0, metavar="ALPHA",
+                    help="topk: take the straight-through gradient at a relaxed point (kept rows at "
+                         "1 - ALPHA, masked rows at ALPHA) instead of at the hard mask; the loss and "
+                         "every metric still use the hard mask (0 = the plain straight-through gradient)")
+    ap.add_argument("--swap-search", type=int, default=0, metavar="PAIRS",
+                    help="topk: instead of moving scores, swap PAIRS kept rows with the largest gradient "
+                         "for PAIRS masked rows with the most negative one, each sampled from the top "
+                         "4 x PAIRS of its side, and keep the swap only if the fitted-row CE drops; the "
+                         "pair count halves after a rejection (up to --line-search tries, default 3) and "
+                         "doubles back after a first-try success (0 = off)")
+    ap.add_argument("--line-search", type=int, default=0, metavar="TRIES",
+                    help="topk: keep a step only if the new mask lowers the CE on the fitted rows; "
+                         "otherwise halve the step and retry, up to TRIES times (0 = off). The step "
+                         "multiplier is remembered, doubling back towards 1 after a first-try success")
+    ap.add_argument("--budget-warmup", type=float, default=0.0, metavar="FRAC",
+                    help="topk: ramp the number of masked rows from 0 to k over this fraction of the "
+                         "updates (cubic); only full-budget iterations can be chosen as the best")
+    ap.add_argument("--lr-schedule", default="constant", choices=["constant", "cosine", "linear"],
+                    help="topk: step size over the updates")
+    ap.add_argument("--lr-min-frac", type=float, default=0.0,
+                    help="topk: the decayed schedules end at this fraction of --lr")
     ap.add_argument("--select-on", default="acc", choices=["acc", "ce"],
                     help="rank iterations on the validation (or validation-test) rows by accuracy "
                          "(ties: lower CE) or by CE (ties: higher accuracy); then the earlier one")
@@ -719,10 +777,22 @@ def main(argv=None):
                              "not with Adam")
         if a.remove_percent <= 0:
             raise SystemExit("--gate topk masks the remove-percent rows; it must be > 0")
-        if a.score_init_std <= 0:
-            raise SystemExit("--score-init-std must be > 0")
+        if a.score_init_std < 0 or (a.score_init == "random" and a.score_init_std == 0):
+            raise SystemExit("--score-init-std must be > 0 (>= 0 with --score-init gradient)")
+        if not 0 <= a.budget_warmup < 1:
+            raise SystemExit("--budget-warmup must be in [0, 1)")
+        if a.score_init == "file" and (a.score_init_path is None or not a.score_init_path.exists()):
+            raise SystemExit("--score-init file needs an existing --score-init-path")
+        if a.line_search < 0:
+            raise SystemExit("--line-search must be >= 0")
+        if not 0 <= a.ste_probe < 0.5:
+            raise SystemExit("--ste-probe must be in [0, 0.5)")
+        if a.swap_search < 0 or (a.swap_search and a.budget_warmup):
+            raise SystemExit("--swap-search needs PAIRS >= 0 and no --budget-warmup")
     if not 0 <= a.val_holdout < 1:
         raise SystemExit("--val-holdout must be in [0, 1)")
+    if not 0 < a.fit_subsample <= 1:
+        raise SystemExit("--fit-subsample must be in (0, 1]")
     if a.val_holdout > 0 and a.test_every == 0:
         raise SystemExit("--val-holdout needs --test-every > 0: the held-out rows are scored, and the "
                          "best iteration chosen, on the test iterations")
@@ -787,6 +857,17 @@ def main(argv=None):
         Xv, yv = Xv[torch.as_tensor(fit_pos, device=device)], yv[fit_pos]
         validation |= {"holdout_fraction": a.val_holdout, "n_fit": len(fit_pos),
                        "n_holdout": len(hold_pos), "rows": "split.npz"}
+    if a.fit_subsample < 1:  # bagging: fit on a random part of the fitted rows
+        sub_seed = a.init_seed if a.fit_subsample_seed is None else a.fit_subsample_seed
+        sub = draw_validation(yv, max(1, int(math.floor(a.fit_subsample * len(yv) + 0.5))), sub_seed)
+        if len(np.unique(yv[sub])) < K:
+            raise SystemExit(f"--fit-subsample {a.fit_subsample:g}: the subsample misses a class "
+                             f"({np.bincount(yv[sub], minlength=K).tolist()})")
+        base = split.get("val_fit_rows", split.get("val_rows", np.arange(len(yv))))
+        split["val_fit_subsample_rows"] = base[sub]
+        Xv, yv = Xv[torch.as_tensor(sub, device=device)], yv[sub]
+        validation |= {"fit_subsample": a.fit_subsample, "fit_subsample_seed": sub_seed,
+                       "n_fit": len(sub), "rows": "split.npz"}
     if split:
         np.savez_compressed(out / "split.npz", **split)
     for y in (yc, yv, yt):
@@ -815,6 +896,8 @@ def main(argv=None):
     val_txt = val_p.name if val_p is not None else f"drawn from the clean context, seed {a.val_seed}"
     val_txt += (f"; {len(yv)} fitted, {len(yh)} held out as validation-test, which picks the best "
                 "iteration" if holdout else ", all optimised on")
+    if a.fit_subsample < 1:
+        val_txt += f" (bagging: a {a.fit_subsample:g} subsample of the fitted rows, seed {sub_seed})"
     log(f"  context {ctx_p}\n  validation {len(yv_all)} rows ({val_txt}), "
         f"test {len(yt)} rows ({test_p.name}), scored every {a.test_every} iterations")
     log(f"  {a.optimizer}, lr {a.lr:g}, {a.steps} steps"
@@ -829,6 +912,14 @@ def main(argv=None):
               "gate": ({"type": "topk", "ste": a.ste, "score_init_std": a.score_init_std,
                         "init_seed": a.init_seed, "k_remove": k_remove, "select_on": a.select_on}
                        | ({"ste_temp": a.ste_temp} if a.ste == "sigmoid-centered" else {})
+                       | ({"score_init": a.score_init} if a.score_init != "random" else {})
+                       | ({"score_init_path": str(a.score_init_path)} if a.score_init == "file" else {})
+                       | ({"line_search": a.line_search} if a.line_search else {})
+                       | ({"ste_probe": a.ste_probe} if a.ste_probe else {})
+                       | ({"swap_search": a.swap_search} if a.swap_search else {})
+                       | ({"budget_warmup": a.budget_warmup} if a.budget_warmup > 0 else {})
+                       | ({"lr_schedule": a.lr_schedule, "lr_min_frac": a.lr_min_frac}
+                          if a.lr_schedule != "constant" else {})
                        if a.gate == "topk" else {"type": "soft", "select_on": a.select_on}),
               "gated": "features only (feature_group_embedder input); labels untouched"}
 
@@ -898,8 +989,26 @@ def main(argv=None):
         if topk:  # free scores; the gate is the hard top-k mask of them, rebuilt every iteration
             if not 0 < k_remove < n:
                 raise SystemExit(f"--gate topk needs 0 < rows masked < {n}, got {k_remove}")
-            scores = init_scores(n, a.score_init_std, a.init_seed, device)
-            g = topk_mask(scores, k_remove)
+            scores = (init_scores(n, a.score_init_std, a.init_seed, device) if a.score_init_std > 0
+                      else torch.zeros(n, device=device))
+            if a.score_init == "gradient":  # SNIP-like start: rank rows by dCE/dg at the full context
+                g1 = torch.ones(n, device=device, requires_grad=True)
+                _, g_full, _ = evaluate(clf, Xc, yp_t, Xv, yv_t, g1, null_x, need_grad=True,
+                                        batch_size=a.batch_size)
+                scores = scores - g_full / g_full.std()
+            elif a.score_init == "file":
+                z = np.load(a.score_init_path)
+                v = z["scores"] if "scores" in z.files else z["g"]
+                if len(v) != n:
+                    raise SystemExit(f"{a.score_init_path} has {len(v)} values for {n} context rows")
+                scores = scores + torch.as_tensor(v, dtype=torch.float32, device=device)
+            warmup = int(round(a.budget_warmup * a.steps))
+            step_mult = 1.0  # line search: remembered step multiplier
+            pairs = a.swap_search  # swap search: current pairs per proposal
+            swap_rng = np.random.default_rng(a.init_seed)
+            if a.swap_search and torch.unique(scores).numel() < n:  # break ties once, reproducibly
+                scores = scores + 1e-6 * init_scores(n, 1.0, a.init_seed + 10_000, device)
+            g = topk_mask(scores, budget_at(0, k_remove, warmup))
         else:
             scores = None
             g = torch.full((n,), float(a.g_init), device=device, requires_grad=True)
@@ -909,6 +1018,8 @@ def main(argv=None):
         fields = (["iter"] + [f"{s}_{k}" for s in scored for k in METRICS]
                   + list(gate_stats(np.ones(n), poisoned, np.arange(k_remove)))
                   + (["score_std", "mask_flips"] if topk else [])
+                + (["ls_evals", "ls_accept", "step_mult"] if topk and (a.line_search or a.swap_search) else [])
+                + (["swap_pairs"] if topk and a.swap_search else [])
                   + ["grad_max_abs", "max_abs_dg", "time_s"])
 
         sel = "valtest" if holdout else "val"  # the split the best iteration is chosen on
@@ -920,18 +1031,29 @@ def main(argv=None):
             return (-r[f"{sel}_accuracy"], r[f"{sel}_ce"], r["iter"])
 
         log_rows, top = [], []  # top: [(log row, gate vector, scores or None)], best first
+        masks_seen = []  # topk: the masked rows of every iteration, saved to gates/masks.npz
         with open(out / "log.csv", "w", newline="") as fh:
             writer = csv.DictWriter(fh, fieldnames=fields, restval="")
             writer.writeheader()
             for it in range(a.steps + 1):
                 t0 = time.time()
                 if topk:
-                    g = topk_mask(scores, k_remove).requires_grad_(it < a.steps)
+                    k_t = budget_at(it, k_remove, warmup)
+                    g = topk_mask(scores, k_t).requires_grad_(it < a.steps)
                 g_now = g.detach().cpu().numpy().copy()
                 s_now = scores.detach().cpu().numpy().copy() if topk else None
-                removed = lowest_gated(g_now, k_remove, tie_order)
-                ce, grad, p_val = evaluate(clf, Xc, yp_t, Xv, yv_t, g, null_x, need_grad=it < a.steps,
-                                           batch_size=a.batch_size)
+                if topk:
+                    masks_seen.append(g_now == 0)
+                removed = (np.flatnonzero(g_now == 0) if topk  # exactly the masked rows
+                           else lowest_gated(g_now, k_remove, tie_order))
+                relaxed = topk and (a.ste_probe > 0 or a.swap_search)
+                ce, grad, p_val = evaluate(clf, Xc, yp_t, Xv, yv_t, g, null_x,
+                                           need_grad=it < a.steps and not relaxed, batch_size=a.batch_size)
+                if relaxed and it < a.steps:  # the gradient at the probe point; loss and metrics stay hard
+                    hard_g = g.detach()
+                    probe = (hard_g * (1 - a.ste_probe) + (1 - hard_g) * a.ste_probe).requires_grad_(True)
+                    grad = evaluate(clf, Xc, yp_t, Xv, yv_t, probe, null_x, need_grad=True,
+                                    batch_size=a.batch_size)[1]
                 row = {"iter": it} | prefixed("val", metrics(p_val, yv))
                 if abs(ce - row["val_ce"]) > 1e-4:  # the loss and the metric are independent paths
                     raise AssertionError(f"loss {ce:.6f} != metric CE {row['val_ce']:.6f}")
@@ -944,12 +1066,65 @@ def main(argv=None):
                 if topk:
                     row["score_std"] = float(s_now.std())
 
-                if grad is not None and topk:  # straight through to the scores, then a new mask
+                if grad is not None and topk and a.swap_search:  # verified swaps of gradient-ranked pairs
+                    hard_g = g.detach()
+                    gr = grad.detach().cpu().numpy()
+                    kept, off = np.flatnonzero(g_now == 1), np.flatnonzero(g_now == 0)
+                    out_pool = kept[np.argsort(-gr[kept], kind="stable")]  # masking should help most
+                    in_pool = off[np.argsort(gr[off], kind="stable")]      # returning should help most
+                    row["grad_max_abs"] = float(np.abs(gr).max())
+                    evals, accepted, flips = 0, 0, 0
+                    for attempt in range(a.line_search or 3):
+                        b = min(pairs, len(off), len(kept))
+                        go = swap_rng.choice(out_pool[:4 * b], b, replace=False)
+                        gi = swap_rng.choice(in_pool[:4 * b], b, replace=False)
+                        cand = hard_g.clone()
+                        cand[torch.as_tensor(go, device=device)] = 0.0
+                        cand[torch.as_tensor(gi, device=device)] = 1.0
+                        evals += 1
+                        ce_c = evaluate(clf, Xc, yp_t, Xv, yv_t, cand, null_x, need_grad=False,
+                                        batch_size=a.batch_size)[0]
+                        if ce_c < ce:
+                            accepted, flips = 1, 2 * b
+                            # scores follow the mask (low = masked), the gradient orders within each side
+                            with torch.no_grad():
+                                scores.copy_(cand - 0.5 - 1e-3 * grad / grad.abs().max().clamp_min(1e-12))
+                            if attempt == 0:
+                                pairs = min(2 * pairs, a.swap_search * 8)
+                            break
+                        pairs = max(1, pairs // 2)
+                    row |= {"ls_evals": evals, "ls_accept": accepted, "step_mult": pairs / a.swap_search,
+                            "swap_pairs": b, "mask_flips": flips,
+                            "max_abs_dg": float(np.abs(scores.detach().cpu().numpy() - s_now).max())}
+                elif grad is not None and topk:  # straight through to the scores, then a new mask
                     gs = ste_grad(grad, scores, a.ste, k_remove=k_remove, temp=a.ste_temp)
                     row["grad_max_abs"] = float(gs.abs().max())
-                    score_step(scores, gs, a.lr, a.pgd_scale)
+                    lr_t = lr_at(it, a.steps, a.lr, a.lr_schedule, a.lr_min_frac)
+                    if a.line_search and k_t == k_remove and budget_at(it + 1, k_remove, warmup) == k_remove:
+                        # backtracking: keep the step only if the new mask lowers the fitted-row CE
+                        evals, accepted = 0, 0
+                        for attempt in range(a.line_search):
+                            cand = scores.detach().clone()
+                            score_step(cand, gs, lr_t * step_mult, a.pgd_scale)
+                            m_c = topk_mask(cand, k_remove)
+                            if torch.equal(m_c, g.detach()):  # no row moved: same CE, keep the scores
+                                accepted = 1
+                            else:
+                                evals += 1
+                                ce_c = evaluate(clf, Xc, yp_t, Xv, yv_t, m_c, null_x, need_grad=False,
+                                                batch_size=a.batch_size)[0]
+                                accepted = int(ce_c < ce)
+                            if accepted:
+                                scores.data.copy_(cand)
+                                if attempt == 0:
+                                    step_mult = min(1.0, 2 * step_mult)
+                                break
+                            step_mult = max(step_mult / 2, 1e-4)
+                        row |= {"ls_evals": evals, "ls_accept": accepted, "step_mult": step_mult}
+                    else:
+                        score_step(scores, gs, lr_t, a.pgd_scale)
                     row["max_abs_dg"] = float(np.abs(scores.detach().cpu().numpy() - s_now).max())
-                    row["mask_flips"] = int((topk_mask(scores, k_remove).cpu().numpy() != g_now).sum())
+                    row["mask_flips"] = int((topk_mask(scores, k_t).cpu().numpy() != g_now).sum())
                 elif grad is not None:  # every iteration but the last: update the gates
                     row["grad_max_abs"] = float(grad.abs().max())
                     if a.optimizer == "pgd":
@@ -964,7 +1139,8 @@ def main(argv=None):
                 if run is not None:
                     run.log(wandb_keys(row), step=it)
 
-                if f"{sel}_ce" in row:  # with a holdout, only the test iterations compete
+                full_budget = not topk or k_t == k_remove
+                if f"{sel}_ce" in row and full_budget:  # holdout: only test iterations compete
                     top = sorted(top + [(row, g_now, s_now)], key=rank_key)[:a.top_k]
                 if any(r is row for r, *_ in top):  # this iteration entered the top-k
                     for k, (r, gk, sk) in enumerate(top, 1):
@@ -980,11 +1156,14 @@ def main(argv=None):
                 log(f"it {it:4d}  val ce {row['val_ce']:.4f} acc {row['val_accuracy']:.4f}{test_txt}"
                     f"{det_txt}  [{row['time_s']:.1f}s]")
                 if a.plot_every and (it % a.plot_every == 0 or it == a.steps):
-                    plot_curves(log_rows, refs, top[0][0]["iter"], out / "plots", baseline)
+                    plot_curves(log_rows, refs, top[0][0]["iter"] if top else it, out / "plots", baseline)
 
         # -- the best gates on the test set, soft and hard ----------------------------------
         save_gate(out / "gates" / "final.npz", g.detach().cpu().numpy(), log_rows[-1],
                   scores=scores.detach().cpu().numpy() if topk else None)
+        if topk:  # one row per iteration (0..steps): True = masked
+            np.savez_compressed(out / "gates" / "masks.npz", masked=np.stack(masks_seen),
+                                iters=np.arange(len(masks_seen)))
         best_row, g_best, s_best = top[0]
         final["poisoned_best_gate_soft"], probs["poisoned_best_gate_soft"] = soft(
             Xt, yt, yt_t, as_t(g_best, torch.float32))

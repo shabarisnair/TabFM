@@ -20,8 +20,12 @@ For every run (one dataset, R, V and strategy):
   proxy        Spearman correlation, across the test checkpoints, between held-out and
                test accuracy (holdout runs)
 
-Writes results/tables/gate_valsplit/runs.csv (every run, every validation seed) and
-summary.txt (the runs of one validation seed, --seed, default 0).
+Writes results/tables/gate_valsplit/runs.csv (every run, every validation seed),
+summary.txt (the runs of one validation seed, --seed, default 0), and seeds_summary.txt /
+seeds.csv (every configuration over all its validation seeds: the mean gain over the clean
+rows alone, how many draws it wins, and a 95% interval for the mean gain from a paired
+bootstrap over test rows within each draw; the interval covers test-row noise for these
+draws, not the spread over all possible draws).
 
     python scripts/analyze_gate_valsplit.py [--seed 1]
 """
@@ -89,6 +93,8 @@ def load_runs() -> list[dict]:
         tp = np.load(d / "test_probs.npz")
         y = tp["y_test"].astype(int)
         diff = bootstrap_diff(tp["poisoned_best_gate_soft"], tp["val_as_context"], y)
+        d_rows = ((tp["poisoned_best_gate_soft"].argmax(1) == y).astype(float)
+                  - (tp["val_as_context"].argmax(1) == y).astype(float))
         tests = [r for r in log if "test_soft_accuracy" in r]
         proxy = (spearman([r["valtest_accuracy"] for r in tests], [r["test_soft_accuracy"] for r in tests])
                  if holdout else float("nan"))
@@ -100,9 +106,62 @@ def load_runs() -> list[dict]:
                                      "val_as_context", "poisoned_plus_val")},
             "chosen": {"iteration": tm["best_iteration"], "soft": M["poisoned_best_gate_soft"],
                        "hard": M["poisoned_best_gate_hard"], "auroc": tm["best_val_row"]["auroc_poisoned"]},
-            "rules": rules, "boot": diff, "proxy_spearman": proxy,
+            "rules": rules, "boot": diff, "proxy_spearman": proxy, "d_rows": d_rows,
         })
     return runs
+
+
+def pooled_interval(d_list, n_boot=2000, seed=0) -> tuple[float, float, float]:
+    """Mean over draws of (gating - clean rows) accuracy, with a 95% interval: test rows
+    resampled independently within each draw, the draws' means averaged per replicate."""
+    rng = np.random.default_rng(seed)
+    reps = np.mean([d[rng.integers(0, len(d), size=(n_boot, len(d)))].mean(1) for d in d_list], axis=0)
+    return (float(np.mean([d.mean() for d in d_list])), float(np.quantile(reps, 0.025)),
+            float(np.quantile(reps, 0.975)))
+
+
+def seeds_summary(runs: list[dict]) -> tuple[str, list[dict]]:
+    groups = {}
+    for r in runs:
+        groups.setdefault((r["dataset"], r["R"], r["V"], r["strategy"]), []).append(r)
+    rows = []
+    for (ds, R, V, st), g in sorted(groups.items()):
+        g = sorted(g, key=lambda r: r["seed"])
+        gains = [r["chosen"]["soft"]["accuracy"] - r["ref"]["val_as_context"]["accuracy"] for r in g]
+        mean, lo, hi = pooled_interval([r["d_rows"] for r in g])
+        ceil = [r["rules"]["test_acc_oracle"]["test_soft"]["accuracy"] - r["ref"]["val_as_context"]["accuracy"]
+                for r in g]
+        rows.append({"dataset": ds, "R": R, "V": V, "strategy": st, "n_seeds": len(g),
+                     "seeds": [r["seed"] for r in g],
+                     "clean_rows_acc": float(np.mean([r["ref"]["val_as_context"]["accuracy"] for r in g])),
+                     "poisoned_acc": float(np.mean([r["ref"]["poisoned_no_gate"]["accuracy"] for r in g])),
+                     "oracle_acc": float(np.mean([r["ref"]["poisoned_oracle_gate"]["accuracy"] for r in g])),
+                     "gating_acc": float(np.mean([r["chosen"]["soft"]["accuracy"] for r in g])),
+                     "gain_mean": mean, "gain_lo": lo, "gain_hi": hi, "gains": gains,
+                     "wins": sum(x > 0 for x in gains), "losses": sum(x < 0 for x in gains),
+                     "ceiling_gain_mean": float(np.mean(ceil))})
+    by = {(r["dataset"], r["R"], r["V"], r["strategy"]): r for r in rows}
+    lines = ["all validation seeds: gain = gating (chosen iteration) - the V clean rows alone, test accuracy",
+             "mean over draws [95% interval over test rows], wins/losses over draws; * = interval excludes 0"]
+    for ds in DATASETS:
+        for R in (10, 20):
+            Vs = sorted({k[2] for k in by if k[0] == ds and k[1] == R})
+            if not Vs:
+                continue
+            any_r = by.get((ds, R, Vs[0], "holdout")) or by.get((ds, R, Vs[0], "full"))
+            lines.append(f"\n{ds}  R={R}%   ({any_r['n_seeds']} draws per V)")
+            lines.append(f"  {'V':>4} {'clean':>6} {'pois':>6} {'oracle':>6} | "
+                         f"{'HOLDOUT gain [95%]':>27} {'w/l':>5} | {'FULL gain [95%]':>27} {'w/l':>5} | {'ceiling':>7}")
+            for V in Vs:
+                h, f = by.get((ds, R, V, "holdout")), by.get((ds, R, V, "full"))
+                cell = lambda x: (f"{x['gain_mean']:+.3f} [{x['gain_lo']:+.3f},{x['gain_hi']:+.3f}]"
+                                  + ("*" if x["gain_lo"] > 0 or x["gain_hi"] < 0 else " ")) if x else "-"
+                wl = lambda x: f"{x['wins']}/{x['losses']}" if x else "-"
+                base = h or f
+                lines.append(f"  {V:>4} {base['clean_rows_acc']:.3f} {base['poisoned_acc']:.3f} {base['oracle_acc']:.3f} | "
+                             f"{cell(h):>27} {wl(h):>5} | {cell(f):>27} {wl(f):>5} | "
+                             f"{(h or f)['ceiling_gain_mean']:+.3f}")
+    return "\n".join(lines), rows
 
 
 def fmt_rule(run, rule):
@@ -176,7 +235,14 @@ def main(argv=None) -> None:
     text = "\n".join(lines)
     (OUT / "summary.txt").write_text(text + "\n")
     print(text)
-    print(f"\nwrote {OUT}/runs.csv ({len(runs)} runs, seeds {seeds}) and summary.txt (seed {a.seed})")
+    stext, srows = seeds_summary(runs)
+    (OUT / "seeds_summary.txt").write_text(stext + "\n")
+    with open(OUT / "seeds.csv", "w", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=list(srows[0]))
+        w.writeheader()
+        w.writerows(srows)
+    print(f"\nwrote {OUT}/runs.csv ({len(runs)} runs, seeds {seeds}), summary.txt (seed {a.seed}), "
+          "seeds_summary.txt and seeds.csv")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,12 @@
+# Night round 2: line search (keep a step only if the fitted-row CE drops) and a soft-gate start
+# <part> <dataset> <R> <ste> <init_std> <lr> <init_seed> [<tag> <extra args...>]
+1 gas-drift 20 identity 0 0.05 0 s-c --score-init file --score-init-path results/gate_valsplit/gas-drift/hub-flip-local_r020/gate-valsplit_gas-drift_hub-flip-local_R20_V500s0_H20_pgd-linf_lr0.05_it300/gates/top1.npz
+1 gas-drift 20 identity 0 0.05 0 s-ls --score-init file --score-init-path results/gate_valsplit/gas-drift/hub-flip-local_r020/gate-valsplit_gas-drift_hub-flip-local_R20_V500s0_H20_pgd-linf_lr0.05_it300/gates/top1.npz --line-search 3
+1 gas-drift 20 identity 0 0.2 0 s-ls --score-init file --score-init-path results/gate_valsplit/gas-drift/hub-flip-local_r020/gate-valsplit_gas-drift_hub-flip-local_R20_V500s0_H20_pgd-linf_lr0.05_it300/gates/top1.npz --line-search 3
+1 gas-drift 20 identity 0 1 0 g-ls --score-init gradient --line-search 3
+1 gas-drift 20 identity 1 5 0 r-ls --line-search 3
+1 url_unique 20 identity 0 0.05 0 s-c --score-init file --score-init-path results/gate_valsplit/url_unique/hub-flip-local_r020/gate-valsplit_url_unique_hub-flip-local_R20_V500s0_H20_pgd-linf_lr0.05_it300/gates/top1.npz
+1 url_unique 20 identity 0 0.05 0 s-ls --score-init file --score-init-path results/gate_valsplit/url_unique/hub-flip-local_r020/gate-valsplit_url_unique_hub-flip-local_R20_V500s0_H20_pgd-linf_lr0.05_it300/gates/top1.npz --line-search 3
+1 url_unique 20 identity 0 0.2 0 s-ls --score-init file --score-init-path results/gate_valsplit/url_unique/hub-flip-local_r020/gate-valsplit_url_unique_hub-flip-local_R20_V500s0_H20_pgd-linf_lr0.05_it300/gates/top1.npz --line-search 3
+1 url_unique 20 identity 0 1 0 g-ls --score-init gradient --line-search 3
+1 url_unique 20 identity 1 5 0 r-ls --line-search 3

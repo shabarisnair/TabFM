@@ -1,0 +1,12 @@
+scripts/gate_topk_parts/night/n8.txt: 6 runs
+6 runs on GPU(s) 2; results in /home/ssn899/Desktop/TabFM/results/gate_topk; W&B online, project TFM_experiments, group gate-topk
+[2026-10-12 11:32:27] START GPU 2  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init2_probe0.05-cos_it300
+[2026-10-12 12:07:13] DONE  GPU 2  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init2_probe0.05-cos_it300
+[skip] gate-topk_url_unique_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init2_probe0.05-cos_it300 (already done)
+[busy] gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init3_probe0.05-cos_it300 (another process holds /home/ssn899/Desktop/TabFM/results/gate_topk/gas-drift/hub-flip-local_r020/gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init3_probe0.05-cos_it300/.lock; delete it if that process died)
+[2026-10-12 12:07:13] START GPU 2  gate-topk_url_unique_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init3_probe0.05-cos_it300
+[2026-10-12 12:23:32] DONE  GPU 2  gate-topk_url_unique_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init3_probe0.05-cos_it300
+[2026-10-12 12:23:32] START GPU 2  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr20_init0_probe0.05_it300
+[2026-10-12 12:56:11] DONE  GPU 2  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr20_init0_probe0.05_it300
+[skip] gate-topk_url_unique_hub-flip-local_R20_V500s0_H20_identity_std1_lr20_init0_probe0.05_it300 (already done)
+ALL REQUESTED RUNS FINISHED

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """Analyse the top-k gating runs (results/gate_topk): which setting is best?
 
-A setting is (surrogate, initial score spread, lr); each has several restarts (init
-seeds) per dataset. For the identity and centred surrogates only lr / spread matters
+A setting is (surrogate, initial score spread, lr, score init, budget warm-up, step
+schedule, step floor, probe point, line or swap search, bagging); each has one or more restarts (init seeds) per dataset. For the identity and centred surrogates only lr / spread matters
 (scaling the scores and the step together leaves every mask unchanged), so the setting
 is also labelled by that ratio.
 
@@ -36,10 +36,19 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 DATASETS = ("gas-drift", "url_unique", "students_dropout")
 
 
-def setting_label(ste: str, std: float, lr: float) -> str:
-    if ste in ("identity", "sigmoid-centered"):
-        return f"{ste} lr/std={lr / std:g} (std {std:g}, lr {lr:g})"
-    return f"{ste} std={std:g} lr={lr:g}"
+def setting_label(ste: str, std: float, lr: float, init: str = "random", warm: float = 0.0,
+                  sched: str = "constant", floor: float = 0.0, ls: int = 0, probe: float = 0.0,
+                  swap: int = 0, bag: float = 1.0) -> str:
+    if init in ("gradient", "file"):
+        base = f"{ste} {'grad' if init == 'gradient' else 'soft'}-start noise {std:g} lr={lr:g}"
+    elif ste in ("identity", "sigmoid-centered"):
+        base = f"{ste} lr/std={lr / std:g} (std {std:g}, lr {lr:g})"
+    else:
+        base = f"{ste} std={std:g} lr={lr:g}"
+    return (base + (f" +warmup{warm:g}" if warm else "")
+            + (f" +{sched}" + (f"(floor {floor:g})" if floor else "") if sched != "constant" else "")
+            + (f" +line-search{ls}" if ls else "") + (f" +probe{probe:g}" if probe else "")
+            + (f" +swap-search{swap}" if swap else "") + (f" +bag{bag:g}" if bag < 1 else ""))
 
 
 def load_runs(root: Path, R: int) -> list[dict]:
@@ -54,9 +63,12 @@ def load_runs(root: Path, R: int) -> list[dict]:
         log = list(csv.DictReader(open(d / "log.csv")))
         flips = [float(r["mask_flips"]) for r in log if r.get("mask_flips")]
         runs.append({
-            "dataset": a["dataset"], "ste": a["ste"], "std": a["score_init_std"], "lr": a["lr"],
+            "run": d.name, "dataset": a["dataset"], "ste": a["ste"], "std": a["score_init_std"], "lr": a["lr"],
             "seed": a["init_seed"], "steps": a["steps"],
-            "setting": (a["ste"], a["score_init_std"], a["lr"]),
+            "setting": (a["ste"], a["score_init_std"], a["lr"], a.get("score_init", "random"),
+                        a.get("budget_warmup", 0.0), a.get("lr_schedule", "constant"),
+                        a.get("lr_min_frac", 0.0), a.get("line_search", 0), a.get("ste_probe", 0.0),
+                        a.get("swap_search", 0), a.get("fit_subsample", 1.0)),
             "iteration": tm["best_iteration"], "hold_ce": b["valtest_ce"], "hold_acc": b["valtest_accuracy"],
             "test_acc": M["poisoned_best_gate_soft"]["accuracy"], "test_ce": M["poisoned_best_gate_soft"]["ce"],
             "test_hard_acc": M["poisoned_best_gate_hard"]["accuracy"],
@@ -85,8 +97,13 @@ def main(argv=None) -> None:
     ap.add_argument("--R", type=int, default=20)
     ap.add_argument("--restarts", type=int, default=4, help="restarts a complete setting has")
     ap.add_argument("--out", type=Path, default=Path("results/tables/gate_topk"))
+    ap.add_argument("--datasets", nargs="+", default=list(DATASETS))
+    ap.add_argument("--name", default=None, help="suffix of the output files (default: R<R>)")
+    ap.add_argument("--exclude", nargs="+", default=[], metavar="TEXT",
+                    help="leave out the runs whose directory name contains any of these")
     a = ap.parse_args(argv)
-    runs = load_runs(a.root, a.R)
+    runs = [r for r in load_runs(a.root, a.R) if r["dataset"] in a.datasets
+            and not any(t in r["run"] for t in a.exclude)]
     if not runs:
         raise SystemExit(f"no top-k runs with R={a.R} under {a.root}")
 
@@ -96,7 +113,7 @@ def main(argv=None) -> None:
     lines = [f"top-k gating, R={a.R}%: best of {a.restarts} restarts by held-out CE; test numbers "
              "are reported, not used to choose"]
     best = {}
-    for ds in DATASETS:
+    for ds in a.datasets:
         keys = sorted(s for d, s in groups if d == ds)
         if not keys:
             continue
@@ -106,7 +123,7 @@ def main(argv=None) -> None:
                      f"500 clean rows alone {ref['val_as_context']:.3f}"
                      + (f"   soft gates (held-out CE {soft['hold_ce']:.4f} @it{soft['iteration']}) "
                         f"{soft['test_acc']:.3f}" if soft else ""))
-        lines.append(f"  {'setting':<46s} {'n':>2s} | {'hold CE':>8s} {'hold acc':>8s} {'it':>4s} | "
+        lines.append(f"  {'setting':<62s} {'n':>2s} | {'hold CE':>8s} {'hold acc':>8s} {'it':>4s} | "
                      f"{'test acc':>8s} {'test CE':>8s} {'prec@R':>6s} {'AUROC':>5s} | "
                      f"{'test acc over restarts':>24s} {'late flips':>10s}")
         rows = []
@@ -117,14 +134,14 @@ def main(argv=None) -> None:
             best[(ds, s)] = b if len(g) >= a.restarts else None
             rows.append((b["hold_ce"], s, g, b, accs))
         for hold_ce, s, g, b, accs in sorted(rows, key=lambda x: x[0]):
-            lines.append(f"  {setting_label(*s):<46s} {len(g):>2d} | {b['hold_ce']:>8.4f} {b['hold_acc']:>8.3f} "
+            lines.append(f"  {setting_label(*s):<62s} {len(g):>2d} | {b['hold_ce']:>8.4f} {b['hold_acc']:>8.3f} "
                          f"{b['iteration']:>4d} | {b['test_acc']:>8.3f} {b['test_ce']:>8.4f} {b['precision']:>6.3f} "
                          f"{b['auroc']:>5.2f} | {sum(accs)/len(accs):>8.3f} [{min(accs):.3f}, {max(accs):.3f}] "
                          f"{sum(r['late_flips'] for r in g)/len(g):>10.1f}")
 
     # overall ranking over the settings complete on every dataset that has them
     settings = sorted({s for (_, s), v in best.items() if v is not None})
-    dsets = [ds for ds in DATASETS if any(d == ds for d, _ in best)]
+    dsets = [ds for ds in a.datasets if any(d == ds for d, _ in best)]
     complete = [s for s in settings if all(best.get((ds, s)) is not None for ds in dsets)]
     if complete:
         lines.append(f"\noverall: settings complete on {', '.join(dsets)}; rank 1 = lowest held-out CE")
@@ -133,12 +150,13 @@ def main(argv=None) -> None:
             for i, s in enumerate(sorted(complete, key=lambda s: best[(ds, s)]["hold_ce"]), 1):
                 rank[s].append(i)
         for s in sorted(complete, key=lambda s: (sum(rank[s]) / len(rank[s]), s)):
-            lines.append(f"  {setting_label(*s):<46s} mean rank {sum(rank[s]) / len(rank[s]):.2f}  "
+            lines.append(f"  {setting_label(*s):<62s} mean rank {sum(rank[s]) / len(rank[s]):.2f}  "
                          f"ranks {rank[s]}  test acc " + " ".join(f"{best[(ds, s)]['test_acc']:.3f}" for ds in dsets))
     text = "\n".join(lines)
     a.out.mkdir(parents=True, exist_ok=True)
-    (a.out / f"settings_R{a.R}.txt").write_text(text + "\n")
-    with open(a.out / f"runs_R{a.R}.csv", "w", newline="") as fh:
+    tag = a.name or f"R{a.R}"
+    (a.out / f"settings_{tag}.txt").write_text(text + "\n")
+    with open(a.out / f"runs_{tag}.csv", "w", newline="") as fh:
         keys = [k for k in runs[0] if k not in ("ref", "setting")]
         w = csv.DictWriter(fh, fieldnames=keys, extrasaction="ignore")
         w.writeheader()

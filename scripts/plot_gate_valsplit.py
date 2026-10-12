@@ -19,7 +19,15 @@ pairlist. Five datasets in five hues failed the normal-vision floor (orange vs y
 orange vs pink), so the second figure facets by dataset instead. Aqua sits at 2.74:1
 contrast; the numbers are in results/tables/gate_valsplit/.
 
-Both figures show one validation seed (--seed, default 0).
+Both figures show one validation seed (--seed, default 0). A third,
+
+  gain_vs_V_all_seeds.png
+                      the mean gain of gating over the clean rows alone across all
+                      validation draws (results/tables/gate_valsplit/seeds.csv), against V,
+                      with its 95% interval over test rows; one panel per dataset, colour =
+                      R, solid = the 20% holdout rule, dashed = fitted on all V rows,
+
+uses every seed.
 
     python scripts/plot_gate_valsplit.py [--seed 1]
 """
@@ -160,6 +168,47 @@ def gain_vs_headroom(by) -> Path:
     return path
 
 
+def gain_vs_v_seeds(table: Path) -> Path:
+    rows = list(csv.DictReader(open(table)))
+    fig, axes = plt.subplots(1, len(DATASETS), figsize=(17, 4.4), dpi=170, sharey=True)
+    fig.patch.set_facecolor(SURFACE)
+    series = [(10, "holdout", BLUE, "o", "-", -0.16), (10, "full", BLUE, "s", (0, (3, 2)), -0.05),
+              (20, "holdout", ORANGE, "o", "-", 0.05), (20, "full", ORANGE, "s", (0, (3, 2)), 0.16)]
+    for ax, (ds, title) in zip(axes, DATASETS):
+        style(ax)
+        ax.axhline(0, color=INK_3, lw=1.0, zorder=1)
+        Vs = sorted({int(r["V"]) for r in rows if r["dataset"] == ds})
+        for R, st, col, mk, ls, dx in series:
+            pts = sorted(((int(r["V"]), r) for r in rows if r["dataset"] == ds and int(r["R"]) == R
+                          and r["strategy"] == st), key=lambda t: t[0])
+            x = [Vs.index(v) + dx for v, _ in pts]
+            y = [100 * float(r["gain_mean"]) for _, r in pts]
+            lo = [y_ - 100 * float(r["gain_lo"]) for y_, (_, r) in zip(y, pts)]
+            hi = [100 * float(r["gain_hi"]) - y_ for y_, (_, r) in zip(y, pts)]
+            ax.errorbar(x, y, yerr=[lo, hi], color=col, ls=ls, lw=1.6, marker=mk, ms=5, capsize=0,
+                        elinewidth=1.0, markeredgecolor=SURFACE, markeredgewidth=0.8, zorder=3)
+        ax.set_xticks(range(len(Vs)))
+        ax.set_xticklabels([str(v) for v in Vs])
+        ax.set_title(title, fontsize=9.5, color=INK, loc="left", pad=4)
+        ax.set_xlabel("V  (clean validation rows)", fontsize=8.5, color=INK_2)
+    axes[0].set_ylabel("gating − clean rows alone (accuracy points)", fontsize=8.5, color=INK_2)
+    fig.suptitle("Where gating beats the clean rows alone", x=0.01, y=0.99, ha="left", fontsize=13, color=INK)
+    fig.text(0.01, 0.905, "mean over 3 validation draws per point; bars: 95% interval over test rows "
+             "(given the draws); above 0 = gating wins", fontsize=8.5, color=INK_2, ha="left")
+    handles = [Line2D([], [], color=c, marker=m, ls=l, lw=1.6, ms=5, markeredgecolor=SURFACE,
+                      label=f"R = {R}%, " + ("20% holdout chooses the iteration" if st == "holdout"
+                                             else "fitted on all V rows"))
+               for R, st, c, m, l, _ in series]
+    fig.legend(handles=handles, loc="lower center", bbox_to_anchor=(0.5, -0.01), ncol=4, frameon=False,
+               fontsize=8.3, labelcolor=INK_2, handlelength=2.6)
+    fig.subplots_adjust(left=0.05, right=0.99, top=0.8, bottom=0.25, wspace=0.08)
+    path = Path("results/figures/gate_valsplit") / "gain_vs_V_all_seeds.png"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path, facecolor=SURFACE)
+    plt.close(fig)
+    return path
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--seed", type=int, default=0, help="validation seed to plot")
@@ -167,6 +216,9 @@ def main(argv=None):
     by = load(a.seed)
     global OUT
     OUT = OUT if a.seed == 0 else OUT / f"seed{a.seed}"
+    seeds_table = TABLE.parent / "seeds.csv"
+    if seeds_table.exists():
+        print("wrote", gain_vs_v_seeds(seeds_table))
     for p in (accuracy_vs_v(by), gain_vs_headroom(by)):
         print("wrote", p)
 

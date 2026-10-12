@@ -1,0 +1,12 @@
+# Night round 4: the relaxed-point straight-through gradient: restarts at alpha 0.25, and alpha 0.1 / 0.4
+# <part> <dataset> <R> <ste> <init_std> <lr> <init_seed> [<tag> <extra args...>]
+1 gas-drift 20 identity 1 5 1 probe --ste-probe 0.25
+1 gas-drift 20 identity 1 5 2 probe --ste-probe 0.25
+1 gas-drift 20 identity 1 5 3 probe --ste-probe 0.25
+1 gas-drift 20 identity 1 5 0 probe0.1 --ste-probe 0.1
+1 gas-drift 20 identity 1 5 0 probe0.4 --ste-probe 0.4
+1 url_unique 20 identity 1 5 1 probe --ste-probe 0.25
+1 url_unique 20 identity 1 5 2 probe --ste-probe 0.25
+1 url_unique 20 identity 1 5 3 probe --ste-probe 0.25
+1 url_unique 20 identity 1 5 0 probe0.1 --ste-probe 0.1
+1 url_unique 20 identity 1 5 0 probe0.4 --ste-probe 0.4

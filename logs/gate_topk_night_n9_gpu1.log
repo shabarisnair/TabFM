@@ -1,0 +1,13 @@
+scripts/gate_topk_parts/night/n9.txt: 8 runs
+8 runs on GPU(s) 1; results in /home/ssn899/Desktop/TabFM/results/gate_topk; W&B online, project TFM_experiments, group gate-topk
+[2026-10-12 12:10:03] START GPU 1  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init0_probe0.05-cos-bag0.6_it300
+[2026-10-12 12:54:49] DONE  GPU 1  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init0_probe0.05-cos-bag0.6_it300
+[busy] gate-topk_url_unique_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init0_probe0.05-cos-bag0.6_it300 (another process holds /home/ssn899/Desktop/TabFM/results/gate_topk/url_unique/hub-flip-local_r020/gate-topk_url_unique_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init0_probe0.05-cos-bag0.6_it300/.lock; delete it if that process died)
+[2026-10-12 12:54:49] START GPU 1  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init1_probe0.05-cos-bag0.6_it300
+[2026-10-12 13:43:47] DONE  GPU 1  gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init1_probe0.05-cos-bag0.6_it300
+[skip] gate-topk_url_unique_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init1_probe0.05-cos-bag0.6_it300 (already done)
+[skip] gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init2_probe0.05-cos-bag0.6_it300 (already done)
+[skip] gate-topk_url_unique_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init2_probe0.05-cos-bag0.6_it300 (already done)
+[busy] gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init3_probe0.05-cos-bag0.6_it300 (another process holds /home/ssn899/Desktop/TabFM/results/gate_topk/gas-drift/hub-flip-local_r020/gate-topk_gas-drift_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init3_probe0.05-cos-bag0.6_it300/.lock; delete it if that process died)
+[busy] gate-topk_url_unique_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init3_probe0.05-cos-bag0.6_it300 (another process holds /home/ssn899/Desktop/TabFM/results/gate_topk/url_unique/hub-flip-local_r020/gate-topk_url_unique_hub-flip-local_R20_V500s0_H20_identity_std1_lr5_init3_probe0.05-cos-bag0.6_it300/.lock; delete it if that process died)
+ALL REQUESTED RUNS FINISHED

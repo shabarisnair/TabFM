@@ -1,0 +1,10 @@
+# Night round 3: verified swaps of pairs ranked by the relaxed (alpha 0.25) straight-through gradient
+# <part> <dataset> <R> <ste> <init_std> <lr> <init_seed> [<tag> <extra args...>]
+1 gas-drift 20 identity 0 1 0 ss-soft --score-init file --score-init-path results/gate_valsplit/gas-drift/hub-flip-local_r020/gate-valsplit_gas-drift_hub-flip-local_R20_V500s0_H20_pgd-linf_lr0.05_it300/gates/top1.npz --swap-search 8 --ste-probe 0.25
+1 gas-drift 20 identity 1 1 0 ss-rand --swap-search 8 --ste-probe 0.25
+1 gas-drift 20 identity 0 1 0 ss-soft-p0 --score-init file --score-init-path results/gate_valsplit/gas-drift/hub-flip-local_r020/gate-valsplit_gas-drift_hub-flip-local_R20_V500s0_H20_pgd-linf_lr0.05_it300/gates/top1.npz --swap-search 8
+1 gas-drift 20 identity 1 5 0 probe --ste-probe 0.25
+1 url_unique 20 identity 0 1 0 ss-soft --score-init file --score-init-path results/gate_valsplit/url_unique/hub-flip-local_r020/gate-valsplit_url_unique_hub-flip-local_R20_V500s0_H20_pgd-linf_lr0.05_it300/gates/top1.npz --swap-search 8 --ste-probe 0.25
+1 url_unique 20 identity 1 1 0 ss-rand --swap-search 8 --ste-probe 0.25
+1 url_unique 20 identity 0 1 0 ss-soft-p0 --score-init file --score-init-path results/gate_valsplit/url_unique/hub-flip-local_r020/gate-valsplit_url_unique_hub-flip-local_R20_V500s0_H20_pgd-linf_lr0.05_it300/gates/top1.npz --swap-search 8
+1 url_unique 20 identity 1 5 0 probe --ste-probe 0.25

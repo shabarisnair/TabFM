@@ -1,0 +1,41 @@
+# gen: the best top-k configuration on the soft-gate draws, written by make_gen_jobs.py.
+# <part> <dataset> <R> <V> <seed>   (one draw = the restarts and their vote)
+# already done, left out: gas-drift 20 500 0
+# already done, left out: url_unique 20 500 0
+# part 1: 1 draws, ~137 min
+1 gas-drift 20 50 0
+# part 2: 1 draws, ~137 min
+2 gas-drift 20 100 0
+# part 3: 1 draws, ~137 min
+3 gas-drift 20 200 0
+# part 4: 1 draws, ~137 min
+4 gas-drift 20 300 0
+# part 5: 1 draws, ~137 min
+5 gas-drift 20 400 0
+# part 6: 3 draws, ~111 min
+6 url_unique 20 50 0
+6 students_dropout 20 50 0
+6 students_dropout 20 500 0
+# part 7: 3 draws, ~97 min
+7 url_unique 20 100 0
+7 students_dropout 20 100 0
+7 credit-approval 20 50 0
+# part 8: 3 draws, ~97 min
+8 url_unique 20 200 0
+8 students_dropout 20 200 0
+8 credit-approval 20 100 0
+# part 9: 3 draws, ~97 min
+9 url_unique 20 300 0
+9 students_dropout 20 300 0
+9 credit-approval 20 200 0
+# part 10: 2 draws, ~90 min
+10 url_unique 20 400 0
+10 students_dropout 20 400 0
+# part 11: 3 draws, ~99 min
+11 heloc 20 50 0
+11 heloc 20 200 0
+11 heloc 20 400 0
+# part 12: 3 draws, ~99 min
+12 heloc 20 100 0
+12 heloc 20 300 0
+12 heloc 20 500 0

@@ -32,8 +32,10 @@
 #  and writes its files to results/gate_topk/<dataset>/<attack>_r<RRR>/<that name>/.
 #
 #  JOBS_FILE: run an explicit list instead of the grid, one run per line,
-#      <part> <dataset> <R> <ste> <init_std> <lr> <init_seed>
-#  (# comments and blank lines skipped); with PART=k only the lines of part k.
+#      <part> <dataset> <R> <ste> <init_std> <lr> <init_seed> [<tag> <extra args...>]
+#  (# comments and blank lines skipped); with PART=k only the lines of part k. A tag
+#  (e.g. "ginit-cos") goes into the run name and the extra args to gate_context.py
+#  (e.g. "--score-init gradient --lr-schedule cosine").
 #  scripts/gate_topk_parts/<round>/run_part<k>.sh run those parts, one per GPU
 #  (written by scripts/gate_topk_parts/make_jobs.py).
 #
@@ -97,9 +99,10 @@ if [[ $WANDB_MODE == online && -z "${WANDB_API_KEY:-}" && -z "${DRY_RUN:-}" ]]; 
   exit 1
 fi
 
-run_one () {   # run_one <gpu> <dataset> <R> <ste> <init_std> <lr> <init_seed>
-  local gpu=$1 ds=$2 r=$3 ste=$4 std=$5 lr=$6 seed=$7
-  local name="gate-topk_${ds}_${ATTACK}_R${r}_V${VAL_SIZE}s${VAL_SEED}_H${HPCT}_${ste}_std${std}_lr${lr}_init${seed}_it${STEPS}"
+run_one () {   # run_one <gpu> <dataset> <R> <ste> <init_std> <lr> <init_seed> [<tag> <extra args...>]
+  local gpu=$1 ds=$2 r=$3 ste=$4 std=$5 lr=$6 seed=$7 tag=${8:-}
+  local extra=("${@:9}")
+  local name="gate-topk_${ds}_${ATTACK}_R${r}_V${VAL_SIZE}s${VAL_SEED}_H${HPCT}_${ste}_std${std}_lr${lr}_init${seed}${tag:+_$tag}_it${STEPS}"
   local out; out="$OUT_ROOT/$ds/$(printf '%s_r%03d' "$ATTACK" "$r")/$name"
   local cmd=("${PY[@]}" "$REPO/scripts/gate_context.py" --gpu "$gpu"
              --dataset "$ds" --context "${CONTEXT[$ds]}" --test "${TEST[$ds]}"
@@ -107,7 +110,7 @@ run_one () {   # run_one <gpu> <dataset> <R> <ste> <init_std> <lr> <init_seed>
              --attack "$ATTACK" --row-percent "$r"
              --gate topk --ste "$ste" --score-init-std "$std" --init-seed "$seed"
              --optimizer pgd --pgd-scale linf --lr "$lr" --steps "$STEPS" --test-every "$TEST_EVERY"
-             --select-on ce
+             --select-on ce "${extra[@]}"
              --run-name "$name" --out "$OUT_ROOT"
              --wandb-project "$WANDB_PROJECT" --wandb-group "$WANDB_GROUP" --wandb-mode "$WANDB_MODE")
   if [[ -n "${DRY_RUN:-}" ]]; then printf '%q ' "${cmd[@]}"; echo; return 0; fi
@@ -133,8 +136,8 @@ if [[ -n "$JOBS_FILE" ]]; then
   [[ -f $JOBS_FILE ]] || { echo "JOBS_FILE not found: $JOBS_FILE"; exit 1; }
   while read -r part ds r ste std lr seed rest; do
     [[ -z ${part:-} || $part == \#* ]] && continue
-    [[ -z ${seed:-} || -n ${rest:-} ]] && { echo "bad line in $JOBS_FILE: $part $ds $r $ste $std $lr $seed $rest"; exit 1; }
-    [[ -z "$PART" || $part == "$PART" ]] && JOBS+=("$ds $r $ste $std $lr $seed")
+    [[ -z ${seed:-} ]] && { echo "bad line in $JOBS_FILE: $part $ds $r $ste $std $lr"; exit 1; }
+    [[ -z "$PART" || $part == "$PART" ]] && JOBS+=("$ds $r $ste $std $lr $seed${rest:+ $rest}")
   done < "$JOBS_FILE"
   echo "${JOBS_FILE}${PART:+, part $PART}: ${#JOBS[@]} runs"
 else
@@ -161,7 +164,7 @@ run_queue () {   # run_queue <queue index> <gpu>: every NQ-th run, starting at t
   local q=$1 gpu=$2 i
   for i in "${!JOBS[@]}"; do
     if (( i % NQ == q )); then
-      # shellcheck disable=SC2086  # the job string is split into its six fields on purpose
+      # shellcheck disable=SC2086  # the job string is split into its fields on purpose
       run_one "$gpu" ${JOBS[$i]}
     fi
   done

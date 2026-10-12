@@ -64,6 +64,7 @@ import argparse
 import contextlib
 import csv
 import json
+import math
 import shutil
 import struct
 import sys
@@ -291,6 +292,22 @@ def test_topk_pieces():
     check("gate_stats with scores: AUROC of -scores = 4/6, precision of the masked rows = 1/2",
           abs(st["auroc_poisoned"] - 4 / 6) < 1e-12 and st["precision_at_R"] == 0.5,
           f"auroc {st['auroc_poisoned']:.4f} precision {st['precision_at_R']}")
+
+    # cubic budget ramp, k = 100 over T = 10: k * (1 - (1 - t/10)^3)
+    #   t=1: 100 * (1 - 0.729) = 27.1 -> 27;  t=5: 87.5 -> 88;  t=9: 99.9 -> 100
+    got = [G.budget_at(t, 100, 10) for t in (0, 1, 5, 9, 10, 50)]
+    check("budget_at: cubic ramp from 0 to k over the warm-up (hand-computed)",
+          got == [0, 27, 88, 100, 100, 100], f"{got}")
+    check("budget_at: no warm-up -> k from the start", G.budget_at(0, 100, 0) == 100)
+    # cosine: lr * (m + (1 - m) * (1 + cos(pi t / T)) / 2); t = T/4 -> (1 + 0.7071068) / 2 = 0.8535534
+    got = [G.lr_at(t, 100, 1.0, "cosine", 0.0) for t in (0, 25, 50, 100)]
+    check("lr_at cosine: 1, 0.8536, 0.5, 0 (hand-computed)",
+          all(abs(x - y) < 1e-6 for x, y in zip(got, [1.0, 0.8535534, 0.5, 0.0])), f"{got}")
+    check("lr_at cosine with a floor of 0.1: 0.55 halfway, 0.1 at the end",
+          abs(G.lr_at(50, 100, 1.0, "cosine", 0.1) - 0.55) < 1e-9
+          and abs(G.lr_at(100, 100, 1.0, "cosine", 0.1) - 0.1) < 1e-9)
+    check("lr_at constant: lr at every step",
+          G.lr_at(0, 100, 0.3, "constant", 0.0) == G.lr_at(77, 100, 0.3, "constant", 0.0) == 0.3)
 
 
 # ============================================================================ B. the gate
@@ -888,6 +905,114 @@ def test_topk(device, gpu):
         cfg = json.loads((out / "config.json").read_text())
         group, wcfg = wandb_run_info(out)
         args = wcfg.get("args", {})
+        # ---- gradient start: iteration 0 masks the k rows whose masking lowers the loss most
+        out_g = G.main(base + ["--score-init", "gradient", "--score-init-std", "0", "--lr", "1",
+                               "--select-on", "ce", "--steps", "2", "--test-every", "1",
+                               "--wandb-mode", "disabled", "--run-name", "grad_start"])
+        rows_g = list(csv.DictReader(open(out_g / "log.csv")))
+        Xv_fit = X_all[torch.as_tensor(sp["val_fit_rows"], device=device)]
+        yv_fit = torch.as_tensor(y_all[sp["val_fit_rows"]], device=device)
+        ones = torch.ones(n, device=device, requires_grad=True)
+        _, gfull, _ = G.evaluate(clf, Xc, yp_t, Xv_fit, yv_fit, ones, null, need_grad=True, batch_size=None)
+        gfull = gfull.cpu().numpy()
+        mg = np.ones(n)
+        mg[np.argsort(-gfull, kind="stable")[:k]] = 0  # the k most positive d CE / d g at g = 1
+        check(f"{tag} --score-init gradient: iteration 0 masks the k rows with the largest dCE/dg at g=1",
+              abs(float(rows_g[0]["precision_at_R"]) - pois[mg == 0].mean()) < 1e-9
+              and abs(float(rows_g[0]["g_mean_poisoned"]) - mg[pois].mean()) < 1e-6,
+              f"precision {rows_g[0]['precision_at_R']} vs {pois[mg == 0].mean():.4f}")
+
+        # ---- budget warm-up and cosine step: rows masked and score steps follow the schedules
+        steps_w, warm = 6, 0.5  # T = 3 updates
+        out_w = G.main(base + ["--budget-warmup", str(warm), "--lr-schedule", "cosine", "--lr", "1",
+                               "--select-on", "ce", "--steps", str(steps_w), "--test-every", "1",
+                               "--wandb-mode", "disabled", "--run-name", "warmup"])
+        rows_w = list(csv.DictReader(open(out_w / "log.csv")))
+        T = 3
+        k_t = [round(k * (1 - (1 - min(t, T) / T) ** 3)) for t in range(steps_w + 1)]
+        check(f"{tag} --budget-warmup: iteration t masks exactly k_t rows (cubic ramp, T = 3)",
+              all(abs(float(r["g_mean"]) - (1 - kt / n)) < 1e-6 for r, kt in zip(rows_w, k_t)),
+              f"k_t {k_t}")
+        lr_t = [0.5 * (1 + math.cos(math.pi * t / steps_w)) for t in range(steps_w)]
+        check(f"{tag} --lr-schedule cosine: update t moves the largest score by lr_t",
+              all(abs(float(r["max_abs_dg"]) - lt) < 1e-5 for r, lt in zip(rows_w[:-1], lr_t)),
+              f"{[round(float(r['max_abs_dg']), 4) for r in rows_w[:-1]]}")
+        tm_w = json.loads((out_w / "test_metrics.json").read_text())
+        check(f"{tag} --budget-warmup: the best iteration has the full budget (t >= T)",
+              tm_w["best_iteration"] >= T, f"best iteration {tm_w['best_iteration']}")
+
+        # ---- start from a file of per-row values (e.g. soft gates): iteration 0 masks their k lowest
+        vals = np.random.default_rng(5).random(n).astype(np.float32)
+        fpath = tmp / "start.npz"
+        np.savez(fpath, g=vals)
+        out_f = G.main(base + ["--score-init", "file", "--score-init-path", str(fpath), "--score-init-std", "0",
+                               "--lr", "0.05", "--select-on", "ce", "--steps", "1", "--test-every", "1",
+                               "--wandb-mode", "disabled", "--run-name", "file_start"])
+        rows_f = list(csv.DictReader(open(out_f / "log.csv")))
+        mf0 = np.ones(n)
+        mf0[np.argsort(vals, kind="stable")[:k]] = 0
+        check(f"{tag} --score-init file: iteration 0 masks the k lowest values of the file",
+              abs(float(rows_f[0]["precision_at_R"]) - pois[mf0 == 0].mean()) < 1e-9
+              and abs(float(rows_f[0]["g_mean_poisoned"]) - mf0[pois].mean()) < 1e-6)
+
+        # ---- line search: a step is kept only if it lowers the CE on the fitted rows
+        out_l = G.main(base + ["--line-search", "3", "--lr", "5", "--select-on", "ce", "--steps", "5",
+                               "--test-every", "1", "--wandb-mode", "disabled", "--run-name", "line_search"])
+        rows_l = list(csv.DictReader(open(out_l / "log.csv")))
+        ces = [float(r["val_ce"]) for r in rows_l]
+        check(f"{tag} --line-search: the fitted-row CE never rises from one iteration to the next",
+              all(b <= a + 1e-5 for a, b in zip(ces, ces[1:])), f"{[round(c, 4) for c in ces]}")
+        check(f"{tag} --line-search: logs its tries and acceptances",
+              all(r["ls_evals"] != "" and r["ls_accept"] in ("0", "1") for r in rows_l[:-1]),
+              f"{[(r['ls_evals'], r['ls_accept']) for r in rows_l[:-1]]}")
+
+        # ---- swap search: verified swaps of gradient-ranked pairs, exactly k rows off throughout
+        out_s = G.main(base + ["--swap-search", "8", "--ste-probe", "0.25", "--select-on", "ce", "--steps", "4",
+                               "--test-every", "1", "--wandb-mode", "disabled", "--run-name", "swap_search"])
+        rows_s = list(csv.DictReader(open(out_s / "log.csv")))
+        ces = [float(r["val_ce"]) for r in rows_s]
+        check(f"{tag} --swap-search: exactly k rows off at every iteration; fitted-row CE never rises",
+              all(abs(float(r["g_mean"]) - (1 - k / n)) < 1e-6 for r in rows_s)
+              and all(b <= a + 1e-5 for a, b in zip(ces, ces[1:])), f"{[round(c, 4) for c in ces]}")
+        check(f"{tag} --swap-search: an accepted swap changes 2b rows (b pairs), a rejected one none",
+              all((int(r["ls_accept"]) == 1) == (int(float(r["mask_flips"])) > 0)
+                  and int(float(r["mask_flips"])) % 2 == 0 for r in rows_s[:-1]),
+              f"{[(r['ls_accept'], r['mask_flips'], r['swap_pairs']) for r in rows_s[:-1]]}")
+
+        # ---- masks.npz: the masked rows of every iteration
+        zm = np.load(out / "gates/masks.npz")
+        mk = zm["masked"]
+        check(f"{tag} masks.npz: one row per iteration, k masked in each; best and last rows == top1 / final",
+              mk.shape == (steps + 1, n) and (mk.sum(1) == k).all()
+              and np.array_equal(~mk[tm["best_iteration"]], z1["g"] == 1) and np.array_equal(~mk[-1], fz["g"] == 1)
+              and np.array_equal(zm["iters"], np.arange(steps + 1)), f"shape {mk.shape}")
+
+        # ---- bagging: fit on a class-stratified subsample of the fitted rows
+        out_b = G.main(base + ["--fit-subsample", "0.5", "--fit-subsample-seed", "7", "--ste-probe", "0.05",
+                               "--lr", "5", "--select-on", "ce", "--steps", "1", "--test-every", "1",
+                               "--wandb-mode", "disabled", "--run-name", "bagging"])
+        sp_b = np.load(out_b / "split.npz")
+        fit_rows, sub_rows = sp_b["val_fit_rows"], sp_b["val_fit_subsample_rows"]
+        want = fit_rows[G.draw_validation(y_all[fit_rows], round(0.5 * len(fit_rows)), 7)]
+        check(f"{tag} --fit-subsample 0.5: half of the fitted rows, the documented stratified draw (seed 7)",
+              np.array_equal(sub_rows, want) and len(sub_rows) == len(fit_rows) // 2
+              and np.array_equal(sp_b["val_holdout_rows"], sp["val_holdout_rows"]),
+              f"{len(sub_rows)} of {len(fit_rows)}")
+        rows_b = list(csv.DictReader(open(out_b / "log.csv")))
+        m_b0 = torch.tensor(~np.load(out_b / "gates/masks.npz")["masked"][0], dtype=torch.float32, device=device)
+        ce_sub = G.evaluate(clf, Xc, yp_t, X_all[torch.as_tensor(sub_rows, device=device)],
+                            torch.as_tensor(y_all[sub_rows], device=device), m_b0, null,
+                            need_grad=False, batch_size=None)[0]
+        check(f"{tag} --fit-subsample: the logged training loss is the CE on the subsample only",
+              abs(float(rows_b[0]["val_ce"]) - ce_sub) < 1e-5, f"{rows_b[0]['val_ce']} vs {ce_sub:.6f}")
+        cfg_b = json.loads((out_b / "config.json").read_text())["validation"]
+        out_b2 = G.main(base + ["--fit-subsample", "0.5", "--init-seed", "7", "--lr", "5", "--steps", "0",
+                                "--test-every", "1", "--wandb-mode", "disabled", "--run-name", "bagging_seed"])
+        check(f"{tag} --fit-subsample: seed defaults to --init-seed; config records it",
+              np.array_equal(np.load(out_b2 / "split.npz")["val_fit_subsample_rows"], sub_rows)
+              and cfg_b["fit_subsample"] == 0.5 and cfg_b["fit_subsample_seed"] == 7
+              and cfg_b["n_fit"] == len(sub_rows))
+
         check(f"{tag} config and W&B: gate, surrogate, init std and seed, select-on, group",
               cfg["gate"] == {"type": "topk", "ste": "sigmoid", "score_init_std": std, "init_seed": seed,
                               "k_remove": k, "select_on": "ce"}

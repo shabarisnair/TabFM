@@ -1,0 +1,10 @@
+# Night round 7: let the mask settle. With a constant step 70-170 masked rows still swap per update
+# at the end and the fitted-row CE hovers at 0.10-0.16 although it touched 0.04-0.07 on gas-drift;
+# a cosine step decay (to 0 at update 300) at alpha 0.05, restarts 0-1; lr 20 at alpha 0.05 (restart 0)
+# <part> <dataset> <R> <ste> <init_std> <lr> <init_seed> [<tag> <extra args...>]
+1 gas-drift 20 identity 1 5 0 probe0.05-cos --ste-probe 0.05 --lr-schedule cosine
+1 url_unique 20 identity 1 5 0 probe0.05-cos --ste-probe 0.05 --lr-schedule cosine
+1 gas-drift 20 identity 1 5 1 probe0.05-cos --ste-probe 0.05 --lr-schedule cosine
+1 url_unique 20 identity 1 5 1 probe0.05-cos --ste-probe 0.05 --lr-schedule cosine
+1 gas-drift 20 identity 1 20 0 probe0.05 --ste-probe 0.05
+1 url_unique 20 identity 1 20 0 probe0.05 --ste-probe 0.05

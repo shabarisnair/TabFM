@@ -1,0 +1,12 @@
+# Night round 6: alpha 0.05 restarts 1-3 (best of 4 vs alpha 0.1); lr 1 and 20 at alpha 0.1 (restart 0)
+# <part> <dataset> <R> <ste> <init_std> <lr> <init_seed> [<tag> <extra args...>]
+1 gas-drift 20 identity 1 5 1 probe0.05 --ste-probe 0.05
+1 gas-drift 20 identity 1 5 2 probe0.05 --ste-probe 0.05
+1 gas-drift 20 identity 1 5 3 probe0.05 --ste-probe 0.05
+1 gas-drift 20 identity 1 1 0 probe0.1 --ste-probe 0.1
+1 gas-drift 20 identity 1 20 0 probe0.1 --ste-probe 0.1
+1 url_unique 20 identity 1 5 1 probe0.05 --ste-probe 0.05
+1 url_unique 20 identity 1 5 2 probe0.05 --ste-probe 0.05
+1 url_unique 20 identity 1 5 3 probe0.05 --ste-probe 0.05
+1 url_unique 20 identity 1 1 0 probe0.1 --ste-probe 0.1
+1 url_unique 20 identity 1 20 0 probe0.1 --ste-probe 0.1

@@ -1,0 +1,12 @@
+# Night round 9: bagging. Each restart fits a different class-stratified 60% of the 400 fitted rows
+# (--fit-subsample 0.6, seed = init seed), so the restarts' overfitting differs and the vote can
+# cancel it; alpha 0.05, cosine step, restarts 0-3 (compare with the unbagged cosine restarts)
+# <part> <dataset> <R> <ste> <init_std> <lr> <init_seed> [<tag> <extra args...>]
+1 gas-drift 20 identity 1 5 0 probe0.05-cos-bag0.6 --ste-probe 0.05 --lr-schedule cosine --fit-subsample 0.6
+1 url_unique 20 identity 1 5 0 probe0.05-cos-bag0.6 --ste-probe 0.05 --lr-schedule cosine --fit-subsample 0.6
+1 gas-drift 20 identity 1 5 1 probe0.05-cos-bag0.6 --ste-probe 0.05 --lr-schedule cosine --fit-subsample 0.6
+1 url_unique 20 identity 1 5 1 probe0.05-cos-bag0.6 --ste-probe 0.05 --lr-schedule cosine --fit-subsample 0.6
+1 gas-drift 20 identity 1 5 2 probe0.05-cos-bag0.6 --ste-probe 0.05 --lr-schedule cosine --fit-subsample 0.6
+1 url_unique 20 identity 1 5 2 probe0.05-cos-bag0.6 --ste-probe 0.05 --lr-schedule cosine --fit-subsample 0.6
+1 gas-drift 20 identity 1 5 3 probe0.05-cos-bag0.6 --ste-probe 0.05 --lr-schedule cosine --fit-subsample 0.6
+1 url_unique 20 identity 1 5 3 probe0.05-cos-bag0.6 --ste-probe 0.05 --lr-schedule cosine --fit-subsample 0.6

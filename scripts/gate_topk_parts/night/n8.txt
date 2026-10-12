@@ -1,0 +1,9 @@
+# Night round 8: cosine step decay at alpha 0.05, restarts 2-3 (with round 7: 4 restarts, so the
+# restarts' masks can vote); then lr 20 at alpha 0.05 (moved here from round 7)
+# <part> <dataset> <R> <ste> <init_std> <lr> <init_seed> [<tag> <extra args...>]
+1 gas-drift 20 identity 1 5 2 probe0.05-cos --ste-probe 0.05 --lr-schedule cosine
+1 url_unique 20 identity 1 5 2 probe0.05-cos --ste-probe 0.05 --lr-schedule cosine
+1 gas-drift 20 identity 1 5 3 probe0.05-cos --ste-probe 0.05 --lr-schedule cosine
+1 url_unique 20 identity 1 5 3 probe0.05-cos --ste-probe 0.05 --lr-schedule cosine
+1 gas-drift 20 identity 1 20 0 probe0.05 --ste-probe 0.05
+1 url_unique 20 identity 1 20 0 probe0.05 --ste-probe 0.05
