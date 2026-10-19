@@ -1,0 +1,8 @@
+url_unique_hub-flip-local_imbalanced_R20_V500s0 grow:pct1:cprior: acc 86.9 prec 0.656 steps 80 (98 s)
+  url_unique_hub-flip-local_imbalanced_R20_V500s1 grow:pct1:cprior: step 72, |T| 3740, poisoned accepted 365/900 (120 s)
+url_unique_hub-flip-local_imbalanced_R20_V500s1 grow:pct1:cprior: acc 84.0 prec 0.540 steps 80 (143 s)
+  url_unique_hub-flip-local_imbalanced_R20_V500s2 grow:pct1:cprior: step 72, |T| 3740, poisoned accepted 234/900 (120 s)
+url_unique_hub-flip-local_imbalanced_R20_V500s2 grow:pct1:cprior: acc 87.8 prec 0.710 steps 80 (142 s)
+students_dropout_hub-flip-local_imbalanced_R20_V500s0 grow:pct1:cprior: acc 79.0 prec 0.592 steps 80 (49 s)
+students_dropout_hub-flip-local_imbalanced_R20_V500s1 grow:pct1:cprior: acc 76.0 prec 0.592 steps 80 (50 s)
+students_dropout_hub-flip-local_imbalanced_R20_V500s2 grow:pct1:cprior: acc 75.6 prec 0.560 steps 80 (49 s)

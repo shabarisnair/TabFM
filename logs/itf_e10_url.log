@@ -1,0 +1,6 @@
+url_unique_hub-flip-local_stratified_R20_V50s0 grow:frac0.1:prior: acc 94.7 prec 0.874 steps 45 (76 s)
+url_unique_hub-flip-local_stratified_R20_V100s0 grow:frac0.1:prior: acc 96.5 prec 0.929 steps 39 (72 s)
+url_unique_hub-flip-local_stratified_R20_V200s0 grow:frac0.1:prior: acc 95.3 prec 0.918 steps 32 (66 s)
+url_unique_hub-flip-local_stratified_R20_V300s0 grow:frac0.1:prior: acc 95.0 prec 0.930 steps 28 (56 s)
+url_unique_hub-flip-local_stratified_R20_V400s0 grow:frac0.1:prior: acc 96.4 prec 0.948 steps 25 (57 s)
+url_unique_hub-flip-local_stratified_R20_V500s0 grow:frac0.1:prior: acc 96.6 prec 0.942 steps 23 (52 s)

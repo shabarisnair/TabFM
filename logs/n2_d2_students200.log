@@ -1,0 +1,7 @@
+students_dropout_hub-flip-local_stratified_R20_V200s0 beam:K1:X1:m50:path: acc 77.8 prec 0.671 steps 45 passes 46 (16 s)
+students_dropout_hub-flip-local_stratified_R20_V200s0 beam:K4:X4:m50:path: acc 77.4 prec 0.645 steps 45 passes 708 (243 s)
+students_dropout_hub-flip-local_stratified_R20_V200s0 beam:K4:X4:m50:entP: acc 77.8 prec 0.648 steps 45 passes 708 (244 s)
+students_dropout_hub-flip-local_stratified_R20_V200s0 beam:K1:X1:m50:hold: acc 77.8 prec 0.654 steps 45 passes 46 (16 s)
+students_dropout_hub-flip-local_stratified_R20_V200s0 beam:K4:X4:m50:hold: acc 78.0 prec 0.670 steps 45 passes 708 (241 s)
+students_dropout_hub-flip-local_stratified_R20_V200s0 beam:K4:X4:m50:holdent: acc 77.2 prec 0.662 steps 45 passes 708 (241 s)
+students_dropout_hub-flip-local_stratified_R20_V200s0 beam:K1:X4:m50:hold: acc 76.2 prec 0.639 steps 45 passes 180 (61 s)

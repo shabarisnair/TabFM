@@ -1,0 +1,24 @@
+tune1 gas-drift_R30_c5_s100__neural: start (n 3970, k 1191, V 30)
+  gas-drift_R30_c5_s100 glc: 16 configs in 64 s; best precision 0.780
+  gas-drift_R30_c5_s100 mwnet: 16 configs in 94 s; best precision 0.128
+  gas-drift_R30_c5_s100 emlc: 16 configs in 154 s; best precision 0.694
+  gas-drift_R30_c5_s100 ieg: 16 configs in 113 s; best precision 0.397
+tune1 gas-drift_R30_c5_s100__neural: done in 428 s
+tune1 url_unique_R30_c5_s101__neural: start (n 3990, k 1197, V 10)
+  url_unique_R30_c5_s101 glc: 16 configs in 55 s; best precision 0.843
+  url_unique_R30_c5_s101 mwnet: 16 configs in 72 s; best precision 0.249
+  url_unique_R30_c5_s101 emlc: 16 configs in 128 s; best precision 0.902
+  url_unique_R30_c5_s101 ieg: 16 configs in 104 s; best precision 0.902
+tune1 url_unique_R30_c5_s101__neural: done in 360 s
+tune1 students_dropout_R20_c1_s101__neural: start (n 2397, k 479, V 3)
+  students_dropout_R20_c1_s101 glc: 16 configs in 29 s; best precision 0.603
+  students_dropout_R20_c1_s101 mwnet: 16 configs in 42 s; best precision 0.380
+  students_dropout_R20_c1_s101 emlc: 16 configs in 72 s; best precision 0.213
+  students_dropout_R20_c1_s101 ieg: 16 configs in 63 s; best precision 0.292
+tune1 students_dropout_R20_c1_s101__neural: done in 206 s
+tune1 students_dropout_R20_c5_s101__neural: start (n 2385, k 477, V 15)
+  students_dropout_R20_c5_s101 glc: 16 configs in 31 s; best precision 0.656
+  students_dropout_R20_c5_s101 mwnet: 16 configs in 42 s; best precision 0.338
+  students_dropout_R20_c5_s101 emlc: 16 configs in 72 s; best precision 0.375
+  students_dropout_R20_c5_s101 ieg: 16 configs in 73 s; best precision 0.319
+tune1 students_dropout_R20_c5_s101__neural: done in 219 s

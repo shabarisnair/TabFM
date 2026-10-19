@@ -1,0 +1,24 @@
+tune1 url_unique_R20_c1_s101__neural: start (n 3998, k 800, V 2)
+  url_unique_R20_c1_s101 glc: 16 configs in 55 s; best precision 0.825
+  url_unique_R20_c1_s101 mwnet: 16 configs in 72 s; best precision 0.390
+  url_unique_R20_c1_s101 emlc: 16 configs in 124 s; best precision 0.716
+  url_unique_R20_c1_s101 ieg: 16 configs in 109 s; best precision 0.855
+tune1 url_unique_R20_c1_s101__neural: done in 360 s
+tune1 url_unique_R20_c1_s102__neural: start (n 3998, k 800, V 2)
+  url_unique_R20_c1_s102 glc: 16 configs in 56 s; best precision 0.731
+  url_unique_R20_c1_s102 mwnet: 16 configs in 74 s; best precision 0.394
+  url_unique_R20_c1_s102 emlc: 16 configs in 122 s; best precision 0.795
+  url_unique_R20_c1_s102 ieg: 16 configs in 103 s; best precision 0.845
+tune1 url_unique_R20_c1_s102__neural: done in 356 s
+tune1 heloc_R20_c3_s101__neural: start (n 3994, k 799, V 6)
+  heloc_R20_c3_s101 glc: 16 configs in 54 s; best precision 0.607
+  heloc_R20_c3_s101 mwnet: 16 configs in 74 s; best precision 0.108
+  heloc_R20_c3_s101 emlc: 16 configs in 93 s; best precision 0.477
+  heloc_R20_c3_s101 ieg: 16 configs in 90 s; best precision 0.507
+tune1 heloc_R20_c3_s101__neural: done in 312 s
+tune1 students_dropout_R30_c1_s101__neural: start (n 2397, k 719, V 3)
+  students_dropout_R30_c1_s101 glc: 16 configs in 27 s; best precision 0.609
+  students_dropout_R30_c1_s101 mwnet: 16 configs in 37 s; best precision 0.509
+  students_dropout_R30_c1_s101 emlc: 16 configs in 61 s; best precision 0.355
+  students_dropout_R30_c1_s101 ieg: 16 configs in 51 s; best precision 0.433
+tune1 students_dropout_R30_c1_s101__neural: done in 176 s

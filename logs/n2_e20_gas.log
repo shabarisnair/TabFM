@@ -1,0 +1,6 @@
+gas-drift_hub-flip-local_stratified_R20_V50s0 beam:K1:X1:p10:path: acc 97.5 prec 0.964 steps 8 passes 9 (16 s)
+  gas-drift_hub-flip-local_stratified_R20_V50s0 beam:K4:X4:p10:vcv: step 6, 85 passes (402 s)
+gas-drift_hub-flip-local_stratified_R20_V50s0 beam:K4:X4:p10:vcv: acc 97.0 prec 0.945 steps 8 passes 112 (682 s)
+gas-drift_hub-flip-local_stratified_R20_V50s0 beam:K4:X4:p10:path: acc 97.8 prec 0.963 steps 8 passes 111 (176 s)
+gas-drift_hub-flip-local_stratified_R20_V50s0 beam:K4:X4:p10:entP: acc 97.9 prec 0.965 steps 8 passes 115 (185 s)
+gas-drift_hub-flip-local_stratified_R20_V50s0 beam:K4:X4:p10:hold: acc 94.6 prec 0.871 steps 8 passes 114 (184 s)

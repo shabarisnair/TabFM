@@ -1,0 +1,2 @@
+gas-drift_R20_c1_s0 fdr: acc 91.7 auc 98.9 ce 0.640 prec 0.788 steps 12 fits 0 (35 s)
+credit-approval_R30_c1_s0 fdr: acc 83.2 auc 91.1 ce 0.373 prec 0.730 steps 2 fits 0 (1 s)

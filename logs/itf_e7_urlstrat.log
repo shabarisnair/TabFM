@@ -1,0 +1,4 @@
+  url_unique_hub-flip-local_stratified_R20_V50s0 grow:pct1:prior:conf0.9: step 63, |T| 3200, poisoned accepted 11/990 (122 s)
+url_unique_hub-flip-local_stratified_R20_V50s0 grow:pct1:prior:conf0.9: acc 95.4 prec 0.883 steps 73 (157 s)
+  url_unique_hub-flip-local_stratified_R20_V100s0 grow:pct1:prior:conf0.9: step 69, |T| 3481, poisoned accepted 14/980 (122 s)
+url_unique_hub-flip-local_stratified_R20_V100s0 grow:pct1:prior:conf0.9: acc 95.3 prec 0.910 steps 78 (150 s)

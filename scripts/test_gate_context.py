@@ -1023,7 +1023,191 @@ def test_topk(device, gpu):
         shutil.rmtree(tmp, ignore_errors=True)
 
 
-SECTIONS = ("rules", "draw", "gate", "gradient", "e2e", "valsplit", "topk")
+# ================================================================ G. attention-weight gate
+def test_attn(device, gpu, S=None):
+    print("\nG. attention-weight gate (--gate attn)")
+    from tabfm_experiments.metrics import multiclass_metrics
+    from tabfm_experiments.sift import HARD_OFF
+
+    # bounded L-inf step: rows at a bound whose step points outwards do not set the scale
+    b = torch.tensor([-1.0, 0.0, -30.0, -5.0])
+    G.pgd_step(b, torch.tensor([1.0, -1.0, 1.0, -2.0]), 0.5, "linf", lo=-30.0, hi=0.0)
+    check("pgd_step with bounds [-30, 0]: largest free change = lr, bounds kept (hand-computed)",
+          torch.allclose(b, torch.tensor([-1.25, 0.0, -30.0, -4.5])), f"{b.tolist()}")
+
+    S = S or setup(device)
+    clf, Xc, yp_t, n = S["clf"], S["Xc"], S["yp_t"], len(S["yc"])
+    Xt, yt_t = S["Xt"][:300], torch.as_tensor(S["yt"][:300], device=device)
+    null = G.capture_null_input(clf, Xc, yp_t)
+    p_none = G.evaluate(clf, Xc, yp_t, Xt, yt_t, None, null, need_grad=False, batch_size=None)[2]
+    zero = torch.zeros(n, device=device)
+    p_zero = G.evaluate_attn(clf, Xc, yp_t, Xt, yt_t, zero, need_grad=False, batch_size=None)[2]
+    d = float(np.abs(p_none - p_zero).max())
+    check("log-weights 0: the same probabilities as no gate", d < 1e-5, f"max|dp| {d:.1e}")
+
+    rng = np.random.default_rng(4)
+    off = torch.as_tensor(rng.permutation(n)[:200], device=device)
+    lw = torch.zeros(n, device=device)
+    lw[off] = HARD_OFF
+    p1 = G.evaluate_attn(clf, Xc, yp_t, Xt, yt_t, lw, need_grad=False, batch_size=None)[2]
+    y_flip = yp_t.clone()
+    y_flip[off] = (y_flip[off] + 1) % S["K"]
+    p2 = G.evaluate_attn(clf, Xc, y_flip, Xt, yt_t, lw, need_grad=False, batch_size=None)[2]
+    d = float(np.abs(p1 - p2).max())
+    check("silenced rows (log-weight -1000) leak no label: relabelling them changes nothing", d < 1e-5,
+          f"max|dp| {d:.1e}")
+    lw = torch.zeros(n, device=device)
+    lw[torch.as_tensor(S["rows"], device=device)] = HARD_OFF
+    yt_all = torch.as_tensor(S["yt"], device=device)
+    pa = G.evaluate_attn(clf, Xc, yp_t, S["Xt"], yt_all, lw, need_grad=False, batch_size=None)[2]
+    keep = torch.as_tensor(np.setdiff1d(np.arange(n), S["rows"]), device=device)
+    pr = G.evaluate(clf, Xc[keep], yp_t[keep], S["Xt"], yt_all, None, null, need_grad=False, batch_size=None)[2]
+    acc_a, acc_r = (multiclass_metrics(p, S["yt"], S["K"])["accuracy"] for p in (pa, pr))
+    check("poisoned rows silenced ~ poisoned rows removed (feature statistics still see them)",
+          abs(acc_a - acc_r) <= 0.01, f"test acc {acc_a:.4f} silenced vs {acc_r:.4f} removed")
+
+    # the gradient of the CE in the log-weights: finite differences
+    Xq, yq = S["Xv"][:200], torch.as_tensor(S["yv"][:200], device=device)
+    b0 = torch.tensor(np.random.default_rng(5).uniform(-3, 0, n), dtype=torch.float32, device=device,
+                      requires_grad=True)
+    _, grad, _ = G.evaluate_attn(clf, Xc, yp_t, Xq, yq, b0, need_grad=True, batch_size=None)
+
+    def L(bv):
+        return G.evaluate_attn(clf, Xc, yp_t, Xq, yq, bv, need_grad=False, batch_size=None)[0]
+
+    bd = b0.detach()
+    fd = (L(bd + 1e-3 * torch.sign(grad)) - L(bd - 1e-3 * torch.sign(grad))) / 2e-3
+    an = float(grad.abs().sum())
+    check("directional derivative along sign(grad): finite diff == autograd", abs(fd - an) / an < 0.02,
+          f"fd {fd:.5e}  autograd {an:.5e}")
+    for i in torch.argsort(grad.abs(), descending=True)[:3].tolist():
+        e = torch.zeros(n, device=device)
+        e[i] = 1e-2
+        fd = (L(bd + e) - L(bd - e)) / 2e-2
+        rel = abs(fd - float(grad[i])) / abs(float(grad[i]))
+        check(f"d CE / d log-weight[{i}]: finite diff (h = 1e-2) == autograd", rel < 0.02,
+              f"fd {fd:.4e}  autograd {float(grad[i]):.4e}  rel {rel:.1e}")
+    _, grad_c, _ = G.evaluate_attn(clf, Xc, yp_t, Xq, yq, b0, need_grad=True, batch_size=80)
+    rel = float((grad_c - grad).abs().max() / grad.abs().max())
+    check("chunked (80/80/40) gradient == unchunked gradient", rel < 1e-3, f"rel max diff {rel:.1e}")
+
+    tmp = Path(tempfile.mkdtemp(prefix="gate_attn_test_"))
+    try:
+        base = ["--gpu", gpu, "--row-percent", "20", "--out", str(tmp), "--val-from-context", "50",
+                "--val-holdout", "0.2", "--wandb-mode", "disabled"]
+        try:
+            G.main(base + ["--gate", "attn", "--optimizer", "adam", "--steps", "0"])
+            refused = None
+        except SystemExit as e:
+            refused = e.code
+        check("--gate attn refused with Adam", isinstance(refused, str), f"{refused!r}")
+        lr, steps = 0.5, 3
+        out = G.main(base + ["--gate", "attn", "--lr", str(lr), "--steps", str(steps), "--test-every", "1",
+                             "--select-on", "ce", "--run-name", "attn"])
+        rows = list(csv.DictReader(open(out / "log.csv")))
+        # from all-zero log-weights the largest free row moves down by exactly lr; later a
+        # row moving up can be stopped by the bound 0, so a step never exceeds lr
+        check("attn: L-inf step (first = lr, none larger); weights stay in (0, 1]",
+              abs(float(rows[0]["max_abs_dg"]) - lr) < 1e-5
+              and all(float(r["max_abs_dg"]) <= lr + 1e-5 for r in rows[:-1])
+              and all(0 < float(r["g_min"]) <= float(r["g_mean"]) <= 1 for r in rows),
+              f"{[r['max_abs_dg'] for r in rows[:-1]]}")
+        z1 = np.load(out / "gates/top1.npz")
+        check("attn: top1.npz keeps the log-weights (scores, in [floor, 0]) and the weights g = exp(scores)",
+              float(z1["scores"].max()) <= 0 and float(z1["scores"].min()) >= -30
+              and np.allclose(z1["g"], np.exp(z1["scores"]), rtol=1e-6, atol=1e-7))
+        zc = np.load(out / "gates/checkpoints.npz")
+        check("attn: checkpoints.npz = the weights at every test iteration, matching the log's g_mean",
+              np.array_equal(zc["iters"], np.arange(steps + 1))
+              and all(abs(float(zc["g"][i].mean()) - float(rows[i]["g_mean"])) < 1e-6 for i in range(steps + 1)))
+        sp, pz = np.load(out / "split.npz"), np.load(out / "poison.npz")
+        X_all, _ = G.load(G.find_split("gas-drift", "context_"), device)
+        Xc2 = X_all[torch.as_tensor(sp["context_rows"], device=device)]
+        yp2 = torch.tensor(pz["y_poisoned"], dtype=torch.float32, device=device)
+        p = G.evaluate_attn(clf, Xc2, yp2, S["Xt"], yt_all, torch.as_tensor(z1["scores"], device=device),
+                            need_grad=False, batch_size=None)[2]
+        tp = np.load(out / "test_probs.npz")
+        d = float(np.abs(p - tp["poisoned_best_gate_soft"]).max())
+        check("attn: the best weights re-scored reproduce the saved test probabilities", d < 1e-5, f"max|dp| {d:.1e}")
+        cfg = json.loads((out / "config.json").read_text())
+        check("attn: config gate", cfg["gate"] == {"type": "attn", "select_on": "ce", "attn_floor": -30.0},
+              f"{cfg['gate']}")
+        # ---- starting from the clean rows' label plausibility (the V-filter)
+        from tabfm_experiments.runtime import evaluate_context
+        X_all, y_all = G.load(G.find_split("gas-drift", "context_"), device)
+        sel_rows = lambda r: X_all[torch.as_tensor(r, device=device)]  # noqa: E731
+        Xf, yf = sel_rows(sp["val_fit_rows"]), y_all[sp["val_fit_rows"]]
+        y_given = pz["y_poisoned"].astype(int)
+        _, _, pv = evaluate_context(clf, Xf, torch.as_tensor(yf, dtype=torch.float32, device=device), Xc2,
+                                    torch.as_tensor(y_given, device=device), need_grad=False)
+        s_ref = np.log(np.clip(pv.cpu().numpy()[np.arange(len(y_given)), y_given], 1e-12, 1.0))
+        s_v = G.vfilter_scores(clf, Xf, yf, Xc2, y_given, batch_size=None)
+        check("vfilter_scores == log p(given label) from evaluate_context with the fitted rows as context",
+              float(np.abs(s_v - s_ref).max()) < 1e-5, f"max diff {float(np.abs(s_v - s_ref).max()):.1e}")
+        out_v = G.main(base + ["--gate", "attn", "--attn-init", "vfilter", "--attn-init-temp", "0.5", "--lr", "0.5",
+                               "--steps", "1", "--test-every", "1", "--run-name", "attn_vfilter"])
+        b0 = np.clip(0.5 * (s_ref - s_ref.max()), -30.0, 0.0)
+        zc0 = np.load(out_v / "gates/checkpoints.npz")["g"][0]
+        check("attn --attn-init vfilter: iteration 0 weights = exp(clip(temp * (s - max s), floor, 0))",
+              np.allclose(zc0, np.exp(b0), rtol=1e-4, atol=1e-6), f"max diff {float(np.abs(zc0 - np.exp(b0)).max()):.1e}")
+        out_t = G.main(base + ["--gate", "topk", "--score-init", "vfilter", "--score-init-std", "0", "--ste-probe", "0.05",
+                               "--lr", "5", "--select-on", "ce", "--steps", "1", "--test-every", "1",
+                               "--run-name", "topk_vfilter"])
+        rows_t = list(csv.DictReader(open(out_t / "log.csv")))
+        k_t = int(json.loads((out_t / "config.json").read_text())["k_remove"])
+        pois_t = np.zeros(len(y_given), bool)
+        pois_t[pz["poisoned_rows"]] = True
+        want = pois_t[np.argsort(s_ref, kind="stable")[:k_t]].mean()
+        check("topk --score-init vfilter: iteration 0 masks the k least plausible labels (precision recomputed)",
+              abs(float(rows_t[0]["precision_at_R"]) - want) < 1e-9, f"{rows_t[0]['precision_at_R']} vs {want:.4f}")
+        out_s = G.main(base + ["--steps", "2", "--test-every", "1", "--run-name", "soft_ckpt"])
+        rows_s = list(csv.DictReader(open(out_s / "log.csv")))
+        zs = np.load(out_s / "gates/checkpoints.npz")
+        check("soft: checkpoints.npz = the gates at every test iteration, matching the log's g_mean",
+              np.array_equal(zs["iters"], np.arange(3))
+              and all(abs(float(zs["g"][i].mean()) - float(rows_s[i]["g_mean"])) < 1e-6 for i in range(3)))
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+# =================================================== H. the form of the clean validation rows
+def test_forms(device, gpu):
+    print("\nH. the form of the clean validation rows (--val-draw)")
+    from tabfm_experiments.multiclass_attacks import standardise
+    X, y = G.load(G.find_split("students_dropout", "context_"), device)
+    n_v, seed = 200, 3
+    rows, anchor = G.draw_validation_form(X, y, n_v, seed, "stratified")
+    check("stratified == draw_validation", anchor is None and np.array_equal(rows, G.draw_validation(y, n_v, seed)))
+    rows, anchor = G.draw_validation_form(X, y, n_v, seed, "local")
+    Z = standardise(X).cpu().numpy()
+    d = np.sqrt(((Z - Z[anchor]) ** 2).sum(1))
+    quota = np.bincount(y[G.draw_validation(y, n_v, seed)], minlength=3)
+    ok = all(set(rows[y[rows] == c]) == set(np.flatnonzero(y == c)[np.argsort(d[y == c], kind="stable")[:quota[c]]])
+             for c in range(3))
+    check("local: each class's rows are its nearest to the anchor, as many as its stratified quota",
+          ok and np.array_equal(np.bincount(y[rows], minlength=3), quota), f"anchor {anchor}")
+    minor = int(np.argmin(np.bincount(y, minlength=3)))
+    rows, _ = G.draw_validation_form(X, y, n_v, seed, "imbalanced", minor, 6)
+    strat = G.draw_validation(y, n_v, seed)
+    check("imbalanced: the minor class has exactly 6 rows, n rows in total, the stratified others kept",
+          int((y[rows] == minor).sum()) == 6 and len(rows) == n_v and len(np.unique(rows)) == n_v
+          and set(strat[y[strat] != minor]) <= set(rows))
+    tmp = Path(tempfile.mkdtemp(prefix="gate_forms_test_"))
+    try:
+        out = G.main(["--gpu", gpu, "--dataset", "students_dropout", "--row-percent", "20", "--out", str(tmp),
+                      "--val-from-context", "200", "--val-seed", "3", "--val-holdout", "0.2", "--val-draw", "imbalanced",
+                      "--val-minor-n", "6", "--steps", "0", "--test-every", "1", "--wandb-mode", "disabled",
+                      "--run-name", "forms"])
+        sp = np.load(out / "split.npz")
+        cfg = json.loads((out / "config.json").read_text())["validation"]
+        check("gate_context --val-draw imbalanced: the run's rows == draw_validation_form; recorded",
+              np.array_equal(sp["val_rows"], rows) and str(sp["val_draw"]) == "imbalanced"
+              and int(sp["val_minor_class"]) == minor and cfg["form"] == "imbalanced" and cfg["minor_n"] == 6)
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+SECTIONS = ("rules", "draw", "gate", "gradient", "e2e", "valsplit", "topk", "attn", "forms")
 
 
 def main(argv=None):
@@ -1051,6 +1235,10 @@ def main(argv=None):
         test_val_split(device, a.gpu)
     if "topk" in a.sections:
         test_topk(device, a.gpu)
+    if "attn" in a.sections:
+        test_attn(device, a.gpu)
+    if "forms" in a.sections:
+        test_forms(device, a.gpu)
     print(f"\n{'ALL PASSED' if not FAILS else f'{len(FAILS)} FAILED: {FAILS}'}")
     return 1 if FAILS else 0
 

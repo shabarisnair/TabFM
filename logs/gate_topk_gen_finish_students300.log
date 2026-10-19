@@ -1,0 +1,9 @@
+1 draws x 4 restarts on GPU(s) 1; results in /home/ssn899/Desktop/TabFM/results/gate_topk_gen; W&B online, project TFM_experiments, group gate-topk-gen
+[2026-10-12 20:56:28] START GPU 1  gate-topk_students_dropout_hub-flip-local_R20_V300s0_H20_identity_std1_lr5_init0_probe0.05_it300
+[2026-10-12 21:06:32] DONE  GPU 1  gate-topk_students_dropout_hub-flip-local_R20_V300s0_H20_identity_std1_lr5_init0_probe0.05_it300
+[skip] gate-topk_students_dropout_hub-flip-local_R20_V300s0_H20_identity_std1_lr5_init1_probe0.05_it300 (already done)
+[skip] gate-topk_students_dropout_hub-flip-local_R20_V300s0_H20_identity_std1_lr5_init2_probe0.05_it300 (already done)
+[skip] gate-topk_students_dropout_hub-flip-local_R20_V300s0_H20_identity_std1_lr5_init3_probe0.05_it300 (already done)
+[2026-10-12 21:06:32] START GPU 1  gate-topk-vote4_students_dropout_hub-flip-local_R20_V300s0_H20_identity_std1_lr5_probe0.05_it300
+[2026-10-12 21:06:42] DONE  GPU 1  gate-topk-vote4_students_dropout_hub-flip-local_R20_V300s0_H20_identity_std1_lr5_probe0.05_it300
+ALL REQUESTED RUNS FINISHED

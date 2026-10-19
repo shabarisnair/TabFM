@@ -1,0 +1,360 @@
+tune1 gas-drift_R20_c1_s100__free: start (n 3994, k 799, V 6)
+  gas-drift_R20_c1_s100 knn_sanitize: 80 configs in 1 s; best precision 0.278
+  gas-drift_R20_c1_s100 label_spread: 120 configs in 8 s; best precision 0.518
+  gas-drift_R20_c1_s100 knn_shapley: 12 configs in 0 s; best precision 0.365
+  gas-drift_R20_c1_s100 data_oob: 16 configs in 39 s; best precision 0.290
+  gas-drift_R20_c1_s100 cleanlab: 9 configs in 52 s; best precision 0.603
+  gas-drift_R20_c1_s100 simifeat: 64 configs in 14 s; best precision 0.305
+tune1 gas-drift_R20_c1_s100__free: done in 117 s
+tune1 gas-drift_R20_c1_s101__free: start (n 3994, k 799, V 6)
+  gas-drift_R20_c1_s101 knn_sanitize: 80 configs in 2 s; best precision 0.268
+  gas-drift_R20_c1_s101 label_spread: 120 configs in 14 s; best precision 0.516
+  gas-drift_R20_c1_s101 knn_shapley: 12 configs in 0 s; best precision 0.272
+  gas-drift_R20_c1_s101 data_oob: 16 configs in 37 s; best precision 0.294
+  gas-drift_R20_c1_s101 cleanlab: 9 configs in 51 s; best precision 0.602
+  gas-drift_R20_c1_s101 simifeat: 64 configs in 13 s; best precision 0.298
+tune1 gas-drift_R20_c1_s101__free: done in 118 s
+tune1 gas-drift_R20_c1_s102__free: start (n 3994, k 799, V 6)
+  gas-drift_R20_c1_s102 knn_sanitize: 80 configs in 1 s; best precision 0.287
+  gas-drift_R20_c1_s102 label_spread: 120 configs in 13 s; best precision 0.549
+  gas-drift_R20_c1_s102 knn_shapley: 12 configs in 0 s; best precision 0.517
+  gas-drift_R20_c1_s102 data_oob: 16 configs in 43 s; best precision 0.297
+  gas-drift_R20_c1_s102 cleanlab: 9 configs in 63 s; best precision 0.610
+  gas-drift_R20_c1_s102 simifeat: 64 configs in 15 s; best precision 0.304
+tune1 gas-drift_R20_c1_s102__free: done in 136 s
+tune1 gas-drift_R20_c3_s101__free: start (n 3982, k 796, V 18)
+  gas-drift_R20_c3_s101 knn_sanitize: 80 configs in 2 s; best precision 0.270
+  gas-drift_R20_c3_s101 label_spread: 120 configs in 14 s; best precision 0.665
+  gas-drift_R20_c3_s101 knn_shapley: 12 configs in 0 s; best precision 0.575
+  gas-drift_R20_c3_s101 data_oob: 16 configs in 44 s; best precision 0.294
+  gas-drift_R20_c3_s101 cleanlab: 9 configs in 62 s; best precision 0.609
+  gas-drift_R20_c3_s101 simifeat: 64 configs in 13 s; best precision 0.300
+tune1 gas-drift_R20_c3_s101__free: done in 136 s
+tune1 gas-drift_R20_c5_s100__free: start (n 3970, k 794, V 30)
+  gas-drift_R20_c5_s100 knn_sanitize: 80 configs in 1 s; best precision 0.283
+  gas-drift_R20_c5_s100 label_spread: 120 configs in 13 s; best precision 0.640
+  gas-drift_R20_c5_s100 knn_shapley: 12 configs in 0 s; best precision 0.489
+  gas-drift_R20_c5_s100 data_oob: 16 configs in 44 s; best precision 0.295
+  gas-drift_R20_c5_s100 cleanlab: 9 configs in 59 s; best precision 0.612
+  gas-drift_R20_c5_s100 simifeat: 64 configs in 13 s; best precision 0.305
+tune1 gas-drift_R20_c5_s100__free: done in 132 s
+tune1 gas-drift_R20_c5_s102__free: start (n 3970, k 794, V 30)
+  gas-drift_R20_c5_s102 knn_sanitize: 80 configs in 2 s; best precision 0.285
+  gas-drift_R20_c5_s102 label_spread: 120 configs in 13 s; best precision 0.637
+  gas-drift_R20_c5_s102 knn_shapley: 12 configs in 0 s; best precision 0.631
+  gas-drift_R20_c5_s102 data_oob: 16 configs in 43 s; best precision 0.296
+  gas-drift_R20_c5_s102 cleanlab: 9 configs in 62 s; best precision 0.623
+  gas-drift_R20_c5_s102 simifeat: 64 configs in 14 s; best precision 0.304
+tune1 gas-drift_R20_c5_s102__free: done in 134 s
+tune1 gas-drift_R30_c1_s101__free: start (n 3994, k 1198, V 6)
+  gas-drift_R30_c1_s101 knn_sanitize: 80 configs in 2 s; best precision 0.386
+  gas-drift_R30_c1_s101 label_spread: 120 configs in 13 s; best precision 0.629
+  gas-drift_R30_c1_s101 knn_shapley: 12 configs in 0 s; best precision 0.419
+  gas-drift_R30_c1_s101 data_oob: 16 configs in 44 s; best precision 0.369
+  gas-drift_R30_c1_s101 cleanlab: 9 configs in 62 s; best precision 0.606
+  gas-drift_R30_c1_s101 simifeat: 64 configs in 13 s; best precision 0.395
+tune1 gas-drift_R30_c1_s101__free: done in 135 s
+tune1 gas-drift_R30_c3_s100__free: start (n 3982, k 1195, V 18)
+  gas-drift_R30_c3_s100 knn_sanitize: 80 configs in 1 s; best precision 0.388
+  gas-drift_R30_c3_s100 label_spread: 120 configs in 13 s; best precision 0.659
+  gas-drift_R30_c3_s100 knn_shapley: 12 configs in 0 s; best precision 0.468
+  gas-drift_R30_c3_s100 data_oob: 16 configs in 43 s; best precision 0.373
+  gas-drift_R30_c3_s100 cleanlab: 9 configs in 63 s; best precision 0.602
+  gas-drift_R30_c3_s100 simifeat: 64 configs in 13 s; best precision 0.394
+tune1 gas-drift_R30_c3_s100__free: done in 135 s
+tune1 gas-drift_R30_c3_s102__free: start (n 3982, k 1195, V 18)
+  gas-drift_R30_c3_s102 knn_sanitize: 80 configs in 2 s; best precision 0.392
+  gas-drift_R30_c3_s102 label_spread: 120 configs in 13 s; best precision 0.578
+  gas-drift_R30_c3_s102 knn_shapley: 12 configs in 0 s; best precision 0.617
+  gas-drift_R30_c3_s102 data_oob: 16 configs in 43 s; best precision 0.366
+  gas-drift_R30_c3_s102 cleanlab: 9 configs in 63 s; best precision 0.610
+  gas-drift_R30_c3_s102 simifeat: 64 configs in 13 s; best precision 0.396
+tune1 gas-drift_R30_c3_s102__free: done in 137 s
+tune1 gas-drift_R30_c5_s101__free: start (n 3970, k 1191, V 30)
+  gas-drift_R30_c5_s101 knn_sanitize: 80 configs in 2 s; best precision 0.389
+  gas-drift_R30_c5_s101 label_spread: 120 configs in 13 s; best precision 0.664
+  gas-drift_R30_c5_s101 knn_shapley: 12 configs in 0 s; best precision 0.707
+  gas-drift_R30_c5_s101 data_oob: 16 configs in 43 s; best precision 0.382
+  gas-drift_R30_c5_s101 cleanlab: 9 configs in 61 s; best precision 0.610
+  gas-drift_R30_c5_s101 simifeat: 64 configs in 12 s; best precision 0.400
+tune1 gas-drift_R30_c5_s101__free: done in 132 s
+tune1 url_unique_R20_c1_s100__free: start (n 3998, k 800, V 2)
+  url_unique_R20_c1_s100 knn_sanitize: 80 configs in 1 s; best precision 0.188
+  url_unique_R20_c1_s100 label_spread: 120 configs in 11 s; best precision 0.797
+  url_unique_R20_c1_s100 knn_shapley: 12 configs in 0 s; best precision 0.728
+  url_unique_R20_c1_s100 data_oob: 16 configs in 9 s; best precision 0.304
+  url_unique_R20_c1_s100 cleanlab: 9 configs in 44 s; best precision 0.434
+  url_unique_R20_c1_s100 simifeat: 64 configs in 13 s; best precision 0.268
+tune1 url_unique_R20_c1_s100__free: done in 79 s
+tune1 url_unique_R20_c1_s102__free: start (n 3998, k 800, V 2)
+  url_unique_R20_c1_s102 knn_sanitize: 80 configs in 1 s; best precision 0.188
+  url_unique_R20_c1_s102 label_spread: 120 configs in 12 s; best precision 0.731
+  url_unique_R20_c1_s102 knn_shapley: 12 configs in 0 s; best precision 0.562
+  url_unique_R20_c1_s102 data_oob: 16 configs in 7 s; best precision 0.296
+  url_unique_R20_c1_s102 cleanlab: 9 configs in 39 s; best precision 0.430
+  url_unique_R20_c1_s102 simifeat: 64 configs in 13 s; best precision 0.246
+tune1 url_unique_R20_c1_s102__free: done in 74 s
+tune1 url_unique_R20_c3_s101__free: start (n 3994, k 799, V 6)
+  url_unique_R20_c3_s101 knn_sanitize: 80 configs in 1 s; best precision 0.188
+  url_unique_R20_c3_s101 label_spread: 120 configs in 12 s; best precision 0.746
+  url_unique_R20_c3_s101 knn_shapley: 12 configs in 0 s; best precision 0.721
+  url_unique_R20_c3_s101 data_oob: 16 configs in 7 s; best precision 0.299
+  url_unique_R20_c3_s101 cleanlab: 9 configs in 37 s; best precision 0.432
+  url_unique_R20_c3_s101 simifeat: 64 configs in 13 s; best precision 0.267
+tune1 url_unique_R20_c3_s101__free: done in 71 s
+tune1 url_unique_R20_c5_s100__free: start (n 3990, k 798, V 10)
+  url_unique_R20_c5_s100 knn_sanitize: 80 configs in 1 s; best precision 0.188
+  url_unique_R20_c5_s100 label_spread: 120 configs in 12 s; best precision 0.827
+  url_unique_R20_c5_s100 knn_shapley: 12 configs in 0 s; best precision 0.694
+  url_unique_R20_c5_s100 data_oob: 16 configs in 7 s; best precision 0.298
+  url_unique_R20_c5_s100 cleanlab: 9 configs in 35 s; best precision 0.440
+  url_unique_R20_c5_s100 simifeat: 64 configs in 13 s; best precision 0.266
+tune1 url_unique_R20_c5_s100__free: done in 69 s
+tune1 url_unique_R20_c5_s102__free: start (n 3990, k 798, V 10)
+  url_unique_R20_c5_s102 knn_sanitize: 80 configs in 1 s; best precision 0.187
+  url_unique_R20_c5_s102 label_spread: 120 configs in 12 s; best precision 0.866
+  url_unique_R20_c5_s102 knn_shapley: 12 configs in 0 s; best precision 0.731
+  url_unique_R20_c5_s102 data_oob: 16 configs in 7 s; best precision 0.302
+  url_unique_R20_c5_s102 cleanlab: 9 configs in 35 s; best precision 0.432
+  url_unique_R20_c5_s102 simifeat: 64 configs in 13 s; best precision 0.246
+tune1 url_unique_R20_c5_s102__free: done in 70 s
+tune1 url_unique_R30_c1_s101__free: start (n 3998, k 1199, V 2)
+  url_unique_R30_c1_s101 knn_sanitize: 80 configs in 1 s; best precision 0.162
+  url_unique_R30_c1_s101 label_spread: 120 configs in 12 s; best precision 0.715
+  url_unique_R30_c1_s101 knn_shapley: 12 configs in 0 s; best precision 0.741
+  url_unique_R30_c1_s101 data_oob: 16 configs in 7 s; best precision 0.355
+  url_unique_R30_c1_s101 cleanlab: 9 configs in 35 s; best precision 0.437
+  url_unique_R30_c1_s101 simifeat: 64 configs in 13 s; best precision 0.240
+tune1 url_unique_R30_c1_s101__free: done in 69 s
+tune1 url_unique_R30_c3_s100__free: start (n 3994, k 1198, V 6)
+  url_unique_R30_c3_s100 knn_sanitize: 80 configs in 1 s; best precision 0.165
+  url_unique_R30_c3_s100 label_spread: 120 configs in 12 s; best precision 0.849
+  url_unique_R30_c3_s100 knn_shapley: 12 configs in 0 s; best precision 0.767
+  url_unique_R30_c3_s100 data_oob: 16 configs in 7 s; best precision 0.350
+  url_unique_R30_c3_s100 cleanlab: 9 configs in 35 s; best precision 0.442
+  url_unique_R30_c3_s100 simifeat: 64 configs in 13 s; best precision 0.247
+tune1 url_unique_R30_c3_s100__free: done in 70 s
+tune1 url_unique_R30_c3_s102__free: start (n 3994, k 1198, V 6)
+  url_unique_R30_c3_s102 knn_sanitize: 80 configs in 1 s; best precision 0.163
+  url_unique_R30_c3_s102 label_spread: 120 configs in 12 s; best precision 0.800
+  url_unique_R30_c3_s102 knn_shapley: 12 configs in 0 s; best precision 0.725
+  url_unique_R30_c3_s102 data_oob: 16 configs in 7 s; best precision 0.356
+  url_unique_R30_c3_s102 cleanlab: 9 configs in 35 s; best precision 0.447
+  url_unique_R30_c3_s102 simifeat: 64 configs in 13 s; best precision 0.238
+tune1 url_unique_R30_c3_s102__free: done in 69 s
+tune1 url_unique_R30_c5_s101__free: start (n 3990, k 1197, V 10)
+  url_unique_R30_c5_s101 knn_sanitize: 80 configs in 2 s; best precision 0.163
+  url_unique_R30_c5_s101 label_spread: 120 configs in 12 s; best precision 0.836
+  url_unique_R30_c5_s101 knn_shapley: 12 configs in 0 s; best precision 0.724
+  url_unique_R30_c5_s101 data_oob: 16 configs in 7 s; best precision 0.355
+  url_unique_R30_c5_s101 cleanlab: 9 configs in 36 s; best precision 0.442
+  url_unique_R30_c5_s101 simifeat: 64 configs in 13 s; best precision 0.240
+tune1 url_unique_R30_c5_s101__free: done in 71 s
+tune1 heloc_R20_c1_s100__free: start (n 3998, k 800, V 2)
+  heloc_R20_c1_s100 knn_sanitize: 80 configs in 1 s; best precision 0.200
+  heloc_R20_c1_s100 label_spread: 120 configs in 12 s; best precision 0.517
+  heloc_R20_c1_s100 knn_shapley: 12 configs in 0 s; best precision 0.405
+  heloc_R20_c1_s100 data_oob: 16 configs in 6 s; best precision 0.284
+  heloc_R20_c1_s100 cleanlab: 9 configs in 31 s; best precision 0.279
+  heloc_R20_c1_s100 simifeat: 64 configs in 14 s; best precision 0.221
+tune1 heloc_R20_c1_s100__free: done in 65 s
+tune1 heloc_R20_c1_s102__free: start (n 3998, k 800, V 2)
+  heloc_R20_c1_s102 knn_sanitize: 80 configs in 1 s; best precision 0.199
+  heloc_R20_c1_s102 label_spread: 120 configs in 13 s; best precision 0.374
+  heloc_R20_c1_s102 knn_shapley: 12 configs in 0 s; best precision 0.360
+  heloc_R20_c1_s102 data_oob: 16 configs in 6 s; best precision 0.291
+  heloc_R20_c1_s102 cleanlab: 9 configs in 31 s; best precision 0.280
+  heloc_R20_c1_s102 simifeat: 64 configs in 13 s; best precision 0.219
+tune1 heloc_R20_c1_s102__free: done in 64 s
+tune1 heloc_R20_c3_s101__free: start (n 3994, k 799, V 6)
+  heloc_R20_c3_s101 knn_sanitize: 80 configs in 1 s; best precision 0.203
+  heloc_R20_c3_s101 label_spread: 120 configs in 12 s; best precision 0.569
+  heloc_R20_c3_s101 knn_shapley: 12 configs in 0 s; best precision 0.350
+  heloc_R20_c3_s101 data_oob: 16 configs in 5 s; best precision 0.285
+  heloc_R20_c3_s101 cleanlab: 9 configs in 31 s; best precision 0.274
+  heloc_R20_c3_s101 simifeat: 64 configs in 13 s; best precision 0.218
+tune1 heloc_R20_c3_s101__free: done in 64 s
+tune1 heloc_R20_c5_s100__free: start (n 3990, k 798, V 10)
+  heloc_R20_c5_s100 knn_sanitize: 80 configs in 1 s; best precision 0.201
+  heloc_R20_c5_s100 label_spread: 120 configs in 12 s; best precision 0.625
+  heloc_R20_c5_s100 knn_shapley: 12 configs in 0 s; best precision 0.539
+  heloc_R20_c5_s100 data_oob: 16 configs in 6 s; best precision 0.279
+  heloc_R20_c5_s100 cleanlab: 9 configs in 31 s; best precision 0.274
+  heloc_R20_c5_s100 simifeat: 64 configs in 13 s; best precision 0.223
+tune1 heloc_R20_c5_s100__free: done in 63 s
+tune1 heloc_R20_c5_s102__free: start (n 3990, k 798, V 10)
+  heloc_R20_c5_s102 knn_sanitize: 80 configs in 1 s; best precision 0.198
+  heloc_R20_c5_s102 label_spread: 120 configs in 12 s; best precision 0.381
+  heloc_R20_c5_s102 knn_shapley: 12 configs in 0 s; best precision 0.492
+  heloc_R20_c5_s102 data_oob: 16 configs in 6 s; best precision 0.286
+  heloc_R20_c5_s102 cleanlab: 9 configs in 31 s; best precision 0.278
+  heloc_R20_c5_s102 simifeat: 64 configs in 13 s; best precision 0.219
+tune1 heloc_R20_c5_s102__free: done in 65 s
+tune1 heloc_R30_c1_s101__free: start (n 3998, k 1199, V 2)
+  heloc_R30_c1_s101 knn_sanitize: 80 configs in 1 s; best precision 0.304
+  heloc_R30_c1_s101 label_spread: 120 configs in 12 s; best precision 0.581
+  heloc_R30_c1_s101 knn_shapley: 12 configs in 0 s; best precision 0.505
+  heloc_R30_c1_s101 data_oob: 16 configs in 6 s; best precision 0.359
+  heloc_R30_c1_s101 cleanlab: 9 configs in 31 s; best precision 0.371
+  heloc_R30_c1_s101 simifeat: 64 configs in 13 s; best precision 0.309
+tune1 heloc_R30_c1_s101__free: done in 64 s
+tune1 heloc_R30_c3_s100__free: start (n 3994, k 1198, V 6)
+  heloc_R30_c3_s100 knn_sanitize: 80 configs in 1 s; best precision 0.308
+  heloc_R30_c3_s100 label_spread: 120 configs in 12 s; best precision 0.600
+  heloc_R30_c3_s100 knn_shapley: 12 configs in 0 s; best precision 0.623
+  heloc_R30_c3_s100 data_oob: 16 configs in 6 s; best precision 0.363
+  heloc_R30_c3_s100 cleanlab: 9 configs in 33 s; best precision 0.374
+  heloc_R30_c3_s100 simifeat: 64 configs in 13 s; best precision 0.316
+tune1 heloc_R30_c3_s100__free: done in 66 s
+tune1 heloc_R30_c3_s102__free: start (n 3994, k 1198, V 6)
+  heloc_R30_c3_s102 knn_sanitize: 80 configs in 1 s; best precision 0.302
+  heloc_R30_c3_s102 label_spread: 120 configs in 12 s; best precision 0.478
+  heloc_R30_c3_s102 knn_shapley: 12 configs in 0 s; best precision 0.578
+  heloc_R30_c3_s102 data_oob: 16 configs in 6 s; best precision 0.356
+  heloc_R30_c3_s102 cleanlab: 9 configs in 31 s; best precision 0.375
+  heloc_R30_c3_s102 simifeat: 64 configs in 13 s; best precision 0.317
+tune1 heloc_R30_c3_s102__free: done in 64 s
+tune1 heloc_R30_c5_s101__free: start (n 3990, k 1197, V 10)
+  heloc_R30_c5_s101 knn_sanitize: 80 configs in 1 s; best precision 0.296
+  heloc_R30_c5_s101 label_spread: 120 configs in 12 s; best precision 0.472
+  heloc_R30_c5_s101 knn_shapley: 12 configs in 0 s; best precision 0.419
+  heloc_R30_c5_s101 data_oob: 16 configs in 6 s; best precision 0.354
+  heloc_R30_c5_s101 cleanlab: 9 configs in 31 s; best precision 0.374
+  heloc_R30_c5_s101 simifeat: 64 configs in 13 s; best precision 0.309
+tune1 heloc_R30_c5_s101__free: done in 64 s
+tune1 students_dropout_R20_c1_s100__free: start (n 2397, k 479, V 3)
+  students_dropout_R20_c1_s100 knn_sanitize: 80 configs in 1 s; best precision 0.311
+  students_dropout_R20_c1_s100 label_spread: 120 configs in 8 s; best precision 0.476
+  students_dropout_R20_c1_s100 knn_shapley: 12 configs in 0 s; best precision 0.443
+  students_dropout_R20_c1_s100 data_oob: 16 configs in 4 s; best precision 0.328
+  students_dropout_R20_c1_s100 cleanlab: 9 configs in 34 s; best precision 0.328
+  students_dropout_R20_c1_s100 simifeat: 64 configs in 13 s; best precision 0.223
+tune1 students_dropout_R20_c1_s100__free: done in 61 s
+tune1 students_dropout_R20_c1_s102__free: start (n 2397, k 479, V 3)
+  students_dropout_R20_c1_s102 knn_sanitize: 80 configs in 1 s; best precision 0.303
+  students_dropout_R20_c1_s102 label_spread: 120 configs in 8 s; best precision 0.455
+  students_dropout_R20_c1_s102 knn_shapley: 12 configs in 0 s; best precision 0.344
+  students_dropout_R20_c1_s102 data_oob: 16 configs in 5 s; best precision 0.322
+  students_dropout_R20_c1_s102 cleanlab: 9 configs in 36 s; best precision 0.342
+  students_dropout_R20_c1_s102 simifeat: 64 configs in 13 s; best precision 0.209
+tune1 students_dropout_R20_c1_s102__free: done in 64 s
+tune1 students_dropout_R20_c3_s101__free: start (n 2391, k 478, V 9)
+  students_dropout_R20_c3_s101 knn_sanitize: 80 configs in 1 s; best precision 0.314
+  students_dropout_R20_c3_s101 label_spread: 120 configs in 8 s; best precision 0.452
+  students_dropout_R20_c3_s101 knn_shapley: 12 configs in 0 s; best precision 0.377
+  students_dropout_R20_c3_s101 data_oob: 16 configs in 4 s; best precision 0.322
+  students_dropout_R20_c3_s101 cleanlab: 9 configs in 36 s; best precision 0.351
+  students_dropout_R20_c3_s101 simifeat: 64 configs in 12 s; best precision 0.222
+tune1 students_dropout_R20_c3_s101__free: done in 62 s
+tune1 students_dropout_R20_c5_s100__free: start (n 2385, k 477, V 15)
+  students_dropout_R20_c5_s100 knn_sanitize: 80 configs in 1 s; best precision 0.310
+  students_dropout_R20_c5_s100 label_spread: 120 configs in 8 s; best precision 0.451
+  students_dropout_R20_c5_s100 knn_shapley: 12 configs in 0 s; best precision 0.449
+  students_dropout_R20_c5_s100 data_oob: 16 configs in 4 s; best precision 0.325
+  students_dropout_R20_c5_s100 cleanlab: 9 configs in 35 s; best precision 0.344
+  students_dropout_R20_c5_s100 simifeat: 64 configs in 13 s; best precision 0.210
+tune1 students_dropout_R20_c5_s100__free: done in 62 s
+tune1 students_dropout_R20_c5_s102__free: start (n 2385, k 477, V 15)
+  students_dropout_R20_c5_s102 knn_sanitize: 80 configs in 1 s; best precision 0.281
+  students_dropout_R20_c5_s102 label_spread: 120 configs in 8 s; best precision 0.482
+  students_dropout_R20_c5_s102 knn_shapley: 12 configs in 0 s; best precision 0.459
+  students_dropout_R20_c5_s102 data_oob: 16 configs in 4 s; best precision 0.327
+  students_dropout_R20_c5_s102 cleanlab: 9 configs in 36 s; best precision 0.346
+  students_dropout_R20_c5_s102 simifeat: 64 configs in 17 s; best precision 0.216
+tune1 students_dropout_R20_c5_s102__free: done in 68 s
+tune1 students_dropout_R30_c1_s101__free: start (n 2397, k 719, V 3)
+  students_dropout_R30_c1_s101 knn_sanitize: 80 configs in 2 s; best precision 0.331
+  students_dropout_R30_c1_s101 label_spread: 120 configs in 10 s; best precision 0.497
+  students_dropout_R30_c1_s101 knn_shapley: 12 configs in 0 s; best precision 0.428
+  students_dropout_R30_c1_s101 data_oob: 16 configs in 4 s; best precision 0.363
+  students_dropout_R30_c1_s101 cleanlab: 9 configs in 36 s; best precision 0.410
+  students_dropout_R30_c1_s101 simifeat: 64 configs in 18 s; best precision 0.306
+tune1 students_dropout_R30_c1_s101__free: done in 71 s
+tune1 students_dropout_R30_c3_s101__free: start (n 2391, k 717, V 9)
+  students_dropout_R30_c3_s101 knn_sanitize: 80 configs in 2 s; best precision 0.354
+  students_dropout_R30_c3_s101 label_spread: 120 configs in 11 s; best precision 0.492
+  students_dropout_R30_c3_s101 knn_shapley: 12 configs in 0 s; best precision 0.484
+  students_dropout_R30_c3_s101 data_oob: 16 configs in 4 s; best precision 0.367
+  students_dropout_R30_c3_s101 cleanlab: 9 configs in 36 s; best precision 0.403
+  students_dropout_R30_c3_s101 simifeat: 64 configs in 19 s; best precision 0.308
+tune1 students_dropout_R30_c3_s101__free: done in 72 s
+tune1 students_dropout_R30_c5_s100__free: start (n 2385, k 716, V 15)
+  students_dropout_R30_c5_s100 knn_sanitize: 80 configs in 2 s; best precision 0.348
+  students_dropout_R30_c5_s100 label_spread: 120 configs in 11 s; best precision 0.522
+  students_dropout_R30_c5_s100 knn_shapley: 12 configs in 0 s; best precision 0.492
+  students_dropout_R30_c5_s100 data_oob: 16 configs in 5 s; best precision 0.365
+  students_dropout_R30_c5_s100 cleanlab: 9 configs in 36 s; best precision 0.416
+  students_dropout_R30_c5_s100 simifeat: 64 configs in 19 s; best precision 0.300
+tune1 students_dropout_R30_c5_s100__free: done in 74 s
+tune1 students_dropout_R30_c5_s102__free: start (n 2385, k 716, V 15)
+  students_dropout_R30_c5_s102 knn_sanitize: 80 configs in 2 s; best precision 0.342
+  students_dropout_R30_c5_s102 label_spread: 120 configs in 10 s; best precision 0.510
+  students_dropout_R30_c5_s102 knn_shapley: 12 configs in 0 s; best precision 0.515
+  students_dropout_R30_c5_s102 data_oob: 16 configs in 9 s; best precision 0.369
+  students_dropout_R30_c5_s102 cleanlab: 9 configs in 38 s; best precision 0.422
+  students_dropout_R30_c5_s102 simifeat: 64 configs in 19 s; best precision 0.310
+tune1 students_dropout_R30_c5_s102__free: done in 80 s
+tune1 credit-approval_R20_c1_s102__free: start (n 364, k 73, V 2)
+  credit-approval_R20_c1_s102 knn_sanitize: 80 configs in 1 s; best precision 0.425
+  credit-approval_R20_c1_s102 label_spread: 120 configs in 5 s; best precision 0.589
+  credit-approval_R20_c1_s102 knn_shapley: 12 configs in 0 s; best precision 0.164
+  credit-approval_R20_c1_s102 data_oob: 16 configs in 2 s; best precision 0.425
+  credit-approval_R20_c1_s102 cleanlab: 9 configs in 29 s; best precision 0.411
+  credit-approval_R20_c1_s102 simifeat: 64 configs in 13 s; best precision 0.452
+tune1 credit-approval_R20_c1_s102__free: done in 51 s
+tune1 credit-approval_R20_c3_s101__free: start (n 360, k 72, V 6)
+  credit-approval_R20_c3_s101 knn_sanitize: 80 configs in 1 s; best precision 0.472
+  credit-approval_R20_c3_s101 label_spread: 120 configs in 5 s; best precision 0.708
+  credit-approval_R20_c3_s101 knn_shapley: 12 configs in 0 s; best precision 0.500
+  credit-approval_R20_c3_s101 data_oob: 16 configs in 2 s; best precision 0.431
+  credit-approval_R20_c3_s101 cleanlab: 9 configs in 29 s; best precision 0.403
+  credit-approval_R20_c3_s101 simifeat: 64 configs in 13 s; best precision 0.500
+tune1 credit-approval_R20_c3_s101__free: done in 51 s
+tune1 credit-approval_R20_c5_s100__free: start (n 356, k 71, V 10)
+  credit-approval_R20_c5_s100 knn_sanitize: 80 configs in 1 s; best precision 0.437
+  credit-approval_R20_c5_s100 label_spread: 120 configs in 5 s; best precision 0.606
+  credit-approval_R20_c5_s100 knn_shapley: 12 configs in 0 s; best precision 0.662
+  credit-approval_R20_c5_s100 data_oob: 16 configs in 2 s; best precision 0.408
+  credit-approval_R20_c5_s100 cleanlab: 9 configs in 35 s; best precision 0.408
+  credit-approval_R20_c5_s100 simifeat: 64 configs in 12 s; best precision 0.451
+tune1 credit-approval_R20_c5_s100__free: done in 56 s
+tune1 credit-approval_R20_c5_s102__free: start (n 356, k 71, V 10)
+  credit-approval_R20_c5_s102 knn_sanitize: 80 configs in 1 s; best precision 0.479
+  credit-approval_R20_c5_s102 label_spread: 120 configs in 5 s; best precision 0.732
+  credit-approval_R20_c5_s102 knn_shapley: 12 configs in 0 s; best precision 0.704
+  credit-approval_R20_c5_s102 data_oob: 16 configs in 2 s; best precision 0.493
+  credit-approval_R20_c5_s102 cleanlab: 9 configs in 34 s; best precision 0.451
+  credit-approval_R20_c5_s102 simifeat: 64 configs in 13 s; best precision 0.479
+tune1 credit-approval_R20_c5_s102__free: done in 56 s
+tune1 credit-approval_R30_c1_s101__free: start (n 364, k 109, V 2)
+  credit-approval_R30_c1_s101 knn_sanitize: 80 configs in 1 s; best precision 0.422
+  credit-approval_R30_c1_s101 label_spread: 120 configs in 5 s; best precision 0.578
+  credit-approval_R30_c1_s101 knn_shapley: 12 configs in 0 s; best precision 0.404
+  credit-approval_R30_c1_s101 data_oob: 16 configs in 2 s; best precision 0.486
+  credit-approval_R30_c1_s101 cleanlab: 9 configs in 31 s; best precision 0.440
+  credit-approval_R30_c1_s101 simifeat: 64 configs in 13 s; best precision 0.440
+tune1 credit-approval_R30_c1_s101__free: done in 53 s
+tune1 credit-approval_R30_c3_s100__free: start (n 360, k 108, V 6)
+  credit-approval_R30_c3_s100 knn_sanitize: 80 configs in 1 s; best precision 0.426
+  credit-approval_R30_c3_s100 label_spread: 120 configs in 5 s; best precision 0.750
+  credit-approval_R30_c3_s100 knn_shapley: 12 configs in 0 s; best precision 0.796
+  credit-approval_R30_c3_s100 data_oob: 16 configs in 2 s; best precision 0.472
+  credit-approval_R30_c3_s100 cleanlab: 9 configs in 30 s; best precision 0.435
+  credit-approval_R30_c3_s100 simifeat: 64 configs in 13 s; best precision 0.444
+tune1 credit-approval_R30_c3_s100__free: done in 52 s
+tune1 credit-approval_R30_c3_s102__free: start (n 360, k 108, V 6)
+  credit-approval_R30_c3_s102 knn_sanitize: 80 configs in 1 s; best precision 0.435
+  credit-approval_R30_c3_s102 label_spread: 120 configs in 5 s; best precision 0.602
+  credit-approval_R30_c3_s102 knn_shapley: 12 configs in 0 s; best precision 0.528
+  credit-approval_R30_c3_s102 data_oob: 16 configs in 2 s; best precision 0.509
+  credit-approval_R30_c3_s102 cleanlab: 9 configs in 34 s; best precision 0.463
+  credit-approval_R30_c3_s102 simifeat: 64 configs in 12 s; best precision 0.454
+tune1 credit-approval_R30_c3_s102__free: done in 56 s
+tune1 credit-approval_R30_c5_s101__free: start (n 356, k 107, V 10)
+  credit-approval_R30_c5_s101 knn_sanitize: 80 configs in 1 s; best precision 0.430
+  credit-approval_R30_c5_s101 label_spread: 120 configs in 5 s; best precision 0.720
+  credit-approval_R30_c5_s101 knn_shapley: 12 configs in 0 s; best precision 0.692
+  credit-approval_R30_c5_s101 data_oob: 16 configs in 3 s; best precision 0.486
+  credit-approval_R30_c5_s101 cleanlab: 9 configs in 37 s; best precision 0.439
+  credit-approval_R30_c5_s101 simifeat: 64 configs in 13 s; best precision 0.477
+tune1 credit-approval_R30_c5_s101__free: done in 59 s

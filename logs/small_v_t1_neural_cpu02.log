@@ -1,0 +1,30 @@
+tune1 gas-drift_R20_c1_s100__neural: start (n 3994, k 799, V 6)
+  gas-drift_R20_c1_s100 glc: 16 configs in 68 s; best precision 0.599
+  gas-drift_R20_c1_s100 mwnet: 16 configs in 68 s; best precision 0.653
+  gas-drift_R20_c1_s100 emlc: 16 configs in 138 s; best precision 0.488
+  gas-drift_R20_c1_s100 ieg: 16 configs in 125 s; best precision 0.552
+tune1 gas-drift_R20_c1_s100__neural: done in 401 s
+tune1 url_unique_R30_c1_s102__neural: start (n 3998, k 1199, V 2)
+  url_unique_R30_c1_s102 glc: 16 configs in 54 s; best precision 0.674
+  url_unique_R30_c1_s102 mwnet: 16 configs in 72 s; best precision 0.607
+  url_unique_R30_c1_s102 emlc: 16 configs in 127 s; best precision 0.737
+  url_unique_R30_c1_s102 ieg: 16 configs in 110 s; best precision 0.825
+tune1 url_unique_R30_c1_s102__neural: done in 364 s
+tune1 heloc_R30_c5_s100__neural: start (n 3990, k 1197, V 10)
+  heloc_R30_c5_s100 glc: 16 configs in 37 s; best precision 0.604
+  heloc_R30_c5_s100 mwnet: 16 configs in 67 s; best precision 0.343
+  heloc_R30_c5_s100 emlc: 16 configs in 120 s; best precision 0.569
+  heloc_R30_c5_s100 ieg: 16 configs in 99 s; best precision 0.602
+tune1 heloc_R30_c5_s100__neural: done in 324 s
+tune1 credit-approval_R20_c3_s101__neural: start (n 360, k 72, V 6)
+  credit-approval_R20_c3_s101 glc: 16 configs in 4 s; best precision 0.875
+  credit-approval_R20_c3_s101 mwnet: 16 configs in 5 s; best precision 0.417
+  credit-approval_R20_c3_s101 emlc: 16 configs in 11 s; best precision 0.722
+  credit-approval_R20_c3_s101 ieg: 16 configs in 8 s; best precision 0.694
+tune1 credit-approval_R20_c3_s101__neural: done in 28 s
+tune1 credit-approval_R30_c3_s100__neural: start (n 360, k 108, V 6)
+  credit-approval_R30_c3_s100 glc: 16 configs in 4 s; best precision 0.630
+  credit-approval_R30_c3_s100 mwnet: 16 configs in 6 s; best precision 0.259
+  credit-approval_R30_c3_s100 emlc: 16 configs in 10 s; best precision 0.889
+  credit-approval_R30_c3_s100 ieg: 16 configs in 10 s; best precision 0.880
+tune1 credit-approval_R30_c3_s100__neural: done in 29 s

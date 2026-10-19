@@ -14,6 +14,7 @@ from tabpfn.errors import TabPFNValidationError
 from tabpfn.preprocessing.pipeline_interface import (
     PreprocessingStep,
 )
+from tabpfn.preprocessing.steps.context_row_weights import context_row_weights
 
 if TYPE_CHECKING:
     from tabpfn.preprocessing.datamodel import FeatureModality, FeatureSchema
@@ -32,6 +33,14 @@ class RemoveConstantFeaturesStep(PreprocessingStep):
         X: np.ndarray | torch.Tensor,
         feature_schema: FeatureSchema,
     ) -> FeatureSchema:
+        # LOCAL ADDITION (scripts/tabfm_experiments/row_weights.py): with context row
+        # weights installed, rows of weight exactly 0 do not count when deciding which
+        # features are constant -- as if they had been deleted. Only the decision uses
+        # the subset; every row is still transformed.
+        w = context_row_weights(X.shape[0])
+        if w is not None:
+            present = w.detach() > 0
+            X = X[present.to(X.device)] if isinstance(X, torch.Tensor) else X[present.cpu().numpy()]
         forced = [feat.non_constant_with_inf for feat in feature_schema.features]
         if isinstance(X, torch.Tensor):
             sel_ = (torch.max(X[0:1, :] != X, dim=0)[0] & ~X.isnan().all(dim=0)).cpu()

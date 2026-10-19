@@ -1,0 +1,8 @@
+3 runs on GPU(s) 2; results in /home/ssn899/Desktop/TabFM/results/gate_soft; W&B online, project TFM_experiments, group gate-soft-night
+[2026-10-12 22:03:15] START GPU 2  gate-valsplit_gas-drift_hub-flip-local_R20_V500s0_H20_pgd-linf_lr0.1_it300
+[2026-10-12 23:00:14] DONE  GPU 2  gate-valsplit_gas-drift_hub-flip-local_R20_V500s0_H20_pgd-linf_lr0.1_it300
+[2026-10-12 23:00:14] START GPU 2  gate-valsplit_url_unique_hub-flip-local_R20_V500s0_H20_pgd-linf_lr0.1_it300
+[2026-10-12 23:16:15] DONE  GPU 2  gate-valsplit_url_unique_hub-flip-local_R20_V500s0_H20_pgd-linf_lr0.1_it300
+[2026-10-12 23:16:15] START GPU 2  gate-valsplit_students_dropout_hub-flip-local_R20_V500s0_H20_pgd-linf_lr0.1_it300
+[2026-10-12 23:20:43] DONE  GPU 2  gate-valsplit_students_dropout_hub-flip-local_R20_V500s0_H20_pgd-linf_lr0.1_it300
+ALL REQUESTED RUNS FINISHED

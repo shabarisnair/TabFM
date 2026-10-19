@@ -1,0 +1,34 @@
+# Soft-gate night, round 5 (reprioritised 01:45): confirm the top-k vote's win over the V-filter with a local
+# clean set (url_unique, seed 0: 87.2 vs 81.3) on more draws, then the soft gate on more draws.
+# hub-flip-local, R = 20%, V = 500.  <part> <dataset> <R> <V> <seed> <tag> [extra args...]
+1 url_unique 20 500 1 local-topk-init0 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 0
+1 url_unique 20 500 1 local-topk-init1 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 1
+1 url_unique 20 500 1 local-topk-init2 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 2
+1 url_unique 20 500 1 local-topk-init3 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 3
+1 url_unique 20 500 2 local-topk-init0 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 0
+1 url_unique 20 500 2 local-topk-init1 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 1
+1 url_unique 20 500 2 local-topk-init2 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 2
+1 url_unique 20 500 2 local-topk-init3 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 3
+1 url_unique 20 500 1 local-soft-lr0.05 --val-draw local
+1 url_unique 20 500 2 local-soft-lr0.05 --val-draw local
+1 gas-drift 20 500 0 local-topk-init0 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 0
+1 gas-drift 20 500 0 local-topk-init1 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 1
+1 gas-drift 20 500 0 local-topk-init2 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 2
+1 gas-drift 20 500 0 local-topk-init3 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 3
+1 gas-drift 20 500 1 local-soft-lr0.05 --val-draw local
+1 gas-drift 20 500 2 local-soft-lr0.05 --val-draw local
+1 students_dropout 20 500 0 local-soft-lr0.05 --val-draw local
+1 students_dropout 20 500 1 local-soft-lr0.05 --val-draw local
+1 students_dropout 20 500 2 local-soft-lr0.05 --val-draw local
+1 students_dropout 20 500 1 imbalanced-soft-lr0.05 --val-draw imbalanced
+1 students_dropout 20 500 2 imbalanced-soft-lr0.05 --val-draw imbalanced
+1 url_unique 20 500 1 imbalanced-soft-lr0.05 --val-draw imbalanced
+1 url_unique 20 500 2 imbalanced-soft-lr0.05 --val-draw imbalanced
+1 gas-drift 20 500 1 local-topk-init0 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 0
+1 gas-drift 20 500 1 local-topk-init1 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 1
+1 gas-drift 20 500 1 local-topk-init2 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 2
+1 gas-drift 20 500 1 local-topk-init3 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 3
+1 gas-drift 20 500 2 local-topk-init0 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 0
+1 gas-drift 20 500 2 local-topk-init1 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 1
+1 gas-drift 20 500 2 local-topk-init2 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 2
+1 gas-drift 20 500 2 local-topk-init3 --val-draw local --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 3

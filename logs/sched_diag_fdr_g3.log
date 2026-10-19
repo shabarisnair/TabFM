@@ -1,0 +1,3 @@
+heloc_R20_c1_s0 fdr: acc 71.9 auc 79.3 ce 0.824 prec 0.595 steps 2 fits 0 (4 s)
+students_dropout_R20_c1_s0 fdr: acc 64.2 auc 79.4 ce 1.079 prec 0.336 steps 7 fits 0 (7 s)
+url_unique_R20_c1_s0 fdr: acc 78.0 auc 87.2 ce 0.703 prec 0.440 steps 5 fits 0 (15 s)

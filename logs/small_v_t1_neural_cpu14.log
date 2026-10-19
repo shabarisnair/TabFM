@@ -1,0 +1,36 @@
+tune1 gas-drift_R30_c1_s101__neural: start (n 3994, k 1198, V 6)
+  gas-drift_R30_c1_s101 glc: 16 configs in 56 s; best precision 0.533
+  gas-drift_R30_c1_s101 mwnet: 16 configs in 74 s; best precision 0.551
+  gas-drift_R30_c1_s101 emlc: 16 configs in 129 s; best precision 0.624
+  gas-drift_R30_c1_s101 ieg: 16 configs in 113 s; best precision 0.489
+tune1 gas-drift_R30_c1_s101__neural: done in 374 s
+tune1 url_unique_R20_c3_s102__neural: start (n 3994, k 799, V 6)
+  url_unique_R20_c3_s102 glc: 16 configs in 51 s; best precision 0.912
+  url_unique_R20_c3_s102 mwnet: 16 configs in 73 s; best precision 0.379
+  url_unique_R20_c3_s102 emlc: 16 configs in 127 s; best precision 0.877
+  url_unique_R20_c3_s102 ieg: 16 configs in 105 s; best precision 0.886
+tune1 url_unique_R20_c3_s102__neural: done in 356 s
+tune1 heloc_R20_c5_s102__neural: start (n 3990, k 798, V 10)
+  heloc_R20_c5_s102 glc: 16 configs in 45 s; best precision 0.600
+  heloc_R20_c5_s102 mwnet: 16 configs in 69 s; best precision 0.383
+  heloc_R20_c5_s102 emlc: 16 configs in 121 s; best precision 0.426
+  heloc_R20_c5_s102 ieg: 16 configs in 103 s; best precision 0.495
+tune1 heloc_R20_c5_s102__neural: done in 338 s
+tune1 credit-approval_R20_c1_s100__neural: start (n 364, k 73, V 2)
+  credit-approval_R20_c1_s100 glc: 16 configs in 4 s; best precision 0.507
+  credit-approval_R20_c1_s100 mwnet: 16 configs in 6 s; best precision 0.589
+  credit-approval_R20_c1_s100 emlc: 16 configs in 11 s; best precision 0.890
+  credit-approval_R20_c1_s100 ieg: 16 configs in 9 s; best precision 0.877
+tune1 credit-approval_R20_c1_s100__neural: done in 31 s
+tune1 credit-approval_R20_c5_s101__neural: start (n 356, k 71, V 10)
+  credit-approval_R20_c5_s101 glc: 16 configs in 5 s; best precision 0.873
+  credit-approval_R20_c5_s101 mwnet: 16 configs in 6 s; best precision 0.507
+  credit-approval_R20_c5_s101 emlc: 16 configs in 10 s; best precision 0.817
+  credit-approval_R20_c5_s101 ieg: 16 configs in 8 s; best precision 0.690
+tune1 credit-approval_R20_c5_s101__neural: done in 29 s
+tune1 credit-approval_R30_c5_s100__neural: start (n 356, k 107, V 10)
+  credit-approval_R30_c5_s100 glc: 16 configs in 4 s; best precision 0.636
+  credit-approval_R30_c5_s100 mwnet: 16 configs in 5 s; best precision 0.495
+  credit-approval_R30_c5_s100 emlc: 16 configs in 9 s; best precision 0.832
+  credit-approval_R30_c5_s100 ieg: 16 configs in 8 s; best precision 0.860
+tune1 credit-approval_R30_c5_s100__neural: done in 26 s

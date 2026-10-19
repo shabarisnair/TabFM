@@ -1,0 +1,46 @@
+tune2 gas-drift_R20_c1_s101: start (n 3994, k 799, V 6)
+tune2 gas-drift_R20_c1_s101: done in 454 s
+tune2 gas-drift_R20_c5_s101: start (n 3970, k 794, V 30)
+tune2 gas-drift_R20_c5_s101: done in 449 s
+tune2 gas-drift_R30_c1_s102: start (n 3994, k 1198, V 6)
+tune2 gas-drift_R30_c1_s102: done in 415 s
+tune2 gas-drift_R30_c5_s100: start (n 3970, k 1191, V 30)
+tune2 gas-drift_R30_c5_s100: done in 409 s
+tune2 url_unique_R20_c1_s101: start (n 3998, k 800, V 2)
+tune2 url_unique_R20_c1_s101: done in 215 s
+tune2 url_unique_R20_c3_s102: start (n 3994, k 799, V 6)
+tune2 url_unique_R20_c3_s102: done in 216 s
+tune2 url_unique_R30_c1_s100: start (n 3998, k 1199, V 2)
+tune2 url_unique_R30_c1_s100: done in 201 s
+tune2 url_unique_R30_c1_s102: start (n 3998, k 1199, V 2)
+tune2 url_unique_R30_c1_s102: done in 201 s
+tune2 url_unique_R30_c5_s100: start (n 3990, k 1197, V 10)
+tune2 url_unique_R30_c5_s100: done in 200 s
+tune2 heloc_R20_c1_s102: start (n 3998, k 800, V 2)
+tune2 heloc_R20_c1_s102: done in 95 s
+tune2 heloc_R20_c5_s100: start (n 3990, k 798, V 10)
+tune2 heloc_R20_c5_s100: done in 95 s
+tune2 heloc_R30_c1_s101: start (n 3998, k 1199, V 2)
+tune2 heloc_R30_c1_s101: done in 91 s
+tune2 heloc_R30_c3_s102: start (n 3994, k 1198, V 6)
+tune2 heloc_R30_c3_s102: done in 88 s
+tune2 students_dropout_R20_c1_s100: start (n 2397, k 479, V 3)
+tune2 students_dropout_R20_c1_s100: done in 62 s
+tune2 students_dropout_R20_c1_s102: start (n 2397, k 479, V 3)
+tune2 students_dropout_R20_c1_s102: done in 75 s
+tune2 students_dropout_R20_c5_s100: start (n 2385, k 477, V 15)
+tune2 students_dropout_R20_c5_s100: done in 77 s
+tune2 students_dropout_R30_c1_s102: start (n 2397, k 719, V 3)
+tune2 students_dropout_R30_c1_s102: done in 71 s
+tune2 students_dropout_R30_c5_s100: start (n 2385, k 716, V 15)
+tune2 students_dropout_R30_c5_s100: done in 72 s
+tune2 credit-approval_R20_c1_s101: start (n 364, k 73, V 2)
+tune2 credit-approval_R20_c1_s101: done in 16 s
+tune2 credit-approval_R20_c3_s101: start (n 360, k 72, V 6)
+tune2 credit-approval_R20_c3_s101: done in 14 s
+tune2 credit-approval_R20_c5_s102: start (n 356, k 71, V 10)
+tune2 credit-approval_R20_c5_s102: done in 15 s
+tune2 credit-approval_R30_c3_s100: start (n 360, k 108, V 6)
+tune2 credit-approval_R30_c3_s100: done in 14 s
+tune2 credit-approval_R30_c5_s101: start (n 356, k 107, V 10)
+tune2 credit-approval_R30_c5_s101: done in 14 s

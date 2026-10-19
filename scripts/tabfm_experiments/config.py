@@ -53,6 +53,13 @@ DATASETS: dict[str, DatasetInfo] = {
     # 3 classes, 7 name-based relation constraints, only 4424 rows: natural_size is
     # provisional, the split protocol for a table this small is still undecided.
     "students_dropout": DatasetInfo("students_dropout", "AcademicOutcome", natural_size=2000),
+    # Unconstrained (get_relation_constraints returns []). TabArena 5th-hardest
+    # classification task; best of 73 official entrants 0.7443 ROC AUC.
+    "ecommerce_shipping": DatasetInfo("ecommerce_shipping", "ArrivedLate", natural_size=5000),
+    # Unconstrained. TabArena 6th-hardest; 1723 rows, so like credit-approval it gets one
+    # stratified split (make_small_splits.py): train 1400, test 300, no val/contexts/selection.
+    # 11.4% positives: TabPFN predicts the majority everywhere, so score it by ROC-AUC.
+    "is_this_a_good_customer": DatasetInfo("is_this_a_good_customer", "bad_client_target", natural_size=1400),
 }
 
 

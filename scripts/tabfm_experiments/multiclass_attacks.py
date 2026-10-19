@@ -9,6 +9,12 @@
                           average. Deterministic.
     hub-flip-random       the SAME hub rows, relabelled to a uniformly random other class.
                           Stochastic in the targets only.
+    boundary-flip-knn     the R% rows whose labels are most AMBIGUOUS among their neighbours
+                          -- the smallest margin between the own class and the best other
+                          class in a distance-weighted vote of the 10 nearest rows -- each
+                          relabelled to that other class. The new labels look plausible to a
+                          model of the clean data, so a filter that keeps the labels a clean
+                          model finds plausible misses many of them. Deterministic.
 
 hub-flip-local and hub-flip-random poison identical rows, so the gap between them
 isolates what the COHERENCE of the poison contributes: neighbouring hubs share a locally
@@ -32,7 +38,7 @@ import torch
 
 from .sampling import bernoulli_row_indices, k_from_percent, random_flip_rng
 
-ATTACKS = ("label-flip-bernoulli", "hub-flip-local", "hub-flip-random")
+ATTACKS = ("label-flip-bernoulli", "hub-flip-local", "hub-flip-random", "boundary-flip-knn")
 STOCHASTIC = ("label-flip-bernoulli", "hub-flip-random")
 
 
@@ -84,6 +90,38 @@ def local_nearest_other_class(X: torch.Tensor, y: np.ndarray, rows: np.ndarray, 
     return out
 
 
+def boundary_flip_knn(X: torch.Tensor, y: np.ndarray, n_classes: int, m: int, k: int = 10,
+                      chunk: int = 1024) -> tuple[np.ndarray, np.ndarray]:
+    """(rows, targets) of boundary-flip-knn: the m rows with the smallest distance-weighted kNN
+    margin, each with the best other class as its target.
+
+    Vote of row i for class c = sum of exp(-d_ij / d_med) over i's k nearest rows j of class c
+    (standardised features, i itself excluded; d_med = the median of all n * k such distances,
+    the lower middle value); margin = own-class vote minus the best other-class vote, the best
+    other class being the first of the largest. Rows sorted by margin, stable.
+    """
+    y = np.asarray(y).astype(int)
+    n = len(y)
+    Z = standardise(X)
+    yt = torch.as_tensor(y, device=Z.device)
+    d_all = torch.empty(n, k, device=Z.device, dtype=Z.dtype)
+    j_all = torch.empty(n, k, device=Z.device, dtype=torch.long)
+    for st in range(0, n, chunk):
+        D = torch.cdist(Z[st:st + chunk], Z)
+        idx = torch.arange(D.shape[0], device=Z.device)
+        D[idx, idx + st] = float("inf")  # never itself
+        d_all[st:st + D.shape[0]], j_all[st:st + D.shape[0]] = D.topk(k, largest=False)
+    w = torch.exp(-d_all / d_all.median().clamp_min(1e-12)).double()
+    vote = torch.zeros(n, n_classes, device=Z.device, dtype=torch.float64).scatter_add_(1, yt[j_all], w)
+    rows_all = torch.arange(n, device=Z.device)
+    own = vote[rows_all, yt].clone()
+    other = vote.clone()
+    other[rows_all, yt] = -1.0
+    best, target = other.max(1)
+    rows = np.sort(np.argsort((own - best).cpu().numpy(), kind="stable")[:m])
+    return rows, target.cpu().numpy()[rows]
+
+
 def poison(attack: str, X: torch.Tensor, y_clean: np.ndarray, n_classes: int, row_percent: float, *,
            run_id: int, row_seed: int, hub_metric: str = "knn", hub_k: int = 10,
            target_k: int = 10) -> tuple[np.ndarray, np.ndarray]:
@@ -98,7 +136,9 @@ def poison(attack: str, X: torch.Tensor, y_clean: np.ndarray, n_classes: int, ro
     if row_percent <= 0:
         return np.zeros(0, dtype=np.int64), y.copy()
 
-    if attack == "label-flip-bernoulli":
+    if attack == "boundary-flip-knn":
+        rows, targets = boundary_flip_knn(X, y, n_classes, k_from_percent(n, row_percent), k=target_k)
+    elif attack == "label-flip-bernoulli":
         # Same stream and same row draw as the binary label-flip-bernoulli, so at K=2 the
         # rows are identical. The targets are drawn from the stream AFTER the rows.
         rng = random_flip_rng(row_seed, run_id, 0)

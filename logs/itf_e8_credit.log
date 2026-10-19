@@ -1,0 +1,3 @@
+credit-approval_hub-flip-local_stratified_R20_V50s0 grow:pct1:prior: acc 85.2 prec 0.864 steps 66 (14 s)
+credit-approval_hub-flip-local_stratified_R20_V100s0 grow:pct1:prior: acc 85.2 prec 0.859 steps 72 (16 s)
+credit-approval_hub-flip-local_stratified_R20_V200s0 grow:pct1:prior: acc 85.7 prec 0.784 steps 69 (15 s)

@@ -1,0 +1,17 @@
+# Soft-gate night, round 3: the filter-evading attack (boundary-flip-knn; run with ATTACK=boundary-flip-knn).
+# Where the V-filter is weak (url_unique, students_dropout), can a gate learned on the validation loss do better?
+# R = 20%, V = 500 (100 held out), seed 0.  <part> <dataset> <R> <V> <seed> <tag> [extra args...]
+1 url_unique 20 500 0 soft-lr0.05
+1 students_dropout 20 500 0 soft-lr0.05
+1 url_unique 20 500 0 attn-lr0.5 --gate attn --lr 0.5 --select-on ce
+1 students_dropout 20 500 0 attn-lr0.5 --gate attn --lr 0.5 --select-on ce
+1 url_unique 20 500 0 attn-vf-lr0.5 --gate attn --attn-init vfilter --lr 0.5 --select-on ce
+1 students_dropout 20 500 0 attn-vf-lr0.5 --gate attn --attn-init vfilter --lr 0.5 --select-on ce
+1 url_unique 20 500 0 topk-init0 --gate topk --ste identity --score-init-std 1 --init-seed 0 --ste-probe 0.05 --lr 5 --select-on ce
+1 url_unique 20 500 0 topk-init1 --gate topk --ste identity --score-init-std 1 --init-seed 1 --ste-probe 0.05 --lr 5 --select-on ce
+1 url_unique 20 500 0 topk-init2 --gate topk --ste identity --score-init-std 1 --init-seed 2 --ste-probe 0.05 --lr 5 --select-on ce
+1 url_unique 20 500 0 topk-init3 --gate topk --ste identity --score-init-std 1 --init-seed 3 --ste-probe 0.05 --lr 5 --select-on ce
+1 students_dropout 20 500 0 topk-init0 --gate topk --ste identity --score-init-std 1 --init-seed 0 --ste-probe 0.05 --lr 5 --select-on ce
+1 students_dropout 20 500 0 topk-init1 --gate topk --ste identity --score-init-std 1 --init-seed 1 --ste-probe 0.05 --lr 5 --select-on ce
+1 students_dropout 20 500 0 topk-init2 --gate topk --ste identity --score-init-std 1 --init-seed 2 --ste-probe 0.05 --lr 5 --select-on ce
+1 students_dropout 20 500 0 topk-init3 --gate topk --ste identity --score-init-std 1 --init-seed 3 --ste-probe 0.05 --lr 5 --select-on ce

@@ -1,0 +1,6 @@
+url_unique_hub-flip-local_stratified_R20_V50s0 oneshot+refine5: acc 94.0 prec 0.859 steps 1 refine 5 (64 s)
+url_unique_hub-flip-local_stratified_R20_V50s0 grow:pct1+refine5: acc 91.1 prec 0.788 steps 80 refine 5 (63 s)
+url_unique_hub-flip-local_stratified_R20_V100s0 oneshot+refine5: acc 94.7 prec 0.874 steps 1 refine 5 (63 s)
+url_unique_hub-flip-local_stratified_R20_V100s0 grow:pct1+refine5: acc 94.4 prec 0.872 steps 80 refine 5 (64 s)
+url_unique_hub-flip-local_stratified_R20_V200s0 oneshot+refine5: acc 94.8 prec 0.886 steps 1 refine 5 (62 s)
+url_unique_hub-flip-local_stratified_R20_V200s0 grow:pct1+refine5: acc 94.4 prec 0.896 steps 80 refine 5 (65 s)

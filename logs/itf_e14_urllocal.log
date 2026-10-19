@@ -1,0 +1,6 @@
+url_unique_hub-flip-local_local_R20_V200s0 grow:pct1:cprior: acc 91.8 prec 0.805 steps 80 (81 s)
+url_unique_hub-flip-local_local_R20_V200s1 grow:pct1:cprior: acc 87.7 prec 0.725 steps 80 (81 s)
+url_unique_hub-flip-local_local_R20_V200s2 grow:pct1:cprior: acc 89.7 prec 0.735 steps 80 (81 s)
+url_unique_hub-flip-local_local_R20_V500s0 grow:pct1:cprior: acc 92.7 prec 0.821 steps 80 (84 s)
+url_unique_hub-flip-local_local_R20_V500s1 grow:pct1:cprior: acc 88.4 prec 0.696 steps 80 (85 s)
+url_unique_hub-flip-local_local_R20_V500s2 grow:pct1:cprior: acc 91.7 prec 0.796 steps 80 (87 s)

@@ -222,6 +222,52 @@ def test_attacks(device: str):
                   f"{len(rows)} rows")
 
 
+def brute_boundary(Z: np.ndarray, y: np.ndarray, K: int, m: int, k: int):
+    """Plain loops: the reference for boundary_flip_knn."""
+    n = len(y)
+    near = []
+    for i in range(n):
+        d = sorted((float(np.linalg.norm(Z[i] - Z[j])), j) for j in range(n) if j != i)[:k]
+        near.append(d)
+    flat = sorted(dd for row in near for dd, _ in row)
+    med = flat[(len(flat) - 1) // 2]                      # torch.median: the lower middle value
+    margin, target = np.empty(n), np.empty(n, dtype=int)
+    for i in range(n):
+        vote = np.zeros(K)
+        for dd, j in near[i]:
+            vote[y[j]] += math.exp(-dd / med)
+        others = [c for c in range(K) if c != y[i]]
+        best_c = max(others, key=lambda c: (vote[c], -c))  # the first of the largest
+        margin[i], target[i] = vote[y[i]] - vote[best_c], best_c
+    rows = np.sort(np.argsort(margin, kind="stable")[:m])
+    return rows, target[rows]
+
+
+def test_boundary(device: str):
+    from tabfm_experiments.multiclass_attacks import boundary_flip_knn, poison, standardise
+    from tabfm_experiments.sampling import k_from_percent
+    print("\nB7. boundary-flip-knn")
+    rng = np.random.default_rng(7)
+    for K, n, k in ((3, 150, 10), (2, 120, 5)):
+        X = rng.normal(size=(n, 6)).astype(np.float32)
+        y = rng.integers(0, K, n)
+        X[np.arange(n), y % 6] += 1.5
+        Xt = torch.tensor(X, device=device)
+        m = k_from_percent(n, 20)
+        got_r, got_t = boundary_flip_knn(Xt, y, K, m, k=k, chunk=17)   # odd chunk on purpose
+        want_r, want_t = brute_boundary(standardise(Xt).cpu().numpy(), y, K, m, k)
+        check(f"K={K} boundary_flip_knn == brute force (rows and targets, k={k})",
+              np.array_equal(got_r, want_r) and np.array_equal(got_t, want_t),
+              f"rows {np.intersect1d(got_r, want_r).size}/{m}")
+        r2, t2 = boundary_flip_knn(Xt, y, K, m, k=k, chunk=4096)
+        check(f"K={K} boundary_flip_knn does not depend on the chunk size",
+              np.array_equal(got_r, r2) and np.array_equal(got_t, t2))
+        rows, yp = poison("boundary-flip-knn", Xt, y, K, 20, run_id=0, row_seed=1, target_k=k)
+        check(f"K={K} poison('boundary-flip-knn'): those rows, those targets, nothing else changed",
+              np.array_equal(rows, got_r) and np.array_equal(yp[rows], got_t)
+              and np.array_equal(np.delete(yp, rows), np.delete(y, rows)) and bool(np.all(yp[rows] != y[rows])))
+
+
 # ============================================================================ C. runtime
 def test_runtime(device: str):
     from tabfm_experiments.config import inference_config
@@ -356,6 +402,7 @@ def main(argv=None):
     device = f"cuda:{a.gpu}"
     test_metrics()
     test_attacks(device)
+    test_boundary(device)
     test_runtime(device)
     test_end_to_end(device)
     print("\n" + ("ALL TESTS PASSED" if not FAILS else f"FAILED ({len(FAILS)}): {FAILS}"))

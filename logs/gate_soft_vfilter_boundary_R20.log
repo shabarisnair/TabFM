@@ -1,0 +1,12 @@
+gas-drift boundary-flip-knn V50 s0: poisoned 78.3 | V only 83.1 | V-filter 90.7 +V 91.0 (prec 0.76) | oracle 98.2 +V 98.6
+gas-drift boundary-flip-knn V100 s0: poisoned 78.9 | V only 93.8 | V-filter 93.8 +V 95.7 (prec 0.92) | oracle 98.3 +V 98.7
+gas-drift boundary-flip-knn V200 s0: poisoned 79.3 | V only 96.9 | V-filter 95.9 +V 96.9 (prec 0.96) | oracle 98.3 +V 98.5
+gas-drift boundary-flip-knn V500 s0: poisoned 78.8 | V only 98.0 | V-filter 97.6 +V 98.2 (prec 0.97) | oracle 98.4 +V 99.3
+url_unique boundary-flip-knn V50 s0: poisoned 85.4 | V only 89.3 | V-filter 89.8 +V 90.1 (prec 0.72) | oracle 96.6 +V 95.6
+url_unique boundary-flip-knn V100 s0: poisoned 85.2 | V only 91.6 | V-filter 91.2 +V 91.2 (prec 0.77) | oracle 96.4 +V 96.2
+url_unique boundary-flip-knn V200 s0: poisoned 84.6 | V only 91.4 | V-filter 92.4 +V 91.6 (prec 0.78) | oracle 96.5 +V 96.4
+url_unique boundary-flip-knn V500 s0: poisoned 84.2 | V only 94.7 | V-filter 94.7 +V 95.8 (prec 0.85) | oracle 96.3 +V 96.0
+students_dropout boundary-flip-knn V50 s0: poisoned 74.0 | V only 68.0 | V-filter 74.4 +V 74.2 (prec 0.42) | oracle 78.2 +V 77.8
+students_dropout boundary-flip-knn V100 s0: poisoned 72.6 | V only 71.2 | V-filter 75.0 +V 75.6 (prec 0.43) | oracle 78.0 +V 78.0
+students_dropout boundary-flip-knn V200 s0: poisoned 73.0 | V only 72.4 | V-filter 74.0 +V 74.0 (prec 0.43) | oracle 78.2 +V 78.2
+students_dropout boundary-flip-knn V500 s0: poisoned 72.8 | V only 76.2 | V-filter 76.4 +V 75.4 (prec 0.48) | oracle 78.8 +V 78.2

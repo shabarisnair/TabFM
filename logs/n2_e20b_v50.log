@@ -1,0 +1,6 @@
+heloc_hub-flip-local_stratified_R20_V50s0 beam:K1:X1:p10:path: acc 73.5 prec 0.545 steps 8 passes 9 (5 s)
+heloc_hub-flip-local_stratified_R20_V50s0 beam:K4:X4:p10:vcv: acc 73.3 prec 0.565 steps 8 passes 117 (254 s)
+heloc_hub-flip-local_stratified_R20_V50s0 beam:K4:X4:p10:path: acc 73.5 prec 0.553 steps 8 passes 117 (63 s)
+students_dropout_hub-flip-local_stratified_R20_V50s0 beam:K1:X1:p10:path: acc 76.6 prec 0.632 steps 8 passes 9 (4 s)
+students_dropout_hub-flip-local_stratified_R20_V50s0 beam:K4:X4:p10:vcv: acc 76.2 prec 0.573 steps 8 passes 117 (186 s)
+students_dropout_hub-flip-local_stratified_R20_V50s0 beam:K4:X4:p10:path: acc 77.4 prec 0.624 steps 8 passes 117 (44 s)

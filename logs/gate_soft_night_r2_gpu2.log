@@ -1,0 +1,21 @@
+scripts/gate_soft_parts/r2.txt: 15 runs on GPU(s) 2; results in /home/ssn899/Desktop/TabFM/results/gate_soft; W&B online, group gate-soft-night
+[busy] gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_attn-lr0.5_it300
+[2026-10-12 23:21:01] START GPU 2  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_attn-lr0.5_it300
+[2026-10-12 23:37:17] DONE  GPU 2  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_attn-lr0.5_it300
+[busy] gate-soft_students_dropout_hub-flip-local_R20_V500s0_H20_attn-lr0.5_it300
+[2026-10-12 23:37:17] START GPU 2  gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_attn-vf-lr0.5_it300
+[2026-10-13 00:07:00] DONE  GPU 2  gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_attn-vf-lr0.5_it300
+[skip] gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_attn-vf-lr0.5_it300 (already done)
+[busy] gate-soft_students_dropout_hub-flip-local_R20_V500s0_H20_attn-vf-lr0.5_it300
+[2026-10-13 00:07:00] START GPU 2  gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_topk-vf_it300
+[2026-10-13 00:39:36] DONE  GPU 2  gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_topk-vf_it300
+[busy] gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_topk-vf_it300
+[2026-10-13 00:39:36] START GPU 2  gate-soft_students_dropout_hub-flip-local_R20_V500s0_H20_topk-vf_it300
+[2026-10-13 00:43:54] DONE  GPU 2  gate-soft_students_dropout_hub-flip-local_R20_V500s0_H20_topk-vf_it300
+[busy] gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_attn-lr0.1_it300
+[busy] gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_attn-lr0.1_it300
+[busy] gate-soft_students_dropout_hub-flip-local_R20_V500s0_H20_attn-lr0.1_it300
+[busy] gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_attn-lr2_it300
+[busy] gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_attn-lr2_it300
+[busy] gate-soft_students_dropout_hub-flip-local_R20_V500s0_H20_attn-lr2_it300
+ALL REQUESTED RUNS FINISHED

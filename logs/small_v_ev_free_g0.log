@@ -1,0 +1,506 @@
+eval gas-drift_R20_c1_s1__free: start (n 4994, k 999, V 6)
+  gas-drift_R20_c1_s1 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: remove 79.1
+  gas-drift_R20_c1_s1 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: relabel 78.6
+  gas-drift_R20_c1_s1 knn_sanitize {"eta": 0.7, "feat": "q", "k_nn": 3, "rounds": 1}: relabel_k 76.3
+  gas-drift_R20_c1_s1 label_spread {"alpha": 0.5, "beta": 0.5, "feat": "q", "n_neighbors": 5}: remove 79.6
+  gas-drift_R20_c1_s1 label_spread {"alpha": 0.8, "beta": 0.1, "feat": "z", "n_neighbors": 50}: relabel 79.0, relabel_k 79.0
+  gas-drift_R20_c1_s1 knn_shapley {"K_nn": 1, "feat": "q"}: remove 84.1
+  gas-drift_R20_c1_s1 data_oob {"anchor_v": false, "max_depth": 10, "max_features": 0.5, "min_samples_leaf": 1}: remove 77.8
+  gas-drift_R20_c1_s1 cleanlab {"method": "confidence_weighted_entropy", "model": "logreg"}: remove 83.0
+  gas-drift_R20_c1_s1 cleanlab {"method": "normalized_margin", "model": "logreg"}: relabel_k 81.8
+  gas-drift_R20_c1_s1 cleanlab {"method": "self_confidence", "model": "logreg"}: flagged 79.8
+  gas-drift_R20_c1_s1 simifeat {"feat": "z", "k_nn": 50, "metric": "cosine", "variant": "rank", "views": 1}: remove 78.3
+eval gas-drift_R20_c1_s1__free: done in 90 s
+eval gas-drift_R20_c1_s2__free: start (n 4994, k 999, V 6)
+  gas-drift_R20_c1_s2 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: remove 78.6
+  gas-drift_R20_c1_s2 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: relabel 78.6
+  gas-drift_R20_c1_s2 knn_sanitize {"eta": 0.7, "feat": "q", "k_nn": 3, "rounds": 1}: relabel_k 76.4
+  gas-drift_R20_c1_s2 label_spread {"alpha": 0.5, "beta": 0.5, "feat": "q", "n_neighbors": 5}: remove 79.6
+  gas-drift_R20_c1_s2 label_spread {"alpha": 0.8, "beta": 0.1, "feat": "z", "n_neighbors": 50}: relabel 78.8, relabel_k 78.8
+  gas-drift_R20_c1_s2 knn_shapley {"K_nn": 1, "feat": "q"}: remove 86.9
+  gas-drift_R20_c1_s2 data_oob {"anchor_v": false, "max_depth": 10, "max_features": 0.5, "min_samples_leaf": 1}: remove 77.6
+  gas-drift_R20_c1_s2 cleanlab {"method": "confidence_weighted_entropy", "model": "logreg"}: remove 83.0
+  gas-drift_R20_c1_s2 cleanlab {"method": "normalized_margin", "model": "logreg"}: relabel_k 81.3
+  gas-drift_R20_c1_s2 cleanlab {"method": "self_confidence", "model": "logreg"}: flagged 80.1
+  gas-drift_R20_c1_s2 simifeat {"feat": "z", "k_nn": 50, "metric": "cosine", "variant": "rank", "views": 1}: remove 78.5
+eval gas-drift_R20_c1_s2__free: done in 85 s
+eval gas-drift_R20_c3_s1__free: start (n 4982, k 996, V 18)
+  gas-drift_R20_c3_s1 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 3}: remove 78.7
+  gas-drift_R20_c3_s1 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: relabel 78.6
+  gas-drift_R20_c3_s1 knn_sanitize {"eta": 0.7, "feat": "q", "k_nn": 3, "rounds": 1}: relabel_k 76.3
+  gas-drift_R20_c3_s1 label_spread {"alpha": 0.95, "beta": 0.0, "feat": "q", "n_neighbors": 50}: remove 85.8
+  gas-drift_R20_c3_s1 label_spread {"alpha": 0.8, "beta": 0.1, "feat": "z", "n_neighbors": 50}: relabel 79.0
+  gas-drift_R20_c3_s1 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "q", "n_neighbors": 50}: relabel_k 81.2
+  gas-drift_R20_c3_s1 knn_shapley {"K_nn": 1, "feat": "q"}: remove 85.0
+  gas-drift_R20_c3_s1 data_oob {"anchor_v": false, "max_depth": 10, "max_features": 0.5, "min_samples_leaf": 1}: remove 78.2
+  gas-drift_R20_c3_s1 cleanlab {"method": "confidence_weighted_entropy", "model": "logreg"}: remove 82.2
+  gas-drift_R20_c3_s1 cleanlab {"method": "normalized_margin", "model": "logreg"}: relabel_k 82.8
+  gas-drift_R20_c3_s1 cleanlab {"method": "self_confidence", "model": "logreg"}: flagged 79.7
+  gas-drift_R20_c3_s1 simifeat {"feat": "z", "k_nn": 50, "metric": "cosine", "variant": "rank", "views": 1}: remove 77.5
+eval gas-drift_R20_c3_s1__free: done in 84 s
+eval gas-drift_R20_c5_s0__free: start (n 4970, k 994, V 30)
+  gas-drift_R20_c5_s0 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: remove 78.9, relabel 78.4
+  gas-drift_R20_c5_s0 knn_sanitize {"eta": 0.7, "feat": "q", "k_nn": 3, "rounds": 1}: relabel_k 76.3
+  gas-drift_R20_c5_s0 label_spread {"alpha": 0.8, "beta": 0.0, "feat": "q", "n_neighbors": 50}: remove 83.8
+  gas-drift_R20_c5_s0 label_spread {"alpha": 0.8, "beta": 0.1, "feat": "z", "n_neighbors": 50}: relabel 79.7
+  gas-drift_R20_c5_s0 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "q", "n_neighbors": 50}: relabel_k 78.8
+  gas-drift_R20_c5_s0 knn_shapley {"K_nn": 50, "feat": "q"}: remove 85.3
+  gas-drift_R20_c5_s0 data_oob {"anchor_v": true, "max_depth": 10, "max_features": 0.5, "min_samples_leaf": 1}: remove 77.8
+  gas-drift_R20_c5_s0 cleanlab {"method": "self_confidence", "model": "logreg"}: remove 83.0, relabel_k 81.6, flagged 80.0
+  gas-drift_R20_c5_s0 simifeat {"feat": "z", "k_nn": 50, "metric": "cosine", "variant": "rank", "views": 1}: remove 79.6
+eval gas-drift_R20_c5_s0__free: done in 75 s
+eval gas-drift_R20_c5_s2__free: start (n 4970, k 994, V 30)
+  gas-drift_R20_c5_s2 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: remove 79.3, relabel 78.8
+  gas-drift_R20_c5_s2 knn_sanitize {"eta": 0.7, "feat": "q", "k_nn": 3, "rounds": 1}: relabel_k 76.8
+  gas-drift_R20_c5_s2 label_spread {"alpha": 0.8, "beta": 0.0, "feat": "q", "n_neighbors": 50}: remove 86.9
+  gas-drift_R20_c5_s2 label_spread {"alpha": 0.8, "beta": 0.1, "feat": "z", "n_neighbors": 50}: relabel 80.2
+  gas-drift_R20_c5_s2 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "q", "n_neighbors": 50}: relabel_k 82.1
+  gas-drift_R20_c5_s2 knn_shapley {"K_nn": 50, "feat": "q"}: remove 87.4
+  gas-drift_R20_c5_s2 data_oob {"anchor_v": true, "max_depth": 10, "max_features": 0.5, "min_samples_leaf": 1}: remove 77.7
+  gas-drift_R20_c5_s2 cleanlab {"method": "self_confidence", "model": "logreg"}: remove 82.8, relabel_k 82.4, flagged 79.8
+  gas-drift_R20_c5_s2 simifeat {"feat": "z", "k_nn": 50, "metric": "cosine", "variant": "rank", "views": 1}: remove 79.5
+eval gas-drift_R20_c5_s2__free: done in 75 s
+eval gas-drift_R30_c1_s1__free: start (n 4994, k 1498, V 6)
+  gas-drift_R30_c1_s1 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: remove 69.2
+  gas-drift_R30_c1_s1 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: relabel 71.3
+  gas-drift_R30_c1_s1 knn_sanitize {"eta": 0.7, "feat": "q", "k_nn": 3, "rounds": 1}: relabel_k 65.7
+  gas-drift_R30_c1_s1 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "q", "n_neighbors": 20}: remove 71.9
+  gas-drift_R30_c1_s1 label_spread {"alpha": 0.8, "beta": 0.1, "feat": "q", "n_neighbors": 50}: relabel 73.0, relabel_k 73.0
+  gas-drift_R30_c1_s1 knn_shapley {"K_nn": 1, "feat": "q"}: remove 76.4
+  gas-drift_R30_c1_s1 data_oob {"anchor_v": false, "max_depth": 10, "max_features": 0.5, "min_samples_leaf": 1}: remove 67.6
+  gas-drift_R30_c1_s1 cleanlab {"method": "confidence_weighted_entropy", "model": "logreg"}: remove 77.1
+  gas-drift_R30_c1_s1 cleanlab {"method": "self_confidence", "model": "logreg"}: relabel_k 70.8, flagged 72.6
+  gas-drift_R30_c1_s1 simifeat {"feat": "z", "k_nn": 50, "metric": "euclidean", "variant": "rank", "views": 21}: remove 68.3
+eval gas-drift_R30_c1_s1__free: done in 74 s
+eval gas-drift_R30_c3_s0__free: start (n 4982, k 1495, V 18)
+  gas-drift_R30_c3_s0 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: remove 71.5, relabel 71.0
+  gas-drift_R30_c3_s0 knn_sanitize {"eta": 0.7, "feat": "q", "k_nn": 3, "rounds": 1}: relabel_k 65.4
+  gas-drift_R30_c3_s0 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "q", "n_neighbors": 50}: remove 82.3, relabel_k 73.9
+  gas-drift_R30_c3_s0 label_spread {"alpha": 0.8, "beta": 0.1, "feat": "q", "n_neighbors": 50}: relabel 71.7
+  gas-drift_R30_c3_s0 knn_shapley {"K_nn": 1, "feat": "q"}: remove 76.1
+  gas-drift_R30_c3_s0 data_oob {"anchor_v": false, "max_depth": 10, "max_features": 0.5, "min_samples_leaf": 1}: remove 65.0
+  gas-drift_R30_c3_s0 cleanlab {"method": "self_confidence", "model": "logreg"}: remove 76.0, relabel_k 73.1, flagged 72.9
+  gas-drift_R30_c3_s0 simifeat {"feat": "z", "k_nn": 50, "metric": "euclidean", "variant": "rank", "views": 21}: remove 69.5
+eval gas-drift_R30_c3_s0__free: done in 70 s
+eval gas-drift_R30_c3_s2__free: start (n 4982, k 1495, V 18)
+  gas-drift_R30_c3_s2 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: remove 70.0, relabel 71.6
+  gas-drift_R30_c3_s2 knn_sanitize {"eta": 0.7, "feat": "q", "k_nn": 3, "rounds": 1}: relabel_k 65.2
+  gas-drift_R30_c3_s2 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "q", "n_neighbors": 50}: remove 80.0, relabel_k 73.9
+  gas-drift_R30_c3_s2 label_spread {"alpha": 0.8, "beta": 0.1, "feat": "q", "n_neighbors": 50}: relabel 72.3
+  gas-drift_R30_c3_s2 knn_shapley {"K_nn": 1, "feat": "q"}: remove 83.2
+  gas-drift_R30_c3_s2 data_oob {"anchor_v": false, "max_depth": 10, "max_features": 0.5, "min_samples_leaf": 1}: remove 67.5
+  gas-drift_R30_c3_s2 cleanlab {"method": "self_confidence", "model": "logreg"}: remove 77.8, relabel_k 72.0, flagged 72.3
+  gas-drift_R30_c3_s2 simifeat {"feat": "z", "k_nn": 50, "metric": "euclidean", "variant": "rank", "views": 21}: remove 68.3
+eval gas-drift_R30_c3_s2__free: done in 70 s
+eval gas-drift_R30_c5_s1__free: start (n 4970, k 1491, V 30)
+  gas-drift_R30_c5_s1 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: remove 70.1, relabel 71.2
+  gas-drift_R30_c5_s1 knn_sanitize {"eta": 0.7, "feat": "q", "k_nn": 3, "rounds": 1}: relabel_k 65.6
+  gas-drift_R30_c5_s1 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "q", "n_neighbors": 20}: remove 83.7, relabel_k 76.7
+  gas-drift_R30_c5_s1 label_spread {"alpha": 0.99, "beta": 0.1, "feat": "q", "n_neighbors": 50}: relabel 71.9
+  gas-drift_R30_c5_s1 knn_shapley {"K_nn": 50, "feat": "q"}: remove 82.7
+  gas-drift_R30_c5_s1 data_oob {"anchor_v": true, "max_depth": 10, "max_features": 0.5, "min_samples_leaf": 1}: remove 67.3
+  gas-drift_R30_c5_s1 cleanlab {"method": "confidence_weighted_entropy", "model": "logreg"}: remove 76.3
+  gas-drift_R30_c5_s1 cleanlab {"method": "self_confidence", "model": "logreg"}: relabel_k 72.4, flagged 72.0
+  gas-drift_R30_c5_s1 simifeat {"feat": "z", "k_nn": 50, "metric": "euclidean", "variant": "rank", "views": 21}: remove 68.1
+eval gas-drift_R30_c5_s1__free: done in 71 s
+eval url_unique_R20_c1_s0__free: start (n 4998, k 1000, V 2)
+  url_unique_R20_c1_s0 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 20, "rounds": 1}: remove 73.6, relabel 74.4, relabel_k 69.0
+  url_unique_R20_c1_s0 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "q", "n_neighbors": 50}: remove 86.9, relabel_k 84.7
+  url_unique_R20_c1_s0 label_spread {"alpha": 0.8, "beta": 0.5, "feat": "q", "n_neighbors": 50}: relabel 78.2
+  url_unique_R20_c1_s0 knn_shapley {"K_nn": 1, "feat": "z"}: remove 86.3
+  url_unique_R20_c1_s0 data_oob {"anchor_v": false, "max_depth": null, "max_features": "sqrt", "min_samples_leaf": 5}: remove 77.7
+  url_unique_R20_c1_s0 cleanlab {"method": "self_confidence", "model": "logreg"}: remove 79.7, relabel_k 76.3, flagged 80.7
+  url_unique_R20_c1_s0 simifeat {"feat": "q", "k_nn": 50, "metric": "euclidean", "variant": "vote", "views": 21}: remove 75.6
+eval url_unique_R20_c1_s0__free: done in 36 s
+eval url_unique_R20_c1_s2__free: start (n 4998, k 1000, V 2)
+  url_unique_R20_c1_s2 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 20, "rounds": 1}: remove 72.7, relabel 74.4, relabel_k 69.0
+  url_unique_R20_c1_s2 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "q", "n_neighbors": 50}: remove 89.7, relabel_k 87.9
+  url_unique_R20_c1_s2 label_spread {"alpha": 0.8, "beta": 0.5, "feat": "q", "n_neighbors": 50}: relabel 77.9
+  url_unique_R20_c1_s2 knn_shapley {"K_nn": 1, "feat": "z"}: remove 87.4
+  url_unique_R20_c1_s2 data_oob {"anchor_v": false, "max_depth": null, "max_features": "sqrt", "min_samples_leaf": 5}: remove 76.7
+  url_unique_R20_c1_s2 cleanlab {"method": "self_confidence", "model": "logreg"}: remove 79.9, relabel_k 76.6, flagged 80.7
+  url_unique_R20_c1_s2 simifeat {"feat": "q", "k_nn": 50, "metric": "euclidean", "variant": "vote", "views": 21}: remove 75.8
+eval url_unique_R20_c1_s2__free: done in 36 s
+eval url_unique_R20_c3_s1__free: start (n 4994, k 999, V 6)
+  url_unique_R20_c3_s1 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 20, "rounds": 3}: remove 73.2
+  url_unique_R20_c3_s1 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 20, "rounds": 1}: relabel 74.7, relabel_k 69.0
+  url_unique_R20_c3_s1 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "q", "n_neighbors": 50}: remove 90.5, relabel_k 88.8
+  url_unique_R20_c3_s1 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "q", "n_neighbors": 20}: relabel 82.3
+  url_unique_R20_c3_s1 knn_shapley {"K_nn": 1, "feat": "q"}: remove 88.1
+  url_unique_R20_c3_s1 data_oob {"anchor_v": true, "max_depth": null, "max_features": 0.5, "min_samples_leaf": 5}: remove 77.6
+  url_unique_R20_c3_s1 cleanlab {"method": "self_confidence", "model": "logreg"}: remove 80.0, relabel_k 76.6, flagged 80.9
+  url_unique_R20_c3_s1 simifeat {"feat": "q", "k_nn": 20, "metric": "cosine", "variant": "vote", "views": 21}: remove 73.9
+eval url_unique_R20_c3_s1__free: done in 37 s
+eval url_unique_R20_c5_s0__free: start (n 4990, k 998, V 10)
+  url_unique_R20_c5_s0 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 20, "rounds": 1}: remove 73.9, relabel 74.8, relabel_k 69.3
+  url_unique_R20_c5_s0 label_spread {"alpha": 0.95, "beta": 0.0, "feat": "q", "n_neighbors": 50}: remove 87.9, relabel 86.7, relabel_k 84.4
+  url_unique_R20_c5_s0 knn_shapley {"K_nn": 1, "feat": "q"}: remove 90.8
+  url_unique_R20_c5_s0 data_oob {"anchor_v": true, "max_depth": null, "max_features": "sqrt", "min_samples_leaf": 5}: remove 76.6
+  url_unique_R20_c5_s0 cleanlab {"method": "self_confidence", "model": "logreg"}: remove 80.1, relabel_k 77.0, flagged 81.0
+  url_unique_R20_c5_s0 simifeat {"feat": "q", "k_nn": 20, "metric": "cosine", "variant": "vote", "views": 21}: remove 75.0
+eval url_unique_R20_c5_s0__free: done in 36 s
+eval url_unique_R20_c5_s2__free: start (n 4990, k 998, V 10)
+  url_unique_R20_c5_s2 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 20, "rounds": 1}: remove 73.1, relabel 74.1, relabel_k 69.0
+  url_unique_R20_c5_s2 label_spread {"alpha": 0.95, "beta": 0.0, "feat": "q", "n_neighbors": 50}: remove 88.3, relabel 85.6, relabel_k 86.0
+  url_unique_R20_c5_s2 knn_shapley {"K_nn": 1, "feat": "q"}: remove 88.6
+  url_unique_R20_c5_s2 data_oob {"anchor_v": true, "max_depth": null, "max_features": "sqrt", "min_samples_leaf": 5}: remove 77.5
+  url_unique_R20_c5_s2 cleanlab {"method": "self_confidence", "model": "logreg"}: remove 80.2, relabel_k 76.7, flagged 81.0
+  url_unique_R20_c5_s2 simifeat {"feat": "q", "k_nn": 20, "metric": "cosine", "variant": "vote", "views": 21}: remove 74.9
+eval url_unique_R20_c5_s2__free: done in 36 s
+eval url_unique_R30_c1_s1__free: start (n 4998, k 1499, V 2)
+  url_unique_R30_c1_s1 knn_sanitize {"eta": 0.7, "feat": "q", "k_nn": 3, "rounds": 1}: remove 62.2
+  url_unique_R30_c1_s1 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: relabel 64.4
+  url_unique_R30_c1_s1 knn_sanitize {"eta": 0.5, "feat": "q", "k_nn": 3, "rounds": 1}: relabel_k 60.2
+  url_unique_R30_c1_s1 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "q", "n_neighbors": 20}: remove 74.2
+  url_unique_R30_c1_s1 label_spread {"alpha": 0.95, "beta": 0.0, "feat": "q", "n_neighbors": 20}: relabel 76.2
+  url_unique_R30_c1_s1 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "q", "n_neighbors": 50}: relabel_k 79.0
+  url_unique_R30_c1_s1 knn_shapley {"K_nn": 1, "feat": "q"}: remove 83.6
+  url_unique_R30_c1_s1 data_oob {"anchor_v": false, "max_depth": null, "max_features": "sqrt", "min_samples_leaf": 5}: remove 67.6
+  url_unique_R30_c1_s1 cleanlab {"method": "self_confidence", "model": "logreg"}: remove 70.4, relabel_k 66.8, flagged 71.8
+  url_unique_R30_c1_s1 simifeat {"feat": "z", "k_nn": 50, "metric": "cosine", "variant": "vote", "views": 21}: remove 65.4
+eval url_unique_R30_c1_s1__free: done in 33 s
+eval url_unique_R30_c3_s0__free: start (n 4994, k 1498, V 6)
+  url_unique_R30_c3_s0 knn_sanitize {"eta": 0.7, "feat": "q", "k_nn": 3, "rounds": 1}: remove 61.5
+  url_unique_R30_c3_s0 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: relabel 64.5
+  url_unique_R30_c3_s0 knn_sanitize {"eta": 0.5, "feat": "q", "k_nn": 3, "rounds": 1}: relabel_k 60.3
+  url_unique_R30_c3_s0 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "q", "n_neighbors": 50}: remove 89.8, relabel_k 90.2
+  url_unique_R30_c3_s0 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "q", "n_neighbors": 20}: relabel 86.5
+  url_unique_R30_c3_s0 knn_shapley {"K_nn": 1, "feat": "q"}: remove 86.3
+  url_unique_R30_c3_s0 data_oob {"anchor_v": true, "max_depth": 10, "max_features": "sqrt", "min_samples_leaf": 5}: remove 67.0
+  url_unique_R30_c3_s0 cleanlab {"method": "self_confidence", "model": "logreg"}: remove 69.7, relabel_k 67.1, flagged 72.6
+  url_unique_R30_c3_s0 simifeat {"feat": "z", "k_nn": 50, "metric": "cosine", "variant": "vote", "views": 21}: remove 65.4
+eval url_unique_R30_c3_s0__free: done in 34 s
+eval url_unique_R30_c3_s2__free: start (n 4994, k 1498, V 6)
+  url_unique_R30_c3_s2 knn_sanitize {"eta": 0.7, "feat": "q", "k_nn": 3, "rounds": 1}: remove 62.6
+  url_unique_R30_c3_s2 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: relabel 64.2
+  url_unique_R30_c3_s2 knn_sanitize {"eta": 0.5, "feat": "q", "k_nn": 3, "rounds": 1}: relabel_k 60.3
+  url_unique_R30_c3_s2 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "q", "n_neighbors": 50}: remove 87.0, relabel_k 84.2
+  url_unique_R30_c3_s2 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "q", "n_neighbors": 20}: relabel 78.9
+  url_unique_R30_c3_s2 knn_shapley {"K_nn": 1, "feat": "q"}: remove 88.1
+  url_unique_R30_c3_s2 data_oob {"anchor_v": true, "max_depth": 10, "max_features": "sqrt", "min_samples_leaf": 5}: remove 66.2
+  url_unique_R30_c3_s2 cleanlab {"method": "self_confidence", "model": "logreg"}: remove 70.0, relabel_k 67.1, flagged 72.4
+  url_unique_R30_c3_s2 simifeat {"feat": "z", "k_nn": 50, "metric": "cosine", "variant": "vote", "views": 21}: remove 65.7
+eval url_unique_R30_c3_s2__free: done in 34 s
+eval url_unique_R30_c5_s1__free: start (n 4990, k 1497, V 10)
+  url_unique_R30_c5_s1 knn_sanitize {"eta": 0.7, "feat": "q", "k_nn": 3, "rounds": 1}: remove 62.1, relabel_k 60.8
+  url_unique_R30_c5_s1 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: relabel 65.1
+  url_unique_R30_c5_s1 label_spread {"alpha": 0.95, "beta": 0.0, "feat": "q", "n_neighbors": 50}: remove 87.4, relabel 88.4
+  url_unique_R30_c5_s1 label_spread {"alpha": 0.8, "beta": 0.0, "feat": "q", "n_neighbors": 50}: relabel_k 84.8
+  url_unique_R30_c5_s1 knn_shapley {"K_nn": 50, "feat": "q"}: remove 84.4
+  url_unique_R30_c5_s1 data_oob {"anchor_v": false, "max_depth": 10, "max_features": "sqrt", "min_samples_leaf": 5}: remove 64.4
+  url_unique_R30_c5_s1 cleanlab {"method": "self_confidence", "model": "logreg"}: remove 70.3, relabel_k 66.6, flagged 72.0
+  url_unique_R30_c5_s1 simifeat {"feat": "z", "k_nn": 50, "metric": "cosine", "variant": "vote", "views": 21}: remove 65.5
+eval url_unique_R30_c5_s1__free: done in 33 s
+eval heloc_R20_c1_s1__free: start (n 4998, k 1000, V 2)
+  heloc_R20_c1_s1 knn_sanitize {"eta": 0.6, "feat": "z", "k_nn": 50, "rounds": 1}: remove 60.8
+  heloc_R20_c1_s1 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: relabel 64.3
+  heloc_R20_c1_s1 knn_sanitize {"eta": 0.6, "feat": "z", "k_nn": 20, "rounds": 3}: relabel_k 56.2
+  heloc_R20_c1_s1 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "z", "n_neighbors": 50}: remove 71.8
+  heloc_R20_c1_s1 label_spread {"alpha": 0.2, "beta": 0.5, "feat": "z", "n_neighbors": 5}: relabel 65.1, relabel_k 65.1
+  heloc_R20_c1_s1 knn_shapley {"K_nn": 1, "feat": "z"}: remove 68.2
+  heloc_R20_c1_s1 data_oob {"anchor_v": false, "max_depth": 10, "max_features": 0.5, "min_samples_leaf": 5}: remove 64.0
+  heloc_R20_c1_s1 cleanlab {"method": "self_confidence", "model": "tabpfn"}: remove 65.2, relabel_k 66.2
+  heloc_R20_c1_s1 cleanlab {"method": "self_confidence", "model": "logreg"}: flagged 70.0
+  heloc_R20_c1_s1 simifeat {"feat": "z", "k_nn": 20, "metric": "cosine", "variant": "vote", "views": 21}: remove 62.5
+eval heloc_R20_c1_s1__free: done in 26 s
+eval heloc_R20_c3_s0__free: start (n 4994, k 999, V 6)
+  heloc_R20_c3_s0 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: remove 63.2
+  heloc_R20_c3_s0 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 3}: relabel 65.3
+  heloc_R20_c3_s0 knn_sanitize {"eta": 0.6, "feat": "z", "k_nn": 20, "rounds": 1}: relabel_k 57.4
+  heloc_R20_c3_s0 label_spread {"alpha": 0.8, "beta": 0.0, "feat": "z", "n_neighbors": 50}: remove 61.6
+  heloc_R20_c3_s0 label_spread {"alpha": 0.5, "beta": 0.5, "feat": "z", "n_neighbors": 5}: relabel 65.2, relabel_k 65.2
+  heloc_R20_c3_s0 knn_shapley {"K_nn": 50, "feat": "z"}: remove 68.9
+  heloc_R20_c3_s0 data_oob {"anchor_v": true, "max_depth": 10, "max_features": 0.5, "min_samples_leaf": 1}: remove 64.2
+  heloc_R20_c3_s0 cleanlab {"method": "self_confidence", "model": "tabpfn"}: remove 66.2
+  heloc_R20_c3_s0 cleanlab {"method": "self_confidence", "model": "logreg"}: relabel_k 66.8, flagged 70.5
+  heloc_R20_c3_s0 simifeat {"feat": "z", "k_nn": 50, "metric": "cosine", "variant": "vote", "views": 21}: remove 63.1
+eval heloc_R20_c3_s0__free: done in 24 s
+eval heloc_R20_c3_s2__free: start (n 4994, k 999, V 6)
+  heloc_R20_c3_s2 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: remove 63.4
+  heloc_R20_c3_s2 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 3}: relabel 64.3
+  heloc_R20_c3_s2 knn_sanitize {"eta": 0.6, "feat": "z", "k_nn": 20, "rounds": 1}: relabel_k 57.1
+  heloc_R20_c3_s2 label_spread {"alpha": 0.8, "beta": 0.0, "feat": "z", "n_neighbors": 50}: remove 67.1
+  heloc_R20_c3_s2 label_spread {"alpha": 0.5, "beta": 0.5, "feat": "z", "n_neighbors": 5}: relabel 65.3, relabel_k 65.3
+  heloc_R20_c3_s2 knn_shapley {"K_nn": 50, "feat": "z"}: remove 67.1
+  heloc_R20_c3_s2 data_oob {"anchor_v": true, "max_depth": 10, "max_features": 0.5, "min_samples_leaf": 1}: remove 64.7
+  heloc_R20_c3_s2 cleanlab {"method": "self_confidence", "model": "tabpfn"}: remove 66.8
+  heloc_R20_c3_s2 cleanlab {"method": "self_confidence", "model": "logreg"}: relabel_k 67.1, flagged 70.5
+  heloc_R20_c3_s2 simifeat {"feat": "z", "k_nn": 50, "metric": "cosine", "variant": "vote", "views": 21}: remove 62.9
+eval heloc_R20_c3_s2__free: done in 21 s
+eval heloc_R20_c5_s1__free: start (n 4990, k 998, V 10)
+  heloc_R20_c5_s1 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: remove 63.6, relabel 64.0
+  heloc_R20_c5_s1 knn_sanitize {"eta": 0.6, "feat": "z", "k_nn": 50, "rounds": 1}: relabel_k 59.1
+  heloc_R20_c5_s1 label_spread {"alpha": 0.5, "beta": 0.0, "feat": "z", "n_neighbors": 50}: remove 72.2
+  heloc_R20_c5_s1 label_spread {"alpha": 0.5, "beta": 0.5, "feat": "z", "n_neighbors": 5}: relabel 65.1, relabel_k 65.1
+  heloc_R20_c5_s1 knn_shapley {"K_nn": 20, "feat": "z"}: remove 67.9
+  heloc_R20_c5_s1 data_oob {"anchor_v": true, "max_depth": 10, "max_features": "sqrt", "min_samples_leaf": 1}: remove 65.1
+  heloc_R20_c5_s1 cleanlab {"method": "self_confidence", "model": "logreg"}: remove 66.9, relabel_k 67.0, flagged 69.8
+  heloc_R20_c5_s1 simifeat {"feat": "z", "k_nn": 20, "metric": "cosine", "variant": "vote", "views": 21}: remove 62.8
+eval heloc_R20_c5_s1__free: done in 14 s
+eval heloc_R30_c1_s0__free: start (n 4998, k 1499, V 2)
+  heloc_R30_c1_s0 knn_sanitize {"eta": 0.5, "feat": "q", "k_nn": 50, "rounds": 3}: remove 50.1, relabel_k 50.4
+  heloc_R30_c1_s0 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: relabel 60.7
+  heloc_R30_c1_s0 label_spread {"alpha": 0.95, "beta": 0.0, "feat": "z", "n_neighbors": 50}: remove 68.6
+  heloc_R30_c1_s0 label_spread {"alpha": 0.2, "beta": 0.5, "feat": "z", "n_neighbors": 5}: relabel 61.5
+  heloc_R30_c1_s0 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "z", "n_neighbors": 20}: relabel_k 65.9
+  heloc_R30_c1_s0 knn_shapley {"K_nn": 1, "feat": "z"}: remove 70.8
+  heloc_R30_c1_s0 data_oob {"anchor_v": false, "max_depth": null, "max_features": 0.5, "min_samples_leaf": 5}: remove 61.9
+  heloc_R30_c1_s0 cleanlab {"method": "self_confidence", "model": "tabpfn"}: remove 61.0, relabel_k 61.5
+  heloc_R30_c1_s0 cleanlab {"method": "self_confidence", "model": "logreg"}: flagged 65.3
+  heloc_R30_c1_s0 simifeat {"feat": "z", "k_nn": 10, "metric": "cosine", "variant": "vote", "views": 21}: remove 57.8
+eval heloc_R30_c1_s0__free: done in 20 s
+eval heloc_R30_c1_s2__free: start (n 4998, k 1499, V 2)
+  heloc_R30_c1_s2 knn_sanitize {"eta": 0.5, "feat": "q", "k_nn": 50, "rounds": 3}: remove 51.0, relabel_k 50.0
+  heloc_R30_c1_s2 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: relabel 60.7
+  heloc_R30_c1_s2 label_spread {"alpha": 0.95, "beta": 0.0, "feat": "z", "n_neighbors": 50}: remove 67.3
+  heloc_R30_c1_s2 label_spread {"alpha": 0.2, "beta": 0.5, "feat": "z", "n_neighbors": 5}: relabel 61.5
+  heloc_R30_c1_s2 label_spread {"alpha": 0.99, "beta": 0.0, "feat": "z", "n_neighbors": 20}: relabel_k 67.9
+  heloc_R30_c1_s2 knn_shapley {"K_nn": 1, "feat": "z"}: remove 62.6
+  heloc_R30_c1_s2 data_oob {"anchor_v": false, "max_depth": null, "max_features": 0.5, "min_samples_leaf": 5}: remove 61.7
+  heloc_R30_c1_s2 cleanlab {"method": "self_confidence", "model": "tabpfn"}: remove 60.5, relabel_k 61.6
+  heloc_R30_c1_s2 cleanlab {"method": "self_confidence", "model": "logreg"}: flagged 64.6
+  heloc_R30_c1_s2 simifeat {"feat": "z", "k_nn": 10, "metric": "cosine", "variant": "vote", "views": 21}: remove 58.9
+eval heloc_R30_c1_s2__free: done in 21 s
+eval heloc_R30_c3_s1__free: start (n 4994, k 1498, V 6)
+  heloc_R30_c3_s1 knn_sanitize {"eta": 0.5, "feat": "q", "k_nn": 50, "rounds": 3}: remove 50.4
+  heloc_R30_c3_s1 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: relabel 60.4
+  heloc_R30_c3_s1 knn_sanitize {"eta": 0.6, "feat": "q", "k_nn": 50, "rounds": 3}: relabel_k 50.9
+  heloc_R30_c3_s1 label_spread {"alpha": 0.8, "beta": 0.0, "feat": "z", "n_neighbors": 50}: remove 71.7, relabel_k 71.3
+  heloc_R30_c3_s1 label_spread {"alpha": 0.2, "beta": 0.5, "feat": "z", "n_neighbors": 5}: relabel 61.4
+  heloc_R30_c3_s1 knn_shapley {"K_nn": 1, "feat": "z"}: remove 69.6
+  heloc_R30_c3_s1 data_oob {"anchor_v": true, "max_depth": null, "max_features": 0.5, "min_samples_leaf": 5}: remove 61.6
+  heloc_R30_c3_s1 cleanlab {"method": "self_confidence", "model": "tabpfn"}: remove 60.8, relabel_k 61.6
+  heloc_R30_c3_s1 cleanlab {"method": "self_confidence", "model": "logreg"}: flagged 64.8
+  heloc_R30_c3_s1 simifeat {"feat": "z", "k_nn": 10, "metric": "cosine", "variant": "vote", "views": 21}: remove 58.9
+eval heloc_R30_c3_s1__free: done in 18 s
+eval heloc_R30_c5_s0__free: start (n 4990, k 1497, V 10)
+  heloc_R30_c5_s0 knn_sanitize {"eta": 0.5, "feat": "q", "k_nn": 50, "rounds": 3}: remove 51.0
+  heloc_R30_c5_s0 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: relabel 60.7
+  heloc_R30_c5_s0 knn_sanitize {"eta": 0.6, "feat": "q", "k_nn": 50, "rounds": 3}: relabel_k 51.6
+  heloc_R30_c5_s0 label_spread {"alpha": 0.5, "beta": 0.0, "feat": "z", "n_neighbors": 50}: remove 60.4
+  heloc_R30_c5_s0 label_spread {"alpha": 0.2, "beta": 0.5, "feat": "z", "n_neighbors": 5}: relabel 61.2, relabel_k 61.2
+  heloc_R30_c5_s0 knn_shapley {"K_nn": 50, "feat": "z"}: remove 66.8
+  heloc_R30_c5_s0 data_oob {"anchor_v": true, "max_depth": null, "max_features": 0.5, "min_samples_leaf": 5}: remove 61.6
+  heloc_R30_c5_s0 cleanlab {"method": "self_confidence", "model": "tabpfn"}: remove 61.4, relabel_k 61.7
+  heloc_R30_c5_s0 cleanlab {"method": "self_confidence", "model": "logreg"}: flagged 64.7
+  heloc_R30_c5_s0 simifeat {"feat": "z", "k_nn": 10, "metric": "cosine", "variant": "vote", "views": 21}: remove 58.2
+eval heloc_R30_c5_s0__free: done in 18 s
+eval heloc_R30_c5_s2__free: start (n 4990, k 1497, V 10)
+  heloc_R30_c5_s2 knn_sanitize {"eta": 0.5, "feat": "q", "k_nn": 50, "rounds": 3}: remove 50.3
+  heloc_R30_c5_s2 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: relabel 60.9
+  heloc_R30_c5_s2 knn_sanitize {"eta": 0.6, "feat": "q", "k_nn": 50, "rounds": 3}: relabel_k 51.2
+  heloc_R30_c5_s2 label_spread {"alpha": 0.5, "beta": 0.0, "feat": "z", "n_neighbors": 50}: remove 65.8
+  heloc_R30_c5_s2 label_spread {"alpha": 0.2, "beta": 0.5, "feat": "z", "n_neighbors": 5}: relabel 61.4, relabel_k 61.4
+  heloc_R30_c5_s2 knn_shapley {"K_nn": 50, "feat": "z"}: remove 66.0
+  heloc_R30_c5_s2 data_oob {"anchor_v": true, "max_depth": null, "max_features": 0.5, "min_samples_leaf": 5}: remove 62.0
+  heloc_R30_c5_s2 cleanlab {"method": "self_confidence", "model": "tabpfn"}: remove 61.4, relabel_k 62.6
+  heloc_R30_c5_s2 cleanlab {"method": "self_confidence", "model": "logreg"}: flagged 64.8
+  heloc_R30_c5_s2 simifeat {"feat": "z", "k_nn": 10, "metric": "cosine", "variant": "vote", "views": 21}: remove 59.1
+eval heloc_R30_c5_s2__free: done in 18 s
+eval students_dropout_R20_c1_s1__free: start (n 2997, k 599, V 3)
+  students_dropout_R20_c1_s1 knn_sanitize {"eta": 0.6, "feat": "q", "k_nn": 10, "rounds": 1}: remove 65.2
+  students_dropout_R20_c1_s1 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 3}: relabel 69.8
+  students_dropout_R20_c1_s1 knn_sanitize {"eta": 0.5, "feat": "q", "k_nn": 5, "rounds": 3}: relabel_k 59.6
+  students_dropout_R20_c1_s1 label_spread {"alpha": 0.2, "beta": 0.5, "feat": "z", "n_neighbors": 50}: remove 67.2
+  students_dropout_R20_c1_s1 label_spread {"alpha": 0.2, "beta": 0.1, "feat": "z", "n_neighbors": 5}: relabel 67.8, relabel_k 67.8
+  students_dropout_R20_c1_s1 knn_shapley {"K_nn": 1, "feat": "z"}: remove 64.4
+  students_dropout_R20_c1_s1 data_oob {"anchor_v": true, "max_depth": 10, "max_features": 0.5, "min_samples_leaf": 1}: remove 65.4
+  students_dropout_R20_c1_s1 cleanlab {"method": "confidence_weighted_entropy", "model": "logreg"}: remove 68.2
+  students_dropout_R20_c1_s1 cleanlab {"method": "normalized_margin", "model": "logreg"}: relabel_k 71.6
+  students_dropout_R20_c1_s1 cleanlab {"method": "self_confidence", "model": "logreg"}: flagged 72.0
+  students_dropout_R20_c1_s1 simifeat {"feat": "q", "k_nn": 5, "metric": "cosine", "variant": "rank", "views": 1}: remove 65.6
+eval students_dropout_R20_c1_s1__free: done in 15 s
+eval students_dropout_R20_c3_s0__free: start (n 2991, k 598, V 9)
+  students_dropout_R20_c3_s0 knn_sanitize {"eta": 0.6, "feat": "q", "k_nn": 10, "rounds": 1}: remove 65.4
+  students_dropout_R20_c3_s0 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 3}: relabel 70.0
+  students_dropout_R20_c3_s0 knn_sanitize {"eta": 0.7, "feat": "q", "k_nn": 5, "rounds": 1}: relabel_k 60.0
+  students_dropout_R20_c3_s0 label_spread {"alpha": 0.2, "beta": 0.5, "feat": "z", "n_neighbors": 50}: remove 67.4
+  students_dropout_R20_c3_s0 label_spread {"alpha": 0.2, "beta": 0.1, "feat": "z", "n_neighbors": 5}: relabel 67.6, relabel_k 67.6
+  students_dropout_R20_c3_s0 knn_shapley {"K_nn": 1, "feat": "z"}: remove 69.8
+  students_dropout_R20_c3_s0 data_oob {"anchor_v": true, "max_depth": 10, "max_features": "sqrt", "min_samples_leaf": 1}: remove 67.2
+  students_dropout_R20_c3_s0 cleanlab {"method": "normalized_margin", "model": "logreg"}: remove 72.2, relabel_k 72.0
+  students_dropout_R20_c3_s0 cleanlab {"method": "self_confidence", "model": "logreg"}: flagged 70.6
+  students_dropout_R20_c3_s0 simifeat {"feat": "q", "k_nn": 5, "metric": "euclidean", "variant": "rank", "views": 1}: remove 66.6
+eval students_dropout_R20_c3_s0__free: done in 12 s
+eval students_dropout_R20_c3_s2__free: start (n 2991, k 598, V 9)
+  students_dropout_R20_c3_s2 knn_sanitize {"eta": 0.6, "feat": "q", "k_nn": 10, "rounds": 1}: remove 65.2
+  students_dropout_R20_c3_s2 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 3}: relabel 69.0
+  students_dropout_R20_c3_s2 knn_sanitize {"eta": 0.7, "feat": "q", "k_nn": 5, "rounds": 1}: relabel_k 59.4
+  students_dropout_R20_c3_s2 label_spread {"alpha": 0.2, "beta": 0.5, "feat": "z", "n_neighbors": 50}: remove 66.8
+  students_dropout_R20_c3_s2 label_spread {"alpha": 0.2, "beta": 0.1, "feat": "z", "n_neighbors": 5}: relabel 67.0, relabel_k 67.0
+  students_dropout_R20_c3_s2 knn_shapley {"K_nn": 1, "feat": "z"}: remove 72.4
+  students_dropout_R20_c3_s2 data_oob {"anchor_v": true, "max_depth": 10, "max_features": "sqrt", "min_samples_leaf": 1}: remove 66.0
+  students_dropout_R20_c3_s2 cleanlab {"method": "normalized_margin", "model": "logreg"}: remove 71.6, relabel_k 70.2
+  students_dropout_R20_c3_s2 cleanlab {"method": "self_confidence", "model": "logreg"}: flagged 71.2
+  students_dropout_R20_c3_s2 simifeat {"feat": "q", "k_nn": 5, "metric": "euclidean", "variant": "rank", "views": 1}: remove 64.2
+eval students_dropout_R20_c3_s2__free: done in 12 s
+eval students_dropout_R20_c5_s1__free: start (n 2985, k 597, V 15)
+  students_dropout_R20_c5_s1 knn_sanitize {"eta": 0.5, "feat": "q", "k_nn": 20, "rounds": 3}: remove 63.8
+  students_dropout_R20_c5_s1 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 3}: relabel 70.4
+  students_dropout_R20_c5_s1 knn_sanitize {"eta": 0.7, "feat": "q", "k_nn": 5, "rounds": 1}: relabel_k 60.0
+  students_dropout_R20_c5_s1 label_spread {"alpha": 0.2, "beta": 0.1, "feat": "z", "n_neighbors": 50}: remove 67.4
+  students_dropout_R20_c5_s1 label_spread {"alpha": 0.2, "beta": 0.1, "feat": "z", "n_neighbors": 5}: relabel 67.8, relabel_k 67.8
+  students_dropout_R20_c5_s1 knn_shapley {"K_nn": 50, "feat": "z"}: remove 71.6
+  students_dropout_R20_c5_s1 data_oob {"anchor_v": true, "max_depth": 10, "max_features": "sqrt", "min_samples_leaf": 1}: remove 67.2
+  students_dropout_R20_c5_s1 cleanlab {"method": "normalized_margin", "model": "logreg"}: remove 71.8, relabel_k 71.6
+  students_dropout_R20_c5_s1 cleanlab {"method": "self_confidence", "model": "logreg"}: flagged 71.0
+  students_dropout_R20_c5_s1 simifeat {"feat": "q", "k_nn": 5, "metric": "cosine", "variant": "rank", "views": 1}: remove 64.6
+eval students_dropout_R20_c5_s1__free: done in 12 s
+eval students_dropout_R30_c1_s0__free: start (n 2997, k 899, V 3)
+  students_dropout_R30_c1_s0 knn_sanitize {"eta": 0.5, "feat": "q", "k_nn": 20, "rounds": 3}: remove 50.8
+  students_dropout_R30_c1_s0 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: relabel 60.6
+  students_dropout_R30_c1_s0 knn_sanitize {"eta": 0.7, "feat": "z", "k_nn": 3, "rounds": 1}: relabel_k 50.4
+  students_dropout_R30_c1_s0 label_spread {"alpha": 0.2, "beta": 0.1, "feat": "z", "n_neighbors": 20}: remove 60.6
+  students_dropout_R30_c1_s0 label_spread {"alpha": 0.2, "beta": 0.1, "feat": "z", "n_neighbors": 5}: relabel 60.8, relabel_k 60.8
+  students_dropout_R30_c1_s0 knn_shapley {"K_nn": 50, "feat": "z"}: remove 61.0
+  students_dropout_R30_c1_s0 data_oob {"anchor_v": true, "max_depth": 10, "max_features": "sqrt", "min_samples_leaf": 1}: remove 60.2
+  students_dropout_R30_c1_s0 cleanlab {"method": "normalized_margin", "model": "logreg"}: remove 63.8, relabel_k 63.4
+  students_dropout_R30_c1_s0 cleanlab {"method": "self_confidence", "model": "logreg"}: flagged 63.4
+  students_dropout_R30_c1_s0 simifeat {"feat": "q", "k_nn": 5, "metric": "cosine", "variant": "vote", "views": 1}: remove 57.4
+eval students_dropout_R30_c1_s0__free: done in 12 s
+eval students_dropout_R30_c1_s2__free: start (n 2997, k 899, V 3)
+  students_dropout_R30_c1_s2 knn_sanitize {"eta": 0.5, "feat": "q", "k_nn": 20, "rounds": 3}: remove 49.4
+  students_dropout_R30_c1_s2 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: relabel 60.6
+  students_dropout_R30_c1_s2 knn_sanitize {"eta": 0.7, "feat": "z", "k_nn": 3, "rounds": 1}: relabel_k 51.0
+  students_dropout_R30_c1_s2 label_spread {"alpha": 0.2, "beta": 0.1, "feat": "z", "n_neighbors": 20}: remove 61.0
+  students_dropout_R30_c1_s2 label_spread {"alpha": 0.2, "beta": 0.1, "feat": "z", "n_neighbors": 5}: relabel 60.2, relabel_k 60.2
+  students_dropout_R30_c1_s2 knn_shapley {"K_nn": 50, "feat": "z"}: remove 59.2
+  students_dropout_R30_c1_s2 data_oob {"anchor_v": true, "max_depth": 10, "max_features": "sqrt", "min_samples_leaf": 1}: remove 58.8
+  students_dropout_R30_c1_s2 cleanlab {"method": "normalized_margin", "model": "logreg"}: remove 64.2, relabel_k 63.8
+  students_dropout_R30_c1_s2 cleanlab {"method": "self_confidence", "model": "logreg"}: flagged 62.4
+  students_dropout_R30_c1_s2 simifeat {"feat": "q", "k_nn": 5, "metric": "cosine", "variant": "vote", "views": 1}: remove 57.4
+eval students_dropout_R30_c1_s2__free: done in 12 s
+eval students_dropout_R30_c3_s1__free: start (n 2991, k 897, V 9)
+  students_dropout_R30_c3_s1 knn_sanitize {"eta": 0.5, "feat": "q", "k_nn": 20, "rounds": 3}: remove 51.2
+  students_dropout_R30_c3_s1 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: relabel 60.2
+  students_dropout_R30_c3_s1 knn_sanitize {"eta": 0.7, "feat": "z", "k_nn": 3, "rounds": 3}: relabel_k 50.4
+  students_dropout_R30_c3_s1 label_spread {"alpha": 0.95, "beta": 0.0, "feat": "q", "n_neighbors": 50}: remove 58.2
+  students_dropout_R30_c3_s1 label_spread {"alpha": 0.2, "beta": 0.1, "feat": "z", "n_neighbors": 5}: relabel 60.4, relabel_k 60.4
+  students_dropout_R30_c3_s1 knn_shapley {"K_nn": 1, "feat": "z"}: remove 61.8
+  students_dropout_R30_c3_s1 data_oob {"anchor_v": false, "max_depth": 10, "max_features": "sqrt", "min_samples_leaf": 5}: remove 60.2
+  students_dropout_R30_c3_s1 cleanlab {"method": "normalized_margin", "model": "logreg"}: remove 64.6, relabel_k 64.0
+  students_dropout_R30_c3_s1 cleanlab {"method": "self_confidence", "model": "logreg"}: flagged 63.0
+  students_dropout_R30_c3_s1 simifeat {"feat": "q", "k_nn": 5, "metric": "cosine", "variant": "vote", "views": 1}: remove 57.4
+eval students_dropout_R30_c3_s1__free: done in 12 s
+eval students_dropout_R30_c5_s0__free: start (n 2985, k 896, V 15)
+  students_dropout_R30_c5_s0 knn_sanitize {"eta": 0.5, "feat": "q", "k_nn": 20, "rounds": 3}: remove 50.4
+  students_dropout_R30_c5_s0 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: relabel 61.0
+  students_dropout_R30_c5_s0 knn_sanitize {"eta": 0.7, "feat": "z", "k_nn": 3, "rounds": 1}: relabel_k 52.0
+  students_dropout_R30_c5_s0 label_spread {"alpha": 0.2, "beta": 0.1, "feat": "z", "n_neighbors": 20}: remove 60.6
+  students_dropout_R30_c5_s0 label_spread {"alpha": 0.2, "beta": 0.1, "feat": "z", "n_neighbors": 5}: relabel 60.4, relabel_k 60.4
+  students_dropout_R30_c5_s0 knn_shapley {"K_nn": 3, "feat": "z"}: remove 64.8
+  students_dropout_R30_c5_s0 data_oob {"anchor_v": false, "max_depth": 10, "max_features": "sqrt", "min_samples_leaf": 1}: remove 58.8
+  students_dropout_R30_c5_s0 cleanlab {"method": "normalized_margin", "model": "logreg"}: remove 65.2, relabel_k 64.8
+  students_dropout_R30_c5_s0 cleanlab {"method": "self_confidence", "model": "logreg"}: flagged 63.0
+  students_dropout_R30_c5_s0 simifeat {"feat": "q", "k_nn": 5, "metric": "euclidean", "variant": "rank", "views": 1}: remove 58.2
+eval students_dropout_R30_c5_s0__free: done in 12 s
+eval students_dropout_R30_c5_s2__free: start (n 2985, k 896, V 15)
+  students_dropout_R30_c5_s2 knn_sanitize {"eta": 0.5, "feat": "q", "k_nn": 20, "rounds": 3}: remove 51.0
+  students_dropout_R30_c5_s2 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: relabel 60.2
+  students_dropout_R30_c5_s2 knn_sanitize {"eta": 0.7, "feat": "z", "k_nn": 3, "rounds": 1}: relabel_k 50.2
+  students_dropout_R30_c5_s2 label_spread {"alpha": 0.2, "beta": 0.1, "feat": "z", "n_neighbors": 20}: remove 61.0
+  students_dropout_R30_c5_s2 label_spread {"alpha": 0.2, "beta": 0.1, "feat": "z", "n_neighbors": 5}: relabel 60.0, relabel_k 60.0
+  students_dropout_R30_c5_s2 knn_shapley {"K_nn": 3, "feat": "z"}: remove 64.6
+  students_dropout_R30_c5_s2 data_oob {"anchor_v": false, "max_depth": 10, "max_features": "sqrt", "min_samples_leaf": 1}: remove 61.2
+  students_dropout_R30_c5_s2 cleanlab {"method": "normalized_margin", "model": "logreg"}: remove 65.4, relabel_k 65.0
+  students_dropout_R30_c5_s2 cleanlab {"method": "self_confidence", "model": "logreg"}: flagged 62.6
+  students_dropout_R30_c5_s2 simifeat {"feat": "q", "k_nn": 5, "metric": "euclidean", "variant": "rank", "views": 1}: remove 56.4
+eval students_dropout_R30_c5_s2__free: done in 11 s
+eval credit-approval_R20_c1_s1__free: start (n 455, k 91, V 2)
+  credit-approval_R20_c1_s1 knn_sanitize {"eta": 0.7, "feat": "q", "k_nn": 50, "rounds": 1}: remove 74.0
+  credit-approval_R20_c1_s1 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 20, "rounds": 1}: relabel 76.0
+  credit-approval_R20_c1_s1 knn_sanitize {"eta": 0.7, "feat": "q", "k_nn": 50, "rounds": 3}: relabel_k 70.4
+  credit-approval_R20_c1_s1 label_spread {"alpha": 0.2, "beta": 0.5, "feat": "q", "n_neighbors": 50}: remove 76.5
+  credit-approval_R20_c1_s1 label_spread {"alpha": 0.8, "beta": 0.5, "feat": "z", "n_neighbors": 50}: relabel 73.5, relabel_k 73.5
+  credit-approval_R20_c1_s1 knn_shapley {"K_nn": 1, "feat": "z"}: remove 68.9
+  credit-approval_R20_c1_s1 data_oob {"anchor_v": false, "max_depth": 10, "max_features": "sqrt", "min_samples_leaf": 5}: remove 76.0
+  credit-approval_R20_c1_s1 cleanlab {"method": "self_confidence", "model": "hgb"}: remove 71.4, relabel_k 73.0, flagged 73.5
+  credit-approval_R20_c1_s1 simifeat {"feat": "q", "k_nn": 20, "metric": "cosine", "variant": "vote", "views": 21}: remove 73.0
+eval credit-approval_R20_c1_s1__free: done in 5 s
+eval credit-approval_R20_c3_s0__free: start (n 451, k 90, V 6)
+  credit-approval_R20_c3_s0 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: remove 73.5, relabel_k 71.9
+  credit-approval_R20_c3_s0 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 20, "rounds": 1}: relabel 73.0
+  credit-approval_R20_c3_s0 label_spread {"alpha": 0.2, "beta": 0.1, "feat": "q", "n_neighbors": 50}: remove 82.1
+  credit-approval_R20_c3_s0 label_spread {"alpha": 0.8, "beta": 0.5, "feat": "q", "n_neighbors": 50}: relabel 73.0, relabel_k 73.0
+  credit-approval_R20_c3_s0 knn_shapley {"K_nn": 20, "feat": "q"}: remove 84.7
+  credit-approval_R20_c3_s0 data_oob {"anchor_v": true, "max_depth": 10, "max_features": "sqrt", "min_samples_leaf": 5}: remove 73.0
+  credit-approval_R20_c3_s0 cleanlab {"method": "self_confidence", "model": "hgb"}: remove 73.5
+  credit-approval_R20_c3_s0 cleanlab {"method": "self_confidence", "model": "logreg"}: relabel_k 78.6
+  credit-approval_R20_c3_s0 cleanlab {"method": "self_confidence", "model": "tabpfn"}: flagged 73.0
+  credit-approval_R20_c3_s0 simifeat {"feat": "q", "k_nn": 50, "metric": "cosine", "variant": "rank", "views": 21}: remove 76.0
+eval credit-approval_R20_c3_s0__free: done in 12 s
+eval credit-approval_R20_c3_s2__free: start (n 451, k 90, V 6)
+  credit-approval_R20_c3_s2 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: remove 73.0, relabel_k 70.4
+  credit-approval_R20_c3_s2 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 20, "rounds": 1}: relabel 75.5
+  credit-approval_R20_c3_s2 label_spread {"alpha": 0.2, "beta": 0.1, "feat": "q", "n_neighbors": 50}: remove 79.6
+  credit-approval_R20_c3_s2 label_spread {"alpha": 0.8, "beta": 0.5, "feat": "q", "n_neighbors": 50}: relabel 71.4, relabel_k 71.4
+  credit-approval_R20_c3_s2 knn_shapley {"K_nn": 20, "feat": "q"}: remove 84.2
+  credit-approval_R20_c3_s2 data_oob {"anchor_v": true, "max_depth": 10, "max_features": "sqrt", "min_samples_leaf": 5}: remove 72.4
+  credit-approval_R20_c3_s2 cleanlab {"method": "self_confidence", "model": "hgb"}: remove 71.9
+  credit-approval_R20_c3_s2 cleanlab {"method": "self_confidence", "model": "logreg"}: relabel_k 79.1
+  credit-approval_R20_c3_s2 cleanlab {"method": "self_confidence", "model": "tabpfn"}: flagged 73.5
+  credit-approval_R20_c3_s2 simifeat {"feat": "q", "k_nn": 50, "metric": "cosine", "variant": "rank", "views": 21}: remove 68.9
+eval credit-approval_R20_c3_s2__free: done in 12 s
+eval credit-approval_R20_c5_s2__free: start (n 447, k 89, V 10)
+  credit-approval_R20_c5_s2 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: remove 72.4, relabel_k 70.9
+  credit-approval_R20_c5_s2 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 20, "rounds": 1}: relabel 76.0
+  credit-approval_R20_c5_s2 label_spread {"alpha": 0.5, "beta": 0.1, "feat": "q", "n_neighbors": 50}: remove 77.0
+  credit-approval_R20_c5_s2 label_spread {"alpha": 0.8, "beta": 0.1, "feat": "q", "n_neighbors": 20}: relabel 75.5
+  credit-approval_R20_c5_s2 label_spread {"alpha": 0.95, "beta": 0.0, "feat": "q", "n_neighbors": 50}: relabel_k 84.7
+  credit-approval_R20_c5_s2 knn_shapley {"K_nn": 50, "feat": "z"}: remove 85.2
+  credit-approval_R20_c5_s2 data_oob {"anchor_v": false, "max_depth": 10, "max_features": "sqrt", "min_samples_leaf": 5}: remove 76.5
+  credit-approval_R20_c5_s2 cleanlab {"method": "self_confidence", "model": "hgb"}: remove 74.0, flagged 73.5
+  credit-approval_R20_c5_s2 cleanlab {"method": "self_confidence", "model": "logreg"}: relabel_k 78.6
+  credit-approval_R20_c5_s2 simifeat {"feat": "q", "k_nn": 50, "metric": "euclidean", "variant": "vote", "views": 21}: remove 67.9
+eval credit-approval_R20_c5_s2__free: done in 8 s
+eval credit-approval_R30_c1_s0__free: start (n 455, k 137, V 2)
+  credit-approval_R30_c1_s0 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: remove 60.2, relabel_k 57.1
+  credit-approval_R30_c1_s0 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 3}: relabel 67.9
+  credit-approval_R30_c1_s0 label_spread {"alpha": 0.2, "beta": 0.5, "feat": "q", "n_neighbors": 50}: remove 69.9
+  credit-approval_R30_c1_s0 label_spread {"alpha": 0.8, "beta": 0.1, "feat": "q", "n_neighbors": 50}: relabel 69.9, relabel_k 69.9
+  credit-approval_R30_c1_s0 knn_shapley {"K_nn": 20, "feat": "z"}: remove 84.2
+  credit-approval_R30_c1_s0 data_oob {"anchor_v": true, "max_depth": null, "max_features": "sqrt", "min_samples_leaf": 5}: remove 69.4
+  credit-approval_R30_c1_s0 cleanlab {"method": "self_confidence", "model": "logreg"}: remove 71.4, relabel_k 71.4, flagged 71.4
+  credit-approval_R30_c1_s0 simifeat {"feat": "z", "k_nn": 50, "metric": "cosine", "variant": "rank", "views": 1}: remove 63.3
+eval credit-approval_R30_c1_s0__free: done in 4 s
+eval credit-approval_R30_c1_s2__free: start (n 455, k 137, V 2)
+  credit-approval_R30_c1_s2 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: remove 58.7, relabel_k 56.1
+  credit-approval_R30_c1_s2 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 3}: relabel 69.4
+  credit-approval_R30_c1_s2 label_spread {"alpha": 0.2, "beta": 0.5, "feat": "q", "n_neighbors": 50}: remove 66.3
+  credit-approval_R30_c1_s2 label_spread {"alpha": 0.8, "beta": 0.1, "feat": "q", "n_neighbors": 50}: relabel 67.9, relabel_k 67.9
+  credit-approval_R30_c1_s2 knn_shapley {"K_nn": 20, "feat": "z"}: remove 70.9
+  credit-approval_R30_c1_s2 data_oob {"anchor_v": true, "max_depth": null, "max_features": "sqrt", "min_samples_leaf": 5}: remove 69.4
+  credit-approval_R30_c1_s2 cleanlab {"method": "self_confidence", "model": "logreg"}: remove 70.4, relabel_k 68.9, flagged 70.9
+  credit-approval_R30_c1_s2 simifeat {"feat": "z", "k_nn": 50, "metric": "cosine", "variant": "rank", "views": 1}: remove 65.8
+eval credit-approval_R30_c1_s2__free: done in 5 s
+eval credit-approval_R30_c3_s1__free: start (n 451, k 135, V 6)
+  credit-approval_R30_c3_s1 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: remove 59.2
+  credit-approval_R30_c3_s1 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: relabel 71.4
+  credit-approval_R30_c3_s1 knn_sanitize {"eta": 0.6, "feat": "q", "k_nn": 10, "rounds": 1}: relabel_k 62.8
+  credit-approval_R30_c3_s1 label_spread {"alpha": 0.5, "beta": 0.0, "feat": "q", "n_neighbors": 50}: remove 61.7, relabel_k 60.7
+  credit-approval_R30_c3_s1 label_spread {"alpha": 0.8, "beta": 0.5, "feat": "z", "n_neighbors": 50}: relabel 68.9
+  credit-approval_R30_c3_s1 knn_shapley {"K_nn": 20, "feat": "z"}: remove 73.5
+  credit-approval_R30_c3_s1 data_oob {"anchor_v": false, "max_depth": null, "max_features": "sqrt", "min_samples_leaf": 5}: remove 68.4
+  credit-approval_R30_c3_s1 cleanlab {"method": "self_confidence", "model": "logreg"}: remove 67.3, relabel_k 64.3, flagged 70.4
+  credit-approval_R30_c3_s1 simifeat {"feat": "z", "k_nn": 50, "metric": "cosine", "variant": "rank", "views": 1}: remove 63.8
+eval credit-approval_R30_c3_s1__free: done in 4 s
+eval credit-approval_R30_c5_s0__free: start (n 447, k 134, V 10)
+  credit-approval_R30_c5_s0 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: remove 59.7
+  credit-approval_R30_c5_s0 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: relabel 67.9
+  credit-approval_R30_c5_s0 knn_sanitize {"eta": 0.5, "feat": "q", "k_nn": 10, "rounds": 1}: relabel_k 64.8
+  credit-approval_R30_c5_s0 label_spread {"alpha": 0.8, "beta": 0.0, "feat": "q", "n_neighbors": 50}: remove 84.2, relabel 80.1, relabel_k 82.7
+  credit-approval_R30_c5_s0 knn_shapley {"K_nn": 50, "feat": "z"}: remove 84.2
+  credit-approval_R30_c5_s0 data_oob {"anchor_v": true, "max_depth": null, "max_features": "sqrt", "min_samples_leaf": 5}: remove 70.9
+  credit-approval_R30_c5_s0 cleanlab {"method": "self_confidence", "model": "logreg"}: remove 72.4, relabel_k 71.9, flagged 75.0
+  credit-approval_R30_c5_s0 simifeat {"feat": "z", "k_nn": 50, "metric": "cosine", "variant": "rank", "views": 1}: remove 62.8
+eval credit-approval_R30_c5_s0__free: done in 4 s
+eval credit-approval_R30_c5_s2__free: start (n 447, k 134, V 10)
+  credit-approval_R30_c5_s2 knn_sanitize {"eta": 0.8, "feat": "q", "k_nn": 50, "rounds": 1}: remove 62.8
+  credit-approval_R30_c5_s2 knn_sanitize {"eta": 0.8, "feat": "z", "k_nn": 50, "rounds": 1}: relabel 67.9
+  credit-approval_R30_c5_s2 knn_sanitize {"eta": 0.5, "feat": "q", "k_nn": 10, "rounds": 1}: relabel_k 65.3
+  credit-approval_R30_c5_s2 label_spread {"alpha": 0.8, "beta": 0.0, "feat": "q", "n_neighbors": 50}: remove 84.2, relabel 79.1, relabel_k 81.6
+  credit-approval_R30_c5_s2 knn_shapley {"K_nn": 50, "feat": "z"}: remove 86.2
+  credit-approval_R30_c5_s2 data_oob {"anchor_v": true, "max_depth": null, "max_features": "sqrt", "min_samples_leaf": 5}: remove 66.8
+  credit-approval_R30_c5_s2 cleanlab {"method": "self_confidence", "model": "logreg"}: remove 68.4, relabel_k 72.4, flagged 74.5
+  credit-approval_R30_c5_s2 simifeat {"feat": "z", "k_nn": 50, "metric": "cosine", "variant": "rank", "views": 1}: remove 63.8
+eval credit-approval_R30_c5_s2__free: done in 4 s

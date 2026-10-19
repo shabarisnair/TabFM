@@ -673,8 +673,34 @@ class TabPFNV2(Architecture):
         """
         fitting = feature_cache is None
 
+        # LOCAL ADDITION (scripts/tabfm_experiments/row_weights.py): optional weights
+        # for the training rows, applied to every statistic fitted on them -- the
+        # imputation means and the standard scaler weighted (a row of weight w counts
+        # like w copies), and the constant-feature / feature-group masks (fitted over
+        # all rows) computed without the training rows of weight exactly 0. So w = 0 is
+        # the row deleted and w = 1 everywhere is the stock encoder. Unset -- the normal
+        # case -- nothing changes.
+        w_stats = getattr(self, "row_weights_stats", None) if fitting else None
+        mask_rows = None  # rows the masks are fitted on (None: all of them)
+        if w_stats is not None:
+            if w_stats.shape[0] != num_train_labels:
+                raise ValueError(
+                    f"row_weights_stats has {w_stats.shape[0]} entries for "
+                    f"{num_train_labels} training rows"
+                )
+            mask_rows = torch.cat(
+                [
+                    w_stats.detach().to(x_RSF.device) > 0,
+                    torch.ones(
+                        x_RSF.shape[0] - num_train_labels,
+                        dtype=torch.bool,
+                        device=x_RSF.device,
+                    ),
+                ]
+            )
+
         column_selection_mask = (
-            _constant_feature_mask(x_RSF)
+            _constant_feature_mask(x_RSF if mask_rows is None else x_RSF[mask_rows])
             if fitting
             else feature_cache["column_selection_mask"]
         )
@@ -687,10 +713,14 @@ class TabPFNV2(Architecture):
         # standard-scaler statistics are computed on the (imputed) training rows.
         feature_means = None if fitting else feature_cache["feature_means"]
         x_RSF, feature_means = _impute_nan_and_inf_with_mean(
-            x_RSF, num_train_labels, feature_means
+            x_RSF, num_train_labels, feature_means, row_weights=w_stats
         )
         if fitting:
-            scaler_stats = self.standard_scaler.fit(x_RSF[:num_train_labels])
+            scaler_stats = (
+                self.standard_scaler.fit(x_RSF[:num_train_labels])
+                if w_stats is None
+                else _weighted_standard_scaler_fit(x_RSF[:num_train_labels], w_stats)
+            )
         else:
             scaler_stats = {
                 "mean": feature_cache["scaler_mean"],
@@ -701,7 +731,7 @@ class TabPFNV2(Architecture):
         # Feature-group normalization (fit over all rows, matching the base).
         if fitting:
             ng_non_constant_mask, ng_num_used_features = _fit_feature_group_scaling(
-                x_RSF
+                x_RSF if mask_rows is None else x_RSF[mask_rows]
             )
         else:
             ng_non_constant_mask = feature_cache["ng_non_constant_mask"]
@@ -761,8 +791,18 @@ class TabPFNV2(Architecture):
 
         unique_ys: list[torch.Tensor] = []
         if self.use_multiclass_target_encoding:
+            # LOCAL ADDITION (scripts/tabfm_experiments/row_weights.py): with weights for
+            # the encoder statistics set, the classes present are those of the training
+            # rows of weight > 0 -- a row of weight 0 is deleted.
+            w_stats = getattr(self, "row_weights_stats", None)
+            present = (
+                slice(None)
+                if w_stats is None
+                else (w_stats.detach().to(y_RB1.device) > 0)
+            )
             unique_ys = [
-                torch.unique(y_RB1[:num_train_labels, b]) for b in range(batch_size)
+                torch.unique(y_RB1[:num_train_labels, b][present])
+                for b in range(batch_size)
             ]
             y_RB1 = _flatten_multiclass_targets(y_RB1, unique_ys)
 
@@ -1204,6 +1244,37 @@ def _weighted_nanmean_over_rows(
     w = row_weights.reshape(-1, *([1] * (x.dim() - 1))).to(x.dtype) * finite.to(x.dtype)
     num = (torch.where(finite, x, torch.zeros_like(x)) * w).sum(0)
     return num / w.sum(0).clamp_min(1e-12)
+
+
+def _weighted_standard_scaler_fit(
+    x: torch.Tensor, row_weights: torch.Tensor
+) -> dict[str, torch.Tensor]:
+    """``TorchStandardScaler.fit`` with row i weighted by ``row_weights[i]``.
+
+    LOCAL ADDITION for this repo (scripts/tabfm_experiments/row_weights.py). Over the
+    non-NaN cells, mean = sum w x / sum w and var = sum w (x - mean)^2 / (sum w - 1), the
+    denominator floored at 1 as in ``torch_nanstd``; a std of 0 becomes 1, and so does
+    every std when only one row has weight > 0, as in ``TorchStandardScaler.fit``. With
+    every weight 1 this is that fit; a row of weight 0 is the row deleted. The square
+    root is taken only where the variance is positive, so constant (e.g. padding)
+    columns give zero gradients, not NaN ones.
+    """
+    valid = ~torch.isnan(x)
+    w = row_weights.reshape(-1, *([1] * (x.dim() - 1))).to(x.dtype) * valid.to(x.dtype)
+    x0 = torch.where(valid, x, torch.zeros_like(x))
+    total = w.sum(0)
+    mean = (w * x0).sum(0) / total.clamp_min(1e-12)
+    sq = torch.where(valid, (x0 - mean.unsqueeze(0)) ** 2, torch.zeros_like(x))
+    var = (w * sq).sum(0) / (total - 1).clamp(min=1.0)
+    positive = var > 0
+    std = torch.where(
+        positive,
+        torch.sqrt(torch.where(positive, var, torch.ones_like(var))),
+        torch.ones_like(var),
+    )
+    if int((row_weights.detach() > 0).sum()) == 1:
+        std = torch.ones_like(std)
+    return {"mean": mean, "std": std}
 
 
 def _impute_nan_and_inf_with_mean(

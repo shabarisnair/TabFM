@@ -1,0 +1,23 @@
+scripts/gate_soft_parts/r6_boundary_smallV.txt: 15 runs on GPU(s) 0; results in /home/ssn899/Desktop/TabFM/results/gate_soft; W&B online, group gate-soft-night
+[busy] gate-soft_url_unique_boundary-flip-knn_R20_V200s0_H20_soft-lr0.05_it300
+[2026-10-13 04:40:14] START GPU 0  gate-soft_url_unique_boundary-flip-knn_R20_V200s0_H20_topk-init0_it300
+[2026-10-13 05:03:49] DONE  GPU 0  gate-soft_url_unique_boundary-flip-knn_R20_V200s0_H20_topk-init0_it300
+[skip] gate-soft_url_unique_boundary-flip-knn_R20_V200s0_H20_topk-init1_it300 (already done)
+[busy] gate-soft_url_unique_boundary-flip-knn_R20_V200s0_H20_topk-init2_it300
+[busy] gate-soft_url_unique_boundary-flip-knn_R20_V200s0_H20_topk-init3_it300
+[2026-10-13 05:03:49] START GPU 0  gate-soft_students_dropout_boundary-flip-knn_R20_V200s0_H20_soft-lr0.05_it300
+[2026-10-13 05:07:45] DONE  GPU 0  gate-soft_students_dropout_boundary-flip-knn_R20_V200s0_H20_soft-lr0.05_it300
+[2026-10-13 05:07:45] START GPU 0  gate-soft_students_dropout_boundary-flip-knn_R20_V200s0_H20_topk-init0_it300
+[2026-10-13 05:12:22] DONE  GPU 0  gate-soft_students_dropout_boundary-flip-knn_R20_V200s0_H20_topk-init0_it300
+[busy] gate-soft_students_dropout_boundary-flip-knn_R20_V200s0_H20_topk-init1_it300
+[2026-10-13 05:12:22] START GPU 0  gate-soft_students_dropout_boundary-flip-knn_R20_V200s0_H20_topk-init2_it300
+[2026-10-13 05:16:58] DONE  GPU 0  gate-soft_students_dropout_boundary-flip-knn_R20_V200s0_H20_topk-init2_it300
+[busy] gate-soft_students_dropout_boundary-flip-knn_R20_V200s0_H20_topk-init3_it300
+[busy] gate-soft_url_unique_boundary-flip-knn_R20_V100s0_H20_soft-lr0.05_it300
+[2026-10-13 05:16:58] START GPU 0  gate-soft_url_unique_boundary-flip-knn_R20_V100s0_H20_topk-init0_it300
+[2026-10-13 05:34:39] DONE  GPU 0  gate-soft_url_unique_boundary-flip-knn_R20_V100s0_H20_topk-init0_it300
+[busy] gate-soft_url_unique_boundary-flip-knn_R20_V100s0_H20_topk-init1_it300
+[busy] gate-soft_url_unique_boundary-flip-knn_R20_V100s0_H20_topk-init2_it300
+[2026-10-13 05:34:39] START GPU 0  gate-soft_url_unique_boundary-flip-knn_R20_V100s0_H20_topk-init3_it300
+[2026-10-13 05:52:20] DONE  GPU 0  gate-soft_url_unique_boundary-flip-knn_R20_V100s0_H20_topk-init3_it300
+ALL REQUESTED RUNS FINISHED

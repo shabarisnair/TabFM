@@ -1,0 +1,3 @@
+  students_dropout_hub-flip-local_stratified_R20_V200s0 beam:K2:X2:m1:path: step 1218, 3906 passes (300 s)
+  students_dropout_hub-flip-local_stratified_R20_V200s0 beam:K2:X2:m1:path: step 2041, 6576 passes (601 s)
+students_dropout_hub-flip-local_stratified_R20_V200s0 beam:K2:X2:m1:path: acc 77.4 prec 0.591 steps 2240 passes 7225 (685 s)

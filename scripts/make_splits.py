@@ -22,6 +22,7 @@ ALL = {                            # dir : (csv relative to ROOT, target column)
     "wids":        ("wids/wids.csv",               "hospital_death"),
     "coil2000_insurance_policies": ("coil2000_insurance_policies/coil2000_insurance_policies.csv", "MobileHomePolicy"),
     "heloc":       ("heloc/heloc.csv",             "RiskPerformance"),
+    "ecommerce_shipping": ("ecommerce_shipping/ecommerce_shipping.csv", "ArrivedLate"),
 }
 
 _ap = argparse.ArgumentParser(description="Build stratified splits for one or more datasets.")

@@ -1,0 +1,3 @@
+students_dropout_R20_c1_s0 fixed:frac0.1:warm0.1: acc 76.8 auc 87.6 ce 0.819 prec 0.656 steps 23 fits 0 (12 s)
+gas-drift_R20_c1_s0 fixed:frac0.1:warm0.1: acc 94.3 auc 99.2 ce 0.515 prec 0.867 steps 23 fits 0 (70 s)
+credit-approval_R30_c1_s0 fixed:frac0.1:warm0.1: acc 79.1 auc 88.8 ce 1.025 prec 0.679 steps 21 fits 0 (3 s)

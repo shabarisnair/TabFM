@@ -1,0 +1,8 @@
+  gas-drift_hub-flip-local_stratified_R20_V50s0 grow:frac0.1:prior: step 44, |T| 3645, poisoned accepted 13/990 (123 s)
+gas-drift_hub-flip-local_stratified_R20_V50s0 grow:frac0.1:prior: acc 97.3 prec 0.963 steps 45 (136 s)
+  gas-drift_hub-flip-local_stratified_R20_V100s0 grow:frac0.1:prior: step 39, |T| 4020, poisoned accepted 42/980 (122 s)
+gas-drift_hub-flip-local_stratified_R20_V100s0 grow:frac0.1:prior: acc 97.1 prec 0.957 steps 39 (129 s)
+gas-drift_hub-flip-local_stratified_R20_V200s0 grow:frac0.1:prior: acc 99.1 prec 0.984 steps 32 (76 s)
+gas-drift_hub-flip-local_stratified_R20_V300s0 grow:frac0.1:prior: acc 99.4 prec 0.988 steps 28 (56 s)
+gas-drift_hub-flip-local_stratified_R20_V400s0 grow:frac0.1:prior: acc 99.3 prec 0.987 steps 25 (67 s)
+gas-drift_hub-flip-local_stratified_R20_V500s0 grow:frac0.1:prior: acc 99.1 prec 0.991 steps 23 (82 s)

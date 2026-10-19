@@ -1,0 +1,7 @@
+  url_unique_hub-flip-local_stratified_R10_V50s0 grow:pct1:prior: step 63, |T| 3200, poisoned accepted 2/495 (122 s)
+url_unique_hub-flip-local_stratified_R10_V50s0 grow:pct1:prior: acc 96.4 prec 0.941 steps 90 (217 s)
+  url_unique_hub-flip-local_stratified_R10_V200s0 grow:pct1:prior: step 64, |T| 3272, poisoned accepted 11/480 (123 s)
+url_unique_hub-flip-local_stratified_R10_V200s0 grow:pct1:prior: acc 97.0 prec 0.944 steps 90 (212 s)
+  url_unique_hub-flip-local_stratified_R10_V500s0 grow:pct1:prior: step 55, |T| 2975, poisoned accepted 0/450 (123 s)
+  url_unique_hub-flip-local_stratified_R10_V500s0 grow:pct1:prior: step 88, |T| 4460, poisoned accepted 3/450 (244 s)
+url_unique_hub-flip-local_stratified_R10_V500s0 grow:pct1:prior: acc 97.1 prec 0.958 steps 90 (257 s)

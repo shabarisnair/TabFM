@@ -1,0 +1,24 @@
+students_dropout_R20_V500s0 log_pgd-linf_lr1_floor-1000_init-vfilter1_pseudo0.5x1b500_it200: start (n 2500, k 500)
+    pseudo-queries: 1250 rows, 3.4% of them poisoned
+    it    0  hold soft 0.390/1.331  hard 0.710  prec 0.680  auroc 0.889  log w med pois -3.4 clean -0.3  (1 s)
+    it   50  hold soft 0.670/0.886  hard 0.730  prec 0.698  auroc 0.891  log w med pois -3.5 clean -0.4  (132 s)
+    it  100  hold soft 0.700/0.850  hard 0.760  prec 0.688  auroc 0.890  log w med pois -3.6 clean -0.5  (263 s)
+    it  150  hold soft 0.700/0.963  hard 0.760  prec 0.698  auroc 0.878  log w med pois -3.8 clean -0.6  (395 s)
+    it  200  hold soft 0.700/1.032  hard 0.760  prec 0.682  auroc 0.878  log w med pois -3.8 clean -0.7  (526 s)
+students_dropout_R20_V500s0 log_pgd-linf_lr1_floor-1000_init-vfilter1_pseudo0.5x1b500_it200: soft it 130 test 0.744 (+V 0.614) | hard it 180 test 0.804 (+V 0.798) prec 0.686 | 534 s
+heloc_R20_V500s0 log_pgd-linf_lr5_floor-1000_init-vfilter1_pseudo0.5x1b500_it200: start (n 4500, k 900)
+    pseudo-queries: 2250 rows, 6.0% of them poisoned
+    it    0  hold soft 0.720/0.540  hard 0.720  prec 0.523  auroc 0.811  log w med pois -1.3 clean -0.3  (1 s)
+    it   50  hold soft 0.730/0.731  hard 0.720  prec 0.393  auroc 0.736  log w med pois -2.1 clean -1.0  (236 s)
+    it  100  hold soft 0.760/0.654  hard 0.720  prec 0.352  auroc 0.697  log w med pois -2.7 clean -1.7  (471 s)
+    it  150  hold soft 0.730/0.746  hard 0.720  prec 0.350  auroc 0.706  log w med pois -3.5 clean -2.4  (709 s)
+    it  200  hold soft 0.700/1.092  hard 0.710  prec 0.319  auroc 0.678  log w med pois -4.0 clean -3.0  (948 s)
+heloc_R20_V500s0 log_pgd-linf_lr5_floor-1000_init-vfilter1_pseudo0.5x1b500_it200: soft it 130 test 0.725 (+V 0.719) | hard it 140 test 0.687 (+V 0.709) prec 0.348 | 957 s
+heloc_R20_V500s0 topk_pgd-linf_lr0.5_probe0.05_init-vfilter1_pseudo0.5x1b500_it200: start (n 4500, k 900)
+    pseudo-queries: 2250 rows, 6.0% of them poisoned
+    it    0  hold soft 0.720/0.635  hard 0.720  prec 0.523  auroc 0.811  log w med pois -inf clean 0.0  (1 s)
+    it   50  hold soft 0.740/0.585  hard 0.740  prec 0.541  auroc 0.795  log w med pois -inf clean 0.0  (237 s)
+    it  100  hold soft 0.740/0.576  hard 0.740  prec 0.539  auroc 0.775  log w med pois -inf clean 0.0  (474 s)
+    it  150  hold soft 0.760/0.561  hard 0.760  prec 0.542  auroc 0.767  log w med pois -inf clean 0.0  (617 s)
+    it  200  hold soft 0.710/0.546  hard 0.710  prec 0.547  auroc 0.770  log w med pois -inf clean 0.0  (726 s)
+heloc_R20_V500s0 topk_pgd-linf_lr0.5_probe0.05_init-vfilter1_pseudo0.5x1b500_it200: soft it 150 test 0.735 (+V 0.735) | hard it 150 test 0.735 (+V 0.735) prec 0.542 | 728 s

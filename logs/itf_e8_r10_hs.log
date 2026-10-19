@@ -1,0 +1,6 @@
+heloc_hub-flip-local_stratified_R10_V50s0 grow:pct1:prior: acc 73.0 prec 0.343 steps 90 (118 s)
+heloc_hub-flip-local_stratified_R10_V200s0 grow:pct1:prior: acc 72.3 prec 0.260 steps 90 (116 s)
+heloc_hub-flip-local_stratified_R10_V500s0 grow:pct1:prior: acc 71.7 prec 0.162 steps 90 (116 s)
+students_dropout_hub-flip-local_stratified_R10_V50s0 grow:pct1:prior: acc 78.0 prec 0.563 steps 89 (79 s)
+students_dropout_hub-flip-local_stratified_R10_V200s0 grow:pct1:prior: acc 78.2 prec 0.493 steps 90 (83 s)
+students_dropout_hub-flip-local_stratified_R10_V500s0 grow:pct1:prior: acc 80.2 prec 0.608 steps 90 (88 s)

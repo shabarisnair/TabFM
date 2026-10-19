@@ -1,0 +1,18 @@
+# Soft-gate night, round 2: the attention-weight gate (--gate attn), and starting from the
+# clean rows' label plausibility (the V-filter). R = 20%, V = 500 (100 held out), seed 0.
+# <part> <dataset> <R> <V> <seed> <tag> [extra args...]
+1 gas-drift 20 500 0 attn-lr0.5 --gate attn --lr 0.5 --select-on ce
+1 url_unique 20 500 0 attn-lr0.5 --gate attn --lr 0.5 --select-on ce
+1 students_dropout 20 500 0 attn-lr0.5 --gate attn --lr 0.5 --select-on ce
+1 gas-drift 20 500 0 attn-vf-lr0.5 --gate attn --attn-init vfilter --lr 0.5 --select-on ce
+1 url_unique 20 500 0 attn-vf-lr0.5 --gate attn --attn-init vfilter --lr 0.5 --select-on ce
+1 students_dropout 20 500 0 attn-vf-lr0.5 --gate attn --attn-init vfilter --lr 0.5 --select-on ce
+1 gas-drift 20 500 0 topk-vf --gate topk --score-init vfilter --score-init-std 0 --ste-probe 0.05 --lr 5 --select-on ce
+1 url_unique 20 500 0 topk-vf --gate topk --score-init vfilter --score-init-std 0 --ste-probe 0.05 --lr 5 --select-on ce
+1 students_dropout 20 500 0 topk-vf --gate topk --score-init vfilter --score-init-std 0 --ste-probe 0.05 --lr 5 --select-on ce
+1 gas-drift 20 500 0 attn-lr0.1 --gate attn --lr 0.1 --select-on ce
+1 url_unique 20 500 0 attn-lr0.1 --gate attn --lr 0.1 --select-on ce
+1 students_dropout 20 500 0 attn-lr0.1 --gate attn --lr 0.1 --select-on ce
+1 gas-drift 20 500 0 attn-lr2 --gate attn --lr 2 --select-on ce
+1 url_unique 20 500 0 attn-lr2 --gate attn --lr 2 --select-on ce
+1 students_dropout 20 500 0 attn-lr2 --gate attn --lr 2 --select-on ce

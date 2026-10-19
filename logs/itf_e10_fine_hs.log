@@ -1,0 +1,8 @@
+  heloc_hub-flip-local_stratified_R20_V50s0 grow:pct0.5:prior: step 109, |T| 2775, poisoned accepted 244/990 (122 s)
+heloc_hub-flip-local_stratified_R20_V50s0 grow:pct0.5:prior: acc 74.5 prec 0.538 steps 159 (210 s)
+  heloc_hub-flip-local_stratified_R20_V200s0 grow:pct0.5:prior: step 108, |T| 2792, poisoned accepted 191/960 (121 s)
+heloc_hub-flip-local_stratified_R20_V200s0 grow:pct0.5:prior: acc 73.5 prec 0.512 steps 160 (208 s)
+  students_dropout_hub-flip-local_stratified_R20_V50s0 grow:pct0.5:prior: step 156, |T| 2390, poisoned accepted 209/590 (120 s)
+students_dropout_hub-flip-local_stratified_R20_V50s0 grow:pct0.5:prior: acc 75.8 prec 0.634 steps 158 (123 s)
+  students_dropout_hub-flip-local_stratified_R20_V200s0 grow:pct0.5:prior: step 160, |T| 2440, poisoned accepted 204/560 (121 s)
+students_dropout_hub-flip-local_stratified_R20_V200s0 grow:pct0.5:prior: acc 76.2 prec 0.636 steps 160 (122 s)

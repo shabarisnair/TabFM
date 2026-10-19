@@ -1,0 +1,54 @@
+url_unique V50 s0: V only 89.3 | poisoned+V 76.8 | soft 91.2 soft+V 91.2 | V-filter 93.7 +V 93.8 (prec 0.86) | oracle+V 97.0 | top-k+V 87.1
+url_unique V50 s1: V only 88.1 | poisoned+V 77.0 | soft 87.8 soft+V 89.2 | V-filter 89.3 +V 89.4 (prec 0.77) | oracle+V 97.1
+url_unique V50 s2: V only 90.3 | poisoned+V 76.8 | soft 79.7 soft+V 79.2 | V-filter 94.9 +V 94.8 (prec 0.88) | oracle+V 97.0
+url_unique V100 s0: V only 91.6 | poisoned+V 76.8 | soft 91.8 soft+V 92.1 | V-filter 94.6 +V 94.7 (prec 0.89) | oracle+V 97.0 | top-k+V 93.2
+url_unique V100 s1: V only 92.2 | poisoned+V 77.0 | soft 92.8 soft+V 93.1 | V-filter 94.7 +V 94.5 (prec 0.87) | oracle+V 97.0
+url_unique V100 s2: V only 90.8 | poisoned+V 76.9 | soft 91.3 soft+V 91.9 | V-filter 95.6 +V 96.0 (prec 0.91) | oracle+V 96.9
+url_unique V200 s0: V only 91.4 | poisoned+V 76.2 | soft 92.6 soft+V 93.5 | V-filter 95.5 +V 95.4 (prec 0.92) | oracle+V 97.0 | top-k+V 94.7
+url_unique V200 s1: V only 92.6 | poisoned+V 77.1 | soft 94.8 soft+V 94.9 | V-filter 95.5 +V 95.6 (prec 0.90) | oracle+V 96.9
+url_unique V200 s2: V only 91.8 | poisoned+V 77.0 | soft 93.3 soft+V 94.1 | V-filter 95.5 +V 96.0 (prec 0.92) | oracle+V 97.1
+url_unique V300 s0: V only 91.7 | poisoned+V 76.0 | soft 94.3 soft+V 94.1 | V-filter 95.9 +V 96.3 (prec 0.91) | oracle+V 97.0 | top-k+V 94.4
+url_unique V300 s1: V only 93.9 | poisoned+V 76.9 | soft 93.6 soft+V 95.0 | V-filter 95.6 +V 95.9 (prec 0.91) | oracle+V 96.9
+url_unique V300 s2: V only 93.7 | poisoned+V 77.7 | soft 95.4 soft+V 94.9 | V-filter 95.6 +V 96.0 (prec 0.94) | oracle+V 97.1
+url_unique V400 s0: V only 93.3 | poisoned+V 76.6 | soft 95.7 soft+V 96.4 | V-filter 95.4 +V 95.9 (prec 0.90) | oracle+V 97.1 | top-k+V 95.9
+url_unique V400 s1: V only 93.3 | poisoned+V 76.8 | soft 94.8 soft+V 93.1 | V-filter 95.9 +V 95.8 (prec 0.92) | oracle+V 97.0
+url_unique V400 s2: V only 94.3 | poisoned+V 77.5 | soft 93.6 soft+V 93.3 | V-filter 96.2 +V 96.5 (prec 0.94) | oracle+V 97.2
+url_unique V500 s0: V only 94.7 | poisoned+V 76.8 | soft 95.3 soft+V 95.2 | V-filter 95.6 +V 96.0 (prec 0.92) | oracle+V 97.1 | top-k+V 96.2
+url_unique V500 s1: V only 94.8 | poisoned+V 78.0 | soft 94.9 soft+V 95.0 | V-filter 96.7 +V 96.1 (prec 0.93) | oracle+V 97.0
+url_unique V500 s2: V only 94.4 | poisoned+V 77.7 | soft 92.4 soft+V 94.2 | V-filter 96.1 +V 96.1 (prec 0.94) | oracle+V 97.0
+gas-drift V50 s0: V only 83.1 | poisoned+V 79.6 | soft 82.3 soft+V 82.5 | V-filter 91.8 +V 91.9 (prec 0.78) | oracle+V 99.4 | top-k+V 82.5
+gas-drift V50 s1: V only 80.2 | poisoned+V 79.4 | soft 81.3 soft+V 81.6 | V-filter 89.6 +V 89.8 (prec 0.75) | oracle+V 99.4
+gas-drift V50 s2: V only 81.1 | poisoned+V 79.6 | soft 88.0 soft+V 88.5 | V-filter 94.7 +V 94.7 (prec 0.86) | oracle+V 99.4
+gas-drift V100 s0: V only 93.8 | poisoned+V 79.5 | soft 79.7 soft+V 79.5 | V-filter 94.9 +V 94.9 (prec 0.91) | oracle+V 99.4 | top-k+V 86.8
+gas-drift V100 s1: V only 88.5 | poisoned+V 79.9 | soft 88.8 soft+V 88.2 | V-filter 95.6 +V 95.5 (prec 0.86) | oracle+V 99.6
+gas-drift V100 s2: V only 92.2 | poisoned+V 79.6 | soft 87.9 soft+V 89.5 | V-filter 94.9 +V 94.9 (prec 0.91) | oracle+V 99.4
+gas-drift V200 s0: V only 96.9 | poisoned+V 80.1 | soft 92.9 soft+V 93.3 | V-filter 98.4 +V 98.4 (prec 0.95) | oracle+V 99.4 | top-k+V 94.9
+gas-drift V200 s1: V only 93.9 | poisoned+V 80.0 | soft 91.1 soft+V 91.6 | V-filter 97.0 +V 97.7 (prec 0.93) | oracle+V 99.6
+gas-drift V200 s2: V only 96.2 | poisoned+V 79.6 | soft 93.1 soft+V 92.9 | V-filter 97.5 +V 97.4 (prec 0.95) | oracle+V 99.4
+gas-drift V300 s0: V only 98.1 | poisoned+V 80.3 | soft 94.1 soft+V 95.2 | V-filter 98.6 +V 98.9 (prec 0.96) | oracle+V 99.4 | top-k+V 94.2
+gas-drift V300 s1: V only 98.2 | poisoned+V 79.1 | soft 92.8 soft+V 93.4 | V-filter 99.2 +V 99.4 (prec 0.98) | oracle+V 99.6
+gas-drift V300 s2: V only 98.2 | poisoned+V 79.7 | soft 95.5 soft+V 95.7 | V-filter 97.6 +V 97.7 (prec 0.96) | oracle+V 99.4
+gas-drift V400 s0: V only 97.9 | poisoned+V 79.7 | soft 94.5 soft+V 94.9 | V-filter 98.4 +V 98.8 (prec 0.98) | oracle+V 99.4 | top-k+V 96.4
+gas-drift V400 s1: V only 98.2 | poisoned+V 79.7 | soft 94.5 soft+V 95.0 | V-filter 98.4 +V 99.4 (prec 0.97) | oracle+V 99.6
+gas-drift V400 s2: V only 98.1 | poisoned+V 80.0 | soft 95.5 soft+V 94.6 | V-filter 98.7 +V 98.8 (prec 0.97) | oracle+V 99.4
+gas-drift V500 s0: V only 98.0 | poisoned+V 79.7 | soft 93.4 soft+V 91.1 | V-filter 98.1 +V 98.7 (prec 0.98) | oracle+V 99.5 | top-k+V 96.0
+gas-drift V500 s1: V only 99.1 | poisoned+V 80.2 | soft 95.2 soft+V 94.6 | V-filter 99.1 +V 99.4 (prec 0.98) | oracle+V 99.6
+gas-drift V500 s2: V only 98.8 | poisoned+V 80.1 | soft 96.4 soft+V 96.6 | V-filter 98.5 +V 98.7 (prec 0.98) | oracle+V 99.4
+students_dropout V50 s0: V only 68.0 | poisoned+V 67.6 | soft 67.4 soft+V 67.6 | V-filter 74.6 +V 75.2 (prec 0.60) | oracle+V 79.8 | top-k+V 68.4
+students_dropout V50 s1: V only 70.4 | poisoned+V 68.2 | soft 70.2 soft+V 70.4 | V-filter 75.2 +V 75.6 (prec 0.45) | oracle+V 80.2
+students_dropout V50 s2: V only 73.0 | poisoned+V 67.8 | soft 67.8 soft+V 67.8 | V-filter 76.0 +V 75.8 (prec 0.60) | oracle+V 80.4
+students_dropout V100 s0: V only 71.2 | poisoned+V 67.8 | soft 76.6 soft+V 77.4 | V-filter 75.4 +V 75.8 (prec 0.64) | oracle+V 80.2 | top-k+V 71.4
+students_dropout V100 s1: V only 71.8 | poisoned+V 68.8 | soft 74.6 soft+V 75.0 | V-filter 77.4 +V 77.4 (prec 0.60) | oracle+V 80.6
+students_dropout V100 s2: V only 73.2 | poisoned+V 68.0 | soft 68.4 soft+V 68.0 | V-filter 76.2 +V 76.8 (prec 0.59) | oracle+V 80.6
+students_dropout V200 s0: V only 72.4 | poisoned+V 68.4 | soft 76.4 soft+V 76.4 | V-filter 76.0 +V 76.0 (prec 0.67) | oracle+V 80.2 | top-k+V 78.4
+students_dropout V200 s1: V only 74.4 | poisoned+V 68.8 | soft 73.0 soft+V 73.2 | V-filter 79.0 +V 78.2 (prec 0.68) | oracle+V 80.4
+students_dropout V200 s2: V only 75.4 | poisoned+V 69.0 | soft 72.4 soft+V 73.8 | V-filter 78.2 +V 78.4 (prec 0.64) | oracle+V 80.6
+students_dropout V300 s0: V only 71.6 | poisoned+V 68.4 | soft 78.8 soft+V 76.8 | V-filter 75.4 +V 74.8 (prec 0.64) | oracle+V 79.8 | top-k+V 76.2
+students_dropout V300 s1: V only 77.6 | poisoned+V 70.0 | soft 72.8 soft+V 76.2 | V-filter 80.4 +V 79.2 (prec 0.66) | oracle+V 80.8
+students_dropout V300 s2: V only 74.0 | poisoned+V 69.4 | soft 75.0 soft+V 74.0 | V-filter 78.4 +V 78.4 (prec 0.66) | oracle+V 80.2
+students_dropout V400 s0: V only 76.6 | poisoned+V 70.2 | soft 75.6 soft+V 75.0 | V-filter 78.8 +V 78.6 (prec 0.68) | oracle+V 80.2 | top-k+V 78.4
+students_dropout V400 s1: V only 77.8 | poisoned+V 71.0 | soft 76.6 soft+V 78.2 | V-filter 78.4 +V 78.6 (prec 0.70) | oracle+V 80.8
+students_dropout V400 s2: V only 75.4 | poisoned+V 70.8 | soft 75.4 soft+V 74.6 | V-filter 79.6 +V 79.4 (prec 0.72) | oracle+V 80.4
+students_dropout V500 s0: V only 76.2 | poisoned+V 71.4 | soft 79.4 soft+V 78.8 | V-filter 79.4 +V 79.0 (prec 0.70) | oracle+V 80.6 | top-k+V 78.6
+students_dropout V500 s1: V only 75.8 | poisoned+V 71.8 | soft 75.4 soft+V 77.0 | V-filter 79.4 +V 78.0 (prec 0.68) | oracle+V 79.8
+students_dropout V500 s2: V only 78.8 | poisoned+V 70.2 | soft 78.2 soft+V 77.4 | V-filter 79.6 +V 80.2 (prec 0.70) | oracle+V 81.4

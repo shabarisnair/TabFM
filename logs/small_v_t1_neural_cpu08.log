@@ -1,0 +1,30 @@
+tune1 gas-drift_R20_c3_s102__neural: start (n 3982, k 796, V 18)
+  gas-drift_R20_c3_s102 glc: 16 configs in 73 s; best precision 0.721
+  gas-drift_R20_c3_s102 mwnet: 16 configs in 97 s; best precision 0.000
+  gas-drift_R20_c3_s102 emlc: 16 configs in 151 s; best precision 0.614
+  gas-drift_R20_c3_s102 ieg: 16 configs in 116 s; best precision 0.530
+tune1 gas-drift_R20_c3_s102__neural: done in 439 s
+tune1 heloc_R20_c1_s102__neural: start (n 3998, k 800, V 2)
+  heloc_R20_c1_s102 glc: 16 configs in 51 s; best precision 0.468
+  heloc_R20_c1_s102 mwnet: 16 configs in 60 s; best precision 0.180
+  heloc_R20_c1_s102 emlc: 16 configs in 117 s; best precision 0.204
+  heloc_R20_c1_s102 ieg: 16 configs in 101 s; best precision 0.362
+tune1 heloc_R20_c1_s102__neural: done in 330 s
+tune1 heloc_R30_c5_s102__neural: start (n 3990, k 1197, V 10)
+  heloc_R30_c5_s102 glc: 16 configs in 49 s; best precision 0.599
+  heloc_R30_c5_s102 mwnet: 16 configs in 73 s; best precision 0.279
+  heloc_R30_c5_s102 emlc: 16 configs in 119 s; best precision 0.541
+  heloc_R30_c5_s102 ieg: 16 configs in 91 s; best precision 0.617
+tune1 heloc_R30_c5_s102__neural: done in 331 s
+tune1 credit-approval_R20_c5_s102__neural: start (n 356, k 71, V 10)
+  credit-approval_R20_c5_s102 glc: 16 configs in 4 s; best precision 0.859
+  credit-approval_R20_c5_s102 mwnet: 16 configs in 6 s; best precision 0.563
+  credit-approval_R20_c5_s102 emlc: 16 configs in 9 s; best precision 0.789
+  credit-approval_R20_c5_s102 ieg: 16 configs in 8 s; best precision 0.718
+tune1 credit-approval_R20_c5_s102__neural: done in 27 s
+tune1 credit-approval_R30_c3_s102__neural: start (n 360, k 108, V 6)
+  credit-approval_R30_c3_s102 glc: 16 configs in 4 s; best precision 0.806
+  credit-approval_R30_c3_s102 mwnet: 16 configs in 5 s; best precision 0.519
+  credit-approval_R30_c3_s102 emlc: 16 configs in 9 s; best precision 0.676
+  credit-approval_R30_c3_s102 ieg: 16 configs in 8 s; best precision 0.657
+tune1 credit-approval_R30_c3_s102__neural: done in 26 s

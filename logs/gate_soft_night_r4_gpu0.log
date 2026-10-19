@@ -1,0 +1,39 @@
+scripts/gate_soft_parts/r4_forms.txt: 20 runs on GPU(s) 0; results in /home/ssn899/Desktop/TabFM/results/gate_soft; W&B online, group gate-soft-night
+[2026-10-12 23:29:51] START GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_local-soft-lr0.05_it300
+[2026-10-12 23:52:58] DONE  GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_local-soft-lr0.05_it300
+[2026-10-12 23:52:58] START GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_local-topk-init0_it300
+[2026-10-13 00:21:28] DONE  GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_local-topk-init0_it300
+[2026-10-13 00:21:28] START GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_local-topk-init1_it300
+[2026-10-13 00:51:30] DONE  GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_local-topk-init1_it300
+[2026-10-13 00:51:30] START GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_local-topk-init2_it300
+[2026-10-13 01:17:37] DONE  GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_local-topk-init2_it300
+[2026-10-13 01:17:37] START GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_local-topk-init3_it300
+[2026-10-13 01:33:46] DONE  GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_local-topk-init3_it300
+[2026-10-13 01:33:46] START GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_imbalanced-soft-lr0.05_it300
+[2026-10-13 01:47:12] DONE  GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_imbalanced-soft-lr0.05_it300
+[2026-10-13 01:47:12] START GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_imbalanced-topk-init0_it300
+[2026-10-13 02:03:21] DONE  GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_imbalanced-topk-init0_it300
+[2026-10-13 02:03:21] START GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_imbalanced-topk-init1_it300
+[2026-10-13 02:19:31] DONE  GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_imbalanced-topk-init1_it300
+[2026-10-13 02:19:31] START GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_imbalanced-topk-init2_it300
+[2026-10-13 02:35:41] DONE  GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_imbalanced-topk-init2_it300
+[2026-10-13 02:35:41] START GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_imbalanced-topk-init3_it300
+[2026-10-13 02:51:50] DONE  GPU 0  gate-soft_url_unique_hub-flip-local_R20_V500s0_H20_imbalanced-topk-init3_it300
+[2026-10-13 02:51:50] START GPU 0  gate-soft_students_dropout_hub-flip-local_R20_V500s0_H20_imbalanced-soft-lr0.05_it300
+[2026-10-13 02:55:27] DONE  GPU 0  gate-soft_students_dropout_hub-flip-local_R20_V500s0_H20_imbalanced-soft-lr0.05_it300
+[2026-10-13 02:55:27] START GPU 0  gate-soft_students_dropout_hub-flip-local_R20_V500s0_H20_imbalanced-topk-init0_it300
+[2026-10-13 02:59:48] DONE  GPU 0  gate-soft_students_dropout_hub-flip-local_R20_V500s0_H20_imbalanced-topk-init0_it300
+[2026-10-13 02:59:48] START GPU 0  gate-soft_students_dropout_hub-flip-local_R20_V500s0_H20_imbalanced-topk-init1_it300
+[2026-10-13 03:04:21] DONE  GPU 0  gate-soft_students_dropout_hub-flip-local_R20_V500s0_H20_imbalanced-topk-init1_it300
+[2026-10-13 03:04:21] START GPU 0  gate-soft_students_dropout_hub-flip-local_R20_V500s0_H20_imbalanced-topk-init2_it300
+[2026-10-13 03:08:38] DONE  GPU 0  gate-soft_students_dropout_hub-flip-local_R20_V500s0_H20_imbalanced-topk-init2_it300
+[2026-10-13 03:08:38] START GPU 0  gate-soft_students_dropout_hub-flip-local_R20_V500s0_H20_imbalanced-topk-init3_it300
+[2026-10-13 03:12:56] DONE  GPU 0  gate-soft_students_dropout_hub-flip-local_R20_V500s0_H20_imbalanced-topk-init3_it300
+[2026-10-13 03:12:56] START GPU 0  gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_local-soft-lr0.05_it300
+[2026-10-13 03:39:58] DONE  GPU 0  gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_local-soft-lr0.05_it300
+[busy] gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_local-topk-init0_it300
+[busy] gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_local-topk-init1_it300
+[2026-10-13 03:39:58] START GPU 0  gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_local-topk-init2_it300
+[2026-10-13 04:12:41] DONE  GPU 0  gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_local-topk-init2_it300
+[busy] gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_local-topk-init3_it300
+ALL REQUESTED RUNS FINISHED

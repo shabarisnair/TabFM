@@ -1,0 +1,8 @@
+gas-drift_R10_c1_s0 oneshot:cprior: acc 86.5 auc 98.8 ce 0.453 prec 0.170 steps 1 fits 0 (8 s)
+coil2000_insurance_policies_R10_c1_s0 fixed:frac0.2:cprior: acc 93.2 auc 68.1 ce 0.346 prec 0.628 steps 39 fits 0 (48 s)
+coil2000_insurance_policies_R10_c1_s0 fixed:both0.1:cprior: acc 93.6 auc 65.1 ce 0.429 prec 0.638 steps 118 fits 0 (271 s)
+heloc_R10_c1_s0 fixed:frac0.2: acc 74.5 auc 80.6 ce 0.585 prec 0.648 steps 39 fits 0 (20 s)
+heloc_R10_c1_s0 fixed:both0.1:cprior: acc 71.9 auc 78.2 ce 0.723 prec 0.280 steps 118 fits 0 (91 s)
+credit-approval_R10_c1_s0 fixed:frac0.05:cprior: acc 85.2 auc 94.0 ce 0.340 prec 0.804 steps 73 fits 0 (9 s)
+credit-approval_R10_c1_s0 oneshot:cprior: acc 76.5 auc 88.9 ce 0.491 prec 0.283 steps 1 fits 0 (0 s)
+gas-drift_R30_c1_s0 fixed:pct1:cprior: acc 94.1 auc 99.4 ce 0.573 prec 0.927 steps 70 fits 0 (216 s)

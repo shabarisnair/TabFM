@@ -1,0 +1,21 @@
+scripts/gate_soft_parts/r3_boundary.txt: 14 runs on GPU(s) 1; results in /home/ssn899/Desktop/TabFM/results/gate_soft; W&B online, group gate-soft-night
+[2026-10-13 00:41:29] START GPU 1  gate-soft_url_unique_boundary-flip-knn_R20_V500s0_H20_soft-lr0.05_it300
+[2026-10-13 01:03:00] DONE  GPU 1  gate-soft_url_unique_boundary-flip-knn_R20_V500s0_H20_soft-lr0.05_it300
+[skip] gate-soft_students_dropout_boundary-flip-knn_R20_V500s0_H20_soft-lr0.05_it300 (already done)
+[skip] gate-soft_url_unique_boundary-flip-knn_R20_V500s0_H20_attn-lr0.5_it300 (already done)
+[busy] gate-soft_students_dropout_boundary-flip-knn_R20_V500s0_H20_attn-lr0.5_it300
+[2026-10-13 01:03:00] START GPU 1  gate-soft_url_unique_boundary-flip-knn_R20_V500s0_H20_attn-vf-lr0.5_it300
+[2026-10-13 01:21:39] DONE  GPU 1  gate-soft_url_unique_boundary-flip-knn_R20_V500s0_H20_attn-vf-lr0.5_it300
+[skip] gate-soft_students_dropout_boundary-flip-knn_R20_V500s0_H20_attn-vf-lr0.5_it300 (already done)
+[busy] gate-soft_url_unique_boundary-flip-knn_R20_V500s0_H20_topk-init0_it300
+[2026-10-13 01:21:39] START GPU 1  gate-soft_url_unique_boundary-flip-knn_R20_V500s0_H20_topk-init1_it300
+[2026-10-13 01:37:39] DONE  GPU 1  gate-soft_url_unique_boundary-flip-knn_R20_V500s0_H20_topk-init1_it300
+[busy] gate-soft_url_unique_boundary-flip-knn_R20_V500s0_H20_topk-init2_it300
+[2026-10-13 01:37:39] START GPU 1  gate-soft_url_unique_boundary-flip-knn_R20_V500s0_H20_topk-init3_it300
+[2026-10-13 01:53:40] DONE  GPU 1  gate-soft_url_unique_boundary-flip-knn_R20_V500s0_H20_topk-init3_it300
+[skip] gate-soft_students_dropout_boundary-flip-knn_R20_V500s0_H20_topk-init0_it300 (already done)
+[skip] gate-soft_students_dropout_boundary-flip-knn_R20_V500s0_H20_topk-init1_it300 (already done)
+[busy] gate-soft_students_dropout_boundary-flip-knn_R20_V500s0_H20_topk-init2_it300
+[2026-10-13 01:53:40] START GPU 1  gate-soft_students_dropout_boundary-flip-knn_R20_V500s0_H20_topk-init3_it300
+[2026-10-13 01:57:55] DONE  GPU 1  gate-soft_students_dropout_boundary-flip-knn_R20_V500s0_H20_topk-init3_it300
+ALL REQUESTED RUNS FINISHED

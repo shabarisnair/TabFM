@@ -1,0 +1,18 @@
+# Soft-gate night, round 6 (run with ATTACK=boundary-flip-knn): the filter-evading attack at smaller V,
+# where the V-filter left 4-5 points to the oracle on url_unique (V = 100-200). Seed 0.
+# <part> <dataset> <R> <V> <seed> <tag> [extra args...]
+1 url_unique 20 200 0 soft-lr0.05
+1 url_unique 20 200 0 topk-init0 --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 0
+1 url_unique 20 200 0 topk-init1 --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 1
+1 url_unique 20 200 0 topk-init2 --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 2
+1 url_unique 20 200 0 topk-init3 --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 3
+1 students_dropout 20 200 0 soft-lr0.05
+1 students_dropout 20 200 0 topk-init0 --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 0
+1 students_dropout 20 200 0 topk-init1 --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 1
+1 students_dropout 20 200 0 topk-init2 --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 2
+1 students_dropout 20 200 0 topk-init3 --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 3
+1 url_unique 20 100 0 soft-lr0.05
+1 url_unique 20 100 0 topk-init0 --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 0
+1 url_unique 20 100 0 topk-init1 --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 1
+1 url_unique 20 100 0 topk-init2 --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 2
+1 url_unique 20 100 0 topk-init3 --gate topk --ste identity --score-init-std 1 --ste-probe 0.05 --lr 5 --select-on ce --init-seed 3

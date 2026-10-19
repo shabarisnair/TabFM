@@ -1,0 +1,43 @@
+scripts/gate_soft_parts/r5_forms_seeds.txt: 31 runs on GPU(s) 2; results in /home/ssn899/Desktop/TabFM/results/gate_soft; W&B online, group gate-soft-night
+[2026-10-13 01:55:45] START GPU 2  gate-soft_url_unique_hub-flip-local_R20_V500s1_H20_local-topk-init0_it300
+[2026-10-13 02:11:57] DONE  GPU 2  gate-soft_url_unique_hub-flip-local_R20_V500s1_H20_local-topk-init0_it300
+[busy] gate-soft_url_unique_hub-flip-local_R20_V500s1_H20_local-topk-init1_it300
+[2026-10-13 02:11:57] START GPU 2  gate-soft_url_unique_hub-flip-local_R20_V500s1_H20_local-topk-init2_it300
+[2026-10-13 02:28:10] DONE  GPU 2  gate-soft_url_unique_hub-flip-local_R20_V500s1_H20_local-topk-init2_it300
+[busy] gate-soft_url_unique_hub-flip-local_R20_V500s1_H20_local-topk-init3_it300
+[2026-10-13 02:28:10] START GPU 2  gate-soft_url_unique_hub-flip-local_R20_V500s2_H20_local-topk-init0_it300
+[2026-10-13 02:44:23] DONE  GPU 2  gate-soft_url_unique_hub-flip-local_R20_V500s2_H20_local-topk-init0_it300
+[busy] gate-soft_url_unique_hub-flip-local_R20_V500s2_H20_local-topk-init1_it300
+[2026-10-13 02:44:23] START GPU 2  gate-soft_url_unique_hub-flip-local_R20_V500s2_H20_local-topk-init2_it300
+[2026-10-13 03:00:35] DONE  GPU 2  gate-soft_url_unique_hub-flip-local_R20_V500s2_H20_local-topk-init2_it300
+[busy] gate-soft_url_unique_hub-flip-local_R20_V500s2_H20_local-topk-init3_it300
+[2026-10-13 03:00:35] START GPU 2  gate-soft_url_unique_hub-flip-local_R20_V500s1_H20_local-soft-lr0.05_it300
+[2026-10-13 03:14:01] DONE  GPU 2  gate-soft_url_unique_hub-flip-local_R20_V500s1_H20_local-soft-lr0.05_it300
+[busy] gate-soft_url_unique_hub-flip-local_R20_V500s2_H20_local-soft-lr0.05_it300
+[2026-10-13 03:14:01] START GPU 2  gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_local-topk-init0_it300
+[2026-10-13 03:46:39] DONE  GPU 2  gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_local-topk-init0_it300
+[busy] gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_local-topk-init1_it300
+[busy] gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_local-topk-init2_it300
+[2026-10-13 03:46:39] START GPU 2  gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_local-topk-init3_it300
+[2026-10-13 04:19:17] DONE  GPU 2  gate-soft_gas-drift_hub-flip-local_R20_V500s0_H20_local-topk-init3_it300
+[skip] gate-soft_gas-drift_hub-flip-local_R20_V500s1_H20_local-soft-lr0.05_it300 (already done)
+[busy] gate-soft_gas-drift_hub-flip-local_R20_V500s2_H20_local-soft-lr0.05_it300
+[skip] gate-soft_students_dropout_hub-flip-local_R20_V500s0_H20_local-soft-lr0.05_it300 (already done)
+[busy] gate-soft_students_dropout_hub-flip-local_R20_V500s1_H20_local-soft-lr0.05_it300
+[2026-10-13 04:19:17] START GPU 2  gate-soft_students_dropout_hub-flip-local_R20_V500s2_H20_local-soft-lr0.05_it300
+[2026-10-13 04:22:54] DONE  GPU 2  gate-soft_students_dropout_hub-flip-local_R20_V500s2_H20_local-soft-lr0.05_it300
+[busy] gate-soft_students_dropout_hub-flip-local_R20_V500s1_H20_imbalanced-soft-lr0.05_it300
+[2026-10-13 04:22:54] START GPU 2  gate-soft_students_dropout_hub-flip-local_R20_V500s2_H20_imbalanced-soft-lr0.05_it300
+[2026-10-13 04:26:33] DONE  GPU 2  gate-soft_students_dropout_hub-flip-local_R20_V500s2_H20_imbalanced-soft-lr0.05_it300
+[busy] gate-soft_url_unique_hub-flip-local_R20_V500s1_H20_imbalanced-soft-lr0.05_it300
+[2026-10-13 04:26:33] START GPU 2  gate-soft_url_unique_hub-flip-local_R20_V500s2_H20_imbalanced-soft-lr0.05_it300
+[2026-10-13 04:39:59] DONE  GPU 2  gate-soft_url_unique_hub-flip-local_R20_V500s2_H20_imbalanced-soft-lr0.05_it300
+[busy] gate-soft_gas-drift_hub-flip-local_R20_V500s1_H20_local-topk-init0_it300
+[busy] gate-soft_gas-drift_hub-flip-local_R20_V500s1_H20_local-topk-init1_it300
+[busy] gate-soft_gas-drift_hub-flip-local_R20_V500s1_H20_local-topk-init2_it300
+[busy] gate-soft_gas-drift_hub-flip-local_R20_V500s1_H20_local-topk-init3_it300
+[busy] gate-soft_gas-drift_hub-flip-local_R20_V500s2_H20_local-topk-init0_it300
+[busy] gate-soft_gas-drift_hub-flip-local_R20_V500s2_H20_local-topk-init1_it300
+[busy] gate-soft_gas-drift_hub-flip-local_R20_V500s2_H20_local-topk-init2_it300
+[busy] gate-soft_gas-drift_hub-flip-local_R20_V500s2_H20_local-topk-init3_it300
+ALL REQUESTED RUNS FINISHED

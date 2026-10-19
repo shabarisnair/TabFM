@@ -1,0 +1,6 @@
+students_dropout_hub-flip-local_local_R20_V200s0 grow:pct1:prior: acc 75.4 prec 0.598 steps 80 (67 s)
+students_dropout_hub-flip-local_local_R20_V200s1 grow:pct1:prior: acc 75.0 prec 0.607 steps 80 (70 s)
+students_dropout_hub-flip-local_local_R20_V200s2 grow:pct1:prior: acc 75.6 prec 0.589 steps 80 (70 s)
+students_dropout_hub-flip-local_local_R20_V500s0 grow:pct1:prior: acc 74.0 prec 0.524 steps 80 (74 s)
+students_dropout_hub-flip-local_local_R20_V500s1 grow:pct1:prior: acc 77.0 prec 0.598 steps 80 (75 s)
+students_dropout_hub-flip-local_local_R20_V500s2 grow:pct1:prior: acc 76.8 prec 0.548 steps 80 (72 s)

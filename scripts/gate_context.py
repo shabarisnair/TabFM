@@ -50,6 +50,16 @@ sigmoid centred on the keep/remove boundary. The scores then take the PGD step (
 that entered or left the mask with the update); detection AUROC is computed from -S.
 --select-on ce ranks iterations by CE on the validation(-test) rows instead of accuracy.
 
+--gate attn weights the context rows in attention instead of gating their features. Each
+row has a log-weight b_i in [--attn-floor, 0], starting at 0; b_i is added to every
+attention logit on row i in every row-attention layer, so row i counts like
+w_i = exp(b_i) copies of itself (w = 0 removes it from the attention exactly), and the
+training-label mean that TabPFN imputes the query rows' targets with is weighted by w
+(evaluate_attn). The feature-input gate above responds almost like a switch (a gate of
+0.96-0.99 already silences a row on gas-drift, url_unique, students_dropout); the
+attention weight is a graded importance. b takes the PGD step within its bounds (--lr in
+log units; --lr-schedule applies), and the log columns g_* describe w.
+
 Test-set curves, to see where over-fitting starts. The test set is scored at iteration
 0, every --test-every iterations, and at the last iteration, in two ways:
 
@@ -123,6 +133,9 @@ Outputs go to results/gate/<dataset>/<attack>_r<R>/<run-name>/:
     plots/gate_hist_best.png   the best gates, clean vs poisoned rows
     gates/top<k>.npz   the top-k gate vectors (g) with their log row; gates/final.npz
     gates/masks.npz    --gate topk: the masked rows of every iteration (masked [steps+1, n])
+    gates/checkpoints.npz  --gate soft / attn: the gate values at every test iteration
+                       (attn: the weights exp(log-weight); its top/final files keep the
+                       log-weights as scores)
     test_metrics.json  final test-set metrics of the best gates and the references
     test_probs.npz     the matching test-set probabilities
     poison.npz         poisoned rows, clean and poisoned labels, the tie-break order
@@ -251,6 +264,55 @@ def evaluate(clf, Xc, yc, Xq, yq, g, null_x, *, need_grad: bool, batch_size: int
     return total, grad, torch.cat(probs).numpy()
 
 
+def evaluate_attn(clf, Xc, yc, Xq, yq, log_w, *, need_grad: bool, batch_size: int | None, full: bool = False):
+    """As evaluate, with the context rows weighted in attention instead of gated at the
+    input (--gate attn): log_w[i] is added to every attention logit on context row i in
+    every row-attention layer, so row i counts like w[i] = exp(log_w[i]) copies of itself
+    (0 = exact removal from the attention), and the training-label mean that TabPFN imputes
+    the query rows' targets with is weighted by w (tabfm_experiments/sift.py; the
+    mechanism is checked by scripts/verify_sift_mechanism.py). The gradient is taken while
+    the bias is installed: activation checkpointing re-runs the forward in the backward.
+    Returns (mean CE, d CE / d log_w or None, probabilities).
+
+    full (--attn-full): weight every channel through which a context row reaches the others
+    -- also the z-norms and the context-fitted discrete fits -- so that log_w = -inf is exactly
+    deleting the row (tabfm_experiments/row_weights.py; checked by scripts/test_row_weights.py)."""
+    if full:
+        from tabfm_experiments.row_weights import evaluate_weighted
+        return evaluate_weighted(clf, Xc, yc, Xq, yq, log_w, need_grad=need_grad, batch_size=batch_size)
+    from tabfm_experiments.sift import build_masks, row_attention_modules, weights_installed
+
+    n_q = len(yq)
+    bs = min(batch_size or n_q, n_q)
+    total, grad, probs = 0.0, (torch.zeros_like(log_w) if need_grad else None), []
+    for st in range(0, n_q, bs):
+        with torch.enable_grad() if need_grad else torch.no_grad():
+            clf.fit_with_differentiable_input(Xc, yc)
+            _install_recompute(clf)
+            lw = log_w if need_grad else log_w.detach()
+            with weights_installed(clf.models_[0], row_attention_modules(clf, "all"),
+                                   build_masks(lw, None), lw.exp()):
+                p = _forward(clf, Xq[st:st + bs], need_grad=need_grad)
+                loss = F.nll_loss(torch.log(p.clamp_min(1e-12)), yq[st:st + bs].to(p.device),
+                                  reduction="sum") / n_q
+                if need_grad:
+                    grad += torch.autograd.grad(loss, log_w)[0]
+        total += float(loss.detach())
+        probs.append(p.detach().float().cpu())
+    return total, grad, torch.cat(probs).numpy()
+
+
+def vfilter_scores(clf, Xv, yv, Xc, y_given, *, batch_size: int | None) -> np.ndarray:
+    """log p(given label | the clean validation rows as the context) for every context row:
+    plain TabPFN, with the clean rows (Xv, labels yv) as its context, scores each context row's
+    given (possibly flipped) label. Low = implausible. Used to start the gates from (the
+    'V-filter': removing the k lowest is a strong baseline on its own)."""
+    yv_f = torch.as_tensor(np.asarray(yv), dtype=torch.float32, device=Xv.device)
+    yg = torch.as_tensor(np.asarray(y_given), dtype=torch.long, device=Xc.device)
+    p = evaluate(clf, Xv, yv_f, Xc, yg, None, None, need_grad=False, batch_size=batch_size)[2]
+    return np.log(np.clip(p[np.arange(len(y_given)), np.asarray(y_given)], 1e-12, 1.0))
+
+
 def lowest_gated(g: np.ndarray, k: int, tie_order: np.ndarray) -> np.ndarray:
     """Sorted indices of the k rows with the smallest gates.
 
@@ -263,18 +325,19 @@ def lowest_gated(g: np.ndarray, k: int, tie_order: np.ndarray) -> np.ndarray:
 
 # ---- the update ----------------------------------------------------------------------
 
-def pgd_step(g: torch.Tensor, grad: torch.Tensor, lr: float, scale: str) -> None:
-    """In place: g <- clip(g - eta * grad, 0, 1). See the module docstring for eta."""
+def pgd_step(g: torch.Tensor, grad: torch.Tensor, lr: float, scale: str,
+             lo: float = 0.0, hi: float = 1.0) -> None:
+    """In place: g <- clip(g - eta * grad, lo, hi). See the module docstring for eta."""
     with torch.no_grad():
         if scale == "linf":
-            pinned = ((g <= 0) & (grad > 0)) | ((g >= 1) & (grad < 0))  # the clip undoes their step
+            pinned = ((g <= lo) & (grad > 0)) | ((g >= hi) & (grad < 0))  # the clip undoes their step
             free = grad[~pinned].abs()
             if free.numel() == 0 or float(free.max()) == 0.0:
                 return
             eta = lr / free.max()
         else:
             eta = lr
-        g.sub_(eta * grad).clamp_(0.0, 1.0)
+        g.sub_(eta * grad).clamp_(lo, hi)
 
 
 def adam_step(g: torch.Tensor, grad: torch.Tensor, opt: torch.optim.Optimizer) -> None:
@@ -593,6 +656,39 @@ def draw_validation(y: np.ndarray, n: int, seed: int) -> np.ndarray:
     return np.sort(np.concatenate([o[:q] for o, q in zip(order, quota)]))
 
 
+def draw_validation_form(X: torch.Tensor, y: np.ndarray, n: int, seed: int, form: str = "stratified",
+                         minor_class: int = 0, minor_n: int = 5) -> tuple[np.ndarray, int | None]:
+    """(sorted rows, anchor or None): the clean validation rows in one of three forms, every
+    class present.
+
+    stratified  draw_validation(y, n, seed)
+    local       per class, its rows nearest (standardised features) to one random anchor row
+                (seed), as many as the class's stratified quota: a clean set covering one region
+    imbalanced  the stratified draw, except that class minor_class gets minor_n random rows
+                (seed); the other classes are topped up with random rows to n in total
+    """
+    from tabfm_experiments.multiclass_attacks import standardise
+    rows = draw_validation(y, n, seed)
+    if form == "stratified":
+        return rows, None
+    quota = np.bincount(y[rows], minlength=int(y.max()) + 1)
+    rng = np.random.default_rng(seed)
+    if form == "local":
+        Z = standardise(X)
+        anchor = int(rng.integers(len(y)))
+        d = torch.cdist(Z[anchor:anchor + 1], Z)[0].cpu().numpy()
+        out = np.concatenate([np.flatnonzero(y == c)[np.argsort(d[y == c], kind="stable")[:q]]
+                              for c, q in enumerate(quota) if q > 0])
+        return np.sort(out), anchor
+    if form == "imbalanced":
+        keep = [r for r in rows if y[r] != minor_class]
+        minor = rng.permutation(np.flatnonzero(y == minor_class))[:minor_n]
+        others = np.setdiff1d(np.flatnonzero(y != minor_class), keep)
+        extra = rng.permutation(others)[:n - len(keep) - len(minor)]
+        return np.sort(np.concatenate([keep, minor, extra]).astype(int)), None
+    raise ValueError(f"unknown validation form {form!r}")
+
+
 def split_holdout(y: np.ndarray, frac: float, seed: int) -> tuple[np.ndarray, np.ndarray]:
     """(fit, holdout): sorted positions in y of a class-stratified random split that holds
     out round(frac * len(y)) rows (half up), drawn as in draw_validation."""
@@ -653,6 +749,13 @@ def main(argv=None):
                          "as the validation set; the other rows are the context that is poisoned and gated")
     ap.add_argument("--val-seed", type=int, default=0,
                     help="seed of the --val-from-context draw; one seed gives nested draws across N")
+    ap.add_argument("--val-draw", default="stratified", choices=["stratified", "local", "imbalanced"],
+                    help="--val-from-context: the form of the clean rows (draw_validation_form): stratified, "
+                         "local (each class's rows nearest one random anchor) or imbalanced (one class with "
+                         "only --val-minor-n rows)")
+    ap.add_argument("--val-minor-class", type=int, default=None,
+                    help="--val-draw imbalanced: the under-represented class (default: the rarest in the file)")
+    ap.add_argument("--val-minor-n", type=int, default=5, help="--val-draw imbalanced: its number of rows")
     ap.add_argument("--val-holdout", type=float, default=0.0, metavar="FRAC",
                     help="hold out this fraction of the validation rows (class-stratified) as a "
                          "validation-test set: the gates are fitted on the rest, it is scored on the "
@@ -685,10 +788,26 @@ def main(argv=None):
     ap.add_argument("--adam-beta1", type=float, default=0.9)
     ap.add_argument("--adam-beta2", type=float, default=0.999)
     ap.add_argument("--adam-eps", type=float, default=1e-8)
-    ap.add_argument("--gate", default="soft", choices=["soft", "topk"],
+    ap.add_argument("--gate", default="soft", choices=["soft", "topk", "attn"],
                     help="soft: one gate in [0, 1] per row; topk: one free score per row, the forward "
                          "pass masks exactly the remove-percent rows with the lowest scores (gate 0, "
-                         "the rest 1), and the gradient reaches the scores straight through (--ste)")
+                         "the rest 1), and the gradient reaches the scores straight through (--ste); "
+                         "attn: one log-weight per row in [--attn-floor, 0], added to the row's "
+                         "attention logits (a row of weight w counts like w copies; see evaluate_attn)")
+    ap.add_argument("--attn-floor", type=float, default=-30.0,
+                    help="attn: the lowest log-weight a row can reach (-30: weight ~1e-13)")
+    ap.add_argument("--attn-full", action="store_true",
+                    help="attn: weight every channel through which a context row reaches the others (the "
+                         "attention, the label mean, the external and internal z-norms, the context-fitted "
+                         "constant-feature and class fits), so a log-weight of -inf is exactly deleting the "
+                         "row (tabfm_experiments/row_weights.py). The attention logit gaps of blocks 7-9 "
+                         "reach ~300, so a row is near deletion only below log-weight ~-1000: pair with "
+                         "--attn-floor -1000 or lower")
+    ap.add_argument("--attn-init", default="zero", choices=["zero", "vfilter"],
+                    help="attn: start every log-weight at 0, or at temp * (s - max s) with s = log p(given "
+                         "label | the FITTED clean rows as the context) (vfilter_scores), clipped to the floor; "
+                         "iteration 0 is then the clean rows' label plausibility used as weights")
+    ap.add_argument("--attn-init-temp", type=float, default=1.0, help="attn, --attn-init vfilter: temp")
     ap.add_argument("--ste", default="identity", choices=["identity", "sigmoid", "sigmoid-centered"],
                     help="topk: surrogate of the hard mask in the backward pass (see ste_grad)")
     ap.add_argument("--ste-temp", type=float, default=1.0,
@@ -697,11 +816,13 @@ def main(argv=None):
                     help="topk: the scores start as N(0, std^2)")
     ap.add_argument("--init-seed", type=int, default=0,
                     help="topk: seed of the initial scores; one seed = one restart")
-    ap.add_argument("--score-init", default="random", choices=["random", "gradient", "file"],
+    ap.add_argument("--score-init", default="random", choices=["random", "gradient", "file", "vfilter"],
                     help="topk: random = N(0, std^2); gradient = -(d CE / d g at g = 1 on the fitted "
                          "validation rows) scaled to unit spread, plus N(0, std^2) noise, so the first "
                          "mask is the rows whose masking lowers the loss most; file = the per-row values "
-                         "of --score-init-path (e.g. soft gates; low = masked first), plus the noise")
+                         "of --score-init-path (e.g. soft gates; low = masked first), plus the noise; "
+                         "vfilter = log p(given label | the fitted clean rows as the context) scaled to unit "
+                         "spread, plus the noise, so the first mask is the k least plausible labels")
     ap.add_argument("--score-init-path", type=Path, default=None,
                     help="topk, --score-init file: an .npz with 'scores' or 'g', one value per context row")
     ap.add_argument("--ste-probe", type=float, default=0.0, metavar="ALPHA",
@@ -778,7 +899,7 @@ def main(argv=None):
         if a.remove_percent <= 0:
             raise SystemExit("--gate topk masks the remove-percent rows; it must be > 0")
         if a.score_init_std < 0 or (a.score_init == "random" and a.score_init_std == 0):
-            raise SystemExit("--score-init-std must be > 0 (>= 0 with --score-init gradient)")
+            raise SystemExit("--score-init-std must be > 0 (>= 0 with --score-init gradient, file or vfilter)")
         if not 0 <= a.budget_warmup < 1:
             raise SystemExit("--budget-warmup must be in [0, 1)")
         if a.score_init == "file" and (a.score_init_path is None or not a.score_init_path.exists()):
@@ -789,6 +910,8 @@ def main(argv=None):
             raise SystemExit("--ste-probe must be in [0, 0.5)")
         if a.swap_search < 0 or (a.swap_search and a.budget_warmup):
             raise SystemExit("--swap-search needs PAIRS >= 0 and no --budget-warmup")
+    if a.gate == "attn" and (a.optimizer != "pgd" or a.attn_floor >= 0):
+        raise SystemExit("--gate attn moves its log-weights with the PGD step and needs --attn-floor < 0")
     if not 0 <= a.val_holdout < 1:
         raise SystemExit("--val-holdout must be in [0, 1)")
     if not 0 < a.fit_subsample <= 1:
@@ -831,17 +954,30 @@ def main(argv=None):
         if a.val_from_context >= n_file:
             raise SystemExit(f"--val-from-context {a.val_from_context} leaves no context: "
                              f"{ctx_p.name} has {n_file} rows")
-        val_rows = draw_validation(yc, a.val_from_context, a.val_seed)
+        minor_class = (a.val_minor_class if a.val_minor_class is not None
+                       else int(np.argmin(np.bincount(yc, minlength=K))))
+        val_rows, anchor = draw_validation_form(Xc, yc, a.val_from_context, a.val_seed, a.val_draw,
+                                                minor_class, a.val_minor_n)
         if len(np.unique(yc[val_rows])) < K:
             raise SystemExit(f"--val-from-context {a.val_from_context} misses a class (class counts "
                              f"{np.bincount(yc[val_rows], minlength=K).tolist()}); draw more rows")
         ctx_rows = np.setdiff1d(np.arange(n_file), val_rows)
         split |= {"val_rows": val_rows, "context_rows": ctx_rows, "val_seed": a.val_seed}
+        if a.val_draw != "stratified":
+            split |= {"val_draw": a.val_draw} | ({"val_anchor": anchor} if anchor is not None else {}) \
+                | ({"val_minor_class": minor_class} if a.val_draw == "imbalanced" else {})
         Xv, yv = Xc[torch.as_tensor(val_rows, device=device)], yc[val_rows]
         Xc, yc = Xc[torch.as_tensor(ctx_rows, device=device)], yc[ctx_rows]
         validation = {"source": "class-stratified random draw from the clean context",
                       "n": a.val_from_context, "seed": a.val_seed, "n_context_file": n_file,
                       "nested_across_n": True, "rows": "split.npz"}
+        if a.val_draw != "stratified":
+            validation |= {"source": f"{a.val_draw} draw from the clean context (draw_validation_form)",
+                           "form": a.val_draw, "nested_across_n": False}
+            if a.val_draw == "imbalanced":
+                validation |= {"minor_class": minor_class, "minor_n": a.val_minor_n}
+            else:
+                validation |= {"anchor": anchor}
     Xv_all, yv_all = Xv, yv  # every clean validation row; the baselines use all of them
     holdout = a.val_holdout > 0
     if holdout:  # fit the gates on part of the validation rows, choose the iteration on the rest
@@ -920,7 +1056,14 @@ def main(argv=None):
                        | ({"budget_warmup": a.budget_warmup} if a.budget_warmup > 0 else {})
                        | ({"lr_schedule": a.lr_schedule, "lr_min_frac": a.lr_min_frac}
                           if a.lr_schedule != "constant" else {})
-                       if a.gate == "topk" else {"type": "soft", "select_on": a.select_on}),
+                       if a.gate == "topk" else
+                       {"type": "attn", "select_on": a.select_on, "attn_floor": a.attn_floor}
+                       | ({"attn_full": True} if a.attn_full else {})
+                       | ({"attn_init": a.attn_init, "attn_init_temp": a.attn_init_temp}
+                          if a.attn_init != "zero" else {})
+                       | ({"lr_schedule": a.lr_schedule, "lr_min_frac": a.lr_min_frac}
+                          if a.lr_schedule != "constant" else {})
+                       if a.gate == "attn" else {"type": "soft", "select_on": a.select_on}),
               "gated": "features only (feature_group_embedder input); labels untouched"}
 
     with wandb_run(a, run_name, out, config) as run:
@@ -945,6 +1088,15 @@ def main(argv=None):
             """Scores of the query rows with the (gated) context; g = None: no gate."""
             p = evaluate(clf, Xc, y_ctx, Xq, yq_t, g, null_x, need_grad=False, batch_size=a.batch_size)[2]
             return metrics(p, yq), p
+
+        def learned(Xq, yq, yq_t, param):
+            """Scores of the query rows under the learned gate: the attention log-weights
+            (--gate attn), else the input gates or top-k mask through soft()."""
+            if a.gate == "attn":
+                p = evaluate_attn(clf, Xc, yp_t, Xq, yq_t, param, need_grad=False, batch_size=a.batch_size,
+                                  full=a.attn_full)[2]
+                return metrics(p, yq), p
+            return soft(Xq, yq, yq_t, param)
 
         def as_context(X_ctx, y_ctx):
             """Test scores of plain TabPFN, no gate, on the context (X_ctx, y_ctx)."""
@@ -986,6 +1138,7 @@ def main(argv=None):
 
         # -- training ------------------------------------------------------------------
         topk = a.gate == "topk"
+        attn = a.gate == "attn"
         if topk:  # free scores; the gate is the hard top-k mask of them, rebuilt every iteration
             if not 0 < k_remove < n:
                 raise SystemExit(f"--gate topk needs 0 < rows masked < {n}, got {k_remove}")
@@ -996,6 +1149,11 @@ def main(argv=None):
                 _, g_full, _ = evaluate(clf, Xc, yp_t, Xv, yv_t, g1, null_x, need_grad=True,
                                         batch_size=a.batch_size)
                 scores = scores - g_full / g_full.std()
+            elif a.score_init == "vfilter":  # the clean rows' label plausibility, low = masked first
+                s_v = vfilter_scores(clf, Xv, yv, Xc, y_pois, batch_size=a.batch_size)
+                log(f"  V-filter start: the k lowest of log p(given label | fitted rows) are "
+                    f"{poisoned[np.argsort(s_v, kind='stable')[:k_remove]].mean():.3f} poisoned")
+                scores = scores + torch.as_tensor((s_v - s_v.mean()) / s_v.std(), dtype=torch.float32, device=device)
             elif a.score_init == "file":
                 z = np.load(a.score_init_path)
                 v = z["scores"] if "scores" in z.files else z["g"]
@@ -1009,6 +1167,15 @@ def main(argv=None):
             if a.swap_search and torch.unique(scores).numel() < n:  # break ties once, reproducibly
                 scores = scores + 1e-6 * init_scores(n, 1.0, a.init_seed + 10_000, device)
             g = topk_mask(scores, budget_at(0, k_remove, warmup))
+        elif attn:  # one log-weight per row; 0 = full weight, the floor = (nearly) none
+            scores = None
+            b0 = np.zeros(n)
+            if a.attn_init == "vfilter":  # the clean rows' label plausibility as the starting weights
+                s_v = vfilter_scores(clf, Xv, yv, Xc, y_pois, batch_size=a.batch_size)
+                b0 = np.clip(a.attn_init_temp * (s_v - s_v.max()), a.attn_floor, 0.0)
+                log(f"  V-filter start: the k lowest of log p(given label | fitted rows) are "
+                    f"{poisoned[np.argsort(s_v, kind='stable')[:k_remove]].mean():.3f} poisoned")
+            g = torch.tensor(b0, dtype=torch.float32, device=device, requires_grad=True)
         else:
             scores = None
             g = torch.full((n,), float(a.g_init), device=device, requires_grad=True)
@@ -1032,6 +1199,7 @@ def main(argv=None):
 
         log_rows, top = [], []  # top: [(log row, gate vector, scores or None)], best first
         masks_seen = []  # topk: the masked rows of every iteration, saved to gates/masks.npz
+        checkpoints = []  # soft / attn: the gates at every test iteration, saved to gates/checkpoints.npz
         with open(out / "log.csv", "w", newline="") as fh:
             writer = csv.DictWriter(fh, fieldnames=fields, restval="")
             writer.writeheader()
@@ -1040,15 +1208,20 @@ def main(argv=None):
                 if topk:
                     k_t = budget_at(it, k_remove, warmup)
                     g = topk_mask(scores, k_t).requires_grad_(it < a.steps)
-                g_now = g.detach().cpu().numpy().copy()
-                s_now = scores.detach().cpu().numpy().copy() if topk else None
+                g_now = (g.detach().exp() if attn else g.detach()).cpu().numpy().copy()  # gate values
+                s_now = (scores.detach().cpu().numpy().copy() if topk  # topk scores; attn log-weights
+                         else g.detach().cpu().numpy().copy() if attn else None)
                 if topk:
                     masks_seen.append(g_now == 0)
                 removed = (np.flatnonzero(g_now == 0) if topk  # exactly the masked rows
                            else lowest_gated(g_now, k_remove, tie_order))
                 relaxed = topk and (a.ste_probe > 0 or a.swap_search)
-                ce, grad, p_val = evaluate(clf, Xc, yp_t, Xv, yv_t, g, null_x,
-                                           need_grad=it < a.steps and not relaxed, batch_size=a.batch_size)
+                if attn:
+                    ce, grad, p_val = evaluate_attn(clf, Xc, yp_t, Xv, yv_t, g, need_grad=it < a.steps,
+                                                    batch_size=a.batch_size, full=a.attn_full)
+                else:
+                    ce, grad, p_val = evaluate(clf, Xc, yp_t, Xv, yv_t, g, null_x,
+                                               need_grad=it < a.steps and not relaxed, batch_size=a.batch_size)
                 if relaxed and it < a.steps:  # the gradient at the probe point; loss and metrics stay hard
                     hard_g = g.detach()
                     probe = (hard_g * (1 - a.ste_probe) + (1 - hard_g) * a.ste_probe).requires_grad_(True)
@@ -1058,10 +1231,12 @@ def main(argv=None):
                 if abs(ce - row["val_ce"]) > 1e-4:  # the loss and the metric are independent paths
                     raise AssertionError(f"loss {ce:.6f} != metric CE {row['val_ce']:.6f}")
                 if a.test_every and (it % a.test_every == 0 or it == a.steps):
-                    row |= prefixed("test_soft", soft(Xt, yt, yt_t, g)[0])
+                    row |= prefixed("test_soft", learned(Xt, yt, yt_t, g)[0])
                     row |= prefixed("test_hard", hard(removed)[0])
                     if holdout:
-                        row |= prefixed("valtest", soft(Xh, yh, yh_t, g)[0])
+                        row |= prefixed("valtest", learned(Xh, yh, yh_t, g)[0])
+                    if not topk:
+                        checkpoints.append((it, g_now))
                 row |= gate_stats(g_now, poisoned, removed, scores=s_now)
                 if topk:
                     row["score_std"] = float(s_now.std())
@@ -1125,6 +1300,11 @@ def main(argv=None):
                         score_step(scores, gs, lr_t, a.pgd_scale)
                     row["max_abs_dg"] = float(np.abs(scores.detach().cpu().numpy() - s_now).max())
                     row["mask_flips"] = int((topk_mask(scores, k_t).cpu().numpy() != g_now).sum())
+                elif grad is not None and attn:  # the log-weights, within [floor, 0]
+                    row["grad_max_abs"] = float(grad.abs().max())
+                    pgd_step(g, grad, lr_at(it, a.steps, a.lr, a.lr_schedule, a.lr_min_frac), a.pgd_scale,
+                             lo=a.attn_floor, hi=0.0)
+                    row["max_abs_dg"] = float(np.abs(g.detach().cpu().numpy() - s_now).max())
                 elif grad is not None:  # every iteration but the last: update the gates
                     row["grad_max_abs"] = float(grad.abs().max())
                     if a.optimizer == "pgd":
@@ -1159,14 +1339,18 @@ def main(argv=None):
                     plot_curves(log_rows, refs, top[0][0]["iter"] if top else it, out / "plots", baseline)
 
         # -- the best gates on the test set, soft and hard ----------------------------------
-        save_gate(out / "gates" / "final.npz", g.detach().cpu().numpy(), log_rows[-1],
-                  scores=scores.detach().cpu().numpy() if topk else None)
+        save_gate(out / "gates" / "final.npz", (g.detach().exp() if attn else g.detach()).cpu().numpy(),
+                  log_rows[-1], scores=(scores.detach().cpu().numpy() if topk
+                                        else g.detach().cpu().numpy() if attn else None))
+        if checkpoints:  # one row per test iteration: the gate values (attn: the weights exp(log-weight))
+            np.savez_compressed(out / "gates" / "checkpoints.npz", iters=np.array([i for i, _ in checkpoints]),
+                                g=np.stack([v for _, v in checkpoints]).astype(np.float32))
         if topk:  # one row per iteration (0..steps): True = masked
             np.savez_compressed(out / "gates" / "masks.npz", masked=np.stack(masks_seen),
                                 iters=np.arange(len(masks_seen)))
         best_row, g_best, s_best = top[0]
-        final["poisoned_best_gate_soft"], probs["poisoned_best_gate_soft"] = soft(
-            Xt, yt, yt_t, as_t(g_best, torch.float32))
+        final["poisoned_best_gate_soft"], probs["poisoned_best_gate_soft"] = learned(
+            Xt, yt, yt_t, as_t(s_best if attn else g_best, torch.float32))
         final["poisoned_best_gate_hard"], probs["poisoned_best_gate_hard"] = hard(
             lowest_gated(g_best, k_remove, tie_order))
         log(f"best: iteration {best_row['iter']}  val acc {best_row['val_accuracy']:.4f} "
@@ -1204,9 +1388,10 @@ def main(argv=None):
         np.savez_compressed(out / "test_probs.npz", y_test=yt.astype(np.int16),
                             **{k: v.astype(np.float32) for k, v in probs.items() if v is not None})
         plot_curves(log_rows, refs, best_row["iter"], out / "plots", baseline)
-        plot_gate_hist(s_best if topk else g_best, poisoned, out / "plots" / "gate_hist_best.png",
-                       f"best {'scores' if topk else 'gates'} (iteration {best_row['iter']})",
-                       xlabel="score S (the lowest rows are masked)" if topk else "gate g")
+        plot_gate_hist(s_best if topk or attn else g_best, poisoned, out / "plots" / "gate_hist_best.png",
+                       f"best {'scores' if topk else 'log-weights' if attn else 'gates'} (iteration {best_row['iter']})",
+                       xlabel=("score S (the lowest rows are masked)" if topk
+                               else "log-weight (the lowest rows count least)" if attn else "gate g"))
         if run is not None:
             wandb_upload(run, out, run_name, {
                 "best_iteration": best_row["iter"], "top_k_iterations": summary["top_k_iterations"],

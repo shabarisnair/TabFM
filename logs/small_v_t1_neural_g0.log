@@ -1,0 +1,2 @@
+tune1 gas-drift_R20_c1_s102__neural: start (n 3994, k 799, V 6)
+  gas-drift_R20_c1_s102 glc: 16 configs in 143 s; best precision 0.506

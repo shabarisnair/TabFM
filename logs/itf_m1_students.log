@@ -1,0 +1,6 @@
+students_dropout_hub-flip-local_stratified_R20_V50s0 grow:m1: acc 71.8 prec 0.546 steps 2360 (2001 s)
+students_dropout_hub-flip-local_stratified_R20_V100s0 grow:m1: acc 73.2 prec 0.567 steps 2320 (1677 s)
+students_dropout_hub-flip-local_stratified_R20_V200s0 grow:m1: acc 74.6 prec 0.561 steps 2240 (1774 s)
+students_dropout_hub-flip-local_stratified_R20_V300s0 grow:m1: acc 75.4 prec 0.594 steps 2160 (1386 s)
+students_dropout_hub-flip-local_stratified_R20_V400s0 grow:m1: acc 77.6 prec 0.615 steps 2080 (1197 s)
+students_dropout_hub-flip-local_stratified_R20_V500s0 grow:m1: acc 78.0 prec 0.660 steps 2000 (1038 s)

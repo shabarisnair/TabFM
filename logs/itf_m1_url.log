@@ -1,0 +1,2 @@
+url_unique_hub-flip-local_stratified_R20_V50s0 grow:m1: acc 95.8 prec 0.922 steps 3960 (7797 s)
+url_unique_hub-flip-local_stratified_R20_V500s0 grow:m1: acc 95.3 prec 0.912 steps 3600 (4394 s)

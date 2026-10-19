@@ -1,0 +1,114 @@
+eval gas-drift_R20_c3_s2__neural: start (n 4982, k 996, V 18)
+  gas-drift_R20_c3_s2 glc {"epochs": 10, "feat": "q", "lr": 0.001, "trusted_weight": 10.0}: native 86.5, remove 86.2, relabel 85.0, relabel_k 86.6
+  gas-drift_R20_c3_s2 mwnet {"epochs": 10, "feat": "q", "lr": 0.01, "meta_lr": 0.001}: native 83.0
+  gas-drift_R20_c3_s2 mwnet {"epochs": 10, "feat": "q", "lr": 0.01, "meta_lr": 0.0001}: remove 79.9
+  gas-drift_R20_c3_s2 emlc {"epochs": 10, "feat": "q", "lr": 0.05, "teacher_lr": 0.0001}: native 84.0
+  gas-drift_R20_c3_s2 emlc {"epochs": 40, "feat": "z", "lr": 0.01, "teacher_lr": 0.0001}: remove 82.0, relabel_k 76.6
+  gas-drift_R20_c3_s2 emlc {"epochs": 10, "feat": "z", "lr": 0.01, "teacher_lr": 0.0001}: relabel 83.7
+  gas-drift_R20_c3_s2 ieg {"epochs": 40, "feat": "q", "kl_weight": 10.0, "lr": 0.003}: native 91.2, relabel 90.0
+  gas-drift_R20_c3_s2 ieg {"epochs": 40, "feat": "q", "kl_weight": 10.0, "lr": 0.001}: remove 83.7
+  gas-drift_R20_c3_s2 ieg {"epochs": 40, "feat": "q", "kl_weight": 1.0, "lr": 0.003}: relabel_k 85.9
+eval gas-drift_R20_c3_s2__neural: done in 1331 s
+eval gas-drift_R30_c1_s0__neural: start (n 4994, k 1498, V 6)
+  gas-drift_R30_c1_s0 glc {"epochs": 10, "feat": "z", "lr": 0.001, "trusted_weight": 1.0}: native 50.5, relabel_k 58.9
+  gas-drift_R30_c1_s0 glc {"epochs": 10, "feat": "q", "lr": 0.001, "trusted_weight": 10.0}: remove 65.4
+  gas-drift_R30_c1_s0 glc {"epochs": 10, "feat": "z", "lr": 0.001, "trusted_weight": 10.0}: relabel 52.4
+  gas-drift_R30_c1_s0 mwnet {"epochs": 10, "feat": "q", "lr": 0.01, "meta_lr": 0.001}: native 73.4
+  gas-drift_R30_c1_s0 mwnet {"epochs": 10, "feat": "q", "lr": 0.01, "meta_lr": 0.0001}: remove 77.3
+  gas-drift_R30_c1_s0 emlc {"epochs": 10, "feat": "z", "lr": 0.05, "teacher_lr": 0.0001}: native 57.6, relabel 61.0, relabel_k 58.5
+  gas-drift_R30_c1_s0 emlc {"epochs": 10, "feat": "q", "lr": 0.05, "teacher_lr": 0.001}: remove 69.8
+  gas-drift_R30_c1_s0 ieg {"epochs": 40, "feat": "q", "kl_weight": 10.0, "lr": 0.003}: native 80.3, relabel_k 81.2
+  gas-drift_R30_c1_s0 ieg {"epochs": 40, "feat": "q", "kl_weight": 1.0, "lr": 0.003}: remove 77.0
+  gas-drift_R30_c1_s0 ieg {"epochs": 40, "feat": "z", "kl_weight": 10.0, "lr": 0.003}: relabel 80.3
+eval gas-drift_R30_c1_s0__neural: done in 1142 s
+eval gas-drift_R30_c5_s2__neural: start (n 4970, k 1491, V 30)
+  gas-drift_R30_c5_s2 glc {"epochs": 10, "feat": "z", "lr": 0.001, "trusted_weight": 1.0}: native 79.1
+  gas-drift_R30_c5_s2 glc {"epochs": 40, "feat": "z", "lr": 0.003, "trusted_weight": 10.0}: remove 84.5, relabel_k 81.6
+  gas-drift_R30_c5_s2 glc {"epochs": 10, "feat": "q", "lr": 0.003, "trusted_weight": 10.0}: relabel 83.0
+  gas-drift_R30_c5_s2 mwnet {"epochs": 40, "feat": "q", "lr": 0.05, "meta_lr": 0.0001}: native 65.3
+  gas-drift_R30_c5_s2 mwnet {"epochs": 40, "feat": "z", "lr": 0.05, "meta_lr": 0.001}: remove 70.0
+  gas-drift_R30_c5_s2 emlc {"epochs": 40, "feat": "q", "lr": 0.01, "teacher_lr": 0.0001}: native 72.6
+  gas-drift_R30_c5_s2 emlc {"epochs": 40, "feat": "z", "lr": 0.05, "teacher_lr": 0.0001}: remove 85.3, relabel_k 79.0
+  gas-drift_R30_c5_s2 emlc {"epochs": 10, "feat": "q", "lr": 0.05, "teacher_lr": 0.0001}: relabel 81.6
+  gas-drift_R30_c5_s2 ieg {"epochs": 40, "feat": "q", "kl_weight": 1.0, "lr": 0.001}: native 87.1
+  gas-drift_R30_c5_s2 ieg {"epochs": 40, "feat": "q", "kl_weight": 1.0, "lr": 0.003}: remove 80.9
+  gas-drift_R30_c5_s2 ieg {"epochs": 40, "feat": "q", "kl_weight": 10.0, "lr": 0.003}: relabel 88.3, relabel_k 84.8
+eval gas-drift_R30_c5_s2__neural: done in 1049 s
+eval url_unique_R30_c3_s0__neural: start (n 4994, k 1498, V 6)
+  url_unique_R30_c3_s0 glc {"epochs": 40, "feat": "q", "lr": 0.001, "trusted_weight": 10.0}: native 84.4, remove 83.9, relabel 84.7, relabel_k 84.4
+  url_unique_R30_c3_s0 mwnet {"epochs": 40, "feat": "q", "lr": 0.01, "meta_lr": 0.001}: native 70.6
+  url_unique_R30_c3_s0 mwnet {"epochs": 10, "feat": "q", "lr": 0.01, "meta_lr": 0.001}: remove 68.0
+  url_unique_R30_c3_s0 emlc {"epochs": 10, "feat": "q", "lr": 0.05, "teacher_lr": 0.0001}: native 88.6, remove 93.6, relabel_k 92.3
+  url_unique_R30_c3_s0 emlc {"epochs": 10, "feat": "z", "lr": 0.01, "teacher_lr": 0.001}: relabel 84.5
+  url_unique_R30_c3_s0 ieg {"epochs": 40, "feat": "z", "kl_weight": 10.0, "lr": 0.003}: native 92.1
+  url_unique_R30_c3_s0 ieg {"epochs": 10, "feat": "z", "kl_weight": 10.0, "lr": 0.003}: remove 85.0, relabel_k 90.4
+  url_unique_R30_c3_s0 ieg {"epochs": 40, "feat": "q", "kl_weight": 10.0, "lr": 0.001}: relabel 93.5
+eval url_unique_R30_c3_s0__neural: done in 530 s
+eval heloc_R20_c3_s1__neural: start (n 4994, k 999, V 6)
+  heloc_R20_c3_s1 glc {"epochs": 10, "feat": "q", "lr": 0.001, "trusted_weight": 1.0}: native 69.4, relabel_k 69.5
+  heloc_R20_c3_s1 glc {"epochs": 10, "feat": "q", "lr": 0.003, "trusted_weight": 10.0}: remove 73.2
+  heloc_R20_c3_s1 glc {"epochs": 40, "feat": "z", "lr": 0.003, "trusted_weight": 10.0}: relabel 67.6
+  heloc_R20_c3_s1 mwnet {"epochs": 10, "feat": "z", "lr": 0.01, "meta_lr": 0.0001}: native 63.9
+  heloc_R20_c3_s1 mwnet {"epochs": 10, "feat": "z", "lr": 0.05, "meta_lr": 0.0001}: remove 65.5
+  heloc_R20_c3_s1 emlc {"epochs": 10, "feat": "z", "lr": 0.01, "teacher_lr": 0.0001}: native 69.9, remove 71.6, relabel 69.0, relabel_k 71.4
+  heloc_R20_c3_s1 ieg {"epochs": 10, "feat": "z", "kl_weight": 1.0, "lr": 0.003}: native 72.4
+  heloc_R20_c3_s1 ieg {"epochs": 40, "feat": "z", "kl_weight": 1.0, "lr": 0.003}: remove 68.8
+  heloc_R20_c3_s1 ieg {"epochs": 40, "feat": "z", "kl_weight": 10.0, "lr": 0.003}: relabel 70.7
+  heloc_R20_c3_s1 ieg {"epochs": 40, "feat": "z", "kl_weight": 1.0, "lr": 0.001}: relabel_k 72.2
+eval heloc_R20_c3_s1__neural: done in 297 s
+eval heloc_R30_c1_s2__neural: start (n 4998, k 1499, V 2)
+  heloc_R30_c1_s2 glc {"epochs": 10, "feat": "z", "lr": 0.001, "trusted_weight": 10.0}: native 59.2, relabel 59.9
+  heloc_R30_c1_s2 glc {"epochs": 40, "feat": "q", "lr": 0.001, "trusted_weight": 1.0}: remove 61.7
+  heloc_R30_c1_s2 glc {"epochs": 40, "feat": "q", "lr": 0.001, "trusted_weight": 10.0}: relabel_k 60.6
+  heloc_R30_c1_s2 mwnet {"epochs": 10, "feat": "q", "lr": 0.05, "meta_lr": 0.0001}: native 58.3
+  heloc_R30_c1_s2 mwnet {"epochs": 40, "feat": "z", "lr": 0.05, "meta_lr": 0.0001}: remove 47.3
+  heloc_R30_c1_s2 emlc {"epochs": 10, "feat": "z", "lr": 0.01, "teacher_lr": 0.0001}: native 57.0, relabel 58.0
+  heloc_R30_c1_s2 emlc {"epochs": 40, "feat": "z", "lr": 0.01, "teacher_lr": 0.001}: remove 66.8
+  heloc_R30_c1_s2 emlc {"epochs": 10, "feat": "z", "lr": 0.01, "teacher_lr": 0.001}: relabel_k 65.6
+  heloc_R30_c1_s2 ieg {"epochs": 40, "feat": "z", "kl_weight": 1.0, "lr": 0.003}: native 70.0, remove 72.0, relabel 70.4, relabel_k 72.4
+eval heloc_R30_c1_s2__neural: done in 269 s
+eval students_dropout_R20_c3_s2__neural: start (n 2991, k 598, V 9)
+  students_dropout_R20_c3_s2 glc {"epochs": 10, "feat": "z", "lr": 0.003, "trusted_weight": 1.0}: native 55.0, remove 76.2, relabel_k 69.2
+  students_dropout_R20_c3_s2 glc {"epochs": 40, "feat": "z", "lr": 0.001, "trusted_weight": 10.0}: relabel 55.6
+  students_dropout_R20_c3_s2 mwnet {"epochs": 10, "feat": "q", "lr": 0.01, "meta_lr": 0.001}: native 73.8
+  students_dropout_R20_c3_s2 mwnet {"epochs": 10, "feat": "q", "lr": 0.01, "meta_lr": 0.0001}: remove 66.4
+  students_dropout_R20_c3_s2 emlc {"epochs": 10, "feat": "z", "lr": 0.01, "teacher_lr": 0.0001}: native 58.2, relabel 54.2, relabel_k 53.4
+  students_dropout_R20_c3_s2 emlc {"epochs": 10, "feat": "q", "lr": 0.01, "teacher_lr": 0.001}: remove 65.2
+  students_dropout_R20_c3_s2 ieg {"epochs": 40, "feat": "z", "kl_weight": 1.0, "lr": 0.003}: native 69.0, relabel 70.0
+  students_dropout_R20_c3_s2 ieg {"epochs": 40, "feat": "q", "kl_weight": 1.0, "lr": 0.001}: remove 70.2
+  students_dropout_R20_c3_s2 ieg {"epochs": 40, "feat": "q", "kl_weight": 1.0, "lr": 0.003}: relabel_k 71.2
+eval students_dropout_R20_c3_s2__neural: done in 179 s
+eval students_dropout_R30_c3_s2__neural: start (n 2991, k 897, V 9)
+  students_dropout_R30_c3_s2 glc {"epochs": 10, "feat": "z", "lr": 0.003, "trusted_weight": 1.0}: native 47.0, remove 57.0, relabel 47.0, relabel_k 56.6
+  students_dropout_R30_c3_s2 mwnet {"epochs": 10, "feat": "q", "lr": 0.01, "meta_lr": 0.001}: native 63.0
+  students_dropout_R30_c3_s2 mwnet {"epochs": 40, "feat": "z", "lr": 0.05, "meta_lr": 0.0001}: remove 61.4
+  students_dropout_R30_c3_s2 emlc {"epochs": 10, "feat": "z", "lr": 0.01, "teacher_lr": 0.0001}: native 53.6, relabel 46.6, relabel_k 44.8
+  students_dropout_R30_c3_s2 emlc {"epochs": 40, "feat": "q", "lr": 0.01, "teacher_lr": 0.001}: remove 56.8
+  students_dropout_R30_c3_s2 ieg {"epochs": 40, "feat": "z", "kl_weight": 1.0, "lr": 0.003}: native 68.0
+  students_dropout_R30_c3_s2 ieg {"epochs": 40, "feat": "q", "kl_weight": 10.0, "lr": 0.003}: remove 64.8
+  students_dropout_R30_c3_s2 ieg {"epochs": 40, "feat": "q", "kl_weight": 1.0, "lr": 0.003}: relabel 70.6, relabel_k 68.6
+eval students_dropout_R30_c3_s2__neural: done in 173 s
+eval credit-approval_R30_c1_s2__neural: start (n 455, k 137, V 2)
+  credit-approval_R30_c1_s2 glc {"epochs": 10, "feat": "z", "lr": 0.001, "trusted_weight": 1.0}: native 71.9, relabel_k 76.5
+  credit-approval_R30_c1_s2 glc {"epochs": 40, "feat": "z", "lr": 0.003, "trusted_weight": 10.0}: remove 73.5
+  credit-approval_R30_c1_s2 glc {"epochs": 10, "feat": "z", "lr": 0.001, "trusted_weight": 10.0}: relabel 67.3
+  credit-approval_R30_c1_s2 mwnet {"epochs": 40, "feat": "q", "lr": 0.05, "meta_lr": 0.0001}: native 64.8
+  credit-approval_R30_c1_s2 mwnet {"epochs": 40, "feat": "z", "lr": 0.01, "meta_lr": 0.0001}: remove 51.5
+  credit-approval_R30_c1_s2 emlc {"epochs": 10, "feat": "z", "lr": 0.01, "teacher_lr": 0.001}: native 64.8, relabel_k 73.0
+  credit-approval_R30_c1_s2 emlc {"epochs": 40, "feat": "z", "lr": 0.01, "teacher_lr": 0.001}: remove 79.6
+  credit-approval_R30_c1_s2 emlc {"epochs": 10, "feat": "z", "lr": 0.01, "teacher_lr": 0.0001}: relabel 69.4
+  credit-approval_R30_c1_s2 ieg {"epochs": 40, "feat": "z", "kl_weight": 1.0, "lr": 0.003}: native 83.7, remove 85.7, relabel 82.7, relabel_k 83.7
+eval credit-approval_R30_c1_s2__neural: done in 11 s
+eval credit-approval_R30_c5_s2__neural: start (n 447, k 134, V 10)
+  credit-approval_R30_c5_s2 glc {"epochs": 10, "feat": "z", "lr": 0.001, "trusted_weight": 10.0}: native 79.1, remove 79.1, relabel 78.6
+  credit-approval_R30_c5_s2 glc {"epochs": 40, "feat": "z", "lr": 0.003, "trusted_weight": 10.0}: relabel_k 68.9
+  credit-approval_R30_c5_s2 mwnet {"epochs": 40, "feat": "q", "lr": 0.05, "meta_lr": 0.0001}: native 61.7
+  credit-approval_R30_c5_s2 mwnet {"epochs": 10, "feat": "q", "lr": 0.01, "meta_lr": 0.0001}: remove 50.5
+  credit-approval_R30_c5_s2 emlc {"epochs": 40, "feat": "z", "lr": 0.01, "teacher_lr": 0.0001}: native 80.6
+  credit-approval_R30_c5_s2 emlc {"epochs": 10, "feat": "q", "lr": 0.05, "teacher_lr": 0.0001}: remove 85.2, relabel_k 85.2
+  credit-approval_R30_c5_s2 emlc {"epochs": 10, "feat": "z", "lr": 0.01, "teacher_lr": 0.001}: relabel 76.5
+  credit-approval_R30_c5_s2 ieg {"epochs": 10, "feat": "q", "kl_weight": 10.0, "lr": 0.001}: native 85.7
+  credit-approval_R30_c5_s2 ieg {"epochs": 40, "feat": "z", "kl_weight": 10.0, "lr": 0.003}: remove 87.2
+  credit-approval_R30_c5_s2 ieg {"epochs": 10, "feat": "q", "kl_weight": 1.0, "lr": 0.003}: relabel 86.7
+  credit-approval_R30_c5_s2 ieg {"epochs": 40, "feat": "z", "kl_weight": 1.0, "lr": 0.001}: relabel_k 86.2
+eval credit-approval_R30_c5_s2__neural: done in 11 s

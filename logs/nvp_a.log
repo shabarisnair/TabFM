@@ -1,0 +1,39 @@
+## students_dropout, V = 200 (V_fit 160, holdout 40; n = 2800, poisoned 560)
+
+Reference model on the clean context: genuine rows with p(own label) < 0.5: 0.27; poisoned rows with p(flipped label) > 0.5: 0.12. Band p in [0.15, 0.65]: 648 genuine, 107 poisoned rows.
+
+| signal | AUROC, all rows | precision of the k most suspicious | AUROC inside the band |
+|---|---|---|---|
+| v_filter | 0.861 | 0.664 | 0.559 |
+| cv_random | 0.695 | 0.270 | 0.423 |
+| cv_block50 | 0.736 | 0.334 | 0.469 |
+| holdout50 | 0.798 | 0.546 | 0.714 |
+| cv_block200 | 0.725 | 0.291 | 0.455 |
+| holdout200 | 0.701 | 0.554 | 0.738 |
+| dependence | 0.647 | 0.411 | 0.583 |
+## heloc, V = 200 (V_fit 160, holdout 40; n = 4800, poisoned 960)
+
+Reference model on the clean context: genuine rows with p(own label) < 0.5: 0.27; poisoned rows with p(flipped label) > 0.5: 0.25. Band p in [0.15, 0.65]: 1439 genuine, 531 poisoned rows.
+
+| signal | AUROC, all rows | precision of the k most suspicious | AUROC inside the band |
+|---|---|---|---|
+| v_filter | 0.791 | 0.482 | 0.622 |
+| cv_random | 0.660 | 0.255 | 0.368 |
+| cv_block50 | 0.680 | 0.256 | 0.397 |
+| holdout50 | 0.720 | 0.520 | 0.714 |
+| cv_block200 | 0.671 | 0.267 | 0.386 |
+| holdout200 | 0.599 | 0.372 | 0.570 |
+| dependence | 0.548 | 0.300 | 0.536 |
+## heloc, V = 500 (V_fit 400, holdout 100; n = 4500, poisoned 900)
+
+Reference model on the clean context: genuine rows with p(own label) < 0.5: 0.27; poisoned rows with p(flipped label) > 0.5: 0.25. Band p in [0.15, 0.65]: 1347 genuine, 517 poisoned rows.
+
+| signal | AUROC, all rows | precision of the k most suspicious | AUROC inside the band |
+|---|---|---|---|
+| v_filter | 0.811 | 0.523 | 0.665 |
+| cv_random | 0.677 | 0.254 | 0.372 |
+| cv_block50 | 0.701 | 0.257 | 0.418 |
+| holdout50 | 0.593 | 0.329 | 0.554 |
+| cv_block200 | 0.687 | 0.257 | 0.387 |
+| holdout200 | 0.581 | 0.299 | 0.567 |
+| dependence | 0.548 | 0.307 | 0.537 |

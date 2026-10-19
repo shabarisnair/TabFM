@@ -1,0 +1,8 @@
+students_dropout_R20_c3_s3 fixed:pct1:rs1: acc 73.0 auc 82.1 ce 1.034 prec 0.560 steps 80 fits 0 (31 s)
+url_unique_R30_c3_s3 fixed:pct1:rs1: acc 85.9 auc 91.3 ce 0.860 prec 0.784 steps 70 fits 0 (91 s)
+heloc_R20_c1_s3 fixed:pct1:rs2: acc 56.3 auc 46.2 ce 2.574 prec 0.287 steps 80 fits 0 (63 s)
+url_unique_R10_c1_s3 fixed:pct1:rs2: acc 92.0 auc 94.1 ce 0.501 prec 0.724 steps 90 fits 0 (153 s)
+heloc_R20_c3_s3 fixed:pct1:rs2: acc 68.8 auc 72.9 ce 1.006 prec 0.524 steps 80 fits 0 (64 s)
+coil2000_insurance_policies_R10_c3_s3 fixed:pct1:rs2: acc 90.8 auc 57.3 ce 0.434 prec 0.607 steps 90 fits 0 (213 s)
+gas-drift_R10_c1_s3 fixed:pct1:rs3: acc 98.6 auc 100.0 ce 0.058 prec 0.954 steps 90 fits 0 (318 s)
+gas-drift_R30_c3_s3 fixed:pct1:rs3: acc 90.9 auc 98.7 ce 0.806 prec 0.898 steps 70 fits 0 (174 s)

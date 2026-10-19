@@ -1,0 +1,12 @@
+url_unique hub-flip-local V50 s0: poisoned 58.4 | V only 89.3 | V-filter 92.3 +V 92.1 (prec 0.89) | oracle 96.9 +V 97.0
+url_unique hub-flip-local V100 s0: poisoned 58.0 | V only 91.6 | V-filter 92.5 +V 92.7 (prec 0.91) | oracle 97.1 +V 96.9
+url_unique hub-flip-local V200 s0: poisoned 58.2 | V only 91.4 | V-filter 94.0 +V 93.9 (prec 0.91) | oracle 97.2 +V 96.9
+url_unique hub-flip-local V500 s0: poisoned 58.2 | V only 94.7 | V-filter 94.9 +V 95.4 (prec 0.94) | oracle 97.1 +V 97.2
+gas-drift hub-flip-local V50 s0: poisoned 60.1 | V only 83.1 | V-filter 87.8 +V 88.4 (prec 0.84) | oracle 98.9 +V 98.9
+gas-drift hub-flip-local V100 s0: poisoned 60.4 | V only 93.8 | V-filter 94.7 +V 95.1 (prec 0.94) | oracle 98.9 +V 99.4
+gas-drift hub-flip-local V200 s0: poisoned 60.4 | V only 96.9 | V-filter 96.4 +V 96.2 (prec 0.96) | oracle 98.8 +V 99.4
+gas-drift hub-flip-local V500 s0: poisoned 59.9 | V only 98.0 | V-filter 98.5 +V 98.9 (prec 0.99) | oracle 99.1 +V 99.1
+students_dropout hub-flip-local V50 s0: poisoned 52.8 | V only 68.0 | V-filter 73.0 +V 73.0 (prec 0.73) | oracle 79.8 +V 80.0
+students_dropout hub-flip-local V100 s0: poisoned 55.0 | V only 71.2 | V-filter 74.8 +V 75.4 (prec 0.74) | oracle 79.6 +V 79.0
+students_dropout hub-flip-local V200 s0: poisoned 53.2 | V only 72.4 | V-filter 75.8 +V 75.6 (prec 0.75) | oracle 80.0 +V 79.2
+students_dropout hub-flip-local V500 s0: poisoned 54.0 | V only 76.2 | V-filter 75.6 +V 75.4 (prec 0.75) | oracle 79.8 +V 80.0

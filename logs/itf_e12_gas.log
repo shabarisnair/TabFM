@@ -1,0 +1,8 @@
+gas-drift_hub-flip-local_stratified_R30_V50s0 oneshot: acc 90.3 prec 0.810 steps 1 (8 s)
+  gas-drift_hub-flip-local_stratified_R30_V50s0 grow:pct1:prior: step 37, |T| 1900, poisoned accepted 1/1485 (121 s)
+  gas-drift_hub-flip-local_stratified_R30_V50s0 grow:pct1:prior: step 60, |T| 3050, poisoned accepted 12/1485 (244 s)
+gas-drift_hub-flip-local_stratified_R30_V50s0 grow:pct1:prior: acc 97.3 prec 0.967 steps 70 (314 s)
+gas-drift_hub-flip-local_stratified_R30_V200s0 oneshot: acc 97.1 prec 0.949 steps 1 (8 s)
+  gas-drift_hub-flip-local_stratified_R30_V200s0 grow:pct1:prior: step 37, |T| 1976, poisoned accepted 0/1440 (125 s)
+  gas-drift_hub-flip-local_stratified_R30_V200s0 grow:pct1:prior: step 65, |T| 3320, poisoned accepted 1/1440 (248 s)
+gas-drift_hub-flip-local_stratified_R30_V200s0 grow:pct1:prior: acc 97.8 prec 0.981 steps 70 (278 s)
