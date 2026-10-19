@@ -1,0 +1,48 @@
+run gas-drift_R10_c5_s0 attn_topk: start (n 4970, k 497, V 30)
+      attn_topk it 0: CE on V 0.0451  (12 s)
+      attn_topk it 5: CE on V 0.0407  (83 s)
+      attn_topk it 10: CE on V 0.0379  (144 s)
+      attn_topk it 15: CE on V 0.0211  (205 s)
+run gas-drift_R10_c5_s0 attn_topk: done in 259 s  attn_topk: acc 93.4 auc 99.8 ce 0.220 prec 0.575
+run gas-drift_R30_c3_s0 attn_soft: start (n 4982, k 1495, V 18)
+      attn_soft it 0: CE on V 0.1436  (12 s)
+      attn_soft it 5: CE on V 0.0034  (73 s)
+      attn_soft it 10: CE on V 0.0026  (134 s)
+      attn_soft it 15: CE on V 0.0012  (195 s)
+run gas-drift_R30_c3_s0 attn_soft: done in 249 s  attn_soft: acc 82.7 auc 97.7 ce 0.669 prec 0.668  attn_soft_softw: acc 77.7 auc 96.4 ce 0.928
+run coil2000_insurance_policies_R10_c5_s0 attn_soft: start (n 4990, k 499, V 10)
+      attn_soft it 0: CE on V 0.9227  (8 s)
+      attn_soft it 5: CE on V 0.3670  (49 s)
+      attn_soft it 10: CE on V 0.2051  (90 s)
+      attn_soft it 15: CE on V 0.1225  (131 s)
+run coil2000_insurance_policies_R10_c5_s0 attn_soft: done in 168 s  attn_soft: acc 86.4 auc 61.0 ce 0.338 prec 0.062  attn_soft_softw: acc 82.1 auc 61.8 ce 0.426
+run coil2000_insurance_policies_R30_c3_s0 attn_soft: start (n 4994, k 1498, V 6)
+      attn_soft it 0: CE on V 0.7472  (8 s)
+      attn_soft it 5: CE on V 0.2299  (50 s)
+      attn_soft it 10: CE on V 0.1093  (92 s)
+      attn_soft it 15: CE on V 0.0534  (134 s)
+run coil2000_insurance_policies_R30_c3_s0 attn_soft: done in 170 s  attn_soft: acc 68.6 auc 53.4 ce 0.821 prec 0.275  attn_soft_softw: acc 68.5 auc 52.3 ce 0.861
+run heloc_R30_c1_s0 attn_soft: start (n 4998, k 1499, V 2)
+      attn_soft it 0: CE on V 0.1253  (3 s)
+      attn_soft it 5: CE on V 0.0066  (15 s)
+      attn_soft it 10: CE on V 0.0017  (28 s)
+      attn_soft it 15: CE on V 0.0006  (40 s)
+run heloc_R30_c1_s0 attn_soft: done in 51 s  attn_soft: acc 54.6 auc 60.5 ce 0.800 prec 0.286  attn_soft_softw: acc 57.1 auc 61.8 ce 0.830
+run ecommerce_shipping_R20_c3_s0 attn_topk: start (n 4994, k 999, V 6)
+      attn_topk it 0: CE on V 0.3603  (1 s)
+      attn_topk it 5: CE on V 0.1429  (8 s)
+      attn_topk it 10: CE on V 0.2397  (14 s)
+      attn_topk it 15: CE on V 0.3255  (20 s)
+run ecommerce_shipping_R20_c3_s0 attn_topk: done in 25 s  attn_topk: acc 63.1 auc 72.1 ce 0.780 prec 0.310
+run students_dropout_R20_c1_s0 attn_soft: start (n 2997, k 599, V 3)
+      attn_soft it 0: CE on V 0.2927  (1 s)
+      attn_soft it 5: CE on V 0.0286  (9 s)
+      attn_soft it 10: CE on V 0.0054  (16 s)
+      attn_soft it 15: CE on V 0.0020  (23 s)
+run students_dropout_R20_c1_s0 attn_soft: done in 30 s  attn_soft: acc 66.0 auc 80.5 ce 0.809 prec 0.189  attn_soft_softw: acc 62.8 auc 80.0 ce 0.992
+run students_dropout_R30_c3_s0 attn_topk: start (n 2991, k 897, V 9)
+      attn_topk it 0: CE on V 1.2616  (1 s)
+      attn_topk it 5: CE on V 1.0486  (9 s)
+      attn_topk it 10: CE on V 0.8727  (16 s)
+      attn_topk it 15: CE on V 0.4321  (22 s)
+run students_dropout_R30_c3_s0 attn_topk: done in 25 s  attn_topk: acc 60.2 auc 76.1 ce 1.227 prec 0.446

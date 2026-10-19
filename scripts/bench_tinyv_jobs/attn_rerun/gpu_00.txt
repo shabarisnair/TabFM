@@ -1,0 +1,21 @@
+# GPU script 00: 20 jobs, about 0.2 H100-hours; '<instance> <method>', longest first
+gas-drift_R10_c1_s0 attn_soft
+gas-drift_R10_c5_s0 attn_topk
+gas-drift_R20_c3_s0 attn_soft
+gas-drift_R30_c3_s0 attn_soft
+coil2000_insurance_policies_R10_c1_s0 attn_soft
+coil2000_insurance_policies_R10_c5_s0 attn_soft
+coil2000_insurance_policies_R20_c3_s0 attn_topk
+coil2000_insurance_policies_R30_c3_s0 attn_soft
+heloc_R20_c3_s0 attn_soft
+heloc_R30_c1_s0 attn_soft
+ecommerce_shipping_R10_c1_s0 attn_topk
+ecommerce_shipping_R10_c3_s0 attn_topk
+ecommerce_shipping_R20_c3_s0 attn_topk
+ecommerce_shipping_R30_c1_s0 attn_topk
+students_dropout_R20_c1_s0 attn_soft
+students_dropout_R20_c3_s0 attn_topk
+students_dropout_R30_c3_s0 attn_topk
+is_this_a_good_customer_R10_c3_s0 attn_soft
+is_this_a_good_customer_R20_c3_s0 attn_soft
+is_this_a_good_customer_R30_c1_s0 attn_soft

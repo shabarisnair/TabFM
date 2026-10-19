@@ -76,9 +76,9 @@ def cost_minutes(ds: str, n: int, k: int, method: str) -> float:
 
 LAUNCHER = """#!/usr/bin/env bash
 # Tiny-V benchmark: GPU script {i:02d} of {N} -- {n_jobs} jobs, about {hours:.1f} H100-hours (estimate).
-# Its longest job: {longest} (about {longest_min:.0f} H100-minutes). See README.md in this folder.
+# Its longest job: {longest} (about {longest_min:.0f} H100-minutes). See scripts/bench_tinyv_jobs/README.md.
 #
-#   GPU=<device index> bash scripts/bench_tinyv_jobs/gpu_{i:02d}.sh
+#   GPU=<device index> bash {out}/gpu_{i:02d}.sh
 #
 #   GPU      the CUDA device (default 0: the first one CUDA_VISIBLE_DEVICES exposes)
 #   WORKERS  parallel workers on that GPU (default 3)
@@ -86,26 +86,31 @@ LAUNCHER = """#!/usr/bin/env bash
 # Needs results/bench_tinyv/draws/ (the shared draws). Finished jobs are skipped, so it can simply be
 # started again after an interruption.
 set -euo pipefail
-cd "$(dirname "$0")/../.."
+cd "$(dirname "$0")/{up}"
 PY=${{PY:-{python}}}
 GPU=${{GPU:-0}}
 WORKERS=${{WORKERS:-3}}
-LIST=scripts/bench_tinyv_jobs/gpu_{i:02d}.txt
-mkdir -p logs/bench_tinyv
+LIST={out}/gpu_{i:02d}.txt
+mkdir -p {logs}
+export PYTORCH_CUDA_ALLOC_CONF=${{PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}}
 for w in $(seq 1 "$WORKERS"); do
   "$PY" -u scripts/bench_tinyv.py run --device "cuda:$GPU" --job-list "$LIST" --grid-if-missing --threads 4 \\
-      > "logs/bench_tinyv/gpu_{i:02d}_w$w.log" 2>&1 &
+      > "{logs}/gpu_{i:02d}_w$w.log" 2>&1 &
   sleep 20
 done
 wait
+# one worker alone retries whatever failed above (e.g. out of GPU memory beside the other workers)
+"$PY" -u scripts/bench_tinyv.py run --device "cuda:$GPU" --job-list "$LIST" --grid-if-missing --threads 4 \\
+    > "{logs}/gpu_{i:02d}_retry.log" 2>&1 || true
 "$PY" scripts/bench_tinyv.py status --job-list "$LIST"
+grep -h "FAILED\\|SKIPPING" {logs}/gpu_{i:02d}_*.log || true
 """
 
 
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--scripts", type=int, default=10)
-    ap.add_argument("--out", type=Path, default=Path("scripts/bench_tinyv_jobs"))
+    ap.add_argument("--out", type=Path, default=Path("scripts/bench_tinyv_jobs"), help="relative to the repository root")
     ap.add_argument("--python", default=sys.executable)
     a = ap.parse_args(argv)
     todo = []
@@ -137,7 +142,8 @@ def main(argv=None) -> None:
             "longest first\n" + "".join(f"{tag} {m}\n" for _, tag, m in jobs))
         sh = a.out / f"gpu_{i:02d}.sh"
         sh.write_text(LAUNCHER.format(i=i, N=a.scripts, n_jobs=len(jobs), hours=load[i] / 60, longest=f"{jobs[0][1]} {jobs[0][2]}",
-                                      longest_min=jobs[0][0], python=a.python))
+                                      longest_min=jobs[0][0], python=a.python, out=a.out.as_posix(),
+                                      up="/".join([".."] * len(a.out.parts)), logs=f"logs/bench_tinyv/{a.out.name}"))
         os.chmod(sh, 0o755)
         by_m = {}
         for _, _, m in jobs:

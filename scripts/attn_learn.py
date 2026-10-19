@@ -66,12 +66,16 @@ CONTEXT = {"heloc": "datasets/heloc/splits/selected/natural/context_5000.csv",
            "students_dropout": "datasets/students_dropout/splits/context_3000.csv",
            "coil2000_insurance_policies": "datasets/coil2000_insurance_policies/splits/selected/natural/context_5000.csv",
            "gas-drift": "datasets/gas-drift/splits/context_5000.csv",
-           "url_unique": "datasets/url_unique/splits/selected/natural/context_5000.csv"}
+           "url_unique": "datasets/url_unique/splits/selected/natural/context_5000.csv",
+           "ecommerce_shipping": "datasets/ecommerce_shipping/splits/selected/natural/context_5000.csv",
+           "is_this_a_good_customer": "datasets/is_this_a_good_customer/splits/train.csv"}
 TEST = {"heloc": "datasets/heloc/splits/test_attack_1000.csv",
         "students_dropout": "datasets/students_dropout/splits/test_attack_500.csv",
         "coil2000_insurance_policies": "datasets/coil2000_insurance_policies/splits/test_attack_1000.csv",
         "gas-drift": "datasets/gas-drift/splits/test_attack_1000.csv",
-        "url_unique": "datasets/url_unique/splits/test_attack_1000.csv"}
+        "url_unique": "datasets/url_unique/splits/test_attack_1000.csv",
+        "ecommerce_shipping": "datasets/ecommerce_shipping/splits/test_attack_1000.csv",
+        "is_this_a_good_customer": "datasets/is_this_a_good_customer/splits/test.csv"}
 DEFAULTS = dict(param="log", opt="pgd-linf", lr=1.0, floor=-1000.0, t_max=20.0, t0=4.0, scale=1000.0, probe=0.05,
                 init="zero", init_temp=1.0, init_std=1.0, steps=200, eval_every=10, holdout=0.2, V=500, seed=0, probe_logw=0.0, grad="all", center="none", prior=0.0, vsub=1.0, pseudo=0.0, pseudo_weight=1.0, pseudo_batch=500, test_every_eval=1, select="ce",
                 adam_beta1=0.9, adam_beta2=0.999, tag="")

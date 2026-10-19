@@ -1,0 +1,7 @@
+dataset,tag,type,n_classes,balance,max_min_ratio,class_shares_context,class_shares_test,n_context,n_test,context_file,test_file
+gas-drift,gas,multi-class,6,roughly balanced,1.83,0.184 / 0.210 / 0.118 / 0.139 / 0.216 / 0.132,0.184 / 0.210 / 0.118 / 0.139 / 0.217 / 0.132,5000,1000,datasets/gas-drift/splits/context_5000.csv,datasets/gas-drift/splits/test_attack_1000.csv
+heloc,heloc,binary,2,roughly balanced,1.09,0.478 / 0.522,0.480 / 0.520,5000,1000,datasets/heloc/splits/selected/natural/context_5000.csv,datasets/heloc/splits/test_attack_1000.csv
+ecommerce_shipping,ecom,binary,2,roughly balanced,1.46,0.407 / 0.593,0.403 / 0.597,5000,1000,datasets/ecommerce_shipping/splits/selected/natural/context_5000.csv,datasets/ecommerce_shipping/splits/test_attack_1000.csv
+students_dropout,stud,multi-class,3,moderately imbalanced,2.78,0.321 / 0.180 / 0.499,0.320 / 0.180 / 0.500,3000,500,datasets/students_dropout/splits/context_3000.csv,datasets/students_dropout/splits/test_attack_500.csv
+is_this_a_good_customer,good,binary,2,imbalanced,7.81,0.886 / 0.114,0.887 / 0.113,1400,300,datasets/is_this_a_good_customer/splits/train.csv,datasets/is_this_a_good_customer/splits/test.csv
+coil2000_insurance_policies,coil,binary,2,imbalanced,13.25,0.930 / 0.070,0.941 / 0.059,5000,1000,datasets/coil2000_insurance_policies/splits/selected/natural/context_5000.csv,datasets/coil2000_insurance_policies/splits/test_attack_1000.csv

@@ -535,6 +535,18 @@ def worker(a, stage: str) -> None:
                          "draws stage and copy the folder here")
     if stage == "grid" and any(m not in ALL_BASELINES for *_, m in todo):
         raise SystemExit("the grid stage is for the baselines only")
+    attn = ("attn_topk", "attn_soft")
+    if any(m in attn for *_, m in todo):  # they need the row-weight hooks of this repository's TabPFN copy
+        import tabpfn
+        try:
+            from tabpfn.preprocessing.steps.context_row_weights import context_row_weights_installed  # noqa: F401
+        except ImportError:
+            print(f"SKIPPING the attention jobs: tabpfn is imported from {Path(tabpfn.__file__).parent}, which lacks the "
+                  "row-weight hooks of this repository's TabPFN (TabPFN/src, commit 86df5d0). Install that copy into "
+                  "this environment (pip install -e TabPFN) and run again.", flush=True)
+            todo = [j for j in todo if j[-1] not in attn]
+            if not todo:
+                raise SystemExit("nothing left to run")
     bd = None
     for ds, R, c, s, method in todo:
         tag = tag_of(ds, R, c, s)

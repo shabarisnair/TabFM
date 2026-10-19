@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Tiny-V benchmark: GPU script 01 of 3 -- 20 jobs, about 0.2 H100-hours (estimate).
+# Its longest job: gas-drift_R10_c3_s0 attn_soft (about 2 H100-minutes). See scripts/bench_tinyv_jobs/README.md.
+#
+#   GPU=<device index> bash scripts/bench_tinyv_jobs/attn_rerun/gpu_01.sh
+#
+#   GPU      the CUDA device (default 0: the first one CUDA_VISIBLE_DEVICES exposes)
+#   WORKERS  parallel workers on that GPU (default 3)
+#   PY       the python of the tabfm environment
+# Needs results/bench_tinyv/draws/ (the shared draws). Finished jobs are skipped, so it can simply be
+# started again after an interruption.
+set -euo pipefail
+cd "$(dirname "$0")/../../.."
+PY=${PY:-/home/ssn899/miniforge3/envs/tabfm/bin/python}
+GPU=${GPU:-0}
+WORKERS=${WORKERS:-3}
+LIST=scripts/bench_tinyv_jobs/attn_rerun/gpu_01.txt
+mkdir -p logs/bench_tinyv/attn_rerun
+export PYTORCH_CUDA_ALLOC_CONF=${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}
+for w in $(seq 1 "$WORKERS"); do
+  "$PY" -u scripts/bench_tinyv.py run --device "cuda:$GPU" --job-list "$LIST" --grid-if-missing --threads 4 \
+      > "logs/bench_tinyv/attn_rerun/gpu_01_w$w.log" 2>&1 &
+  sleep 20
+done
+wait
+# one worker alone retries whatever failed above (e.g. out of GPU memory beside the other workers)
+"$PY" -u scripts/bench_tinyv.py run --device "cuda:$GPU" --job-list "$LIST" --grid-if-missing --threads 4 \
+    > "logs/bench_tinyv/attn_rerun/gpu_01_retry.log" 2>&1 || true
+"$PY" scripts/bench_tinyv.py status --job-list "$LIST"
+grep -h "FAILED\|SKIPPING" logs/bench_tinyv/attn_rerun/gpu_01_*.log || true

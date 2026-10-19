@@ -1,0 +1,115 @@
+run heloc_R10_c5_s0 greedy_m1: start (n 4990, k 499, V 10)
+run heloc_R10_c5_s0 greedy_m1: done in 2149 s  greedy_m1: acc 71.5 auc 78.3 ce 0.804 prec 0.261
+run gas-drift_R20_c3_s0 label_spread: start (n 4982, k 996, V 18)
+    label_spread: V-selected {"alpha": 0.95, "beta": 0.0, "feat": "q", "n_neighbors": 5} relabel (V log loss 0.000) of 363 (configuration, mode) pairs, 274 distinct cleaned sets
+run gas-drift_R20_c3_s0 label_spread: done in 837 s  label_spread: acc 81.6 auc 95.9 ce 1.006 prec 0.415  label_spread_relabel: acc 63.4 auc 88.3 ce 3.632 prec 0.378  label_spread_vsel: acc 55.4 auc 79.3 ce 6.041 prec 0.322
+run coil2000_insurance_policies_R10_c1_s0 label_spread: start (n 4998, k 500, V 2)
+    label_spread: V-selected {"alpha": 0.8, "beta": 0.0, "feat": "q", "n_neighbors": 50} relabel (V log loss 0.000) of 363 (configuration, mode) pairs, 278 distinct cleaned sets
+run coil2000_insurance_policies_R10_c1_s0 label_spread: done in 534 s  label_spread: acc 87.6 auc 57.7 ce 0.338 prec 0.052  label_spread_relabel: acc 36.2 auc 43.3 ce 2.657 prec 0.052  label_spread_vsel: acc 51.5 auc 63.1 ce 3.993 prec 0.075
+run gas-drift_R10_c5_s0 nan_topk: start (n 4970, k 497, V 30)
+      nan_topk restart 0 it 0: CE on V (relaxed) 0.0493  (13 s)
+      nan_topk restart 0 it 5: CE on V (relaxed) 0.0306  (76 s)
+      nan_topk restart 0 it 10: CE on V (relaxed) 0.0203  (140 s)
+      nan_topk restart 0 it 15: CE on V (relaxed) 0.0247  (221 s)
+      nan_topk restart 1 it 0: CE on V (relaxed) 0.0441  (309 s)
+      nan_topk restart 1 it 5: CE on V (relaxed) 0.0114  (385 s)
+      nan_topk restart 1 it 10: CE on V (relaxed) 0.0113  (449 s)
+      nan_topk restart 1 it 15: CE on V (relaxed) 0.0143  (512 s)
+      nan_topk restart 2 it 0: CE on V (relaxed) 0.0508  (575 s)
+      nan_topk restart 2 it 5: CE on V (relaxed) 0.0242  (634 s)
+      nan_topk restart 2 it 10: CE on V (relaxed) 0.0160  (694 s)
+      nan_topk restart 2 it 15: CE on V (relaxed) 0.0150  (763 s)
+      nan_topk restart 3 it 0: CE on V (relaxed) 0.0531  (822 s)
+      nan_topk restart 3 it 5: CE on V (relaxed) 0.0208  (881 s)
+      nan_topk restart 3 it 10: CE on V (relaxed) 0.0285  (940 s)
+      nan_topk restart 3 it 15: CE on V (relaxed) 0.0204  (999 s)
+run gas-drift_R10_c5_s0 nan_topk: done in 1052 s  nan_topk: acc 90.4 auc 99.4 ce 0.321 prec 0.300
+run heloc_R30_c5_s0 emlc: start (n 4990, k 1497, V 10)
+    emlc: V-selected {"epochs": 10, "feat": "z", "lr": 0.01, "teacher_lr": 0.001} relabel (V log loss 0.000) of 51 (configuration, mode) pairs, 51 distinct cleaned sets
+run heloc_R30_c5_s0 emlc: done in 338 s  emlc: acc 66.0 auc 70.7 ce 1.220 prec 0.496  emlc_relabel: acc 64.5 auc 69.2 ce 2.760 prec 0.459  emlc_vsel: acc 65.6 auc 70.6 ce 2.561 prec 0.470
+run coil2000_insurance_policies_R20_c3_s0 nan_topk: start (n 4994, k 999, V 6)
+      nan_topk restart 0 it 0: CE on V (relaxed) 1.1881  (11 s)
+      nan_topk restart 0 it 5: CE on V (relaxed) 0.8932  (67 s)
+      nan_topk restart 0 it 10: CE on V (relaxed) 0.9992  (122 s)
+      nan_topk restart 0 it 15: CE on V (relaxed) 0.9831  (178 s)
+      nan_topk restart 1 it 0: CE on V (relaxed) 1.1848  (234 s)
+      nan_topk restart 1 it 5: CE on V (relaxed) 0.8439  (294 s)
+      nan_topk restart 1 it 10: CE on V (relaxed) 1.0145  (348 s)
+      nan_topk restart 1 it 15: CE on V (relaxed) 0.9392  (391 s)
+      nan_topk restart 2 it 0: CE on V (relaxed) 1.0488  (436 s)
+      nan_topk restart 2 it 5: CE on V (relaxed) 0.9805  (481 s)
+      nan_topk restart 2 it 10: CE on V (relaxed) 0.9176  (525 s)
+      nan_topk restart 2 it 15: CE on V (relaxed) 0.9200  (582 s)
+      nan_topk restart 3 it 0: CE on V (relaxed) 1.0810  (640 s)
+      nan_topk restart 3 it 5: CE on V (relaxed) 1.1066  (700 s)
+      nan_topk restart 3 it 10: CE on V (relaxed) 0.8523  (758 s)
+      nan_topk restart 3 it 15: CE on V (relaxed) 1.0473  (817 s)
+run coil2000_insurance_policies_R20_c3_s0 nan_topk: done in 869 s  nan_topk: acc 74.2 auc 56.7 ce 0.681 prec 0.065
+run heloc_R20_c1_s0 label_spread: start (n 4998, k 1000, V 2)
+    label_spread: V-selected {"alpha": 0.2, "beta": 0.0, "feat": "z", "n_neighbors": 20} relabel (V log loss 0.000) of 363 (configuration, mode) pairs, 275 distinct cleaned sets
+run heloc_R20_c1_s0 label_spread: done in 230 s  label_spread: acc 68.1 auc 72.7 ce 0.798 prec 0.424  label_spread_relabel: acc 55.2 auc 65.4 ce 3.496 prec 0.253  label_spread_vsel: acc 64.8 auc 72.7 ce 2.114 prec 0.326
+run ecommerce_shipping_R30_c5_s0 label_spread: start (n 4990, k 1497, V 10)
+    label_spread: V-selected {"alpha": 0.99, "beta": 0.0, "feat": "q", "n_neighbors": 10} relabel (V log loss 0.000) of 363 (configuration, mode) pairs, 276 distinct cleaned sets
+run ecommerce_shipping_R30_c5_s0 label_spread: done in 119 s  label_spread: acc 62.9 auc 67.2 ce 1.564 prec 0.394  label_spread_relabel: acc 52.7 auc 52.4 ce 3.514 prec 0.326  label_spread_vsel: acc 49.0 auc 49.9 ce 4.322 prec 0.298
+run is_this_a_good_customer_R20_c1_s0 greedy_m1: start (n 1398, k 280, V 2)
+run is_this_a_good_customer_R20_c1_s0 greedy_m1: done in 133 s  greedy_m1: acc 78.7 auc 67.7 ce 0.995 prec 0.511
+run is_this_a_good_customer_R10_c1_s0 ieg: start (n 1398, k 140, V 2)
+    ieg: V-selected {"epochs": 10, "feat": "z", "kl_weight": 10.0, "lr": 0.001} relabel (V log loss 0.000) of 48 (configuration, mode) pairs, 47 distinct cleaned sets
+run is_this_a_good_customer_R10_c1_s0 ieg: done in 102 s  ieg: acc 82.3 auc 75.7 ce 0.375 prec 0.086  ieg_relabel: acc 64.7 auc 71.6 ce 2.304 prec 0.080  ieg_vsel: acc 65.7 auc 71.0 ce 2.469 prec 0.076
+run is_this_a_good_customer_R30_c1_s0 label_spread: start (n 1398, k 419, V 2)
+    label_spread: V-selected {"alpha": 0.5, "beta": 0.0, "feat": "z", "n_neighbors": 50} relabel (V log loss 0.000) of 363 (configuration, mode) pairs, 242 distinct cleaned sets
+run is_this_a_good_customer_R30_c1_s0 label_spread: done in 24 s  label_spread: acc 67.3 auc 68.3 ce 1.146 prec 0.279  label_spread_relabel: acc 50.0 auc 65.3 ce 2.357 prec 0.290  label_spread_vsel: acc 50.7 auc 67.2 ce 3.240 prec 0.267
+run students_dropout_R30_c3_s0 nan_topk: start (n 2991, k 897, V 9)
+      nan_topk restart 0 it 0: CE on V (relaxed) 0.8645  (2 s)
+      nan_topk restart 0 it 5: CE on V (relaxed) 0.8249  (9 s)
+      nan_topk restart 0 it 10: CE on V (relaxed) 0.6414  (17 s)
+      nan_topk restart 0 it 15: CE on V (relaxed) 0.4559  (25 s)
+      nan_topk restart 1 it 0: CE on V (relaxed) 0.7767  (33 s)
+      nan_topk restart 1 it 5: CE on V (relaxed) 0.7031  (41 s)
+      nan_topk restart 1 it 10: CE on V (relaxed) 0.7251  (49 s)
+      nan_topk restart 1 it 15: CE on V (relaxed) 0.6827  (57 s)
+      nan_topk restart 2 it 0: CE on V (relaxed) 0.8910  (65 s)
+      nan_topk restart 2 it 5: CE on V (relaxed) 0.5371  (75 s)
+      nan_topk restart 2 it 10: CE on V (relaxed) 0.5441  (85 s)
+      nan_topk restart 2 it 15: CE on V (relaxed) 0.5237  (95 s)
+      nan_topk restart 3 it 0: CE on V (relaxed) 0.9418  (107 s)
+      nan_topk restart 3 it 5: CE on V (relaxed) 0.7204  (118 s)
+      nan_topk restart 3 it 10: CE on V (relaxed) 0.7586  (129 s)
+      nan_topk restart 3 it 15: CE on V (relaxed) 0.7302  (139 s)
+run students_dropout_R30_c3_s0 nan_topk: done in 149 s  nan_topk: acc 63.8 auc 80.8 ce 0.824 prec 0.467
+run heloc_R20_c5_s0 attn_topk: start (n 4990, k 998, V 10)
+      attn_topk it 0: CE on V 1.0399  (4 s)
+      attn_topk it 5: CE on V 0.1362  (24 s)
+      attn_topk it 10: CE on V 0.1834  (44 s)
+      attn_topk it 15: CE on V 0.0704  (63 s)
+run heloc_R20_c5_s0 attn_topk: done in 80 s  attn_topk: acc 67.6 auc 72.2 ce 0.802 prec 0.419
+run students_dropout_R30_c3_s0 greedy_pct1: start (n 2991, k 897, V 9)
+run students_dropout_R30_c3_s0 greedy_pct1: done in 24 s  greedy_pct1: acc 72.4 auc 82.6 ce 1.403 prec 0.679
+run students_dropout_R30_c5_s0 attn_soft: start (n 2985, k 896, V 15)
+      attn_soft it 0: CE on V 0.8476  (2 s)
+      attn_soft it 5: CE on V 0.3745  (14 s)
+      attn_soft it 10: CE on V 0.1632  (26 s)
+      attn_soft it 15: CE on V 0.0847  (38 s)
+run students_dropout_R30_c5_s0 attn_soft: done in 49 s  attn_soft: acc 61.0 auc 78.4 ce 0.878 prec 0.444  attn_soft_softw: acc 55.6 auc 74.0 ce 1.293
+run gas-drift_R10_c3_s0 refs: start (n 4982, k 498, V 18)
+run gas-drift_R10_c3_s0 refs: done in 9 s  v_only: acc 70.4 auc 95.7 ce 0.800  poisoned_plus_v: acc 89.9 auc 99.3 ce 0.320  oracle_plus_v: acc 99.4 auc 100.0 ce 0.015 prec 1.000
+run is_this_a_good_customer_R30_c3_s0 attn_soft: start (n 1394, k 418, V 6)
+      attn_soft it 0: CE on V 0.7169  (0 s)
+      attn_soft it 5: CE on V 0.1303  (2 s)
+      attn_soft it 10: CE on V 0.0439  (4 s)
+      attn_soft it 15: CE on V 0.0189  (6 s)
+run is_this_a_good_customer_R30_c3_s0 attn_soft: done in 8 s  attn_soft: acc 72.7 auc 62.1 ce 0.609 prec 0.359  attn_soft_softw: acc 71.7 auc 57.2 ce 0.755
+run ecommerce_shipping_R10_c3_s0 knn_shapley: start (n 4994, k 499, V 6)
+    knn_shapley: V-selected {"K_nn": 5, "feat": "z"} remove (V log loss 0.099) of 12 (configuration, mode) pairs, 3 distinct cleaned sets
+run ecommerce_shipping_R10_c3_s0 knn_shapley: done in 2 s  knn_shapley: acc 65.0 auc 73.0 ce 0.551 prec 0.180  knn_shapley_vsel: acc 65.0 auc 73.0 ce 0.551 prec 0.180
+run heloc_R30_c3_s0 refs: start (n 4994, k 1498, V 6)
+run heloc_R30_c3_s0 refs: done in 2 s  v_only: acc 58.6 auc 65.3 ce 0.660  poisoned_plus_v: acc 61.1 auc 64.9 ce 0.680  oracle_plus_v: acc 73.7 auc 80.0 ce 0.547 prec 1.000
+run ecommerce_shipping_R10_c1_s0 refs: start (n 4998, k 500, V 2)
+run ecommerce_shipping_R10_c1_s0 refs: done in 1 s  v_only: acc 47.0 auc 57.9 ce 0.741  poisoned_plus_v: acc 69.1 auc 76.6 ce 0.494  oracle_plus_v: acc 68.9 auc 76.2 ce 0.493 prec 1.000
+run ecommerce_shipping_R20_c3_s0 vfilter: start (n 4994, k 999, V 6)
+run ecommerce_shipping_R20_c3_s0 vfilter: done in 0 s  vfilter: acc 63.3 auc 71.5 ce 0.835 prec 0.296
+run is_this_a_good_customer_R30_c1_s0 knn_shapley: start (n 1398, k 419, V 2)
+    knn_shapley: V-selected {"K_nn": 1, "feat": "q"} remove (V log loss 0.001) of 12 (configuration, mode) pairs, 2 distinct cleaned sets
+run is_this_a_good_customer_R30_c1_s0 knn_shapley: done in 1 s  knn_shapley: acc 68.3 auc 68.1 ce 1.150 prec 0.396  knn_shapley_vsel: acc 72.7 auc 62.5 ce 1.060 prec 0.351
+run is_this_a_good_customer_R30_c1_s0 vfilter: start (n 1398, k 419, V 2)
+run is_this_a_good_customer_R30_c1_s0 vfilter: done in 0 s  vfilter: acc 72.3 auc 70.0 ce 0.981 prec 0.382

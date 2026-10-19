@@ -1,0 +1,105 @@
+{
+ "created": "2026-10-19T03:08:52-05:00",
+ "host": "ecen-a86552",
+ "root": "results/bench_tinyv",
+ "git_commit": "86df5d0141e17da1e590d49efb7403e645134229",
+ "git_dirty": [
+  "docs/bench_tinyv.md",
+  "scripts/bench_tinyv.py",
+  "scripts/bench_tinyv_jobs/README.md",
+  "scripts/plan_bench_tinyv.py",
+  "scripts/report_bench_tinyv.py",
+  "scripts/archive_bench_tinyv.py",
+  "scripts/bench_tinyv_jobs/attn_rerun/",
+  "scripts/elo_bench_tinyv.py"
+ ],
+ "instances": 54,
+ "entries": 22,
+ "run_files": 648,
+ "runs_per_host": {
+  "ecen-a86552": 267,
+  "ecen-a86553": 160,
+  "ecen-a86555": 125,
+  "imported": 96
+ },
+ "files": {
+  "README.md": {
+   "bytes": 5862,
+   "sha256": "2795bfbb64115e180a28c90b5652052aa437ec9f64279f09ac71d41936f8ec5b"
+  },
+  "by_v_r.csv": {
+   "bytes": 79301,
+   "sha256": "0f1d9823e1ad5ac527d346cc709ff1a50b716c9dbd78fc8dba5fca46973170ef",
+   "rows": 198
+  },
+  "by_v_r.md": {
+   "bytes": 46153,
+   "sha256": "8b3c5472396bd4003bf054261e77f61b416e6c511ec11aee8053df8a31fcdec9"
+  },
+  "code/archive_bench_tinyv.py": {
+   "bytes": 13336,
+   "sha256": "096028340cf5829aed6f00877235549edc67cdcbabe3d1ababaaa9baca70813e"
+  },
+  "code/bench_tinyv.py": {
+   "bytes": 35906,
+   "sha256": "dabffc286207bc52ce3734a8f6d8ff9246178eea2c9f4614d8b9247f022480cc"
+  },
+  "code/elo_bench_tinyv.py": {
+   "bytes": 10767,
+   "sha256": "49dc1aba08634449589f4cf214bc8ee33aa97e24d9fe9f097ae2095c08384e2a"
+  },
+  "code/report_bench_tinyv.py": {
+   "bytes": 13243,
+   "sha256": "8230ad76f3c1f466026f6bf54cbf06562b470318ecfa6a357e073af3602f0d2f"
+  },
+  "code/tinyv_learned.py": {
+   "bytes": 6755,
+   "sha256": "59631487d663e43a61bdc06943d16f28855b734b313505b9291be0b9725dcd3d"
+  },
+  "datasets.csv": {
+   "bytes": 1417,
+   "sha256": "6979a365a59072e06f94f0b6fee3dcc5c76374bc86e01ff6090dc4525fe07001",
+   "rows": 6
+  },
+  "elo.csv": {
+   "bytes": 29983,
+   "sha256": "293173b172b4aee6c1a2434a0a4fb1beefc43a05c5f77bc725e5d7493b1c23f9",
+   "rows": 126
+  },
+  "elo.md": {
+   "bytes": 5214,
+   "sha256": "c2fdbd6fe294e80b8f3e34f1af6a59b8dd80a29096a46a5abfad63eefc9b94b6"
+  },
+  "findings.md": {
+   "bytes": 13365,
+   "sha256": "b802818799f3c30ce74a9c7f978ad60418070e4f1e3e1b321eb99d979ae17718"
+  },
+  "instances.csv": {
+   "bytes": 3582,
+   "sha256": "3b31c56dd94c2170df2126c6c8d647c3407e5b4436f30fd334b36b2d0c72ffab",
+   "rows": 54
+  },
+  "per_dataset.csv": {
+   "bytes": 20453,
+   "sha256": "960388f0142b792d876be20f7affeecafcd07f185383af3d8ff5cbfd64a08199",
+   "rows": 132
+  },
+  "raw/draws_and_masks.tar.gz": {
+   "bytes": 2531929,
+   "sha256": "9bf526d1f30af7d151091d5f663135cae4842cf14e2fcab168b4b52cc249f7e5"
+  },
+  "raw/runs.jsonl.gz": {
+   "bytes": 507783,
+   "sha256": "5c406fea74c870c5203d6f59d3dd939429a0f2f6851c275f2ffacdd4e549352e"
+  },
+  "report.md": {
+   "bytes": 55614,
+   "sha256": "006a43e250237575f58343747c00ba390b2ccaa4be5626cf8ad8ca4fc07e8cab"
+  },
+  "results.csv": {
+   "bytes": 228184,
+   "sha256": "7ed3b6ccf08ea036bf4d89c3261bbcc674850f095f040190c318241d0280995f",
+   "rows": 1188
+  }
+ }
+}

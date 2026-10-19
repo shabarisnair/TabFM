@@ -1,0 +1,34 @@
+run gas-drift_R20_c1_s0 greedy_m1: start (n 4994, k 999, V 6)
+run gas-drift_R20_c1_s0 greedy_m1: done in 10780 s  greedy_m1: acc 95.1 auc 99.8 ce 0.331 prec 0.916
+run students_dropout_R10_c3_s0 attn_soft: start (n 2991, k 299, V 9)
+      attn_soft it 0: CE on V 0.7081  (4 s)
+      attn_soft it 5: CE on V 0.1377  (20 s)
+      attn_soft it 10: CE on V 0.0394  (35 s)
+      attn_soft it 15: CE on V 0.0177  (51 s)
+run students_dropout_R10_c3_s0 attn_soft: done in 65 s  attn_soft: acc 76.2 auc 88.0 ce 0.599 prec 0.087  attn_soft_softw: acc 74.2 auc 84.9 ce 0.752
+run is_this_a_good_customer_R10_c5_s0 nan_topk: start (n 1390, k 139, V 10)
+      nan_topk restart 0 it 0: CE on V (relaxed) 1.2882  (0 s)
+      nan_topk restart 0 it 5: CE on V (relaxed) 1.2311  (3 s)
+      nan_topk restart 0 it 10: CE on V (relaxed) 1.2061  (5 s)
+      nan_topk restart 0 it 15: CE on V (relaxed) 1.2668  (7 s)
+      nan_topk restart 1 it 0: CE on V (relaxed) 1.2701  (9 s)
+      nan_topk restart 1 it 5: CE on V (relaxed) 1.1053  (12 s)
+      nan_topk restart 1 it 10: CE on V (relaxed) 1.0919  (14 s)
+      nan_topk restart 1 it 15: CE on V (relaxed) 1.0257  (16 s)
+      nan_topk restart 2 it 0: CE on V (relaxed) 1.3367  (18 s)
+      nan_topk restart 2 it 5: CE on V (relaxed) 1.1914  (20 s)
+      nan_topk restart 2 it 10: CE on V (relaxed) 1.0430  (22 s)
+      nan_topk restart 2 it 15: CE on V (relaxed) 0.9934  (24 s)
+      nan_topk restart 3 it 0: CE on V (relaxed) 1.2283  (27 s)
+      nan_topk restart 3 it 5: CE on V (relaxed) 1.2337  (29 s)
+      nan_topk restart 3 it 10: CE on V (relaxed) 1.1592  (32 s)
+      nan_topk restart 3 it 15: CE on V (relaxed) 1.1616  (35 s)
+run is_this_a_good_customer_R10_c5_s0 nan_topk: done in 37 s  nan_topk: acc 82.3 auc 76.5 ce 0.377 prec 0.094
+run ecommerce_shipping_R20_c3_s0 refs: start (n 4994, k 999, V 6)
+run ecommerce_shipping_R20_c3_s0 refs: done in 2 s  v_only: acc 54.5 auc 58.2 ce 0.687  poisoned_plus_v: acc 67.4 auc 75.6 ce 0.497  oracle_plus_v: acc 68.8 auc 75.7 ce 0.494 prec 1.000
+run is_this_a_good_customer_R20_c1_s0 refs: start (n 1398, k 280, V 2)
+run is_this_a_good_customer_R20_c1_s0 refs: done in 1 s  v_only: acc 63.7 auc 68.0 ce 0.651  poisoned_plus_v: acc 80.7 auc 70.7 ce 0.416  oracle_plus_v: acc 88.7 auc 79.8 ce 0.310 prec 1.000
+run is_this_a_good_customer_R10_c1_s0 vfilter: start (n 1398, k 140, V 2)
+run is_this_a_good_customer_R10_c1_s0 vfilter: done in 0 s  vfilter: acc 84.0 auc 75.7 ce 0.383 prec 0.100
+run is_this_a_good_customer_R20_c1_s0 vfilter: start (n 1398, k 280, V 2)
+run is_this_a_good_customer_R20_c1_s0 vfilter: done in 0 s  vfilter: acc 78.3 auc 69.6 ce 0.691 prec 0.186

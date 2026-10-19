@@ -7,7 +7,12 @@ poisoned rows?
 **Code:**
 - `scripts/bench_tinyv.py`: draws, jobs and methods;
 - `scripts/tinyv_learned.py`: the attention-weight and NaN-gate learners;
-- `scripts/report_bench_tinyv.py`: tables.
+- `scripts/report_bench_tinyv.py`: tables;
+- `scripts/elo_bench_tinyv.py`: the TabArena-style Elo (1 - ROC-AUC on binary datasets, log loss on
+  multi-class ones; Bradley-Terry over the pairwise battles of the 54 instances, 200 bootstrap resamples).
+- `scripts/archive_bench_tinyv.py`: freezes every table, the raw run records, the draws and removal masks and
+  the code into `results_archive/bench_tinyv/<date>/` (git-tracked, with a README and a manifest), since
+  `results/` is git-ignored. Snapshot of the complete benchmark: `results_archive/bench_tinyv/2026-10-19/`.
 
 Results go to `results/bench_tinyv/` (git-ignored), and tables to `results/tables/bench_tinyv/`.
 
@@ -140,6 +145,8 @@ python scripts/bench_tinyv.py run --device cuda:1 --methods knn_sanitize label_s
 # progress and tables (partial results are fine)
 python scripts/bench_tinyv.py status
 python scripts/report_bench_tinyv.py
+python scripts/elo_bench_tinyv.py
+python scripts/archive_bench_tinyv.py --tag $(date +%F)   # a frozen, git-tracked copy
 ```
 
 **Workers.** Several workers can share one machine or a shared folder: jobs are claimed with lock files.

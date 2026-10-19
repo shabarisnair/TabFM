@@ -1,0 +1,2 @@
+run gas-drift_R10_c5_s0 greedy_m1: start (n 4970, k 497, V 30)
+run gas-drift_R10_c5_s0 greedy_m1: done in 7526 s  greedy_m1: acc 98.1 auc 100.0 ce 0.091 prec 0.940

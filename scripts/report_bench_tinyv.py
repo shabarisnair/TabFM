@@ -37,6 +37,15 @@ for _b in BASELINES:
 NAME = dict(ENTRIES)
 METRICS = [("acc", "accuracy (%)", 100, True), ("auc", "ROC-AUC (%)", 100, True), ("ce", "log loss", 1, False),
            ("prec", "precision of the removed rows", 1, True)]
+# by_v_r.md: one table per (c, R), the datasets in this order, each with these four columns
+CLASS_SHARES = {  # class shares of the clean train contexts (the test sets are stratified the same way)
+    "gas-drift": (0.184, 0.210, 0.118, 0.139, 0.216, 0.132), "students_dropout": (0.321, 0.180, 0.499),
+    "heloc": (0.478, 0.522), "ecommerce_shipping": (0.407, 0.593), "is_this_a_good_customer": (0.886, 0.114),
+    "coil2000_insurance_policies": (0.930, 0.070)}
+TAG = {"gas-drift": "gas", "students_dropout": "stud", "heloc": "heloc", "ecommerce_shipping": "ecom",
+       "is_this_a_good_customer": "good", "coil2000_insurance_policies": "coil"}
+VR_METRICS = [("prec", "Prec", "{:.2f}", 1, True), ("auc", "AUC", "{:.3f}", 1, True), ("acc", "Acc %", "{:.1f}", 100, True),
+              ("ce", "LL", "{:.3f}", 1, False)]
 
 
 def load(root: Path) -> list[dict]:
@@ -58,6 +67,57 @@ def fmt(v, scale, nd=1):
     if v is None or (isinstance(v, float) and not np.isfinite(v)):
         return "."
     return f"{scale * v:.{nd}f}" if scale != 1 else f"{v:.3f}"
+
+
+def balance(shares) -> str:
+    """Largest over smallest class share: up to 2 roughly balanced, up to 4 moderately imbalanced."""
+    ratio = max(shares) / min(shares)
+    return "roughly balanced" if ratio <= 2 else "moderately imbalanced" if ratio <= 4 else "imbalanced"
+
+
+def kind(ds: str) -> str:
+    p = CLASS_SHARES[ds]
+    return f"{'binary' if len(p) == 2 else f'multi-class ({len(p)} classes)'}, {balance(p)}"
+
+
+def write_by_v_r(rows: list[dict], path: Path) -> None:
+    """One table per (c, R): a row per entry, and per dataset its precision, ROC-AUC, accuracy and log loss."""
+    val = {(r["dataset"], r["c"], r["R"], r["entry"]): r for r in rows}
+    entries = [e for e, _ in ENTRIES if any(k[3] == e for k in val)]
+    dss = [d for d in TAG if any(k[0] == d for k in val)]
+    L = ["# Tiny-V benchmark: one table per V size and poisoning rate", "",
+         "V holds c clean rows per class (2c rows on the binary datasets, 3c on students, 6c on gas-drift); R% of the "
+         "remaining train context is poisoned with hub-flip-local. One draw per table cell.", "",
+         "| tag | dataset | type | class shares of the clean train context |", "|---|---|---|---|"]
+    L += [f"| {TAG[d]} | {d} | {kind(d)} | {' / '.join(f'{100 * s:.0f}%' for s in CLASS_SHARES[d])} |" for d in dss]
+    L += ["", "Prec: precision of the removed rows (relabel modes: of the relabelled rows); random removal scores R/100 on "
+          "average. AUC: ROC-AUC (binary: class 1; multi-class: one-vs-rest macro). Acc %: accuracy, degenerate on good "
+          "and coil (TabPFN predicts the majority class). LL: log loss, lower is better. Bold: the best entry of the "
+          "column, oracle + V excluded. '–': not run, or no rows removed.", ""]
+    for c in sorted({k[1] for k in val}):
+        for R in sorted({k[2] for k in val}):
+            L += [f"## V = {c} row{'s' if c > 1 else ''} per class, R = {R:g}%", "",
+                  "| entry | " + " | ".join(f"{TAG[d]} {name}" for d in dss for _, name, *_ in VR_METRICS) + " |",
+                  "|---|" + "---|" * (len(dss) * len(VR_METRICS))]
+            best = {}
+            for d in dss:
+                for m, _, _, _, higher in VR_METRICS:
+                    vs = [val[d, c, R, e][m] for e in entries if not e.startswith("oracle") and (d, c, R, e) in val]
+                    vs = [v for v in vs if v is not None and np.isfinite(v)]
+                    best[d, m] = (max(vs) if higher else min(vs)) if vs else None
+            for e in entries:
+                out = []
+                for d in dss:
+                    for m, _, f, scale, _ in VR_METRICS:
+                        v = val[d, c, R, e][m] if (d, c, R, e) in val else None
+                        if v is None or not np.isfinite(v):
+                            out.append("–")
+                            continue
+                        s = f.format(scale * v)
+                        out.append(f"**{s}**" if not e.startswith("oracle") and v == best[d, m] else s)
+                L.append(f"| {NAME.get(e, e)} | " + " | ".join(out) + " |")
+            L.append("")
+    path.write_text("\n".join(L) + "\n")
 
 
 def main(argv=None) -> None:
@@ -149,8 +209,9 @@ def main(argv=None) -> None:
     imported = sorted({(r["instance"], r["entry"]) for r in rows if r["imported"]})
     L += ["", f"Imported from the schedule study (identical draws and code): {len(imported)} entries."]
     (a.out / "report.md").write_text("\n".join(L) + "\n")
+    write_by_v_r(rows, a.out / "by_v_r.md")
     print("\n".join(L[:len(entries) + 12]))
-    print(f"\n-> {a.out / 'report.md'}, {a.out / 'results.csv'}")
+    print(f"\n-> {a.out / 'report.md'}, {a.out / 'by_v_r.md'}, {a.out / 'results.csv'}")
 
 
 if __name__ == "__main__":

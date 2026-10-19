@@ -1,0 +1,135 @@
+run heloc_R10_c3_s0 greedy_m1: start (n 4994, k 499, V 6)
+run heloc_R10_c3_s0 greedy_m1: done in 2239 s  greedy_m1: acc 70.4 auc 73.8 ce 0.738 prec 0.311
+run gas-drift_R20_c1_s0 label_spread: start (n 4994, k 999, V 6)
+    label_spread: V-selected {"alpha": 0.95, "beta": 0.0, "feat": "q", "n_neighbors": 10} relabel (V log loss 0.000) of 363 (configuration, mode) pairs, 273 distinct cleaned sets
+run gas-drift_R20_c1_s0 label_spread: done in 830 s  label_spread: acc 78.5 auc 97.7 ce 0.848 prec 0.395  label_spread_relabel: acc 52.5 auc 80.0 ce 5.955 prec 0.286  label_spread_vsel: acc 53.1 auc 79.9 ce 5.496 prec 0.334
+run gas-drift_R30_c3_s0 emlc: start (n 4982, k 1495, V 18)
+    emlc: V-selected {"epochs": 10, "feat": "z", "lr": 0.05, "teacher_lr": 0.0001} remove (V log loss 0.000) of 51 (configuration, mode) pairs, 51 distinct cleaned sets
+run gas-drift_R30_c3_s0 emlc: done in 375 s  emlc: acc 87.0 auc 97.3 ce 0.786 prec 0.706  emlc_relabel: acc 69.9 auc 91.1 ce 2.635 prec 0.589  emlc_vsel: acc 84.6 auc 96.4 ce 0.964 prec 0.599
+run gas-drift_R20_c3_s0 nan_topk: start (n 4982, k 996, V 18)
+      nan_topk restart 0 it 0: CE on V (relaxed) 0.2026  (12 s)
+      nan_topk restart 0 it 5: CE on V (relaxed) 0.0157  (76 s)
+      nan_topk restart 0 it 10: CE on V (relaxed) 0.0243  (142 s)
+      nan_topk restart 0 it 15: CE on V (relaxed) 0.0665  (208 s)
+      nan_topk restart 1 it 0: CE on V (relaxed) 0.2328  (285 s)
+      nan_topk restart 1 it 5: CE on V (relaxed) 0.0778  (375 s)
+      nan_topk restart 1 it 10: CE on V (relaxed) 0.0289  (461 s)
+      nan_topk restart 1 it 15: CE on V (relaxed) 0.0332  (527 s)
+      nan_topk restart 2 it 0: CE on V (relaxed) 0.2296  (592 s)
+      nan_topk restart 2 it 5: CE on V (relaxed) 0.0487  (655 s)
+      nan_topk restart 2 it 10: CE on V (relaxed) 0.0199  (715 s)
+      nan_topk restart 2 it 15: CE on V (relaxed) 0.0158  (775 s)
+      nan_topk restart 3 it 0: CE on V (relaxed) 0.2559  (845 s)
+      nan_topk restart 3 it 5: CE on V (relaxed) 0.0548  (904 s)
+      nan_topk restart 3 it 10: CE on V (relaxed) 0.0122  (964 s)
+      nan_topk restart 3 it 15: CE on V (relaxed) 0.0280  (1023 s)
+run gas-drift_R20_c3_s0 nan_topk: done in 1076 s  nan_topk: acc 82.3 auc 97.1 ce 1.001 prec 0.346
+run ecommerce_shipping_R10_c5_s0 emlc: start (n 4990, k 499, V 10)
+    emlc: V-selected {"epochs": 40, "feat": "z", "lr": 0.01, "teacher_lr": 0.001} relabel (V log loss 0.000) of 51 (configuration, mode) pairs, 51 distinct cleaned sets
+run ecommerce_shipping_R10_c5_s0 emlc: done in 293 s  emlc: acc 65.6 auc 74.1 ce 0.583 prec 0.086  emlc_relabel: acc 58.6 auc 59.2 ce 3.641 prec 0.116  emlc_vsel: acc 58.6 auc 59.9 ce 3.591 prec 0.116
+run gas-drift_R30_c3_s0 attn_topk: start (n 4982, k 1495, V 18)
+[W1018 20:57:28.878468822 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 2 while trying to allocate 38799409152 bytes (free: 29607198720, total: 99951706112).
+[W1018 20:57:29.342278887 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 2 while trying to allocate 38799409152 bytes (free: 33111539712, total: 99951706112).
+run gas-drift_R30_c3_s0 attn_topk: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 36.13 GiB. GPU 2 has a total capacity of 93.09 GiB of which 30.84 GiB is free. Process 2587982 has 4.99 GiB memory in use. Including non-PyTorch memory, this process has 9.16 GiB memory in use. Process 2593819 has 48.07 GiB memory in use. Of the allocated memory 7.88 GiB is allocated by PyTorch, and 268.12 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 570, in worker
+    res, arrays_out = run_learned(bd, d, method, a, log=log)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 285, in run_learned
+    out = L.attn_weights(bd.clf, d, method.split("_")[1], steps=a.max_steps, log=log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_learned.py", line 60, in attn_weights
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], d["Xv"], d["yv"], lw_d, need_grad=True,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 143, in evaluate_weighted
+    grad += torch.autograd.grad(loss, log_w)[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/__init__.py", line 594, in grad
+    result = _engine_run_backward(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 36.13 GiB. GPU 2 has a total capacity of 93.09 GiB of which 30.84 GiB is free. Process 2587982 has 4.99 GiB memory in use. Including non-PyTorch memory, this process has 9.16 GiB memory in use. Process 2593819 has 48.07 GiB memory in use. Of the allocated memory 7.88 GiB is allocated by PyTorch, and 268.12 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+run coil2000_insurance_policies_R30_c3_s0 nan_topk: start (n 4994, k 1498, V 6)
+      nan_topk restart 0 it 0: CE on V (relaxed) 1.0959  (11 s)
+      nan_topk restart 0 it 5: CE on V (relaxed) 0.8673  (70 s)
+      nan_topk restart 0 it 10: CE on V (relaxed) 0.7577  (143 s)
+      nan_topk restart 0 it 15: CE on V (relaxed) 0.7111  (215 s)
+      nan_topk restart 1 it 0: CE on V (relaxed) 1.0755  (278 s)
+      nan_topk restart 1 it 5: CE on V (relaxed) 0.7872  (348 s)
+      nan_topk restart 1 it 10: CE on V (relaxed) 0.8329  (420 s)
+      nan_topk restart 1 it 15: CE on V (relaxed) 0.7592  (492 s)
+      nan_topk restart 2 it 0: CE on V (relaxed) 1.3993  (559 s)
+      nan_topk restart 2 it 5: CE on V (relaxed) 0.6581  (603 s)
+      nan_topk restart 2 it 10: CE on V (relaxed) 0.6488  (647 s)
+      nan_topk restart 2 it 15: CE on V (relaxed) 0.4233  (692 s)
+      nan_topk restart 3 it 0: CE on V (relaxed) 1.1953  (736 s)
+      nan_topk restart 3 it 5: CE on V (relaxed) 0.8507  (791 s)
+      nan_topk restart 3 it 10: CE on V (relaxed) 0.8239  (851 s)
+      nan_topk restart 3 it 15: CE on V (relaxed) 0.9301  (910 s)
+run coil2000_insurance_policies_R30_c3_s0 nan_topk: done in 962 s  nan_topk: acc 61.8 auc 53.9 ce 1.120 prec 0.087
+run students_dropout_R20_c1_s0 ieg: start (n 2997, k 599, V 3)
+    ieg: V-selected {"epochs": 10, "feat": "z", "kl_weight": 10.0, "lr": 0.001} relabel (V log loss 0.000) of 48 (configuration, mode) pairs, 48 distinct cleaned sets
+run students_dropout_R20_c1_s0 ieg: done in 231 s  ieg: acc 63.6 auc 78.4 ce 1.106 prec 0.309  ieg_relabel: acc 57.0 auc 73.3 ce 2.438 prec 0.259  ieg_vsel: acc 56.6 auc 73.8 ce 2.956 prec 0.247
+run ecommerce_shipping_R20_c3_s0 label_spread: start (n 4994, k 999, V 6)
+    label_spread: V-selected {"alpha": 0.95, "beta": 0.0, "feat": "z", "n_neighbors": 50} relabel (V log loss 0.000) of 363 (configuration, mode) pairs, 279 distinct cleaned sets
+run ecommerce_shipping_R20_c3_s0 label_spread: done in 113 s  label_spread: acc 63.8 auc 72.1 ce 0.948 prec 0.249  label_spread_relabel: acc 51.5 auc 50.9 ce 3.012 prec 0.200  label_spread_vsel: acc 57.0 auc 53.1 ce 3.535 prec 0.227
+run students_dropout_R30_c3_s0 label_spread: start (n 2991, k 897, V 9)
+    label_spread: V-selected {"alpha": 0.99, "beta": 0.0, "feat": "q", "n_neighbors": 5} relabel (V log loss 0.001) of 363 (configuration, mode) pairs, 290 distinct cleaned sets
+run students_dropout_R30_c3_s0 label_spread: done in 138 s  label_spread: acc 59.0 auc 76.3 ce 1.067 prec 0.379  label_spread_relabel: acc 45.8 auc 58.9 ce 2.821 prec 0.342  label_spread_vsel: acc 28.8 auc 50.8 ce 6.376 prec 0.230
+run is_this_a_good_customer_R10_c5_s0 ieg: start (n 1390, k 139, V 10)
+    ieg: V-selected {"epochs": 10, "feat": "z", "kl_weight": 10.0, "lr": 0.001} relabel (V log loss 0.002) of 48 (configuration, mode) pairs, 48 distinct cleaned sets
+run is_this_a_good_customer_R10_c5_s0 ieg: done in 104 s  ieg: acc 83.0 auc 76.8 ce 0.353 prec 0.007  ieg_relabel: acc 59.0 auc 73.0 ce 3.047 prec 0.051  ieg_vsel: acc 52.0 auc 70.9 ce 4.033 prec 0.043
+run is_this_a_good_customer_R30_c1_s0 ieg: start (n 1398, k 419, V 2)
+    ieg: V-selected {"epochs": 10, "feat": "z", "kl_weight": 10.0, "lr": 0.001} relabel (V log loss 0.000) of 48 (configuration, mode) pairs, 48 distinct cleaned sets
+run is_this_a_good_customer_R30_c1_s0 ieg: done in 97 s  ieg: acc 64.7 auc 69.1 ce 1.639 prec 0.234  ieg_relabel: acc 62.3 auc 70.3 ce 2.601 prec 0.330  ieg_vsel: acc 57.7 auc 68.9 ce 3.849 prec 0.243
+run heloc_R10_c3_s0 attn_topk: start (n 4994, k 499, V 6)
+      attn_topk it 0: CE on V 0.2302  (4 s)
+      attn_topk it 5: CE on V 0.4658  (25 s)
+      attn_topk it 10: CE on V 0.1651  (45 s)
+      attn_topk it 15: CE on V 0.1336  (66 s)
+run heloc_R10_c3_s0 attn_topk: done in 83 s  attn_topk: acc 70.9 auc 77.0 ce 0.609 prec 0.228
+run heloc_R30_c3_s0 attn_soft: start (n 4994, k 1498, V 6)
+      attn_soft it 0: CE on V 0.3689  (4 s)
+      attn_soft it 5: CE on V 0.1577  (25 s)
+      attn_soft it 10: CE on V 0.0447  (45 s)
+      attn_soft it 15: CE on V 0.0181  (66 s)
+run heloc_R30_c3_s0 attn_soft: done in 85 s  attn_soft: acc 59.2 auc 61.1 ce 0.936 prec 0.326  attn_soft_softw: acc 58.3 auc 61.6 ce 0.875
+run students_dropout_R10_c1_s0 attn_soft: start (n 2997, k 300, V 3)
+      attn_soft it 0: CE on V 0.3939  (2 s)
+      attn_soft it 5: CE on V 0.0436  (14 s)
+      attn_soft it 10: CE on V 0.0076  (26 s)
+      attn_soft it 15: CE on V 0.0033  (38 s)
+run students_dropout_R10_c1_s0 attn_soft: done in 49 s  attn_soft: acc 75.6 auc 87.1 ce 0.623 prec 0.097  attn_soft_softw: acc 66.8 auc 81.3 ce 0.894
+run gas-drift_R20_c1_s0 knn_shapley: start (n 4994, k 999, V 6)
+    knn_shapley: V-selected {"K_nn": 5, "feat": "z"} remove (V log loss 0.000) of 12 (configuration, mode) pairs, 5 distinct cleaned sets
+run gas-drift_R20_c1_s0 knn_shapley: done in 21 s  knn_shapley: acc 84.3 auc 96.9 ce 0.963 prec 0.426  knn_shapley_vsel: acc 84.3 auc 96.9 ce 0.963 prec 0.426
+run coil2000_insurance_policies_R10_c1_s0 knn_shapley: start (n 4998, k 500, V 2)
+    knn_shapley: V-selected {"K_nn": 5, "feat": "z"} remove (V log loss 0.452) of 12 (configuration, mode) pairs, 2 distinct cleaned sets
+run coil2000_insurance_policies_R10_c1_s0 knn_shapley: done in 10 s  knn_shapley: acc 87.5 auc 60.8 ce 0.358 prec 0.232  knn_shapley_vsel: acc 87.5 auc 60.8 ce 0.358 prec 0.232
+run coil2000_insurance_policies_R30_c5_s0 knn_shapley: start (n 4990, k 1497, V 10)
+    knn_shapley: V-selected {"K_nn": 20, "feat": "z"} remove (V log loss 0.154) of 12 (configuration, mode) pairs, 5 distinct cleaned sets
+run coil2000_insurance_policies_R30_c5_s0 knn_shapley: done in 11 s  knn_shapley: acc 69.9 auc 52.9 ce 0.900 prec 0.408  knn_shapley_vsel: acc 69.9 auc 52.9 ce 0.900 prec 0.409
+run is_this_a_good_customer_R20_c1_s0 attn_soft: start (n 1398, k 280, V 2)
+      attn_soft it 0: CE on V 0.4330  (1 s)
+      attn_soft it 5: CE on V 0.0757  (2 s)
+      attn_soft it 10: CE on V 0.0284  (4 s)
+      attn_soft it 15: CE on V 0.0201  (6 s)
+run is_this_a_good_customer_R20_c1_s0 attn_soft: done in 8 s  attn_soft: acc 81.3 auc 71.3 ce 0.485 prec 0.211  attn_soft_softw: acc 78.7 auc 64.4 ce 0.537
+run heloc_R30_c1_s0 knn_shapley: start (n 4998, k 1499, V 2)
+    knn_shapley: V-selected {"K_nn": 1, "feat": "q"} remove (V log loss 0.000) of 12 (configuration, mode) pairs, 2 distinct cleaned sets
+run heloc_R30_c1_s0 knn_shapley: done in 2 s  knn_shapley: acc 70.8 auc 74.5 ce 1.026 prec 0.568  knn_shapley_vsel: acc 64.3 auc 68.0 ce 1.365 prec 0.405
+run heloc_R30_c3_s0 greedy_pct10: start (n 4994, k 1498, V 6)
+run heloc_R30_c3_s0 greedy_pct10: done in 3 s  greedy_pct10: acc 67.7 auc 72.9 ce 1.532 prec 0.527
+run ecommerce_shipping_R10_c1_s0 knn_shapley: start (n 4998, k 500, V 2)
+    knn_shapley: V-selected {"K_nn": 5, "feat": "z"} remove (V log loss 0.026) of 12 (configuration, mode) pairs, 2 distinct cleaned sets
+run ecommerce_shipping_R10_c1_s0 knn_shapley: done in 2 s  knn_shapley: acc 65.2 auc 73.3 ce 0.588 prec 0.092  knn_shapley_vsel: acc 65.2 auc 73.3 ce 0.588 prec 0.092
+run heloc_R10_c3_s0 refs: start (n 4994, k 499, V 6)
+run heloc_R10_c3_s0 refs: done in 2 s  v_only: acc 58.6 auc 65.3 ce 0.660  poisoned_plus_v: acc 69.8 auc 77.3 ce 0.580  oracle_plus_v: acc 74.3 auc 80.5 ce 0.542 prec 1.000
+run students_dropout_R10_c3_s0 vfilter: start (n 2991, k 299, V 9)
+run students_dropout_R10_c3_s0 vfilter: done in 1 s  vfilter: acc 74.8 auc 86.3 ce 0.703 prec 0.147
+run ecommerce_shipping_R10_c5_s0 vfilter: start (n 4990, k 499, V 10)
+run ecommerce_shipping_R10_c5_s0 vfilter: done in 1 s  vfilter: acc 65.6 auc 73.3 ce 0.632 prec 0.142
+run is_this_a_good_customer_R30_c1_s0 greedy_pct10: start (n 1398, k 419, V 2)
+run is_this_a_good_customer_R30_c1_s0 greedy_pct10: done in 1 s  greedy_pct10: acc 73.0 auc 67.5 ce 1.637 prec 0.465

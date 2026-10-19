@@ -32,6 +32,34 @@ GPU=10 bash scripts/bench_tinyv_jobs/gpu_10.sh
    this machine's `results/bench_tinyv/`. There is one file per (instance, method), so the copies never collide.
 2. **Make the tables.** Run `python scripts/report_bench_tinyv.py`, which writes `results/tables/bench_tinyv/`.
    The schedule study's results for 24 instances (refs, V-filter, greedy 1% and 10%) are already imported here.
+   `python scripts/elo_bench_tinyv.py` adds the TabArena-style Elo (`elo.md`, `elo.csv`).
+
+## The missing attention jobs (re-run, done)
+
+**Done on 2026-10-19:** the three `attn_rerun` scripts below ran on ecen-a86552 (GPUs 0-2, about 17
+minutes) and finished all 63 jobs, so the benchmark is complete. With 3 workers per GPU, the third worker ran out
+of memory beside two gas-drift or coil2000 attention jobs (about 45 GB each); the other workers picked those jobs
+up. The rest of this section is how it happened and how to repeat it.
+
+None of the 63 `attn_topk` / `attn_soft` jobs of gpu_04-gpu_10 finished: those scripts ran on ecen-a86553
+(gpu_04-07) and ecen-a86555 (gpu_08-10), where every other job finished. All 45 attention jobs of gpu_00-03
+finished on ecen-a86552. Only the attention learners use the row-weight hooks of the repository's TabPFN
+(`TabPFN/src`: `architectures/tabpfn_v2.py`, `preprocessing/steps/context_row_weights.py` and two other
+preprocessing steps, all added in commit 86df5d0). So the likely cause is a `tabfm` environment there that
+imports another TabPFN copy; the worker logs on those machines (`logs/bench_tinyv/gpu_04_w1.log` etc.) will
+say. `attn_rerun/gpu_00.sh`, `gpu_01.sh` and `gpu_02.sh` split the 63 jobs (about half an hour each on an H100 with
+3 workers; a final single-worker pass retries any job that ran out of memory). Run them on a
+machine whose `python -c "import tabpfn; print(tabpfn.__file__)"` points into this repository's `TabPFN/src`
+(ecen-a86552 does):
+
+```
+GPU=0 bash scripts/bench_tinyv_jobs/attn_rerun/gpu_00.sh    # logs: logs/bench_tinyv/attn_rerun/
+GPU=1 bash scripts/bench_tinyv_jobs/attn_rerun/gpu_01.sh
+GPU=2 bash scripts/bench_tinyv_jobs/attn_rerun/gpu_02.sh
+```
+
+On a machine whose TabPFN lacks the hooks, the workers now skip the attention jobs and say so in the log
+(`SKIPPING the attention jobs ...`) instead of failing each one.
 
 ## What runs
 

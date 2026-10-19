@@ -1,0 +1,1189 @@
+run gas-drift_R30_c1_s0 attn_topk: start (n 4994, k 1498, V 6)
+[W1019 02:42:29.942617178 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 12255232, total: 99951706112).
+[W1019 02:42:29.952126227 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 12255232, total: 99951706112).
+[W1019 02:42:29.955155809 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 12255232, total: 99951706112).
+run gas-drift_R30_c1_s0 attn_topk: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 240.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 91.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 1.96 GiB memory in use. Of the allocated memory 1.27 GiB is allocated by PyTorch, and 28.06 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 582, in worker
+    res, arrays_out = run_learned(bd, d, method, a, log=log)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 285, in run_learned
+    out = L.attn_weights(bd.clf, d, method.split("_")[1], steps=a.max_steps, log=log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_learned.py", line 60, in attn_weights
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], d["Xv"], d["yv"], lw_d, need_grad=True,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 139, in evaluate_weighted
+    p = _forward(clf, X_q[st:st + bs], need_grad=need_grad)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/runtime.py", line 170, in _forward
+    return clf.forward(X_test, use_inference_mode=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/classifier.py", line 1741, in forward
+    for output, config in tqdm(
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/tqdm/std.py", line 1175, in __iter__
+    for obj in iterable:
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/inference.py", line 71, in __next__
+    value = next(self._inner)
+            ^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/parallel_execute.py", line 86, in parallel_execute
+    yield from _execute_in_current_thread(devices[0], functions)
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/parallel_execute.py", line 97, in _execute_in_current_thread
+    yield function(device=device)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/inference.py", line 812, in _call_model
+    return model(
+           ^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 1014, in forward
+    x_BRCD = torch.utils.checkpoint.checkpoint(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_compile.py", line 54, in inner
+    return disable_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 1548, in _fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 606, in checkpoint
+    return _checkpoint_impl(
+           ^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 681, in _checkpoint_impl
+    gen.throw(e)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1988, in _checkpoint_without_reentrant_generator_impl
+    yield
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 678, in _checkpoint_impl
+    ret = function(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 382, in forward
+    x_BRCE = chunked_evaluate_maybe_inplace(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/chunked_evaluate.py", line 49, in chunked_evaluate_maybe_inplace
+    result = f(x.flatten(0, batch_dims - 1), *args, **kwargs).view(x.shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 146, in forward
+    output_BrHCD = scaled_dot_product_attention(q_BrCHD, k_BrCHD, v_BrCHD)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 83, in scaled_dot_product_attention
+    return _torch_sdpa(q_BSHD, k_BSJD, v_BSJD, _backends_override, attn_mask=attn_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 214, in _torch_sdpa
+    keys[i * sub_batch : (i + 1) * sub_batch].contiguous(),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 240.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 91.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 1.96 GiB memory in use. Of the allocated memory 1.27 GiB is allocated by PyTorch, and 28.06 MiB is reserved by PyTorch but unallocated.
+run gas-drift_R30_c5_s0 attn_topk: start (n 4970, k 1491, V 30)
+[W1019 02:42:30.017563574 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 12255232, total: 99951706112).
+[W1019 02:42:30.019134990 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 12255232, total: 99951706112).
+run gas-drift_R30_c5_s0 attn_topk: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 240.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 91.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 1.96 GiB memory in use. Of the allocated memory 1.27 GiB is allocated by PyTorch, and 28.21 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 582, in worker
+    res, arrays_out = run_learned(bd, d, method, a, log=log)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 285, in run_learned
+    out = L.attn_weights(bd.clf, d, method.split("_")[1], steps=a.max_steps, log=log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_learned.py", line 60, in attn_weights
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], d["Xv"], d["yv"], lw_d, need_grad=True,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 139, in evaluate_weighted
+    p = _forward(clf, X_q[st:st + bs], need_grad=need_grad)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/runtime.py", line 170, in _forward
+    return clf.forward(X_test, use_inference_mode=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/classifier.py", line 1741, in forward
+    for output, config in tqdm(
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/tqdm/std.py", line 1175, in __iter__
+    for obj in iterable:
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/inference.py", line 71, in __next__
+    value = next(self._inner)
+            ^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/parallel_execute.py", line 86, in parallel_execute
+    yield from _execute_in_current_thread(devices[0], functions)
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/parallel_execute.py", line 97, in _execute_in_current_thread
+    yield function(device=device)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/inference.py", line 812, in _call_model
+    return model(
+           ^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 1014, in forward
+    x_BRCD = torch.utils.checkpoint.checkpoint(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_compile.py", line 54, in inner
+    return disable_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 1548, in _fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 606, in checkpoint
+    return _checkpoint_impl(
+           ^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 681, in _checkpoint_impl
+    gen.throw(e)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1988, in _checkpoint_without_reentrant_generator_impl
+    yield
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 678, in _checkpoint_impl
+    ret = function(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 382, in forward
+    x_BRCE = chunked_evaluate_maybe_inplace(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/chunked_evaluate.py", line 49, in chunked_evaluate_maybe_inplace
+    result = f(x.flatten(0, batch_dims - 1), *args, **kwargs).view(x.shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 146, in forward
+    output_BrHCD = scaled_dot_product_attention(q_BrCHD, k_BrCHD, v_BrCHD)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 83, in scaled_dot_product_attention
+    return _torch_sdpa(q_BSHD, k_BSJD, v_BSJD, _backends_override, attn_mask=attn_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 214, in _torch_sdpa
+    keys[i * sub_batch : (i + 1) * sub_batch].contiguous(),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 240.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 91.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 1.96 GiB memory in use. Of the allocated memory 1.27 GiB is allocated by PyTorch, and 28.21 MiB is reserved by PyTorch but unallocated.
+run coil2000_insurance_policies_R10_c3_s0 attn_topk: start (n 4994, k 499, V 6)
+[W1019 02:42:31.783113848 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 18546688, total: 99951706112).
+[W1019 02:42:31.788039014 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 1769472, total: 99951706112).
+[W1019 02:42:31.790116973 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 1769472, total: 99951706112).
+run coil2000_insurance_policies_R10_c3_s0 attn_topk: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 162.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 121.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 1.94 GiB memory in use. Of the allocated memory 1.23 GiB is allocated by PyTorch, and 36.21 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 582, in worker
+    res, arrays_out = run_learned(bd, d, method, a, log=log)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 285, in run_learned
+    out = L.attn_weights(bd.clf, d, method.split("_")[1], steps=a.max_steps, log=log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_learned.py", line 60, in attn_weights
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], d["Xv"], d["yv"], lw_d, need_grad=True,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 139, in evaluate_weighted
+    p = _forward(clf, X_q[st:st + bs], need_grad=need_grad)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/runtime.py", line 170, in _forward
+    return clf.forward(X_test, use_inference_mode=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/classifier.py", line 1741, in forward
+    for output, config in tqdm(
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/tqdm/std.py", line 1175, in __iter__
+    for obj in iterable:
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/inference.py", line 71, in __next__
+    value = next(self._inner)
+            ^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/parallel_execute.py", line 86, in parallel_execute
+    yield from _execute_in_current_thread(devices[0], functions)
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/parallel_execute.py", line 97, in _execute_in_current_thread
+    yield function(device=device)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/inference.py", line 812, in _call_model
+    return model(
+           ^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 1014, in forward
+    x_BRCD = torch.utils.checkpoint.checkpoint(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_compile.py", line 54, in inner
+    return disable_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 1548, in _fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 606, in checkpoint
+    return _checkpoint_impl(
+           ^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 681, in _checkpoint_impl
+    gen.throw(e)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1988, in _checkpoint_without_reentrant_generator_impl
+    yield
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 678, in _checkpoint_impl
+    ret = function(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 382, in forward
+    x_BRCE = chunked_evaluate_maybe_inplace(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/chunked_evaluate.py", line 49, in chunked_evaluate_maybe_inplace
+    result = f(x.flatten(0, batch_dims - 1), *args, **kwargs).view(x.shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 146, in forward
+    output_BrHCD = scaled_dot_product_attention(q_BrCHD, k_BrCHD, v_BrCHD)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 83, in scaled_dot_product_attention
+    return _torch_sdpa(q_BSHD, k_BSJD, v_BSJD, _backends_override, attn_mask=attn_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 212, in _torch_sdpa
+    torch.nn.functional.scaled_dot_product_attention(
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 162.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 121.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 1.94 GiB memory in use. Of the allocated memory 1.23 GiB is allocated by PyTorch, and 36.21 MiB is reserved by PyTorch but unallocated.
+run coil2000_insurance_policies_R20_c3_s0 attn_soft: start (n 4994, k 999, V 6)
+[W1019 02:42:32.330962915 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 18546688, total: 99951706112).
+[W1019 02:42:32.341110044 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 1769472, total: 99951706112).
+run coil2000_insurance_policies_R20_c3_s0 attn_soft: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 162.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 121.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 1.94 GiB memory in use. Of the allocated memory 1.23 GiB is allocated by PyTorch, and 36.23 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 582, in worker
+    res, arrays_out = run_learned(bd, d, method, a, log=log)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 285, in run_learned
+    out = L.attn_weights(bd.clf, d, method.split("_")[1], steps=a.max_steps, log=log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_learned.py", line 60, in attn_weights
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], d["Xv"], d["yv"], lw_d, need_grad=True,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 139, in evaluate_weighted
+    p = _forward(clf, X_q[st:st + bs], need_grad=need_grad)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/runtime.py", line 170, in _forward
+    return clf.forward(X_test, use_inference_mode=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/classifier.py", line 1741, in forward
+    for output, config in tqdm(
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/tqdm/std.py", line 1175, in __iter__
+    for obj in iterable:
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/inference.py", line 71, in __next__
+    value = next(self._inner)
+            ^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/parallel_execute.py", line 86, in parallel_execute
+    yield from _execute_in_current_thread(devices[0], functions)
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/parallel_execute.py", line 97, in _execute_in_current_thread
+    yield function(device=device)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/inference.py", line 812, in _call_model
+    return model(
+           ^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 1014, in forward
+    x_BRCD = torch.utils.checkpoint.checkpoint(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_compile.py", line 54, in inner
+    return disable_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 1548, in _fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 606, in checkpoint
+    return _checkpoint_impl(
+           ^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 681, in _checkpoint_impl
+    gen.throw(e)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1988, in _checkpoint_without_reentrant_generator_impl
+    yield
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 678, in _checkpoint_impl
+    ret = function(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 382, in forward
+    x_BRCE = chunked_evaluate_maybe_inplace(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/chunked_evaluate.py", line 49, in chunked_evaluate_maybe_inplace
+    result = f(x.flatten(0, batch_dims - 1), *args, **kwargs).view(x.shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 146, in forward
+    output_BrHCD = scaled_dot_product_attention(q_BrCHD, k_BrCHD, v_BrCHD)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 83, in scaled_dot_product_attention
+    return _torch_sdpa(q_BSHD, k_BSJD, v_BSJD, _backends_override, attn_mask=attn_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 212, in _torch_sdpa
+    torch.nn.functional.scaled_dot_product_attention(
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 162.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 121.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 1.94 GiB memory in use. Of the allocated memory 1.23 GiB is allocated by PyTorch, and 36.23 MiB is reserved by PyTorch but unallocated.
+run coil2000_insurance_policies_R30_c1_s0 attn_soft: start (n 4998, k 1499, V 2)
+[W1019 02:42:32.838857257 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 18546688, total: 99951706112).
+[W1019 02:42:32.850127288 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 3866624, total: 99951706112).
+run coil2000_insurance_policies_R30_c1_s0 attn_soft: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 162.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 123.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 1.93 GiB memory in use. Of the allocated memory 1.23 GiB is allocated by PyTorch, and 34.21 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 582, in worker
+    res, arrays_out = run_learned(bd, d, method, a, log=log)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 285, in run_learned
+    out = L.attn_weights(bd.clf, d, method.split("_")[1], steps=a.max_steps, log=log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_learned.py", line 60, in attn_weights
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], d["Xv"], d["yv"], lw_d, need_grad=True,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 139, in evaluate_weighted
+    p = _forward(clf, X_q[st:st + bs], need_grad=need_grad)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/runtime.py", line 170, in _forward
+    return clf.forward(X_test, use_inference_mode=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/classifier.py", line 1741, in forward
+    for output, config in tqdm(
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/tqdm/std.py", line 1175, in __iter__
+    for obj in iterable:
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/inference.py", line 753, in iter_outputs
+    for output, ensemble_member in zip(
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/inference.py", line 71, in __next__
+    value = next(self._inner)
+            ^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/parallel_execute.py", line 86, in parallel_execute
+    yield from _execute_in_current_thread(devices[0], functions)
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/parallel_execute.py", line 97, in _execute_in_current_thread
+    yield function(device=device)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/inference.py", line 812, in _call_model
+    return model(
+           ^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 1014, in forward
+    x_BRCD = torch.utils.checkpoint.checkpoint(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_compile.py", line 54, in inner
+    return disable_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 1548, in _fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 606, in checkpoint
+    return _checkpoint_impl(
+           ^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 681, in _checkpoint_impl
+    gen.throw(e)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1988, in _checkpoint_without_reentrant_generator_impl
+    yield
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 678, in _checkpoint_impl
+    ret = function(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 382, in forward
+    x_BRCE = chunked_evaluate_maybe_inplace(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/chunked_evaluate.py", line 49, in chunked_evaluate_maybe_inplace
+    result = f(x.flatten(0, batch_dims - 1), *args, **kwargs).view(x.shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 146, in forward
+    output_BrHCD = scaled_dot_product_attention(q_BrCHD, k_BrCHD, v_BrCHD)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 83, in scaled_dot_product_attention
+    return _torch_sdpa(q_BSHD, k_BSJD, v_BSJD, _backends_override, attn_mask=attn_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 212, in _torch_sdpa
+    torch.nn.functional.scaled_dot_product_attention(
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 162.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 123.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 1.93 GiB memory in use. Of the allocated memory 1.23 GiB is allocated by PyTorch, and 34.21 MiB is reserved by PyTorch but unallocated.
+run heloc_R10_c1_s0 attn_topk: start (n 4998, k 500, V 2)
+[W1019 02:42:34.247432854 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 1769472, total: 99951706112).
+[W1019 02:42:34.247564442 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 1769472, total: 99951706112).
+run heloc_R10_c1_s0 attn_topk: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 48.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 1.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.05 GiB memory in use. Of the allocated memory 1.29 GiB is allocated by PyTorch, and 32.08 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 582, in worker
+    res, arrays_out = run_learned(bd, d, method, a, log=log)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 285, in run_learned
+    out = L.attn_weights(bd.clf, d, method.split("_")[1], steps=a.max_steps, log=log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_learned.py", line 60, in attn_weights
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], d["Xv"], d["yv"], lw_d, need_grad=True,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 143, in evaluate_weighted
+    grad += torch.autograd.grad(loss, log_w)[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/__init__.py", line 594, in grad
+    result = _engine_run_backward(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1369, in unpack_hook
+    _run_fn_with_dynamo_disabled(frame.recompute_fn, *args)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_compile.py", line 54, in inner
+    return disable_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 1548, in _fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1336, in _run_fn_with_dynamo_disabled
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1962, in recompute_fn
+    fn(*args, **kwargs)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 421, in forward
+    x_BCRE = chunked_evaluate_maybe_inplace(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/chunked_evaluate.py", line 49, in chunked_evaluate_maybe_inplace
+    result = f(x.flatten(0, batch_dims - 1), *args, **kwargs).view(x.shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 422, in <lambda>
+    lambda x, single_eval_pos=None: self.per_column_attention_between_cells(
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 239, in forward
+    out_train_BcNHD = scaled_dot_product_attention(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 83, in scaled_dot_product_attention
+    return _torch_sdpa(q_BSHD, k_BSJD, v_BSJD, _backends_override, attn_mask=attn_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 213, in _torch_sdpa
+    q_BHSD[i * sub_batch : (i + 1) * sub_batch].contiguous(),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 48.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 1.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.05 GiB memory in use. Of the allocated memory 1.29 GiB is allocated by PyTorch, and 32.08 MiB is reserved by PyTorch but unallocated.
+run heloc_R10_c3_s0 attn_soft: start (n 4994, k 499, V 6)
+[W1019 02:42:35.562311060 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 1769472, total: 99951706112).
+[W1019 02:42:35.573550164 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 1769472, total: 99951706112).
+[W1019 02:42:35.573670876 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 1769472, total: 99951706112).
+run heloc_R10_c3_s0 attn_soft: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 48.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 1.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.05 GiB memory in use. Of the allocated memory 1.29 GiB is allocated by PyTorch, and 32.26 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 582, in worker
+    res, arrays_out = run_learned(bd, d, method, a, log=log)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 285, in run_learned
+    out = L.attn_weights(bd.clf, d, method.split("_")[1], steps=a.max_steps, log=log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_learned.py", line 60, in attn_weights
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], d["Xv"], d["yv"], lw_d, need_grad=True,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 143, in evaluate_weighted
+    grad += torch.autograd.grad(loss, log_w)[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/__init__.py", line 594, in grad
+    result = _engine_run_backward(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1369, in unpack_hook
+    _run_fn_with_dynamo_disabled(frame.recompute_fn, *args)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_compile.py", line 54, in inner
+    return disable_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 1548, in _fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1336, in _run_fn_with_dynamo_disabled
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1962, in recompute_fn
+    fn(*args, **kwargs)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 421, in forward
+    x_BCRE = chunked_evaluate_maybe_inplace(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/chunked_evaluate.py", line 49, in chunked_evaluate_maybe_inplace
+    result = f(x.flatten(0, batch_dims - 1), *args, **kwargs).view(x.shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 422, in <lambda>
+    lambda x, single_eval_pos=None: self.per_column_attention_between_cells(
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 239, in forward
+    out_train_BcNHD = scaled_dot_product_attention(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 83, in scaled_dot_product_attention
+    return _torch_sdpa(q_BSHD, k_BSJD, v_BSJD, _backends_override, attn_mask=attn_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 213, in _torch_sdpa
+    q_BHSD[i * sub_batch : (i + 1) * sub_batch].contiguous(),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 48.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 1.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.05 GiB memory in use. Of the allocated memory 1.29 GiB is allocated by PyTorch, and 32.26 MiB is reserved by PyTorch but unallocated.
+run heloc_R20_c1_s0 attn_soft: start (n 4998, k 1000, V 2)
+[W1019 02:42:36.804155842 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 1769472, total: 99951706112).
+[W1019 02:42:36.815041563 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 12255232, total: 99951706112).
+run heloc_R20_c1_s0 attn_soft: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 48.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 51.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.00 GiB memory in use. Of the allocated memory 1.22 GiB is allocated by PyTorch, and 57.73 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 582, in worker
+    res, arrays_out = run_learned(bd, d, method, a, log=log)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 285, in run_learned
+    out = L.attn_weights(bd.clf, d, method.split("_")[1], steps=a.max_steps, log=log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_learned.py", line 60, in attn_weights
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], d["Xv"], d["yv"], lw_d, need_grad=True,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 143, in evaluate_weighted
+    grad += torch.autograd.grad(loss, log_w)[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/__init__.py", line 594, in grad
+    result = _engine_run_backward(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1369, in unpack_hook
+    _run_fn_with_dynamo_disabled(frame.recompute_fn, *args)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_compile.py", line 54, in inner
+    return disable_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 1548, in _fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1336, in _run_fn_with_dynamo_disabled
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1962, in recompute_fn
+    fn(*args, **kwargs)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 421, in forward
+    x_BCRE = chunked_evaluate_maybe_inplace(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/chunked_evaluate.py", line 49, in chunked_evaluate_maybe_inplace
+    result = f(x.flatten(0, batch_dims - 1), *args, **kwargs).view(x.shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 422, in <lambda>
+    lambda x, single_eval_pos=None: self.per_column_attention_between_cells(
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 239, in forward
+    out_train_BcNHD = scaled_dot_product_attention(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 83, in scaled_dot_product_attention
+    return _torch_sdpa(q_BSHD, k_BSJD, v_BSJD, _backends_override, attn_mask=attn_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 213, in _torch_sdpa
+    q_BHSD[i * sub_batch : (i + 1) * sub_batch].contiguous(),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 48.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 51.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.00 GiB memory in use. Of the allocated memory 1.22 GiB is allocated by PyTorch, and 57.73 MiB is reserved by PyTorch but unallocated.
+run heloc_R20_c1_s0 attn_topk: start (n 4998, k 1000, V 2)
+[W1019 02:42:37.098630883 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 12255232, total: 99951706112).
+[W1019 02:42:37.106549207 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 16449536, total: 99951706112).
+run heloc_R20_c1_s0 attn_topk: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 48.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 55.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.00 GiB memory in use. Of the allocated memory 1.22 GiB is allocated by PyTorch, and 53.71 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 582, in worker
+    res, arrays_out = run_learned(bd, d, method, a, log=log)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 285, in run_learned
+    out = L.attn_weights(bd.clf, d, method.split("_")[1], steps=a.max_steps, log=log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_learned.py", line 60, in attn_weights
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], d["Xv"], d["yv"], lw_d, need_grad=True,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 143, in evaluate_weighted
+    grad += torch.autograd.grad(loss, log_w)[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/__init__.py", line 594, in grad
+    result = _engine_run_backward(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1369, in unpack_hook
+    _run_fn_with_dynamo_disabled(frame.recompute_fn, *args)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_compile.py", line 54, in inner
+    return disable_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 1548, in _fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1336, in _run_fn_with_dynamo_disabled
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1962, in recompute_fn
+    fn(*args, **kwargs)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 421, in forward
+    x_BCRE = chunked_evaluate_maybe_inplace(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/chunked_evaluate.py", line 49, in chunked_evaluate_maybe_inplace
+    result = f(x.flatten(0, batch_dims - 1), *args, **kwargs).view(x.shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 422, in <lambda>
+    lambda x, single_eval_pos=None: self.per_column_attention_between_cells(
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 239, in forward
+    out_train_BcNHD = scaled_dot_product_attention(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 83, in scaled_dot_product_attention
+    return _torch_sdpa(q_BSHD, k_BSJD, v_BSJD, _backends_override, attn_mask=attn_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 213, in _torch_sdpa
+    q_BHSD[i * sub_batch : (i + 1) * sub_batch].contiguous(),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 48.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 55.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.00 GiB memory in use. Of the allocated memory 1.22 GiB is allocated by PyTorch, and 53.71 MiB is reserved by PyTorch but unallocated.
+run heloc_R20_c5_s0 attn_soft: start (n 4990, k 998, V 10)
+[W1019 02:42:39.387579112 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 16449536, total: 99951706112).
+[W1019 02:42:39.388111244 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 16449536, total: 99951706112).
+run heloc_R20_c5_s0 attn_soft: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 48.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 55.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.00 GiB memory in use. Of the allocated memory 1.22 GiB is allocated by PyTorch, and 54.06 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 582, in worker
+    res, arrays_out = run_learned(bd, d, method, a, log=log)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 285, in run_learned
+    out = L.attn_weights(bd.clf, d, method.split("_")[1], steps=a.max_steps, log=log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_learned.py", line 60, in attn_weights
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], d["Xv"], d["yv"], lw_d, need_grad=True,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 143, in evaluate_weighted
+    grad += torch.autograd.grad(loss, log_w)[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/__init__.py", line 594, in grad
+    result = _engine_run_backward(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1369, in unpack_hook
+    _run_fn_with_dynamo_disabled(frame.recompute_fn, *args)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_compile.py", line 54, in inner
+    return disable_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 1548, in _fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1336, in _run_fn_with_dynamo_disabled
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1962, in recompute_fn
+    fn(*args, **kwargs)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 421, in forward
+    x_BCRE = chunked_evaluate_maybe_inplace(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/chunked_evaluate.py", line 49, in chunked_evaluate_maybe_inplace
+    result = f(x.flatten(0, batch_dims - 1), *args, **kwargs).view(x.shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 422, in <lambda>
+    lambda x, single_eval_pos=None: self.per_column_attention_between_cells(
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 239, in forward
+    out_train_BcNHD = scaled_dot_product_attention(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 83, in scaled_dot_product_attention
+    return _torch_sdpa(q_BSHD, k_BSJD, v_BSJD, _backends_override, attn_mask=attn_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 213, in _torch_sdpa
+    q_BHSD[i * sub_batch : (i + 1) * sub_batch].contiguous(),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 48.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 55.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.00 GiB memory in use. Of the allocated memory 1.22 GiB is allocated by PyTorch, and 54.06 MiB is reserved by PyTorch but unallocated.
+run heloc_R30_c5_s0 attn_topk: start (n 4990, k 1497, V 10)
+[W1019 02:42:40.677392344 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 16449536, total: 99951706112).
+[W1019 02:42:40.677906498 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 16449536, total: 99951706112).
+run heloc_R30_c5_s0 attn_topk: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 48.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 55.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.00 GiB memory in use. Of the allocated memory 1.22 GiB is allocated by PyTorch, and 54.04 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 582, in worker
+    res, arrays_out = run_learned(bd, d, method, a, log=log)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 285, in run_learned
+    out = L.attn_weights(bd.clf, d, method.split("_")[1], steps=a.max_steps, log=log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_learned.py", line 60, in attn_weights
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], d["Xv"], d["yv"], lw_d, need_grad=True,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 143, in evaluate_weighted
+    grad += torch.autograd.grad(loss, log_w)[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/__init__.py", line 594, in grad
+    result = _engine_run_backward(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1369, in unpack_hook
+    _run_fn_with_dynamo_disabled(frame.recompute_fn, *args)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_compile.py", line 54, in inner
+    return disable_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 1548, in _fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1336, in _run_fn_with_dynamo_disabled
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1962, in recompute_fn
+    fn(*args, **kwargs)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 421, in forward
+    x_BCRE = chunked_evaluate_maybe_inplace(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/chunked_evaluate.py", line 49, in chunked_evaluate_maybe_inplace
+    result = f(x.flatten(0, batch_dims - 1), *args, **kwargs).view(x.shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 422, in <lambda>
+    lambda x, single_eval_pos=None: self.per_column_attention_between_cells(
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 239, in forward
+    out_train_BcNHD = scaled_dot_product_attention(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 83, in scaled_dot_product_attention
+    return _torch_sdpa(q_BSHD, k_BSJD, v_BSJD, _backends_override, attn_mask=attn_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 213, in _torch_sdpa
+    q_BHSD[i * sub_batch : (i + 1) * sub_batch].contiguous(),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 48.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 55.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.00 GiB memory in use. Of the allocated memory 1.22 GiB is allocated by PyTorch, and 54.04 MiB is reserved by PyTorch but unallocated.
+run ecommerce_shipping_R20_c3_s0 attn_soft: start (n 4994, k 999, V 6)
+[W1019 02:42:41.616248601 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 12255232, total: 99951706112).
+[W1019 02:42:41.629131840 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 14352384, total: 99951706112).
+run ecommerce_shipping_R20_c3_s0 attn_soft: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 3.36 GiB. GPU 2 has a total capacity of 93.09 GiB of which 453.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 1.61 GiB memory in use. Of the allocated memory 855.24 MiB is allocated by PyTorch, and 48.76 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 582, in worker
+    res, arrays_out = run_learned(bd, d, method, a, log=log)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 285, in run_learned
+    out = L.attn_weights(bd.clf, d, method.split("_")[1], steps=a.max_steps, log=log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_learned.py", line 60, in attn_weights
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], d["Xv"], d["yv"], lw_d, need_grad=True,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 143, in evaluate_weighted
+    grad += torch.autograd.grad(loss, log_w)[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/__init__.py", line 594, in grad
+    result = _engine_run_backward(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 3.36 GiB. GPU 2 has a total capacity of 93.09 GiB of which 453.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 1.61 GiB memory in use. Of the allocated memory 855.24 MiB is allocated by PyTorch, and 48.76 MiB is reserved by PyTorch but unallocated.
+run ecommerce_shipping_R30_c1_s0 attn_soft: start (n 4998, k 1499, V 2)
+[W1019 02:42:42.400580023 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 12255232, total: 99951706112).
+[W1019 02:42:42.442685215 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 14352384, total: 99951706112).
+run ecommerce_shipping_R30_c1_s0 attn_soft: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 3.36 GiB. GPU 2 has a total capacity of 93.09 GiB of which 453.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 1.61 GiB memory in use. Of the allocated memory 855.46 MiB is allocated by PyTorch, and 48.54 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 582, in worker
+    res, arrays_out = run_learned(bd, d, method, a, log=log)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 285, in run_learned
+    out = L.attn_weights(bd.clf, d, method.split("_")[1], steps=a.max_steps, log=log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_learned.py", line 60, in attn_weights
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], d["Xv"], d["yv"], lw_d, need_grad=True,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 143, in evaluate_weighted
+    grad += torch.autograd.grad(loss, log_w)[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/__init__.py", line 594, in grad
+    result = _engine_run_backward(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 3.36 GiB. GPU 2 has a total capacity of 93.09 GiB of which 453.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 1.61 GiB memory in use. Of the allocated memory 855.46 MiB is allocated by PyTorch, and 48.54 MiB is reserved by PyTorch but unallocated.
+run students_dropout_R10_c3_s0 attn_topk: start (n 2991, k 299, V 9)
+[W1019 02:42:43.398121368 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 20643840, total: 99951706112).
+[W1019 02:42:43.407419519 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 20643840, total: 99951706112).
+[W1019 02:42:43.407509394 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 20643840, total: 99951706112).
+run students_dropout_R10_c3_s0 attn_topk: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 42.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 19.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.04 GiB memory in use. Of the allocated memory 1.26 GiB is allocated by PyTorch, and 50.33 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 582, in worker
+    res, arrays_out = run_learned(bd, d, method, a, log=log)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 285, in run_learned
+    out = L.attn_weights(bd.clf, d, method.split("_")[1], steps=a.max_steps, log=log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_learned.py", line 60, in attn_weights
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], d["Xv"], d["yv"], lw_d, need_grad=True,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 143, in evaluate_weighted
+    grad += torch.autograd.grad(loss, log_w)[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/__init__.py", line 594, in grad
+    result = _engine_run_backward(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1369, in unpack_hook
+    _run_fn_with_dynamo_disabled(frame.recompute_fn, *args)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_compile.py", line 54, in inner
+    return disable_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 1548, in _fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1336, in _run_fn_with_dynamo_disabled
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1962, in recompute_fn
+    fn(*args, **kwargs)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 421, in forward
+    x_BCRE = chunked_evaluate_maybe_inplace(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/chunked_evaluate.py", line 49, in chunked_evaluate_maybe_inplace
+    result = f(x.flatten(0, batch_dims - 1), *args, **kwargs).view(x.shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 422, in <lambda>
+    lambda x, single_eval_pos=None: self.per_column_attention_between_cells(
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 239, in forward
+    out_train_BcNHD = scaled_dot_product_attention(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 83, in scaled_dot_product_attention
+    return _torch_sdpa(q_BSHD, k_BSJD, v_BSJD, _backends_override, attn_mask=attn_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 212, in _torch_sdpa
+    torch.nn.functional.scaled_dot_product_attention(
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 42.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 19.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.04 GiB memory in use. Of the allocated memory 1.26 GiB is allocated by PyTorch, and 50.33 MiB is reserved by PyTorch but unallocated.
+run students_dropout_R10_c5_s0 attn_soft: start (n 2985, k 299, V 15)
+[W1019 02:42:44.281654007 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 20643840, total: 99951706112).
+[W1019 02:42:44.281827368 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 20643840, total: 99951706112).
+run students_dropout_R10_c5_s0 attn_soft: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 42.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 19.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.04 GiB memory in use. Of the allocated memory 1.26 GiB is allocated by PyTorch, and 50.94 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 582, in worker
+    res, arrays_out = run_learned(bd, d, method, a, log=log)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 285, in run_learned
+    out = L.attn_weights(bd.clf, d, method.split("_")[1], steps=a.max_steps, log=log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_learned.py", line 60, in attn_weights
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], d["Xv"], d["yv"], lw_d, need_grad=True,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 143, in evaluate_weighted
+    grad += torch.autograd.grad(loss, log_w)[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/__init__.py", line 594, in grad
+    result = _engine_run_backward(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1369, in unpack_hook
+    _run_fn_with_dynamo_disabled(frame.recompute_fn, *args)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_compile.py", line 54, in inner
+    return disable_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 1548, in _fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1336, in _run_fn_with_dynamo_disabled
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1962, in recompute_fn
+    fn(*args, **kwargs)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 421, in forward
+    x_BCRE = chunked_evaluate_maybe_inplace(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/chunked_evaluate.py", line 49, in chunked_evaluate_maybe_inplace
+    result = f(x.flatten(0, batch_dims - 1), *args, **kwargs).view(x.shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 422, in <lambda>
+    lambda x, single_eval_pos=None: self.per_column_attention_between_cells(
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 239, in forward
+    out_train_BcNHD = scaled_dot_product_attention(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 83, in scaled_dot_product_attention
+    return _torch_sdpa(q_BSHD, k_BSJD, v_BSJD, _backends_override, attn_mask=attn_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 212, in _torch_sdpa
+    torch.nn.functional.scaled_dot_product_attention(
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 42.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 19.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.04 GiB memory in use. Of the allocated memory 1.26 GiB is allocated by PyTorch, and 50.94 MiB is reserved by PyTorch but unallocated.
+run students_dropout_R20_c3_s0 attn_soft: start (n 2991, k 598, V 9)
+[W1019 02:42:44.159857622 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 20643840, total: 99951706112).
+[W1019 02:42:44.160080147 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 20643840, total: 99951706112).
+run students_dropout_R20_c3_s0 attn_soft: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 42.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 19.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.04 GiB memory in use. Of the allocated memory 1.26 GiB is allocated by PyTorch, and 50.35 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 582, in worker
+    res, arrays_out = run_learned(bd, d, method, a, log=log)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 285, in run_learned
+    out = L.attn_weights(bd.clf, d, method.split("_")[1], steps=a.max_steps, log=log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_learned.py", line 60, in attn_weights
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], d["Xv"], d["yv"], lw_d, need_grad=True,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 143, in evaluate_weighted
+    grad += torch.autograd.grad(loss, log_w)[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/__init__.py", line 594, in grad
+    result = _engine_run_backward(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1369, in unpack_hook
+    _run_fn_with_dynamo_disabled(frame.recompute_fn, *args)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_compile.py", line 54, in inner
+    return disable_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 1548, in _fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1336, in _run_fn_with_dynamo_disabled
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1962, in recompute_fn
+    fn(*args, **kwargs)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 421, in forward
+    x_BCRE = chunked_evaluate_maybe_inplace(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/chunked_evaluate.py", line 49, in chunked_evaluate_maybe_inplace
+    result = f(x.flatten(0, batch_dims - 1), *args, **kwargs).view(x.shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 422, in <lambda>
+    lambda x, single_eval_pos=None: self.per_column_attention_between_cells(
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 239, in forward
+    out_train_BcNHD = scaled_dot_product_attention(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 83, in scaled_dot_product_attention
+    return _torch_sdpa(q_BSHD, k_BSJD, v_BSJD, _backends_override, attn_mask=attn_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 212, in _torch_sdpa
+    torch.nn.functional.scaled_dot_product_attention(
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 42.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 19.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.04 GiB memory in use. Of the allocated memory 1.26 GiB is allocated by PyTorch, and 50.35 MiB is reserved by PyTorch but unallocated.
+run students_dropout_R30_c3_s0 attn_soft: start (n 2991, k 897, V 9)
+[W1019 02:42:45.042509475 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 20643840, total: 99951706112).
+[W1019 02:42:45.042797669 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 2 while trying to map 20971520 bytes (free: 20643840, total: 99951706112).
+run students_dropout_R30_c3_s0 attn_soft: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 42.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 19.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.04 GiB memory in use. Of the allocated memory 1.26 GiB is allocated by PyTorch, and 50.35 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 582, in worker
+    res, arrays_out = run_learned(bd, d, method, a, log=log)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/bench_tinyv.py", line 285, in run_learned
+    out = L.attn_weights(bd.clf, d, method.split("_")[1], steps=a.max_steps, log=log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_learned.py", line 60, in attn_weights
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], d["Xv"], d["yv"], lw_d, need_grad=True,
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 143, in evaluate_weighted
+    grad += torch.autograd.grad(loss, log_w)[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/__init__.py", line 594, in grad
+    result = _engine_run_backward(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1369, in unpack_hook
+    _run_fn_with_dynamo_disabled(frame.recompute_fn, *args)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_compile.py", line 54, in inner
+    return disable_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 1548, in _fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1336, in _run_fn_with_dynamo_disabled
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/utils/checkpoint.py", line 1962, in recompute_fn
+    fn(*args, **kwargs)
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 421, in forward
+    x_BCRE = chunked_evaluate_maybe_inplace(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/chunked_evaluate.py", line 49, in chunked_evaluate_maybe_inplace
+    result = f(x.flatten(0, batch_dims - 1), *args, **kwargs).view(x.shape)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 422, in <lambda>
+    lambda x, single_eval_pos=None: self.per_column_attention_between_cells(
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1783, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1794, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/tabpfn_v2.py", line 239, in forward
+    out_train_BcNHD = scaled_dot_product_attention(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 83, in scaled_dot_product_attention
+    return _torch_sdpa(q_BSHD, k_BSJD, v_BSJD, _backends_override, attn_mask=attn_mask)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/architectures/shared/scaled_dot_product_attention.py", line 212, in _torch_sdpa
+    torch.nn.functional.scaled_dot_product_attention(
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 42.00 MiB. GPU 2 has a total capacity of 93.09 GiB of which 19.69 MiB is free. Process 3512315 has 45.39 GiB memory in use. Process 3513117 has 45.61 GiB memory in use. Including non-PyTorch memory, this process has 2.04 GiB memory in use. Of the allocated memory 1.26 GiB is allocated by PyTorch, and 50.35 MiB is reserved by PyTorch but unallocated.
+run is_this_a_good_customer_R10_c1_s0 attn_soft: start (n 1398, k 140, V 2)
+      attn_soft it 0: CE on V 1.0069  (0 s)
+      attn_soft it 5: CE on V 0.2361  (2 s)
+      attn_soft it 10: CE on V 0.1144  (4 s)
+      attn_soft it 15: CE on V 0.0661  (6 s)
+run is_this_a_good_customer_R10_c1_s0 attn_soft: done in 9 s  attn_soft: acc 85.3 auc 78.3 ce 0.341 prec 0.107  attn_soft_softw: acc 82.7 auc 77.3 ce 0.375
+run is_this_a_good_customer_R20_c1_s0 attn_topk: start (n 1398, k 280, V 2)
+      attn_topk it 0: CE on V 0.8702  (0 s)
+      attn_topk it 5: CE on V 0.5303  (2 s)
+      attn_topk it 10: CE on V 0.5048  (4 s)
+      attn_topk it 15: CE on V 0.4634  (7 s)
+run is_this_a_good_customer_R20_c1_s0 attn_topk: done in 8 s  attn_topk: acc 78.0 auc 68.5 ce 0.621 prec 0.211
+run is_this_a_good_customer_R20_c5_s0 attn_topk: start (n 1390, k 278, V 10)
+      attn_topk it 0: CE on V 1.1640  (0 s)
+      attn_topk it 5: CE on V 0.8430  (2 s)
+      attn_topk it 10: CE on V 0.8154  (5 s)
+      attn_topk it 15: CE on V 0.8570  (7 s)
+run is_this_a_good_customer_R20_c5_s0 attn_topk: done in 8 s  attn_topk: acc 76.7 auc 65.4 ce 0.536 prec 0.219
+run is_this_a_good_customer_R30_c5_s0 attn_soft: start (n 1390, k 417, V 10)
+      attn_soft it 0: CE on V 0.7196  (0 s)
+      attn_soft it 5: CE on V 0.3077  (2 s)
+      attn_soft it 10: CE on V 0.1332  (4 s)
+      attn_soft it 15: CE on V 0.0674  (6 s)
+run is_this_a_good_customer_R30_c5_s0 attn_soft: done in 8 s  attn_soft: acc 71.7 auc 62.7 ce 0.592 prec 0.295  attn_soft_softw: acc 72.3 auc 63.8 ce 0.715
