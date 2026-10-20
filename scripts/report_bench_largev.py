@@ -41,9 +41,10 @@ import report_bench_tinyv as RB  # noqa: E402
 HEAD = [("v_only", "V only"), ("poisoned_plus_v", "poisoned + V"), ("oracle_plus_v", "oracle + V"),
         ("vfilter", "V-filter + V"), ("attn_topk", "attention weights, top-k (M1) + V"),
         ("attn_soft", "attention weights, soft (A3) + V"), ("nan_soft", "NaN gate, soft + V"),
-        ("nan_topk", "NaN gate, top-k vote + V")]
+        ("nan_topk", "NaN gate, top-k vote + V"),
+        ("attn_wsoft", "attention weights, best soft form (w, V-filter, PGD; soft) + V")]
 NAME = dict(HEAD)
-LEARNERS = ["attn_topk", "attn_soft", "nan_soft", "nan_topk"]
+LEARNERS = ["attn_topk", "attn_soft", "nan_soft", "nan_topk", "attn_wsoft"]
 METRICS = ["acc", "bacc", "auc", "ce", "prec"]
 
 

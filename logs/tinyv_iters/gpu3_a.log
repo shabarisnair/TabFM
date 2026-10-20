@@ -1,0 +1,68 @@
+[00:59:30 cuda:3] gas-drift_R30_c1_s1 soft: start (n 4994, k 1498, V 6)
+[00:59:46 cuda:3]     soft it   0: test auc 0.9236 acc 0.7220 ce 1.6351  (14 s)
+[W1020 00:59:53.559154738 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 3 while trying to map 20971520 bytes (free: 12779520, total: 99951706112).
+[W1020 00:59:53.681771348 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 3 while trying to map 20971520 bytes (free: 14876672, total: 99951706112).
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_iter_study.py", line 160, in <module>
+    main()
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_iter_study.py", line 156, in main
+    work(a.device, a.seed, a.skip_datasets)
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_iter_study.py", line 141, in work
+    res = run(bd, d, method, log)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tinyv_iter_study.py", line 106, in run
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], d["Xv"], d["yv"], lw_d, need_grad=True)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 143, in evaluate_weighted
+    grad += torch.autograd.grad(loss, log_w)[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/__init__.py", line 594, in grad
+    result = _engine_run_backward(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 36.34 GiB. GPU 3 has a total capacity of 93.09 GiB of which 30.15 GiB is free. Process 2905888 has 22.76 GiB memory in use. Process 2924192 has 21.74 GiB memory in use. Process 2927750 has 9.79 GiB memory in use. Including non-PyTorch memory, this process has 8.61 GiB memory in use. Of the allocated memory 7.83 GiB is allocated by PyTorch, and 55.91 MiB is reserved by PyTorch but unallocated.
+ERROR conda.cli.main_run:execute(127): `conda run python -u scripts/tinyv_iter_study.py work --device cuda:3` failed. (See above for error)
+[01:05:10 cuda:3] heloc_R30_c1_s1 soft: start (n 4998, k 1499, V 2)
+[01:05:15 cuda:3]     soft it   0: test auc 0.6954 acc 0.6190 ce 0.6618  (3 s)
+[01:07:42 cuda:3]     soft it  20: test auc 0.6069 acc 0.5700 ce 0.8530  (151 s)
+[01:09:49 cuda:3]     soft it  40: test auc 0.6012 acc 0.5690 ce 0.9075  (277 s)
+[01:12:06 cuda:3]     soft it  60: test auc 0.6211 acc 0.5800 ce 0.8995  (414 s)
+[01:14:33 cuda:3]     soft it  80: test auc 0.5921 acc 0.5720 ce 1.0045  (561 s)
+[01:14:33 cuda:3] heloc_R30_c1_s1 soft: done in 561 s
+[01:14:33 cuda:3] heloc_R30_c5_s1 m1: start (n 4990, k 1497, V 10)
+[01:14:35 cuda:3]     m1 it   0: test auc 0.7741 acc 0.7100 ce 1.4642  (1 s)
+[01:17:03 cuda:3]     m1 it  20: test auc 0.7729 acc 0.7080 ce 1.1865  (149 s)
+[01:19:21 cuda:3]     m1 it  40: test auc 0.7737 acc 0.7130 ce 1.1622  (287 s)
+[01:21:59 cuda:3]     m1 it  60: test auc 0.7734 acc 0.7130 ce 1.1716  (445 s)
+[01:24:36 cuda:3]     m1 it  80: test auc 0.7730 acc 0.7110 ce 1.0993  (602 s)
+[01:24:36 cuda:3] heloc_R30_c5_s1 m1: done in 602 s
+[01:24:36 cuda:3] heloc_R30_c5_s1 soft: start (n 4990, k 1497, V 10)
+[01:24:41 cuda:3]     soft it   0: test auc 0.7283 acc 0.6960 ce 0.7974  (4 s)
+[01:28:05 cuda:3]     soft it  20: test auc 0.7226 acc 0.6890 ce 1.0077  (208 s)
+[01:30:57 cuda:3]     soft it  40: test auc 0.7219 acc 0.6820 ce 1.0969  (380 s)
+[01:33:39 cuda:3]     soft it  60: test auc 0.7182 acc 0.6740 ce 1.1561  (542 s)
+[01:36:31 cuda:3]     soft it  80: test auc 0.7128 acc 0.6750 ce 1.3381  (714 s)
+[01:36:31 cuda:3] heloc_R30_c5_s1 soft: done in 714 s
+[01:36:31 cuda:3] students_dropout_R30_c3_s1 m1: start (n 2991, k 897, V 9)
+[01:36:33 cuda:3]     m1 it   0: test auc 0.8018 acc 0.6180 ce 2.1028  (1 s)
+[01:38:21 cuda:3]     m1 it  20: test auc 0.7831 acc 0.5940 ce 2.0321  (109 s)
+[01:40:05 cuda:3]     m1 it  40: test auc 0.7779 acc 0.6040 ce 2.0807  (213 s)
+[01:41:45 cuda:3]     m1 it  60: test auc 0.7736 acc 0.5780 ce 2.1564  (313 s)
+[01:43:27 cuda:3]     m1 it  80: test auc 0.7727 acc 0.5720 ce 2.1419  (415 s)
+[01:43:27 cuda:3] students_dropout_R30_c3_s1 m1: done in 415 s
+[01:43:27 cuda:3] ecommerce_shipping_R30_c1_s1 m1: start (n 4998, k 1499, V 2)
+[01:43:29 cuda:3]     m1 it   0: test auc 0.6227 acc 0.5900 ce 1.5974  (1 s)
+[01:45:08 cuda:3]     m1 it  20: test auc 0.6721 acc 0.6040 ce 1.1217  (100 s)
+[01:46:41 cuda:3]     m1 it  40: test auc 0.6807 acc 0.6010 ce 1.1352  (193 s)
+[01:48:06 cuda:3]     m1 it  60: test auc 0.6843 acc 0.5930 ce 1.0801  (278 s)
+[01:49:33 cuda:3]     m1 it  80: test auc 0.6826 acc 0.5980 ce 1.1162  (365 s)
+[01:49:33 cuda:3] ecommerce_shipping_R30_c1_s1 m1: done in 365 s
+[01:49:34 cuda:3] ecommerce_shipping_R30_c5_s1 m1: start (n 4990, k 1497, V 10)
+[01:49:35 cuda:3]     m1 it   0: test auc 0.7047 acc 0.6280 ce 1.5905  (1 s)
+[01:51:03 cuda:3]     m1 it  20: test auc 0.7126 acc 0.6420 ce 1.3528  (89 s)
+[01:52:27 cuda:3]     m1 it  40: test auc 0.7109 acc 0.6430 ce 1.2254  (172 s)
+[01:53:36 cuda:3]     m1 it  60: test auc 0.7138 acc 0.6450 ce 1.1567  (242 s)
+[01:54:46 cuda:3]     m1 it  80: test auc 0.7122 acc 0.6500 ce 1.0861  (312 s)
+[01:54:46 cuda:3] ecommerce_shipping_R30_c5_s1 m1: done in 312 s

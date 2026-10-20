@@ -1,0 +1,21 @@
+[00:59:30 cuda:2] gas-drift_R30_c1_s1 m1: start (n 4994, k 1498, V 6)
+[00:59:34 cuda:2]     m1 it   0: test auc 0.9191 acc 0.7050 ce 1.5817  (2 s)
+[01:04:27 cuda:2]     m1 it  20: test auc 0.9263 acc 0.7090 ce 1.5328  (295 s)
+[01:08:33 cuda:2]     m1 it  40: test auc 0.9162 acc 0.7110 ce 1.5970  (541 s)
+[01:10:51 cuda:2]     m1 it  60: test auc 0.9244 acc 0.7120 ce 1.4966  (680 s)
+[01:12:48 cuda:2]     m1 it  80: test auc 0.9240 acc 0.7090 ce 1.5833  (796 s)
+[01:12:48 cuda:2] gas-drift_R30_c1_s1 m1: done in 796 s
+[01:12:48 cuda:2] gas-drift_R30_c1_s1 soft: start (n 4994, k 1498, V 6)
+[01:12:51 cuda:2]     soft it   0: test auc 0.9236 acc 0.7220 ce 1.6351  (3 s)
+[01:17:43 cuda:2]     soft it  20: test auc 0.9336 acc 0.7230 ce 1.6744  (295 s)
+[01:24:02 cuda:2]     soft it  40: test auc 0.9271 acc 0.7180 ce 1.7259  (675 s)
+[01:30:39 cuda:2]     soft it  60: test auc 0.9214 acc 0.7040 ce 1.8983  (1071 s)
+[01:37:15 cuda:2]     soft it  80: test auc 0.9141 acc 0.7040 ce 2.1564  (1467 s)
+[01:37:15 cuda:2] gas-drift_R30_c1_s1 soft: done in 1467 s
+[01:37:15 cuda:2] coil2000_insurance_policies_R30_c5_s1 soft: start (n 4990, k 1497, V 10)
+[01:37:23 cuda:2]     soft it   0: test auc 0.5305 acc 0.7010 ce 0.6458  (7 s)
+[01:42:47 cuda:2]     soft it  20: test auc 0.5343 acc 0.7180 ce 0.8812  (331 s)
+[01:47:21 cuda:2]     soft it  40: test auc 0.5297 acc 0.7360 ce 0.9874  (605 s)
+[01:51:41 cuda:2]     soft it  60: test auc 0.5312 acc 0.7310 ce 1.2025  (865 s)
+[01:56:01 cuda:2]     soft it  80: test auc 0.5344 acc 0.7300 ce 1.3102  (1126 s)
+[01:56:01 cuda:2] coil2000_insurance_policies_R30_c5_s1 soft: done in 1126 s

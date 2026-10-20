@@ -152,3 +152,32 @@ Terminated
 [22:58:41 w30] is_this_a_good_customer_R30_V500_s0 w_ones_sign_lr0.01: it 100 of 130 (patience) hold ce 0.3459 | test soft+V auc 0.6022 acc 0.7033 ce 0.5749 | auroc 0.841 floor False | 50 s
 [22:58:41 w30] heloc_R30_V500_s0 w_ones_sign_lr0.04: start (n 4500, k 1350)
 [22:58:42 w30]     it   0  hold ce 0.5860 acc 0.630 | auroc 0.500  log w med pois 0.0 clean 0.0  (1 s)
+[23:01:33 w30] heloc_R30_V500_s0 w_ones_sign_lr0.04: it 15 of 45 (patience) hold ce 0.5134 | test soft+V auc 0.7329 acc 0.6620 ce 0.6182 | auroc 0.670 floor False | 172 s
+[23:01:33 w30] heloc_R30_V500_s0 w_vfilter_sign_lr0.0025: start (n 4500, k 1350)
+[23:01:34 w30]     it   0  hold ce 0.6023 acc 0.700 | auroc 0.802  log w med pois -1.3 clean -0.3  (1 s)
+[23:04:35 w30]     it  50  hold ce 0.5387 acc 0.730 | auroc 0.794  log w med pois -1.3 clean -0.4  (182 s)
+[23:04:56 w30] heloc_R30_V500_s0 w_vfilter_sign_lr0.0025: it 25 of 55 (patience) hold ce 0.5321 | test soft+V auc 0.7645 acc 0.6930 ce 0.6300 | auroc 0.800 floor False | 203 s
+[23:04:56 w30] is_this_a_good_customer_R30_V500_s0 w_vfilter_sign_lr0.0025: start (n 900, k 270)
+[23:04:56 w30]     it   0  hold ce 2.9511 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+[23:05:15 w30]     it  50  hold ce 0.5590 acc 0.790 | auroc 0.915  log w med pois -2.3 clean -0.1  (19 s)
+[23:05:33 w30]     it 100  hold ce 0.3825 acc 0.890 | auroc 0.912  log w med pois -2.4 clean -0.1  (37 s)
+[23:05:46 w30] is_this_a_good_customer_R30_V500_s0 w_vfilter_sign_lr0.0025: it 115 of 135 (patience) hold ce 0.3726 | test soft+V auc 0.6642 acc 0.4900 ce 1.1317 | auroc 0.912 floor False | 51 s
+[23:05:46 w30] ecommerce_shipping_R30_V500_s0 w_vfilter_sign_lr0.01: start (n 4500, k 1350)
+[23:05:47 w30]     it   0  hold ce 0.8700 acc 0.570 | auroc 0.736  log w med pois -0.7 clean -0.4  (0 s)
+[23:06:59 w30] ecommerce_shipping_R30_V500_s0 w_vfilter_sign_lr0.01: it 1 of 35 (patience) hold ce 0.6127 | test soft+V auc 0.7314 acc 0.6360 ce 0.5971 | auroc 0.736 floor False | 72 s
+[23:06:59 w30] is_this_a_good_customer_R30_V500_s0 w_vfilter_sign_lr0.01: start (n 900, k 270)
+[23:06:59 w30]     it   0  hold ce 2.9511 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+[23:07:19 w30]     it  50  hold ce 0.5952 acc 0.780 | auroc 0.895  log w med pois -2.7 clean -0.1  (20 s)
+[23:07:37 w30]     it 100  hold ce 0.6166 acc 0.790 | auroc 0.887  log w med pois -3.7 clean -0.1  (38 s)
+[23:07:38 w30] is_this_a_good_customer_R30_V500_s0 w_vfilter_sign_lr0.01: it 70 of 100 (patience) hold ce 0.5132 | test soft+V auc 0.6090 acc 0.6200 ce 0.7959 | auroc 0.890 floor False | 39 s
+[23:07:38 w30] ecommerce_shipping_R30_V500_s0 w_vfilter_sign_lr0.04: start (n 4500, k 1350)
+[23:07:38 w30]     it   0  hold ce 0.8700 acc 0.570 | auroc 0.736  log w med pois -0.7 clean -0.4  (0 s)
+[23:08:49 w30] ecommerce_shipping_R30_V500_s0 w_vfilter_sign_lr0.04: it 1 of 35 (patience) hold ce 0.6219 | test soft+V auc 0.7420 acc 0.6630 ce 0.5313 | auroc 0.735 floor False | 71 s
+[23:09:29 w30] is_this_a_good_customer_R30_V500_s0 w_vfilter_sign_lr0.000625: start (n 900, k 270)
+[23:09:29 w30]     it   0  hold ce 2.9511 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+[23:09:49 w30]     it  50  hold ce 2.0410 acc 0.280 | auroc 0.921  log w med pois -2.1 clean -0.1  (20 s)
+[23:10:07 w30]     it 100  hold ce 1.7132 acc 0.320 | auroc 0.914  log w med pois -2.1 clean -0.1  (38 s)
+[23:10:25 w30]     it 150  hold ce 1.4185 acc 0.450 | auroc 0.911  log w med pois -2.1 clean -0.1  (56 s)
+[23:10:43 w30]     it 200  hold ce 1.2690 acc 0.500 | auroc 0.908  log w med pois -2.1 clean -0.1  (74 s)
+[23:10:44 w30] is_this_a_good_customer_R30_V500_s0 w_vfilter_sign_lr0.000625: it 195 of 200 (max_steps) hold ce 1.2427 | test soft+V auc 0.6193 acc 0.4733 ce 1.1867 | auroc 0.909 floor False | 75 s
+[23:54:29 w30] nothing left: done

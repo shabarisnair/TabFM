@@ -1,0 +1,11 @@
+[02:33:16 cuda:3] ecommerce_shipping_R30_c5_s1 m1: start (n 4990, k 1497, V 10)
+[02:33:19 cuda:3]     m1 it   0: test auc 0.7047 acc 0.6280 ce 1.5905  (1 s)
+[02:34:21 cuda:3]     m1 it  20: test auc 0.7126 acc 0.6420 ce 1.3528  (64 s)
+[02:35:21 cuda:3]     m1 it  40: test auc 0.7109 acc 0.6430 ce 1.2254  (123 s)
+[02:36:19 cuda:3]     m1 it  60: test auc 0.7138 acc 0.6450 ce 1.1567  (181 s)
+[02:37:18 cuda:3]     m1 it  80: test auc 0.7122 acc 0.6500 ce 1.0861  (240 s)
+[02:38:12 cuda:3]     m1 it 100: test auc 0.7178 acc 0.6450 ce 0.9977  (294 s)
+[02:39:07 cuda:3]     m1 it 120: test auc 0.7185 acc 0.6500 ce 0.9964  (349 s)
+[02:42:22 cuda:3]     m1 it 200: test auc 0.7190 acc 0.6500 ce 0.9394  (544 s)
+[02:46:11 cuda:3]     m1 it 300: test auc 0.7181 acc 0.6450 ce 0.9018  (773 s)
+[02:46:11 cuda:3] ecommerce_shipping_R30_c5_s1 m1: done in 773 s

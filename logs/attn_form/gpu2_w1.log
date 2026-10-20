@@ -91,3 +91,23 @@ Terminated
 [23:01:15 w21] students_dropout_R30_V500_s0 w_ones_sign_lr0.01: it 125 of 155 (patience) hold ce 0.7474 | test soft+V auc 0.8627 acc 0.7400 ce 0.6287 | auroc 0.599 floor False | 319 s
 [23:01:15 w21] ecommerce_shipping_R30_V500_s0 w_ones_sign_lr0.04: start (n 4500, k 1350)
 [23:01:15 w21]     it   0  hold ce 0.5774 acc 0.570 | auroc 0.500  log w med pois 0.0 clean 0.0  (0 s)
+[23:02:15 w21] ecommerce_shipping_R30_V500_s0 w_ones_sign_lr0.04: it 1 of 30 (patience) hold ce 0.5767 | test soft+V auc 0.7443 acc 0.6810 ce 0.5012 | auroc 0.566 floor False | 60 s
+[23:02:15 w21] heloc_R30_V500_s0 w_ones_sign_lr0.16: start (n 4500, k 1350)
+[23:02:16 w21]     it   0  hold ce 0.5860 acc 0.630 | auroc 0.500  log w med pois 0.0 clean 0.0  (1 s)
+[23:04:32 w21] heloc_R30_V500_s0 w_ones_sign_lr0.16: it 4 of 35 (patience) hold ce 0.5151 | test soft+V auc 0.7290 acc 0.6670 ce 0.6243 | auroc 0.644 floor False | 136 s
+[23:04:32 w21] ecommerce_shipping_R30_V500_s0 w_ones_sign_lr0.16: start (n 4500, k 1350)
+[23:04:32 w21]     it   0  hold ce 0.5774 acc 0.570 | auroc 0.500  log w med pois 0.0 clean 0.0  (0 s)
+[23:05:33 w21] ecommerce_shipping_R30_V500_s0 w_ones_sign_lr0.16: it 0 of 30 (patience) hold ce 0.5774 | test soft+V auc 0.7450 acc 0.6800 ce 0.5022 | auroc 0.500 floor False | 61 s
+[23:05:33 w21] students_dropout_R30_V500_s0 w_vfilter_sign_lr0.01: start (n 2500, k 750)
+[23:05:34 w21]     it   0  hold ce 1.5560 acc 0.350 | auroc 0.876  log w med pois -3.1 clean -0.3  (0 s)
+[23:07:17 w21]     it  50  hold ce 0.7718 acc 0.670 | auroc 0.852  log w med pois -10000.0 clean -0.3  (104 s)
+[23:08:01 w21] students_dropout_R30_V500_s0 w_vfilter_sign_lr0.01: it 40 of 70 (patience) hold ce 0.7189 | test soft+V auc 0.7770 acc 0.6040 ce 0.9488 | auroc 0.856 floor False | 148 s
+[23:08:01 w21] is_this_a_good_customer_R30_V500_s0 w_vfilter_sign_lr0.04: start (n 900, k 270)
+[23:08:01 w21]     it   0  hold ce 2.9511 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+[23:08:18 w21] is_this_a_good_customer_R30_V500_s0 w_vfilter_sign_lr0.04: it 8 of 40 (patience) hold ce 0.5580 | test soft+V auc 0.6729 acc 0.6333 ce 0.8045 | auroc 0.889 floor False | 18 s
+[23:09:18 w21] students_dropout_R30_V500_s0 w_vfilter_sign_lr0.000625: start (n 2500, k 750)
+[23:09:19 w21]     it   0  hold ce 1.5560 acc 0.350 | auroc 0.876  log w med pois -3.1 clean -0.3  (0 s)
+[23:11:00 w21]     it  50  hold ce 0.8665 acc 0.620 | auroc 0.875  log w med pois -3.2 clean -0.3  (102 s)
+[23:12:08 w21]     it 100  hold ce 0.8335 acc 0.600 | auroc 0.873  log w med pois -3.2 clean -0.3  (169 s)
+[23:12:37 w21] students_dropout_R30_V500_s0 w_vfilter_sign_lr0.000625: it 90 of 120 (patience) hold ce 0.8265 | test soft+V auc 0.7565 acc 0.5700 ce 1.0071 | auroc 0.874 floor False | 199 s
+[23:54:23 w21] nothing left: done

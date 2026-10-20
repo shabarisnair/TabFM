@@ -235,7 +235,8 @@ def init_raw(param: str, init: str, d: dict, clf, device) -> torch.Tensor:
     return raw.float()
 
 
-def train(job: dict, data, d: dict, stop: dict, log=print) -> tuple[dict, dict]:
+def train(job: dict, data, d: dict, stop: dict, log=print, track_test: bool = False) -> tuple[dict, dict]:
+    """track_test: also score the test set at every evaluation (never used to choose; for curves)."""
     import attn_learn as A
     from sklearn.metrics import roc_auc_score
     from tabfm_experiments.row_weights import evaluate_weighted
@@ -278,6 +279,8 @@ def train(job: dict, data, d: dict, stop: dict, log=print) -> tuple[dict, dict]:
             hold = A.metrics(evaluate_weighted(clf, d["Xc"], d["yp"], d["Xh"], d["yh"], lw, need_grad=False)[2], d["yh"])
             e = {"it": it, "hold_ce": hold["ce"], "hold_acc": hold["acc"], "hold_auc": hold["auc"],
                  "sec": round(time.time() - t0, 1)} | weight_stats(lw)
+            if track_test:
+                e["test"] = test(lw)
             evals.append(e)
             snaps[it] = lw.clone()
             if it % 50 == 0:

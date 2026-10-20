@@ -70,7 +70,11 @@ ATTN_COMMON = dict(steps=200, eval_every=10, holdout=HOLDOUT, select="ce", test_
 NAN_SOFT = dict(steps=200, lr=0.05, eval_every=5)                          # results/gate_valsplit's soft gate
 NAN_TOPK = dict(restarts=4, steps=200, lr=5.0, probe=0.05, eval_every=5)  # results/tables/gate_topk's best
 RESTARTS = tuple(f"nan_topk_r{r}" for r in range(NAN_TOPK["restarts"]))
-JOBS = ("refs", "attn_topk", "attn_soft", "nan_soft", *RESTARTS)
+# the best soft form of the attention-form study (results/tables/attn_form/findings.md): w in [0, 1], V-filter start,
+# PGD-L-inf lr 0.8, trained by attn_form_study.train (held-out early stopping); deployed soft, its w = 0 rows deleted
+WSOFT = dict(param="w", init="vfilter", opt="pgd", lr=0.8)
+FORM = Path("results/attn_form/runs")  # that study's runs (V = 500, R = 30%, seed 0: this benchmark's draws)
+JOBS = ("refs", "attn_topk", "attn_soft", "nan_soft", *RESTARTS, "attn_wsoft")
 CONFIRM = Path("results/attn_learn/confirm")
 CONFIRM_FILES = {"attn_topk": "topk_pgd-linf_lr0.2_probe0.05_init-vfilter1_it200.json",
                  "attn_soft": "log_adam_lr0.1_floor-1000_init-vfilter1_it200.json"}
@@ -82,7 +86,7 @@ U = {"gas-drift": 4.8, "coil2000_insurance_policies": 3.6, "heloc": 1.07, "stude
      "ecommerce_shipping": 0.64, "is_this_a_good_customer": 0.14}
 N_CTX = {"gas-drift": 5000, "heloc": 5000, "ecommerce_shipping": 5000, "students_dropout": 3000,
          "is_this_a_good_customer": 1400, "coil2000_insurance_policies": 5000}
-UPDATES = {"refs": 4, "attn_topk": 215, "attn_soft": 215, "nan_soft": 215} | {r: 215 for r in RESTARTS}
+UPDATES = {"refs": 4, "attn_topk": 215, "attn_soft": 215, "nan_soft": 215, "attn_wsoft": 60} | {r: 215 for r in RESTARTS}
 
 
 def tag_of(ds: str, R: float, V: int, s: int) -> str:
@@ -260,6 +264,24 @@ def run_attn(data: Data, d: dict, job: str, log=print) -> tuple[dict, dict]:
     return {"rows": attn_rows(job, res, d["k"]), "evals": res["evals"], "config": c}, {"removed": removed}
 
 
+def wsoft_rows(res: dict, logw_sel: np.ndarray, pois: np.ndarray) -> list[dict]:
+    """attn_form_study.train's choice (lowest held-out log loss) as report rows: soft + V and soft alone; the rows at
+    w = 0 count as removed (they are deleted exactly), so precision and n_removed are theirs."""
+    s = res["sel"]["ce"]
+    zero = logw_sel <= -1000  # w = 0 (any positive float32 w has log w > -104)
+    extra = {"prec": float(pois[zero].mean()) if zero.any() else None, "n_removed": int(zero.sum()), "it": s["it"],
+             "auroc": s["auroc"]}
+    return [{"name": "attn_wsoft", "test": s["test"]["soft_v"]} | extra,
+            {"name": "attn_wsoft_nov", "test": s["test"]["soft"]} | extra]
+
+
+def run_attn_wsoft(data: Data, d: dict, log=print) -> tuple[dict, dict]:
+    import attn_form_study as S
+    res, arrays = S.train({"ds": d["ds"]} | WSOFT, data, d, S.STOP, log=log)
+    return ({"rows": wsoft_rows(res, arrays["logw_sel"], d["pois"]), "evals": res["evals"], "stopped": res["stopped"],
+             "last_it": res["last_it"], "config": WSOFT | {"stop": S.STOP}}, arrays)
+
+
 def run_nan_soft(data: Data, d: dict, log=print) -> tuple[dict, dict]:
     """The soft NaN gate fitted on 80% of V; the gates at the lowest held-out log loss."""
     import gate_context as G
@@ -355,6 +377,8 @@ def run_job(data: Data, d: dict, job: str, log=print) -> tuple[dict, dict | None
         return run_attn(data, d, job, log=log)
     if job == "nan_soft":
         return run_nan_soft(data, d, log=log)
+    if job == "attn_wsoft":
+        return run_attn_wsoft(data, d, log=log)
     if job in RESTARTS:
         return run_nan_topk_restart(data, d, RESTARTS.index(job), log=log)
     raise ValueError(f"unknown job {job!r}")
@@ -433,6 +457,32 @@ def stage_draws(a) -> None:
     print(f"{made} new draws in {ROOT / 'draws'} ({checked} of them checked against the soft gate's saved draws)")
 
 
+def stage_import_form(a) -> None:
+    """The attention-form study's best soft form at V = 500, R = 30%, seed 0: the same draw (checked on the poison),
+    the same training (attn_form_study.train), so it is this benchmark's attn_wsoft job there."""
+    done = 0
+    for ds in a.datasets:
+        tag = tag_of(ds, 30.0, 500, 0)
+        src = FORM / tag / f"w_vfilter_pgd_lr{WSOFT['lr']:g}.json"
+        out = ROOT / "runs" / tag / "attn_wsoft.json"
+        draw = ROOT / "draws" / f"{tag}.npz"
+        if not src.exists() or out.exists() or not draw.exists():
+            continue
+        z = np.load(draw)
+        pois = np.zeros(len(z["ctx_rows"]), dtype=bool)
+        pois[z["pois_rows"]] = True
+        arr = dict(np.load(str(src)[:-len(".json")] + ".npz"))
+        assert np.array_equal(arr["pois"], pois), f"{src}: its poisoned rows differ from {draw}"
+        res = json.loads(src.read_text())
+        out.parent.mkdir(parents=True, exist_ok=True)
+        save(out, {"method": "attn_wsoft", "instance": tag, "seconds": res["seconds"], "provenance": str(src),
+                   "imported": time.strftime("%Y-%m-%d"), "rows": wsoft_rows(res, arr["logw_sel"], pois),
+                   "evals": res["evals"], "stopped": res["stopped"], "last_it": res["last_it"],
+                   "config": WSOFT | {"stop": res["stop"]}}, arr)
+        done += 1
+    print(f"imported {done} results from {FORM}")
+
+
 def stage_import_attn(a) -> None:
     """The attention study's runs whose draw is this benchmark's (same function; checked on the poison)."""
     done = 0
@@ -476,7 +526,8 @@ def worker(a) -> None:
     if missing:
         raise SystemExit(f"{len(missing)} draws missing under {ROOT / 'draws'} (e.g. {missing[0]}): build them once "
                          "with the draws stage and copy the folder here")
-    if any(job in ATTN for _, job in todo):  # they need the row-weight hooks of this repository's TabPFN copy
+    attn = (*ATTN, "attn_wsoft")
+    if any(job in attn for _, job in todo):  # they need the row-weight hooks of this repository's TabPFN copy
         import tabpfn
         try:
             from tabpfn.preprocessing.steps.context_row_weights import context_row_weights_installed  # noqa: F401
@@ -484,7 +535,7 @@ def worker(a) -> None:
             print(f"SKIPPING the attention jobs: tabpfn is imported from {Path(tabpfn.__file__).parent}, which lacks "
                   "the row-weight hooks of this repository's TabPFN (TabPFN/src). Install that copy into this "
                   "environment (pip install -e TabPFN) and run again.", flush=True)
-            todo = [j for j in todo if j[1] not in ATTN]
+            todo = [j for j in todo if j[1] not in attn]
     data = None
     log = lambda msg: print(msg, flush=True)  # noqa: E731
     for tag, job in todo:
@@ -651,7 +702,7 @@ def stage_plan(a) -> None:
 
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("stage", choices=["draws", "import-attn", "run", "votes", "status", "plan"])
+    ap.add_argument("stage", choices=["draws", "import-attn", "import-form", "run", "votes", "status", "plan"])
     ap.add_argument("--device", default="cuda:0")
     ap.add_argument("--datasets", nargs="+", default=list(DATASETS))
     ap.add_argument("--Vs", nargs="+", type=int, default=list(VS))
@@ -665,7 +716,7 @@ def main(argv=None) -> None:
     ap.add_argument("--out", type=Path, default=Path("scripts/bench_largev_jobs"), help="plan: relative to the repository root")
     ap.add_argument("--python", default=sys.executable)
     a = ap.parse_args(argv)
-    {"draws": stage_draws, "import-attn": stage_import_attn, "run": worker, "votes": stage_votes,
+    {"draws": stage_draws, "import-attn": stage_import_attn, "import-form": stage_import_form, "run": worker, "votes": stage_votes,
      "status": stage_status, "plan": stage_plan}[a.stage](a)
 
 

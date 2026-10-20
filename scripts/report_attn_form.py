@@ -54,7 +54,24 @@ def value(r: dict, metric: str, dep: str = PRIMARY, sel: str = "ce") -> float:
 
 
 def complete(res: dict) -> list:
-    return [c for c, v in res.items() if len(v["runs"]) == len(DATASETS)]
+    """The configurations finished on every dataset; log2000 only where it differs from log (it is the log run
+    unless a log run reached the -1000 floor)."""
+    out = []
+    for c, v in res.items():
+        if len(v["runs"]) != len(DATASETS):
+            continue
+        if c[0] == "log2000":
+            base = res.get(("log",) + c[1:])
+            if base and base["lr"] == v["lr"] and all(v["runs"][ds] is base["runs"][ds] for ds in DATASETS):
+                continue
+        out.append(c)
+    return out
+
+
+def log2000_note(res: dict) -> str:
+    same = [c for c in res if c[0] == "log2000" and len(res[c]["runs"]) == len(DATASETS) and c not in complete(res)]
+    return (f"log w with floor -2000: identical to floor -1000 in {len(same)} of 6 configurations (no log run reached "
+            "-1000), so it is not listed separately." if same else "")
 
 
 def ranks_of(res: dict, cfgs: list, metric: str, higher: bool, dep=PRIMARY, sel="ce") -> dict:
@@ -170,7 +187,7 @@ def main(argv=None) -> None:
           "configuration on the held-out log loss of heloc, students, ecommerce and good_customer (mean rank over a "
           "x4 grid) and reused on gas-drift and coil2000. Nothing is chosen on the test set. Bold: the best of a "
           "column. Ranks: per dataset among the configurations shown (1 = best), then averaged.", "",
-          f"Configurations complete on all 6 datasets: {len(cfgs)} of {len(res)}.", ""]
+          f"Configurations complete on all 6 datasets: {len(cfgs)} distinct.", log2000_note(res), ""]
     if not cfgs:
         (a.out / "report.md").write_text("\n".join(md) + "\n")
         print("nothing complete yet")
@@ -193,7 +210,8 @@ def main(argv=None) -> None:
            "then mean test, soft)", "",
            "| configuration | lr | rank of held-out log loss | held-out log loss | test ROC-AUC | test accuracy | "
            "test log loss | chosen |", "|---|---|---|---|---|---|---|---|"]
-    for c, v in res.items():
+    for c in cfgs:
+        v = res[c]
         runs = {lr: [S.load(ds, *c, lr) for ds in S.SMALL] for lr in v["lrs"]}
         okl = [lr for lr in v["lrs"] if all(r is not None and not r.get("failed") for r in runs[lr])]
         if not okl:
@@ -262,7 +280,7 @@ def main(argv=None) -> None:
     md += [""]
     md += response_section(a.out)
     (a.out / "report.md").write_text("\n".join(md) + "\n")
-    print(f"-> {a.out}/report.md, {a.out}/runs.csv ({len(cfgs)} of {len(res)} configurations complete)")
+    print(f"-> {a.out}/report.md, {a.out}/runs.csv ({len(cfgs)} distinct configurations complete)")
 
 
 def zone(entry: dict) -> str:

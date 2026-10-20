@@ -17,3 +17,28 @@ Terminated
 [22:35:11 w20]     it   0  hold ce 0.5608 acc 0.730 | auroc 0.500  log w med pois 0.0 clean 0.0  (2 s)
 [22:44:34 w20]     it  50  hold ce 0.4130 acc 0.800 | auroc 0.629  log w med pois -0.1 clean -0.0  (566 s)
 [22:53:34 w20]     it 100  hold ce 0.3581 acc 0.880 | auroc 0.619  log w med pois -0.1 clean -0.0  (1106 s)
+[23:02:21 w20]     it 150  hold ce 0.3495 acc 0.890 | auroc 0.620  log w med pois -0.1 clean -0.0  (1632 s)
+[23:04:28 w20] coil2000_insurance_policies_R30_V500_s0 w_ones_pgd_lr0.2: it 130 of 160 (patience) hold ce 0.3408 | test soft+V auc 0.5782 acc 0.7970 ce 0.4208 | auroc 0.617 floor False | 1761 s
+[23:04:29 w20] gas-drift_R30_V500_s0 sigmoid_ones_adam_lr0.2: start (n 4500, k 1350)
+[23:04:32 w20]     it   0  hold ce 1.1695 acc 0.800 | auroc 0.500  log w med pois -0.0 clean -0.0  (3 s)
+[23:13:56 w20]     it  50  hold ce 0.2917 acc 0.920 | auroc 0.575  log w med pois -0.0 clean -0.0  (567 s)
+[23:18:19 w20]     it 100  hold ce 0.1960 acc 0.960 | auroc 0.548  log w med pois -0.0 clean -0.0  (831 s)
+[23:22:43 w20]     it 150  hold ce 0.1666 acc 0.960 | auroc 0.536  log w med pois -0.0 clean -0.0  (1094 s)
+[23:27:07 w20]     it 200  hold ce 0.1421 acc 0.970 | auroc 0.532  log w med pois -0.0 clean -0.0  (1358 s)
+[23:27:13 w20] gas-drift_R30_V500_s0 sigmoid_ones_adam_lr0.2: it 200 of 200 (max_steps) hold ce 0.1421 | test soft+V auc 0.9884 acc 0.8610 ce 0.3497 | auroc 0.532 floor False | 1364 s
+[23:27:13 w20] coil2000_insurance_policies_R30_V500_s0 sigmoid_ones_pgd_lr1: start (n 4500, k 1350)
+[23:27:14 w20]     it   0  hold ce 0.5608 acc 0.730 | auroc 0.500  log w med pois -0.0 clean -0.0  (1 s)
+[23:30:17 w20]     it  50  hold ce 0.4919 acc 0.770 | auroc 0.554  log w med pois -0.0 clean -0.0  (184 s)
+[23:33:14 w20]     it 100  hold ce 0.4356 acc 0.800 | auroc 0.558  log w med pois -0.0 clean -0.0  (361 s)
+[23:36:11 w20]     it 150  hold ce 0.4212 acc 0.810 | auroc 0.558  log w med pois -0.0 clean -0.0  (538 s)
+[23:39:08 w20]     it 200  hold ce 0.4313 acc 0.810 | auroc 0.559  log w med pois -0.0 clean -0.0  (715 s)
+[23:39:12 w20] coil2000_insurance_policies_R30_V500_s0 sigmoid_ones_pgd_lr1: it 195 of 200 (max_steps) hold ce 0.4102 | test soft+V auc 0.5498 acc 0.7560 ce 0.5076 | auroc 0.559 floor False | 719 s
+[23:39:12 w20] gas-drift_R30_V500_s0 sigmoid_vfilter_pgd_lr16: start (n 4500, k 1350)
+[23:39:14 w20]     it   0  hold ce 0.0007 acc 1.000 | auroc 0.999  log w med pois -15.3 clean -0.0  (1 s)
+[23:42:07 w20] gas-drift_R30_V500_s0 sigmoid_vfilter_pgd_lr16: it 10 of 30 (patience) hold ce 0.0006 | test soft+V auc 0.9998 acc 0.9940 ce 0.0277 | auroc 0.994 floor False | 175 s
+[23:42:07 w20] gas-drift_R30_V500_s0 w_ones_sign_lr0.04: start (n 4500, k 1350)
+[23:42:08 w20]     it   0  hold ce 1.1695 acc 0.800 | auroc 0.500  log w med pois 0.0 clean 0.0  (1 s)
+[23:46:41 w20]     it  50  hold ce 0.2044 acc 0.950 | auroc 0.464  log w med pois -0.2 clean -0.3  (274 s)
+[23:51:04 w20]     it 100  hold ce 0.2122 acc 0.950 | auroc 0.481  log w med pois -0.3 clean -0.5  (537 s)
+[23:54:14 w20] gas-drift_R30_V500_s0 w_ones_sign_lr0.04: it 105 of 135 (patience) hold ce 0.1678 | test soft+V auc 0.9874 acc 0.8680 ce 0.3518 | auroc 0.475 floor False | 727 s
+[23:54:14 w20] nothing left: done

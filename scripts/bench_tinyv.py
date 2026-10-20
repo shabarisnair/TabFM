@@ -77,6 +77,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import socket
 import sys
@@ -111,6 +112,10 @@ LEARNED = ("attn_topk", "attn_soft", "nan_topk")
 BASELINES = ("label_spread", "knn_shapley", "emlc", "ieg")
 ALL_BASELINES = ("knn_sanitize", "label_spread", "knn_shapley", "data_oob", "cleanlab", "simifeat", "glc", "mwnet", "emlc", "ieg")
 METHODS = ("refs", *GREEDY, *LEARNED, *BASELINES)
+# the attention learners at another update count than tinyv_learned's 20 (scripts/tinyv_iter_study.py): M1 as
+# attn_topk_it<N>, the best soft form (w / V-filter / PGD, deployed soft + V) as attn_wsoft_it<N> (lr 0.8) or
+# attn_wsoft_lr<x>_it<N>
+ITERS_NAME = re.compile(r"attn_(topk|wsoft)(?:_lr([0-9.]+))?_it(\d+)")
 DEFAULTS = {  # the baselines' default configurations: small_v_methods.py's function defaults, z-scored features
     "knn_sanitize": {"feat": "z", "k_nn": 10, "eta": 0.5, "rounds": 1},
     "label_spread": {"feat": "z", "n_neighbors": 10, "alpha": 0.9, "beta": 0.0},
@@ -281,6 +286,17 @@ def run_learned(bd: BenchData, d: dict, method: str, a, log=print) -> tuple[dict
     if method == "nan_topk":
         out = L.nan_topk_gate(bd.clf, d, restarts=a.restarts, steps=a.max_steps, log=log)
         rows = [removal_row(method, bd, d, out["removed"], seconds=out["seconds"], votes_hist=out["votes_hist"])]
+    elif ITERS_NAME.fullmatch(method):
+        variant, lr, steps = ITERS_NAME.fullmatch(method).groups()
+        out = L.attn_weights(bd.clf, d, variant, steps=a.max_steps or int(steps), lr=float(lr) if lr else None, log=log)
+        if variant == "topk":
+            rows = [removal_row(method, bd, d, out["removed"], seconds=out["seconds"], steps=out["steps"])]
+        else:  # soft + V; the rows at w = 0 are deleted exactly, and their precision is reported
+            zero = np.flatnonzero(torch.isinf(out["log_w"]).cpu().numpy())
+            p = L.soft_plus_v_probs(bd.clf, d, out["log_w"], bd.Xt, bd.yt)
+            rows = [{"name": method, "test": metrics(p, bd.yt), "prec": float(d["pois"][zero].mean()) if len(zero) else None,
+                     "n_removed": int(len(zero)), "seconds": out["seconds"], "steps": out["steps"]}]
+            out["removed"] = zero
     else:
         out = L.attn_weights(bd.clf, d, method.split("_")[1], steps=a.max_steps, log=log)
         rows = [removal_row(method, bd, d, out["removed"], seconds=out["seconds"], steps=out["steps"])]
@@ -438,7 +454,7 @@ def read_job_list(path: Path) -> list[tuple]:
         if not line:
             continue
         tag, method = line.split()
-        if method not in METHODS + ALL_BASELINES:
+        if method not in METHODS + ALL_BASELINES and not ITERS_NAME.fullmatch(method):
             raise SystemExit(f"{path}: unknown method {method!r}")
         ds, R, c, s = parse_tag(tag)
         if ds not in DATASETS:
@@ -536,7 +552,7 @@ def worker(a, stage: str) -> None:
     if stage == "grid" and any(m not in ALL_BASELINES for *_, m in todo):
         raise SystemExit("the grid stage is for the baselines only")
     attn = ("attn_topk", "attn_soft")
-    if any(m in attn for *_, m in todo):  # they need the row-weight hooks of this repository's TabPFN copy
+    if any(m in attn or ITERS_NAME.fullmatch(m) for *_, m in todo):  # they need the row-weight hooks of this repository's TabPFN copy
         import tabpfn
         try:
             from tabpfn.preprocessing.steps.context_row_weights import context_row_weights_installed  # noqa: F401
@@ -544,7 +560,7 @@ def worker(a, stage: str) -> None:
             print(f"SKIPPING the attention jobs: tabpfn is imported from {Path(tabpfn.__file__).parent}, which lacks the "
                   "row-weight hooks of this repository's TabPFN (TabPFN/src, commit 86df5d0). Install that copy into "
                   "this environment (pip install -e TabPFN) and run again.", flush=True)
-            todo = [j for j in todo if j[-1] not in attn]
+            todo = [j for j in todo if j[-1] not in attn and not ITERS_NAME.fullmatch(j[-1])]
             if not todo:
                 raise SystemExit("nothing left to run")
     bd = None
@@ -578,7 +594,7 @@ def worker(a, stage: str) -> None:
                 res = run_refs(bd, d, log=log)
             elif method in GREEDY:
                 res, arrays_out = run_greedy(bd, d, method, log=log)
-            elif method in LEARNED:
+            elif method in LEARNED or ITERS_NAME.fullmatch(method):
                 res, arrays_out = run_learned(bd, d, method, a, log=log)
             else:
                 gpath = ROOT / "grids" / tag / f"{method}.json"

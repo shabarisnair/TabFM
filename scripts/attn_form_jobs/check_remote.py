@@ -11,7 +11,7 @@ attention-form study (remote_gpu<N>.sh call this first and stop if anything fail
    the start and after the first update (results/attn_form/preflight_reference, to 0.01 + 1%; later updates are only
    reported, since a large step can amplify GPU rounding).
 
-    python scripts/attn_form_jobs/check_remote.py --device cuda:0 [--skip-numbers]
+    python scripts/attn_form_jobs/check_remote.py --device cuda:0 [--manifest inputs.sha256] [--skip-numbers]
 """
 from __future__ import annotations
 
@@ -63,19 +63,20 @@ def numbers(device: str) -> list[str]:
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--device", default="cuda:0")
+    ap.add_argument("--manifest", type=Path, default=HERE / "inputs.sha256", help="sha256sum lines of the input files")
     ap.add_argument("--skip-numbers", action="store_true")
     a = ap.parse_args(argv)
     os.chdir(REPO)
     sys.path.insert(0, str(REPO / "scripts"))
     bad = []
-    for line in (HERE / "inputs.sha256").read_text().splitlines():
+    for line in (a.manifest if a.manifest.is_absolute() else REPO / a.manifest).read_text().splitlines():
         want, path = line.split(maxsplit=1)
         p = Path(path)
         if not p.exists():
             bad.append(f"missing {p}")
         elif sha256(p) != want:
             bad.append(f"differs from the main machine's: {p}")
-    print(f"  inputs: {'ok' if not bad else 'NOT ok'} (datasets' split files and draws)")
+    print(f"  inputs: {'ok' if not bad else 'NOT ok'} ({a.manifest.name}: datasets' split files and draws)")
     import tabpfn
     import tabpfn.preprocessing.steps.context_row_weights  # noqa: F401 - the row-weight hooks
     if not Path(tabpfn.__file__).resolve().is_relative_to(REPO / "TabPFN" / "src"):

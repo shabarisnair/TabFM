@@ -34,11 +34,14 @@ import torch
 ATTN_CONFIGS = {
     "topk": dict(param="topk", opt="pgd-linf", lr=0.2, probe=0.05, init="vfilter", steps=20),
     "soft": dict(param="log", opt="adam", lr=0.1, floor=-1000.0, init="vfilter", prior=0.0, steps=20),
+    # the best soft form of results/tables/attn_form/findings.md: w in [0, 1], V-filter start, PGD-L-inf lr 0.8;
+    # deployed soft (w = 0 deletes a row exactly); its update count comes with the job name (attn_wsoft_it<N>)
+    "wsoft": dict(param="w", opt="pgd-linf", lr=0.8, init="vfilter", prior=0.0, steps=20),
 }
 NAN_GATE = dict(restarts=4, steps=20, lr=5.0, probe=0.05, score_std=1.0)
 
 
-def attn_weights(clf, d: dict, variant: str, *, steps: int | None = None, log=print) -> dict:
+def attn_weights(clf, d: dict, variant: str, *, steps: int | None = None, lr: float | None = None, log=print) -> dict:
     """Learn the weights on all of V; returns the removed rows (k) and, for the soft variant, the final
     log-weights (for the extra soft deployment)."""
     import attn_learn as A
@@ -46,6 +49,8 @@ def attn_weights(clf, d: dict, variant: str, *, steps: int | None = None, log=pr
     c = dict(A.DEFAULTS) | ATTN_CONFIGS[variant] | {"seed": d["seed"]}
     if steps is not None:
         c["steps"] = steps
+    if lr is not None:
+        c["lr"] = lr
     device = d["Xc"].device
     dd = {"n": d["n"], "Xc": d["Xc"], "yp": d["y_given"], "Xf": d["Xv"], "yf": d["yv"]}  # fitted rows = all of V
     torch.manual_seed(c["seed"])

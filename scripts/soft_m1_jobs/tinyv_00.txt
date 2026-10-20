@@ -1,0 +1,7 @@
+gas-drift_R30_c1_s0 attn_topk_it300
+heloc_R30_c5_s0 attn_topk_it300
+students_dropout_R30_c1_s0 attn_topk_it300
+ecommerce_shipping_R30_c5_s0 attn_topk_it300
+is_this_a_good_customer_R30_c3_s0 attn_topk_it300
+heloc_R30_c1_s0 attn_wsoft_lr0.2_it4
+ecommerce_shipping_R30_c1_s0 attn_wsoft_lr0.2_it4
