@@ -111,6 +111,7 @@ def readme(tag: str, meta: dict, ds: pd.DataFrame, entries: list[str]) -> str:
          "| file | what |", "|---|---|",
          "| `results.csv` | one row per instance x entry: every metric (the source of every other table) |",
          "| `by_v_r.md`, `by_v_r.csv` | one table per V size x poisoning rate: per dataset, precision, ROC-AUC, accuracy, log loss |",
+         "| `pooled.md`, `pooled.csv` | the same metrics pooled over all V x R settings: mean and 95% t-interval over the 9 settings |",
          "| `report.md` | summary over the instances and per-dataset tables of each metric |",
          "| `per_dataset.csv` | means over each dataset's 9 instances, per entry |",
          "| `elo.md`, `elo.csv` | TabArena-style Elo (main fit and sensitivity fits) |",

@@ -1,0 +1,19 @@
+[21:44:57 w20] heloc_R30_V500_s0 w_ones_pgd_lr0.2: start (n 4500, k 1350)
+[21:44:59 w20]     it   0  hold ce 0.5860 acc 0.630 | auroc 0.500  log w med pois 0.0 clean 0.0  (1 s)
+[21:48:01 w20]     it  50  hold ce 0.5551 acc 0.640 | auroc 0.667  log w med pois -0.2 clean -0.0  (182 s)
+[21:49:00 w20] heloc_R30_V500_s0 w_ones_pgd_lr0.2: it 35 of 65 (patience) hold ce 0.5293 | test soft+V auc 0.7047 acc 0.6450 ce 0.6495 | auroc 0.672 floor False | 243 s
+[21:49:00 w20] coil2000_insurance_policies_R30_V500_s0 w_ones_adam_lr0.04: start (n 4500, k 1350)
+[21:49:02 w20]     it   0  hold ce 0.5608 acc 0.730 | auroc 0.500  log w med pois 0.0 clean 0.0  (2 s)
+[21:58:23 w20]     it  50  hold ce 0.3642 acc 0.880 | auroc 0.569  log w med pois -0.3 clean -0.1  (563 s)
+[22:02:17 w20] coil2000_insurance_policies_R30_V500_s0 w_ones_adam_lr0.04: it 40 of 70 (patience) hold ce 0.3485 | test soft+V auc 0.5776 acc 0.8400 ce 0.3771 | auroc 0.565 floor False | 797 s
+[22:02:17 w20] gas-drift_R30_V500_s0 w_ones_pgd_lr0.2: start (n 4500, k 1350)
+[22:02:21 w20]     it   0  hold ce 1.1695 acc 0.800 | auroc 0.500  log w med pois 0.0 clean 0.0  (3 s)
+[22:16:05 w20]     it  50  hold ce 1.1541 acc 0.790 | auroc 0.596  log w med pois -0.0 clean -0.0  (828 s)
+[22:28:33 w20] gas-drift_R30_V500_s0 w_ones_pgd_lr0.2: it 65 of 95 (patience) hold ce 0.9533 | test soft+V auc 0.9726 acc 0.7360 ce 0.6275 | auroc 0.583 floor False | 1576 s
+[22:28:33 w20] gas-drift_R30_V500_s0 w_vfilter_adam_lr0.0025: start (n 4500, k 1350)
+[22:28:37 w20]     it   0  hold ce 0.0007 acc 1.000 | auroc 0.999  log w med pois -15.3 clean -0.0  (3 s)
+Terminated
+[22:35:07 w20] coil2000_insurance_policies_R30_V500_s0 w_ones_pgd_lr0.2: start (n 4500, k 1350)
+[22:35:11 w20]     it   0  hold ce 0.5608 acc 0.730 | auroc 0.500  log w med pois 0.0 clean 0.0  (2 s)
+[22:44:34 w20]     it  50  hold ce 0.4130 acc 0.800 | auroc 0.629  log w med pois -0.1 clean -0.0  (566 s)
+[22:53:34 w20]     it 100  hold ce 0.3581 acc 0.880 | auroc 0.619  log w med pois -0.1 clean -0.0  (1106 s)

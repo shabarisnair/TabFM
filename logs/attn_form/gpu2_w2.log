@@ -1,0 +1,130 @@
+[21:44:57 w22] students_dropout_R30_V500_s0 w_vfilter_adam_lr0.0025: start (n 2500, k 750)
+[21:44:59 w22]     it   0  hold ce 1.5560 acc 0.350 | auroc 0.876  log w med pois -3.1 clean -0.3  (0 s)
+[21:46:42 w22]     it  50  hold ce 0.8484 acc 0.610 | auroc 0.871  log w med pois -3.2 clean -0.3  (103 s)
+[21:46:55 w22] students_dropout_R30_V500_s0 w_vfilter_adam_lr0.0025: it 25 of 55 (patience) hold ce 0.7092 | test soft+V auc 0.7236 acc 0.5400 ce 1.0527 | auroc 0.873 floor False | 118 s
+[21:46:55 w22] heloc_R30_V500_s0 w_vfilter_adam_lr0.01: start (n 4500, k 1350)
+[21:46:57 w22]     it   0  hold ce 0.6023 acc 0.700 | auroc 0.802  log w med pois -1.3 clean -0.3  (1 s)
+[21:49:31 w22] heloc_R30_V500_s0 w_vfilter_adam_lr0.01: it 10 of 40 (patience) hold ce 0.5347 | test soft+V auc 0.7820 acc 0.7190 ce 0.6127 | auroc 0.799 floor False | 155 s
+[21:49:31 w22] heloc_R30_V500_s0 w_vfilter_adam_lr0.04: start (n 4500, k 1350)
+[21:49:32 w22]     it   0  hold ce 0.6023 acc 0.700 | auroc 0.802  log w med pois -1.3 clean -0.3  (1 s)
+[21:52:05 w22] heloc_R30_V500_s0 w_vfilter_adam_lr0.04: it 8 of 40 (patience) hold ce 0.5310 | test soft+V auc 0.7761 acc 0.7060 ce 0.6088 | auroc 0.778 floor False | 155 s
+[21:52:05 w22] is_this_a_good_customer_R30_V500_s0 w_ones_pgd_lr0.8: start (n 900, k 270)
+[21:52:06 w22]     it   0  hold ce 0.5922 acc 0.740 | auroc 0.500  log w med pois 0.0 clean 0.0  (0 s)
+[21:52:25 w22]     it  50  hold ce 0.8307 acc 0.460 | auroc 0.853  log w med pois -4.8 clean -0.0  (20 s)
+[21:52:26 w22] is_this_a_good_customer_R30_V500_s0 w_ones_pgd_lr0.8: it 20 of 50 (patience) hold ce 0.3772 | test soft+V auc 0.7046 acc 0.8467 ce 0.3553 | auroc 0.841 floor False | 21 s
+[21:52:26 w22] is_this_a_good_customer_R30_V500_s0 w_vfilter_adam_lr0.04: start (n 900, k 270)
+[21:52:26 w22]     it   0  hold ce 2.9511 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+[21:52:46 w22]     it  50  hold ce 0.4969 acc 0.830 | auroc 0.854  log w med pois -1.7 clean -0.1  (20 s)
+[21:53:01 w22] is_this_a_good_customer_R30_V500_s0 w_vfilter_adam_lr0.04: it 60 of 90 (patience) hold ce 0.4464 | test soft+V auc 0.6380 acc 0.6500 ce 0.6627 | auroc 0.852 floor False | 35 s
+[21:53:01 w22] heloc_R30_V500_s0 w_vfilter_adam_lr0.000625: start (n 4500, k 1350)
+[21:53:02 w22]     it   0  hold ce 0.6023 acc 0.700 | auroc 0.802  log w med pois -1.3 clean -0.3  (1 s)
+[21:56:09 w22]     it  50  hold ce 0.5459 acc 0.740 | auroc 0.801  log w med pois -1.3 clean -0.3  (188 s)
+[21:59:09 w22]     it 100  hold ce 0.5344 acc 0.750 | auroc 0.800  log w med pois -1.3 clean -0.3  (368 s)
+[22:01:57 w22] heloc_R30_V500_s0 w_vfilter_adam_lr0.000625: it 135 of 145 (patience) hold ce 0.5319 | test soft+V auc 0.7560 acc 0.6940 ce 0.6355 | auroc 0.799 floor False | 536 s
+[22:01:57 w22] ecommerce_shipping_R30_V500_s0 w_vfilter_pgd_lr0.05: start (n 4500, k 1350)
+[22:01:58 w22]     it   0  hold ce 0.8700 acc 0.570 | auroc 0.736  log w med pois -0.7 clean -0.4  (0 s)
+[22:03:09 w22] ecommerce_shipping_R30_V500_s0 w_vfilter_pgd_lr0.05: it 5 of 35 (patience) hold ce 0.6091 | test soft+V auc 0.7307 acc 0.6670 ce 0.5395 | auroc 0.736 floor False | 72 s
+[22:03:09 w22] is_this_a_good_customer_R30_V500_s0 w_vfilter_pgd_lr0.05: start (n 900, k 270)
+[22:03:10 w22]     it   0  hold ce 2.9511 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+[22:03:30 w22]     it  50  hold ce 1.5922 acc 0.440 | auroc 0.916  log w med pois -2.2 clean -0.1  (20 s)
+[22:03:48 w22]     it 100  hold ce 1.0499 acc 0.600 | auroc 0.913  log w med pois -2.6 clean -0.1  (38 s)
+[22:04:03 w22] is_this_a_good_customer_R30_V500_s0 w_vfilter_pgd_lr0.05: it 135 of 140 (patience) hold ce 0.6729 | test soft+V auc 0.6412 acc 0.7367 ce 0.5924 | auroc 0.917 floor False | 54 s
+[22:04:04 w22] heloc_R30_V500_s0 w_vfilter_pgd_lr0.2: start (n 4500, k 1350)
+[22:04:05 w22]     it   0  hold ce 0.6023 acc 0.700 | auroc 0.802  log w med pois -1.3 clean -0.3  (1 s)
+[22:06:20 w22] heloc_R30_V500_s0 w_vfilter_pgd_lr0.2: it 4 of 35 (patience) hold ce 0.5361 | test soft+V auc 0.7698 acc 0.7000 ce 0.6323 | auroc 0.803 floor False | 137 s
+[22:06:20 w22] students_dropout_R30_V500_s0 sigmoid_ones_adam_lr0.05: start (n 2500, k 750)
+[22:06:21 w22]     it   0  hold ce 1.0550 acc 0.530 | auroc 0.500  log w med pois -0.0 clean -0.0  (0 s)
+[22:08:05 w22]     it  50  hold ce 0.9077 acc 0.560 | auroc 0.553  log w med pois -0.2 clean -0.1  (104 s)
+[22:09:45 w22]     it 100  hold ce 0.7708 acc 0.690 | auroc 0.596  log w med pois -0.2 clean -0.0  (205 s)
+[22:11:25 w22]     it 150  hold ce 0.7564 acc 0.710 | auroc 0.602  log w med pois -0.4 clean -0.0  (304 s)
+[22:12:37 w22] students_dropout_R30_V500_s0 sigmoid_ones_adam_lr0.05: it 155 of 185 (patience) hold ce 0.7519 | test soft+V auc 0.8506 acc 0.6960 ce 0.6926 | auroc 0.601 floor False | 376 s
+[22:12:37 w22] ecommerce_shipping_R30_V500_s0 w_vfilter_pgd_lr3.2: start (n 4500, k 1350)
+[22:12:37 w22]     it   0  hold ce 0.8700 acc 0.570 | auroc 0.736  log w med pois -0.7 clean -0.4  (0 s)
+[22:13:49 w22] ecommerce_shipping_R30_V500_s0 w_vfilter_pgd_lr3.2: it 1 of 35 (patience) hold ce 0.6074 | test soft+V auc 0.7356 acc 0.6650 ce 0.5294 | auroc 0.734 floor False | 72 s
+[22:13:49 w22] is_this_a_good_customer_R30_V500_s0 w_vfilter_pgd_lr3.2: start (n 900, k 270)
+[22:13:49 w22]     it   0  hold ce 2.9511 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+[22:14:09 w22]     it  50  hold ce 0.5697 acc 0.840 | auroc 0.741  log w med pois -10000.0 clean -0.2  (20 s)
+[22:14:15 w22] is_this_a_good_customer_R30_V500_s0 w_vfilter_pgd_lr3.2: it 35 of 65 (patience) hold ce 0.4721 | test soft+V auc 0.6954 acc 0.8267 ce 0.4038 | auroc 0.736 floor False | 26 s
+[22:14:15 w22] is_this_a_good_customer_R30_V500_s0 sigmoid_ones_adam_lr0.2: start (n 900, k 270)
+[22:14:15 w22]     it   0  hold ce 0.5922 acc 0.740 | auroc 0.500  log w med pois -0.0 clean -0.0  (0 s)
+[22:14:35 w22]     it  50  hold ce 0.3631 acc 0.890 | auroc 0.765  log w med pois -1.4 clean -0.0  (20 s)
+[22:14:45 w22] is_this_a_good_customer_R30_V500_s0 sigmoid_ones_adam_lr0.2: it 45 of 75 (patience) hold ce 0.3621 | test soft+V auc 0.5577 acc 0.5800 ce 0.8428 | auroc 0.761 floor False | 30 s
+[22:14:45 w22] students_dropout_R30_V500_s0 sigmoid_ones_adam_lr0.8: start (n 2500, k 750)
+[22:14:46 w22]     it   0  hold ce 1.0550 acc 0.530 | auroc 0.500  log w med pois -0.0 clean -0.0  (0 s)
+[22:16:13 w22] students_dropout_R30_V500_s0 sigmoid_ones_adam_lr0.8: it 9 of 40 (patience) hold ce 0.7811 | test soft+V auc 0.8516 acc 0.7260 ce 0.6515 | auroc 0.582 floor False | 88 s
+[22:16:13 w22] heloc_R30_V500_s0 sigmoid_ones_pgd_lr1: start (n 4500, k 1350)
+[22:16:14 w22]     it   0  hold ce 0.5860 acc 0.630 | auroc 0.500  log w med pois -0.0 clean -0.0  (1 s)
+[22:19:19 w22]     it  50  hold ce 0.5528 acc 0.670 | auroc 0.630  log w med pois -0.0 clean -0.0  (186 s)
+[22:22:17 w22]     it 100  hold ce 0.5383 acc 0.660 | auroc 0.633  log w med pois -0.0 clean -0.0  (364 s)
+[22:25:11 w22]     it 150  hold ce 0.5320 acc 0.650 | auroc 0.634  log w med pois -0.0 clean -0.0  (538 s)
+[22:28:09 w22]     it 200  hold ce 0.5352 acc 0.660 | auroc 0.631  log w med pois -0.0 clean -0.0  (716 s)
+[22:28:15 w22] heloc_R30_V500_s0 sigmoid_ones_pgd_lr1: it 180 of 200 (max_steps) hold ce 0.5288 | test soft+V auc 0.7081 acc 0.6490 ce 0.6439 | auroc 0.632 floor False | 722 s
+[22:28:15 w22] is_this_a_good_customer_R30_V500_s0 sigmoid_vfilter_adam_lr0.05: start (n 900, k 270)
+[22:28:16 w22]     it   0  hold ce 2.9518 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+[22:28:35 w22]     it  50  hold ce 0.7868 acc 0.630 | auroc 0.903  log w med pois -2.2 clean -0.0  (20 s)
+[22:28:53 w22]     it 100  hold ce 0.5280 acc 0.790 | auroc 0.891  log w med pois -2.3 clean -0.0  (38 s)
+[22:29:12 w22]     it 150  hold ce 0.4598 acc 0.850 | auroc 0.881  log w med pois -2.4 clean -0.0  (56 s)
+[22:29:25 w22] is_this_a_good_customer_R30_V500_s0 sigmoid_vfilter_adam_lr0.05: it 185 of 185 (patience) hold ce 0.4585 | test soft+V auc 0.6704 acc 0.4333 ce 1.0537 | auroc 0.874 floor False | 70 s
+[22:29:25 w22] ecommerce_shipping_R30_V500_s0 sigmoid_ones_pgd_lr0.25: start (n 4500, k 1350)
+[22:29:26 w22]     it   0  hold ce 0.5774 acc 0.570 | auroc 0.500  log w med pois -0.0 clean -0.0  (0 s)
+[22:31:02 w22]     it  50  hold ce 0.5746 acc 0.570 | auroc 0.563  log w med pois -0.0 clean -0.0  (96 s)
+[22:31:32 w22] ecommerce_shipping_R30_V500_s0 sigmoid_ones_pgd_lr0.25: it 50 of 65 (patience) hold ce 0.5746 | test soft+V auc 0.7449 acc 0.6860 ce 0.5005 | auroc 0.563 floor False | 127 s
+[22:31:32 w22] students_dropout_R30_V500_s0 sigmoid_vfilter_adam_lr0.2: start (n 2500, k 750)
+[22:31:33 w22]     it   0  hold ce 1.5564 acc 0.350 | auroc 0.876  log w med pois -3.1 clean -0.3  (0 s)
+[22:33:12 w22] students_dropout_R30_V500_s0 sigmoid_vfilter_adam_lr0.2: it 15 of 45 (patience) hold ce 0.7883 | test soft+V auc 0.7752 acc 0.6620 ce 0.8194 | auroc 0.854 floor False | 100 s
+[22:33:12 w22] is_this_a_good_customer_R30_V500_s0 sigmoid_vfilter_adam_lr0.2: start (n 900, k 270)
+[22:33:12 w22]     it   0  hold ce 2.9518 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+[22:33:32 w22]     it  50  hold ce 0.3997 acc 0.890 | auroc 0.884  log w med pois -2.7 clean -0.0  (20 s)
+[22:33:48 w22] is_this_a_good_customer_R30_V500_s0 sigmoid_vfilter_adam_lr0.2: it 60 of 90 (patience) hold ce 0.3966 | test soft+V auc 0.5668 acc 0.4267 ce 1.0770 | auroc 0.881 floor False | 36 s
+[22:33:48 w22] students_dropout_R30_V500_s0 sigmoid_vfilter_adam_lr0.8: start (n 2500, k 750)
+[22:33:49 w22]     it   0  hold ce 1.5564 acc 0.350 | auroc 0.876  log w med pois -3.1 clean -0.3  (0 s)
+Terminated
+[22:35:07 w22] students_dropout_R30_V500_s0 sigmoid_vfilter_adam_lr0.8: start (n 2500, k 750)
+[22:35:10 w22]     it   0  hold ce 1.5564 acc 0.350 | auroc 0.876  log w med pois -3.1 clean -0.3  (0 s)
+[22:36:54 w22]     it  50  hold ce 0.6672 acc 0.730 | auroc 0.761  log w med pois -6.1 clean -0.0  (105 s)
+[22:37:36 w22] students_dropout_R30_V500_s0 sigmoid_vfilter_adam_lr0.8: it 40 of 70 (patience) hold ce 0.6560 | test soft+V auc 0.8362 acc 0.7020 ce 0.7027 | auroc 0.766 floor False | 149 s
+[22:37:37 w22] is_this_a_good_customer_R30_V500_s0 sigmoid_vfilter_adam_lr0.8: start (n 900, k 270)
+[22:37:37 w22]     it   0  hold ce 2.9518 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+[22:37:57 w22]     it  50  hold ce 0.4534 acc 0.880 | auroc 0.808  log w med pois -3.6 clean -0.0  (20 s)
+[22:38:08 w22] is_this_a_good_customer_R30_V500_s0 sigmoid_vfilter_adam_lr0.8: it 45 of 75 (patience) hold ce 0.4467 | test soft+V auc 0.6315 acc 0.8433 ce 0.5168 | auroc 0.808 floor False | 31 s
+[22:38:08 w22] heloc_R30_V500_s0 sigmoid_vfilter_pgd_lr1: start (n 4500, k 1350)
+[22:38:09 w22]     it   0  hold ce 0.6022 acc 0.700 | auroc 0.802  log w med pois -1.3 clean -0.3  (1 s)
+[22:41:16 w22]     it  50  hold ce 0.5702 acc 0.740 | auroc 0.782  log w med pois -1.5 clean -0.3  (188 s)
+[22:41:41 w22] heloc_R30_V500_s0 sigmoid_vfilter_pgd_lr1: it 25 of 55 (patience) hold ce 0.5274 | test soft+V auc 0.7761 acc 0.6960 ce 0.6092 | auroc 0.797 floor False | 213 s
+[22:41:41 w22] ecommerce_shipping_R30_V500_s0 sigmoid_vfilter_adam_lr3.2: start (n 4500, k 1350)
+[22:41:41 w22]     it   0  hold ce 0.8535 acc 0.570 | auroc 0.736  log w med pois -0.7 clean -0.4  (0 s)
+[22:42:53 w22] ecommerce_shipping_R30_V500_s0 sigmoid_vfilter_adam_lr3.2: it 3 of 35 (patience) hold ce 0.6896 | test soft+V auc 0.7146 acc 0.6460 ce 0.7660 | auroc 0.576 floor False | 73 s
+[22:42:53 w22] ecommerce_shipping_R30_V500_s0 sigmoid_vfilter_pgd_lr1: start (n 4500, k 1350)
+[22:42:54 w22]     it   0  hold ce 0.8535 acc 0.570 | auroc 0.736  log w med pois -0.7 clean -0.4  (0 s)
+[22:44:15 w22] ecommerce_shipping_R30_V500_s0 sigmoid_vfilter_pgd_lr1: it 6 of 40 (patience) hold ce 0.6146 | test soft+V auc 0.7349 acc 0.6650 ce 0.5626 | auroc 0.736 floor False | 82 s
+[22:44:15 w22] students_dropout_R30_V500_s0 sigmoid_vfilter_adam_lr12.8: start (n 2500, k 750)
+[22:44:16 w22]     it   0  hold ce 1.5564 acc 0.350 | auroc 0.876  log w med pois -3.1 clean -0.3  (0 s)
+[22:46:01 w22]     it  50  hold ce 0.8219 acc 0.650 | auroc 0.644  log w med pois -77.1 clean -0.0  (106 s)
+[22:47:40 w22]     it 100  hold ce 0.8109 acc 0.640 | auroc 0.643  log w med pois -77.6 clean -0.0  (205 s)
+[22:48:02 w22] students_dropout_R30_V500_s0 sigmoid_vfilter_adam_lr12.8: it 80 of 110 (patience) hold ce 0.7678 | test soft+V auc 0.8439 acc 0.7300 ce 0.6641 | auroc 0.644 floor False | 227 s
+[22:48:02 w22] is_this_a_good_customer_R30_V500_s0 sigmoid_vfilter_pgd_lr4: start (n 900, k 270)
+[22:48:02 w22]     it   0  hold ce 2.9518 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+[22:48:22 w22]     it  50  hold ce 0.4597 acc 0.870 | auroc 0.832  log w med pois -3.8 clean -0.0  (20 s)
+[22:48:27 w22] is_this_a_good_customer_R30_V500_s0 sigmoid_vfilter_pgd_lr4: it 30 of 60 (patience) hold ce 0.4253 | test soft+V auc 0.6431 acc 0.7100 ce 0.6305 | auroc 0.855 floor False | 25 s
+[22:48:27 w22] students_dropout_R30_V500_s0 sigmoid_vfilter_pgd_lr16: start (n 2500, k 750)
+[22:48:28 w22]     it   0  hold ce 1.5564 acc 0.350 | auroc 0.876  log w med pois -3.1 clean -0.3  (0 s)
+[22:50:12 w22]     it  50  hold ce 0.7779 acc 0.700 | auroc 0.679  log w med pois -6.1 clean -0.1  (105 s)
+[22:50:46 w22] students_dropout_R30_V500_s0 sigmoid_vfilter_pgd_lr16: it 35 of 65 (patience) hold ce 0.7167 | test soft+V auc 0.8344 acc 0.7060 ce 0.7058 | auroc 0.704 floor False | 140 s
+[22:50:46 w22] ecommerce_shipping_R30_V500_s0 w_ones_sign_lr0.0025: start (n 4500, k 1350)
+[22:50:47 w22]     it   0  hold ce 0.5774 acc 0.570 | auroc 0.500  log w med pois 0.0 clean 0.0  (0 s)
+[22:51:48 w22] ecommerce_shipping_R30_V500_s0 w_ones_sign_lr0.0025: it 10 of 30 (patience) hold ce 0.5772 | test soft+V auc 0.7447 acc 0.6820 ce 0.5015 | auroc 0.574 floor False | 62 s
+[22:51:48 w22] students_dropout_R30_V500_s0 sigmoid_vfilter_pgd_lr64: start (n 2500, k 750)
+[22:51:49 w22]     it   0  hold ce 1.5564 acc 0.350 | auroc 0.876  log w med pois -3.1 clean -0.3  (0 s)
+[22:53:34 w22]     it  50  hold ce 0.7490 acc 0.670 | auroc 0.593  log w med pois -6.9 clean -0.0  (106 s)
+[22:54:16 w22] students_dropout_R30_V500_s0 sigmoid_vfilter_pgd_lr64: it 40 of 70 (patience) hold ce 0.7075 | test soft+V auc 0.8387 acc 0.7040 ce 0.6903 | auroc 0.601 floor False | 147 s
+[22:54:16 w22] is_this_a_good_customer_R30_V500_s0 sigmoid_vfilter_pgd_lr64: start (n 900, k 270)
+[22:54:16 w22]     it   0  hold ce 2.9518 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+[22:54:36 w22]     it  50  hold ce 0.5023 acc 0.770 | auroc 0.494  log w med pois -0.0 clean -0.0  (20 s)
+[22:54:52 w22]     it 100  hold ce 0.4642 acc 0.790 | auroc 0.526  log w med pois -0.0 clean -0.0  (36 s)
+[22:55:01 w22] is_this_a_good_customer_R30_V500_s0 sigmoid_vfilter_pgd_lr64: it 95 of 125 (patience) hold ce 0.4385 | test soft+V auc 0.7445 acc 0.8500 ce 0.3458 | auroc 0.527 floor False | 45 s
+[22:55:01 w22] heloc_R30_V500_s0 w_ones_sign_lr0.01: start (n 4500, k 1350)
+[22:55:02 w22]     it   0  hold ce 0.5860 acc 0.630 | auroc 0.500  log w med pois 0.0 clean 0.0  (1 s)
+[22:57:59 w22]     it  50  hold ce 0.5350 acc 0.670 | auroc 0.629  log w med pois -0.1 clean -0.0  (178 s)
+[22:59:50 w22] heloc_R30_V500_s0 w_ones_sign_lr0.01: it 50 of 80 (patience) hold ce 0.5350 | test soft+V auc 0.7104 acc 0.6530 ce 0.6388 | auroc 0.629 floor False | 289 s
+[22:59:50 w22] students_dropout_R30_V500_s0 w_ones_sign_lr0.04: start (n 2500, k 750)
+[22:59:50 w22]     it   0  hold ce 1.0550 acc 0.530 | auroc 0.500  log w med pois 0.0 clean 0.0  (0 s)

@@ -1,0 +1,23 @@
+[21:44:57 w31] heloc_R30_V500_s0 w_ones_adam_lr0.16: start (n 4500, k 1350)
+[21:45:00 w31]     it   0  hold ce 0.5860 acc 0.630 | auroc 0.500  log w med pois 0.0 clean 0.0  (1 s)
+[21:47:05 w31] heloc_R30_V500_s0 w_ones_adam_lr0.16: it 4 of 35 (patience) hold ce 0.5304 | test soft+V auc 0.7368 acc 0.6630 ce 0.6102 | auroc 0.660 floor False | 128 s
+[21:47:05 w31] gas-drift_R30_V500_s0 w_ones_adam_lr0.04: start (n 4500, k 1350)
+[21:47:08 w31]     it   0  hold ce 1.1695 acc 0.800 | auroc 0.500  log w med pois 0.0 clean 0.0  (3 s)
+[22:00:40 w31]     it  50  hold ce 0.2036 acc 0.940 | auroc 0.521  log w med pois -0.3 clean -0.3  (815 s)
+[22:13:47 w31]     it 100  hold ce 0.1383 acc 0.970 | auroc 0.515  log w med pois -0.5 clean -0.5  (1602 s)
+[22:17:56 w31] gas-drift_R30_V500_s0 w_ones_adam_lr0.04: it 115 of 115 (patience) hold ce 0.1324 | test soft+V auc 0.9899 acc 0.8700 ce 0.2960 | auroc 0.514 floor False | 1851 s
+[22:17:56 w31] coil2000_insurance_policies_R30_V500_s0 w_ones_pgd_lr0.2: start (n 4500, k 1350)
+[22:17:58 w31]     it   0  hold ce 0.5608 acc 0.730 | auroc 0.500  log w med pois 0.0 clean 0.0  (2 s)
+[22:27:16 w31]     it  50  hold ce 0.4145 acc 0.800 | auroc 0.622  log w med pois -0.1 clean -0.0  (560 s)
+Terminated
+[22:35:08 w31] gas-drift_R30_V500_s0 w_vfilter_adam_lr0.0025: start (n 4500, k 1350)
+[22:35:14 w31]     it   0  hold ce 0.0007 acc 1.000 | auroc 0.999  log w med pois -15.3 clean -0.0  (3 s)
+[22:44:13 w31] gas-drift_R30_V500_s0 w_vfilter_adam_lr0.0025: it 0 of 30 (patience) hold ce 0.0007 | test soft+V auc 0.9998 acc 0.9890 ce 0.0343 | auroc 0.999 floor False | 545 s
+[22:44:13 w31] coil2000_insurance_policies_R30_V500_s0 w_vfilter_adam_lr0.0025: start (n 4500, k 1350)
+[22:44:16 w31]     it   0  hold ce 0.2899 acc 0.930 | auroc 0.947  log w med pois -3.2 clean -0.1  (2 s)
+[22:51:57 w31] coil2000_insurance_policies_R30_V500_s0 w_vfilter_adam_lr0.0025: it 10 of 40 (patience) hold ce 0.2285 | test soft+V auc 0.6731 acc 0.9410 ce 0.2543 | auroc 0.945 floor False | 464 s
+[22:51:57 w31] gas-drift_R30_V500_s0 w_vfilter_pgd_lr0.8: start (n 4500, k 1350)
+[22:52:02 w31]     it   0  hold ce 0.0007 acc 1.000 | auroc 0.999  log w med pois -15.3 clean -0.0  (3 s)
+[23:00:55 w31] gas-drift_R30_V500_s0 w_vfilter_pgd_lr0.8: it 0 of 30 (patience) hold ce 0.0007 | test soft+V auc 0.9998 acc 0.9890 ce 0.0343 | auroc 0.999 floor False | 538 s
+[23:00:55 w31] coil2000_insurance_policies_R30_V500_s0 w_vfilter_pgd_lr0.8: start (n 4500, k 1350)
+[23:00:58 w31]     it   0  hold ce 0.2899 acc 0.930 | auroc 0.947  log w med pois -3.2 clean -0.1  (2 s)

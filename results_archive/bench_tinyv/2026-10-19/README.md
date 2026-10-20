@@ -4,8 +4,8 @@ TabPFN v2 with V (c clean rows per class) + a method's cleaned version of the po
 
 ## Provenance
 
-- Made 2026-10-19T03:08:52-05:00 on ecen-a86552 by `scripts/archive_bench_tinyv.py` from `results/bench_tinyv`.
-- Git commit 86df5d0141e17da1e590d49efb7403e645134229, with uncommitted changes to docs/bench_tinyv.md, scripts/bench_tinyv.py, scripts/bench_tinyv_jobs/README.md, scripts/plan_bench_tinyv.py, scripts/report_bench_tinyv.py, scripts/archive_bench_tinyv.py, scripts/bench_tinyv_jobs/attn_rerun/, scripts/elo_bench_tinyv.py.
+- Made 2026-10-19T12:16:58-05:00 on ecen-a86552 by `scripts/archive_bench_tinyv.py` from `results/bench_tinyv`.
+- Git commit 6ec930dd9bcabe773c5ff8663b11770669860a61, with uncommitted changes to scripts/archive_bench_tinyv.py, scripts/report_bench_tinyv.py.
   `code/` holds the scripts as they were when this snapshot was made.
 - 54 instances, 22 entries, 648 run files. Runs per host: ecen-a86552 267, ecen-a86553 160, ecen-a86555 125, imported 96.
 
@@ -15,6 +15,7 @@ TabPFN v2 with V (c clean rows per class) + a method's cleaned version of the po
 |---|---|
 | `results.csv` | one row per instance x entry: every metric (the source of every other table) |
 | `by_v_r.md`, `by_v_r.csv` | one table per V size x poisoning rate: per dataset, precision, ROC-AUC, accuracy, log loss |
+| `pooled.md`, `pooled.csv` | the same metrics pooled over all V x R settings: mean and 95% t-interval over the 9 settings |
 | `report.md` | summary over the instances and per-dataset tables of each metric |
 | `per_dataset.csv` | means over each dataset's 9 instances, per entry |
 | `elo.md`, `elo.csv` | TabArena-style Elo (main fit and sensitivity fits) |

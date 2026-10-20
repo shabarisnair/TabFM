@@ -80,6 +80,70 @@ def kind(ds: str) -> str:
     return f"{'binary' if len(p) == 2 else f'multi-class ({len(p)} classes)'}, {balance(p)}"
 
 
+METRIC_KEY = ("Prec: precision of the removed rows (relabel modes: of the relabelled rows); random removal scores R/100 "
+              "on average. AUC: ROC-AUC (binary: class 1; multi-class: one-vs-rest macro). Acc %: accuracy, degenerate "
+              "on good and coil (TabPFN predicts the majority class). LL: log loss, lower is better.")
+
+
+def dataset_legend(dss: list[str]) -> list[str]:
+    return ["| tag | dataset | type | class shares of the clean train context |", "|---|---|---|---|"] + [
+        f"| {TAG[d]} | {d} | {kind(d)} | {' / '.join(f'{100 * s:.0f}%' for s in CLASS_SHARES[d])} |" for d in dss]
+
+
+def write_pooled(rows: list[dict], path: Path) -> None:
+    """One table over all (c, R) settings: per entry and dataset, each metric's mean over the settings and the
+    half-width of its 95% t-interval, the settings taken as the sample (so it spans how much the entry varies
+    with c and R, not only draw noise); the numbers also go to <path>.csv."""
+    from scipy import stats
+    val = {(r["dataset"], r["c"], r["R"], r["entry"]): r for r in rows}
+    entries = [e for e, _ in ENTRIES if any(k[3] == e for k in val)]
+    dss = [d for d in TAG if any(k[0] == d for k in val)]
+    settings = sorted({(k[1], k[2]) for k in val})
+    stat, recs = {}, []
+    for e in entries:
+        for d in dss:
+            for m, *_ in VR_METRICS:
+                v = [val[d, c, R, e][m] for c, R in settings if (d, c, R, e) in val]
+                v = np.array([x for x in v if x is not None and np.isfinite(x)], dtype=float)
+                n = len(v)
+                mean = float(v.mean()) if n else np.nan
+                hw = float(stats.t.ppf(0.975, n - 1) * v.std(ddof=1) / np.sqrt(n)) if n > 1 else np.nan
+                stat[e, d, m] = (n, mean, hw)
+                recs.append({"entry": e, "dataset": d, "metric": m, "n_settings": n, "mean": mean, "ci95_half_width": hw})
+    best = {}
+    for d in dss:
+        for m, _, _, _, higher in VR_METRICS:
+            ms = [stat[e, d, m][1] for e in entries if not e.startswith("oracle") and stat[e, d, m][0]]
+            best[d, m] = (max(ms) if higher else min(ms)) if ms else None
+    L = ["# Tiny-V benchmark: every V size and poisoning rate pooled", "",
+         f"Each cell: the mean over the {len(settings)} settings (c = {', '.join(str(c) for c in sorted({c for c, _ in settings}))} "
+         f"clean rows per class × R = {', '.join(f'{R:g}' for R in sorted({R for _, R in settings}))}%; one draw each) ± the "
+         "half-width of its 95% t-interval, the settings taken as the sample: it spans how much the entry varies with "
+         "V and R as well as draw noise.", ""]
+    L += dataset_legend(dss) + ["", METRIC_KEY + " Bold: the best mean of the column, oracle + V excluded. '–': no rows "
+                                "removed. A bracket gives the number of settings when it is short.", "",
+                                "| entry | " + " | ".join(f"{TAG[d]} {name}" for d in dss for _, name, *_ in VR_METRICS) + " |",
+                                "|---|" + "---|" * (len(dss) * len(VR_METRICS))]
+    for e in entries:
+        out = []
+        for d in dss:
+            for m, _, f, scale, _ in VR_METRICS:
+                n, mean, hw = stat[e, d, m]
+                if not n:
+                    out.append("–")
+                    continue
+                s = f.format(scale * mean) + (f" ± {f.format(scale * hw)}" if np.isfinite(hw) else "")
+                if not e.startswith("oracle") and mean == best[d, m]:
+                    s = f"**{s}**"
+                out.append(s + (f" ({n})" if n < len(settings) else ""))
+        L.append(f"| {NAME.get(e, e)} | " + " | ".join(out) + " |")
+    path.write_text("\n".join(L) + "\n")
+    with open(path.with_suffix(".csv"), "w", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=list(recs[0]))
+        w.writeheader()
+        w.writerows(recs)
+
+
 def write_by_v_r(rows: list[dict], path: Path) -> None:
     """One table per (c, R): a row per entry, and per dataset its precision, ROC-AUC, accuracy and log loss."""
     val = {(r["dataset"], r["c"], r["R"], r["entry"]): r for r in rows}
@@ -87,13 +151,9 @@ def write_by_v_r(rows: list[dict], path: Path) -> None:
     dss = [d for d in TAG if any(k[0] == d for k in val)]
     L = ["# Tiny-V benchmark: one table per V size and poisoning rate", "",
          "V holds c clean rows per class (2c rows on the binary datasets, 3c on students, 6c on gas-drift); R% of the "
-         "remaining train context is poisoned with hub-flip-local. One draw per table cell.", "",
-         "| tag | dataset | type | class shares of the clean train context |", "|---|---|---|---|"]
-    L += [f"| {TAG[d]} | {d} | {kind(d)} | {' / '.join(f'{100 * s:.0f}%' for s in CLASS_SHARES[d])} |" for d in dss]
-    L += ["", "Prec: precision of the removed rows (relabel modes: of the relabelled rows); random removal scores R/100 on "
-          "average. AUC: ROC-AUC (binary: class 1; multi-class: one-vs-rest macro). Acc %: accuracy, degenerate on good "
-          "and coil (TabPFN predicts the majority class). LL: log loss, lower is better. Bold: the best entry of the "
-          "column, oracle + V excluded. '–': not run, or no rows removed.", ""]
+         "remaining train context is poisoned with hub-flip-local. One draw per table cell.", ""]
+    L += dataset_legend(dss) + ["", METRIC_KEY + " Bold: the best entry of the column, oracle + V excluded. '–': not "
+                                "run, or no rows removed.", ""]
     for c in sorted({k[1] for k in val}):
         for R in sorted({k[2] for k in val}):
             L += [f"## V = {c} row{'s' if c > 1 else ''} per class, R = {R:g}%", "",
@@ -210,8 +270,9 @@ def main(argv=None) -> None:
     L += ["", f"Imported from the schedule study (identical draws and code): {len(imported)} entries."]
     (a.out / "report.md").write_text("\n".join(L) + "\n")
     write_by_v_r(rows, a.out / "by_v_r.md")
+    write_pooled(rows, a.out / "pooled.md")
     print("\n".join(L[:len(entries) + 12]))
-    print(f"\n-> {a.out / 'report.md'}, {a.out / 'by_v_r.md'}, {a.out / 'results.csv'}")
+    print(f"\n-> {a.out / 'report.md'}, {a.out / 'by_v_r.md'}, {a.out / 'pooled.md'}, {a.out / 'results.csv'}")
 
 
 if __name__ == "__main__":
