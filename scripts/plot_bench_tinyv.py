@@ -4,7 +4,9 @@
 Each figure has a panel per metric (accuracy, precision of the removed rows, ROC-AUC, log loss); the x axis lists
 the methods, a line per dataset, and a 7th line (black) is the mean over the 6 datasets. Methods that relabel
 rows are left out: the relabel modes and the V-selected EMLC, IEG and label spreading (they chose relabelling in
-almost every instance). The same numbers go to a markdown file, one table per V size and metric.
+almost every instance). Of the learned row filters only M1 (top-k attention weights, 300 updates: the count of
+scripts/tinyv_iter_study.py) and the best soft form (w / V-filter / PGD lr 0.2, 4 updates, deployed soft + V) are
+shown; A3 and the NaN gates are left out. The same numbers go to a markdown file, one table per V size and metric.
 
     python scripts/plot_bench_tinyv.py [--R 30] [--plots results/plots/bench_tinyv] [--tables results/tables/bench_tinyv]
 """
@@ -23,9 +25,9 @@ import report_bench_tinyv as RB  # noqa: E402
 
 PLOTTED = [("v_only", "V only"), ("poisoned_plus_v", "poisoned + V"), ("oracle_plus_v", "oracle + V"),
            ("vfilter", "V-filter"), ("greedy_pct10", "greedy, 10%/step"), ("greedy_pct1", "greedy, 1%/step"),
-           ("greedy_m1", "greedy, 1 row/step"), ("attn_topk", "attention top-k (M1)"),
-           ("attn_soft", "attention soft (A3)"), ("attn_soft_softw", "A3, soft weights + V"),
-           ("nan_topk", "NaN gate, top-k vote"), ("label_spread", "label spreading"), ("knn_shapley", "KNN-Shapley"),
+           ("greedy_m1", "greedy, 1 row/step"), ("attn_topk_it300", "attention top-k (M1)"),
+           ("attn_wsoft_lr0.2_it4", "best soft form (w, PGD)"),
+           ("label_spread", "label spreading"), ("knn_shapley", "KNN-Shapley"),
            ("knn_shapley_vsel", "KNN-Shapley (V-sel.)"), ("emlc", "EMLC"), ("ieg", "IEG")]
 DATASETS = [("gas-drift", "gas-drift"), ("students_dropout", "students"), ("heloc", "heloc"),
             ("ecommerce_shipping", "ecommerce"), ("is_this_a_good_customer", "good_customer"),
@@ -54,9 +56,12 @@ def main(argv=None) -> None:
     a.plots.mkdir(parents=True, exist_ok=True)
     md = [f"# Tiny-V benchmark at R = {a.R:g}%: every method on every dataset, per V size", "",
           "One draw per cell, no aggregation over settings; mean = the mean over the 6 datasets. Methods that relabel "
-          "rows are left out (the relabel modes and the V-selected EMLC, IEG and label spreading). Precision: the "
-          "share of the removed rows that were poisoned ('–': nothing removed). Bold: the best entry of the column, "
-          "oracle + V excluded. Accuracy is degenerate on good_customer and coil2000 (the majority class).", ""]
+          "rows are left out (the relabel modes and the V-selected EMLC, IEG and label spreading). Learned row "
+          "filters: M1 (top-k attention weights, 300 updates) and the best soft form (w / V-filter / PGD lr 0.2, 4 "
+          "updates, deployed soft + V); A3 and the NaN gates are left out. Precision: the share of the removed rows "
+          "that were poisoned (for the soft form, the rows it set to w = 0; '–': nothing removed). Bold: the best "
+          "entry of the column, oracle + V excluded. Accuracy is degenerate on good_customer and coil2000 (the "
+          "majority class).", ""]
     for c in cs:
         get = lambda ds, e, m: (lambda v: np.nan if v is None or not np.isfinite(v) else float(v))(  # noqa: E731
             val[(ds, c, e)][m] if (ds, c, e) in val else None)

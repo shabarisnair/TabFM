@@ -23,7 +23,6 @@ import report_bench_largev as RL  # noqa: E402
 
 PLOTTED = [("v_only", "V only"), ("poisoned_plus_v", "poisoned + V"), ("oracle_plus_v", "oracle + V"),
            ("vfilter", "V-filter + V"), ("attn_topk", "attention top-k (M1)"),
-           ("attn_soft", "attention soft (A3), hard"), ("attn_soft_softw", "A3, soft weights"),
            ("attn_wsoft", "best soft form (w, PGD)"),
            ("nan_soft", "NaN gate soft, hard"), ("nan_soft_softg", "NaN gate soft, soft gates"),
            ("nan_topk", "NaN gate, top-k vote")]
@@ -47,10 +46,11 @@ def main(argv=None) -> None:
     a.plots.mkdir(parents=True, exist_ok=True)
     md = [f"# Larger-V benchmark at R = {a.R:g}%: every method on every dataset, per V size", "",
           "One draw per cell (seed 0), no aggregation over settings; mean = the mean over the 6 datasets. Every "
-          "method has all of V in the context. hard: the k = R% lowest-ranked rows removed; soft weights / soft "
-          "gates: nothing removed. Precision: the share of the removed rows that were poisoned ('–': nothing "
-          "removed). Bold: the best entry of the column, oracle + V excluded. Accuracy is degenerate on "
-          "good_customer and coil2000 (the majority class).", ""]
+          "method has all of V in the context. hard: the k = R% lowest-ranked rows removed; soft gates: nothing "
+          "removed; best soft form: w / V-filter / PGD lr 0.8, held-out early stopping, deployed soft (its w = 0 rows "
+          "deleted exactly). Precision: the share of the removed rows that were poisoned (for the soft form, the "
+          "rows it set to w = 0; '–': nothing removed). Bold: the best entry of the column, oracle + V excluded. "
+          "Accuracy is degenerate on good_customer and coil2000 (the majority class).", ""]
     for V in vs:
         def get(ds, e, m):
             r = val.get((ds, V, e))
