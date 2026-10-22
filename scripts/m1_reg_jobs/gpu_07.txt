@@ -1,0 +1,13 @@
+large_heloc_R30_V50_s1 m1
+large_heloc_R30_V100_s1 m1_l2_0.01
+large_students_dropout_R30_V50_s1 m1
+large_students_dropout_R30_V100_s1 m1_l2_0.01
+large_ecommerce_shipping_R30_V50_s1 m1_mb0.5
+large_is_this_a_good_customer_R30_V50_s1 m1_l1x5
+tiny_gas-drift_R30_c5_s1 m1_knn10
+large_gas-drift_R30_V50_s1 m1_knn10
+large_ecommerce_shipping_R30_V100_s1 m1_knn10
+large_is_this_a_good_customer_R30_V100_s1 m1_mb0.25
+tiny_heloc_R30_c5_s1 m1_pseudo0.3
+large_students_dropout_R30_V100_s1 m1_pseudo0.3
+tiny_ecommerce_shipping_R30_c5_s1 m1_pseudo0.3

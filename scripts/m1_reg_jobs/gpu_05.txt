@@ -1,0 +1,12 @@
+large_gas-drift_R30_V100_s1 refs
+tiny_gas-drift_R30_c5_s1 m1_l1x5
+large_gas-drift_R30_V50_s1 m1_l1x5
+large_heloc_R30_V100_s1 m1_mb0.5
+tiny_students_dropout_R30_c5_s1 m1_l2_0.01
+large_students_dropout_R30_V100_s1 m1
+tiny_ecommerce_shipping_R30_c5_s1 m1_mb0.5
+large_gas-drift_R30_V100_s1 m1_knn10
+tiny_heloc_R30_c5_s1 m1_knn10
+large_ecommerce_shipping_R30_V50_s1 m1_knn10
+large_is_this_a_good_customer_R30_V50_s1 m1_mb0.25
+large_is_this_a_good_customer_R30_V50_s1 m1_pseudo0.3

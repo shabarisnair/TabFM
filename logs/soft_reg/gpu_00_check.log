@@ -1,0 +1,76 @@
+  inputs: ok (inputs.sha256: datasets' split files and draws)
+  model: /home/ssn899/.cache/tabpfn/tabpfn-v2-classifier-finetuned-zk73skhh.ckpt  code: tabpfn from /home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn
+is_this_a_good_customer_R30_V500_s0 w_ones_adam_lr0.01: start (n 900, k 270)
+    it   0  hold ce 0.5922 acc 0.740 | auroc 0.500  log w med pois 0.0 clean 0.0  (1 s)
+is_this_a_good_customer_R30_V500_s0 w_ones_adam_lr0.01: it 3 of 3 (max_steps) hold ce 0.5809 | test soft+V auc 0.6768 acc 0.8300 ce 0.3918 | auroc 0.695 floor False | 1 s
+is_this_a_good_customer_R30_V500_s0 w_ones_pgd_lr0.05: start (n 900, k 270)
+    it   0  hold ce 0.5922 acc 0.740 | auroc 0.500  log w med pois 0.0 clean 0.0  (0 s)
+is_this_a_good_customer_R30_V500_s0 w_ones_pgd_lr0.05: it 3 of 3 (max_steps) hold ce 0.5840 | test soft+V auc 0.6759 acc 0.8300 ce 0.3935 | auroc 0.681 floor False | 1 s
+is_this_a_good_customer_R30_V500_s0 w_ones_sign_lr0.01: start (n 900, k 270)
+    it   0  hold ce 0.5922 acc 0.740 | auroc 0.500  log w med pois 0.0 clean 0.0  (0 s)
+is_this_a_good_customer_R30_V500_s0 w_ones_sign_lr0.01: it 3 of 3 (max_steps) hold ce 0.5813 | test soft+V auc 0.6768 acc 0.8267 ce 0.3913 | auroc 0.648 floor False | 1 s
+is_this_a_good_customer_R30_V500_s0 w_vfilter_adam_lr0.01: start (n 900, k 270)
+    it   0  hold ce 2.9511 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+is_this_a_good_customer_R30_V500_s0 w_vfilter_adam_lr0.01: it 3 of 3 (max_steps) hold ce 1.5237 | test soft+V auc 0.6414 acc 0.4600 ce 1.3243 | auroc 0.921 floor False | 0 s
+is_this_a_good_customer_R30_V500_s0 w_vfilter_pgd_lr0.05: start (n 900, k 270)
+    it   0  hold ce 2.9511 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+is_this_a_good_customer_R30_V500_s0 w_vfilter_pgd_lr0.05: it 1 of 3 (max_steps) hold ce 2.7641 | test soft+V auc 0.6399 acc 0.3900 ce 1.4721 | auroc 0.926 floor False | 1 s
+is_this_a_good_customer_R30_V500_s0 w_vfilter_sign_lr0.01: start (n 900, k 270)
+    it   0  hold ce 2.9511 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+is_this_a_good_customer_R30_V500_s0 w_vfilter_sign_lr0.01: it 3 of 3 (max_steps) hold ce 1.4946 | test soft+V auc 0.6468 acc 0.4767 ce 1.3094 | auroc 0.923 floor False | 0 s
+is_this_a_good_customer_R30_V500_s0 sigmoid_ones_adam_lr0.2: start (n 900, k 270)
+    it   0  hold ce 0.5922 acc 0.740 | auroc 0.500  log w med pois -0.0 clean -0.0  (0 s)
+is_this_a_good_customer_R30_V500_s0 sigmoid_ones_adam_lr0.2: it 3 of 3 (max_steps) hold ce 0.5855 | test soft+V auc 0.6765 acc 0.8300 ce 0.3916 | auroc 0.683 floor False | 0 s
+is_this_a_good_customer_R30_V500_s0 sigmoid_ones_pgd_lr4: start (n 900, k 270)
+    it   0  hold ce 0.5922 acc 0.740 | auroc 0.500  log w med pois -0.0 clean -0.0  (0 s)
+is_this_a_good_customer_R30_V500_s0 sigmoid_ones_pgd_lr4: it 3 of 3 (max_steps) hold ce 0.5709 | test soft+V auc 0.6772 acc 0.8333 ce 0.3902 | auroc 0.662 floor False | 1 s
+is_this_a_good_customer_R30_V500_s0 sigmoid_ones_sign_lr0.2: start (n 900, k 270)
+    it   0  hold ce 0.5922 acc 0.740 | auroc 0.500  log w med pois -0.0 clean -0.0  (0 s)
+is_this_a_good_customer_R30_V500_s0 sigmoid_ones_sign_lr0.2: it 3 of 3 (max_steps) hold ce 0.5832 | test soft+V auc 0.6770 acc 0.8300 ce 0.3920 | auroc 0.626 floor False | 0 s
+is_this_a_good_customer_R30_V500_s0 sigmoid_vfilter_adam_lr0.2: start (n 900, k 270)
+    it   0  hold ce 2.9518 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+is_this_a_good_customer_R30_V500_s0 sigmoid_vfilter_adam_lr0.2: it 3 of 3 (max_steps) hold ce 1.9105 | test soft+V auc 0.6285 acc 0.4467 ce 1.3535 | auroc 0.919 floor False | 0 s
+is_this_a_good_customer_R30_V500_s0 sigmoid_vfilter_pgd_lr4: start (n 900, k 270)
+    it   0  hold ce 2.9518 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+is_this_a_good_customer_R30_V500_s0 sigmoid_vfilter_pgd_lr4: it 3 of 3 (max_steps) hold ce 0.6965 | test soft+V auc 0.6330 acc 0.7400 ce 0.6401 | auroc 0.907 floor False | 0 s
+is_this_a_good_customer_R30_V500_s0 sigmoid_vfilter_sign_lr0.2: start (n 900, k 270)
+    it   0  hold ce 2.9518 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+is_this_a_good_customer_R30_V500_s0 sigmoid_vfilter_sign_lr0.2: it 3 of 3 (max_steps) hold ce 1.6367 | test soft+V auc 0.6325 acc 0.4600 ce 1.3459 | auroc 0.918 floor False | 0 s
+is_this_a_good_customer_R30_V500_s0 log_ones_adam_lr0.1: start (n 900, k 270)
+    it   0  hold ce 0.5922 acc 0.740 | auroc 0.500  log w med pois 0.0 clean 0.0  (0 s)
+is_this_a_good_customer_R30_V500_s0 log_ones_adam_lr0.1: it 3 of 3 (max_steps) hold ce 0.5136 | test soft+V auc 0.6994 acc 0.8433 ce 0.3699 | auroc 0.714 floor False | 1 s
+is_this_a_good_customer_R30_V500_s0 log_ones_pgd_lr4: start (n 900, k 270)
+    it   0  hold ce 0.5922 acc 0.740 | auroc 0.500  log w med pois 0.0 clean 0.0  (0 s)
+is_this_a_good_customer_R30_V500_s0 log_ones_pgd_lr4: it 1 of 3 (max_steps) hold ce 0.5279 | test soft+V auc 0.6831 acc 0.8067 ce 0.3853 | auroc 0.741 floor False | 1 s
+is_this_a_good_customer_R30_V500_s0 log_ones_sign_lr0.1: start (n 900, k 270)
+    it   0  hold ce 0.5922 acc 0.740 | auroc 0.500  log w med pois 0.0 clean 0.0  (0 s)
+is_this_a_good_customer_R30_V500_s0 log_ones_sign_lr0.1: it 3 of 3 (max_steps) hold ce 0.5080 | test soft+V auc 0.7051 acc 0.8467 ce 0.3670 | auroc 0.673 floor False | 1 s
+is_this_a_good_customer_R30_V500_s0 log_vfilter_adam_lr0.1: start (n 900, k 270)
+    it   0  hold ce 2.9511 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+is_this_a_good_customer_R30_V500_s0 log_vfilter_adam_lr0.1: it 3 of 3 (max_steps) hold ce 2.0213 | test soft+V auc 0.6194 acc 0.4467 ce 1.3368 | auroc 0.891 floor False | 0 s
+is_this_a_good_customer_R30_V500_s0 log_vfilter_pgd_lr4: start (n 900, k 270)
+    it   0  hold ce 2.9511 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+is_this_a_good_customer_R30_V500_s0 log_vfilter_pgd_lr4: it 3 of 3 (max_steps) hold ce 0.6487 | test soft+V auc 0.6301 acc 0.5033 ce 1.0323 | auroc 0.881 floor False | 0 s
+is_this_a_good_customer_R30_V500_s0 log_vfilter_sign_lr0.1: start (n 900, k 270)
+    it   0  hold ce 2.9511 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+is_this_a_good_customer_R30_V500_s0 log_vfilter_sign_lr0.1: it 3 of 3 (max_steps) hold ce 1.9890 | test soft+V auc 0.6232 acc 0.4467 ce 1.3292 | auroc 0.902 floor False | 0 s
+is_this_a_good_customer_R30_V500_s0 log2000_ones_adam_lr0.1: start (n 900, k 270)
+    it   0  hold ce 0.5922 acc 0.740 | auroc 0.500  log w med pois 0.0 clean 0.0  (0 s)
+is_this_a_good_customer_R30_V500_s0 log2000_ones_adam_lr0.1: it 3 of 3 (max_steps) hold ce 0.5136 | test soft+V auc 0.6994 acc 0.8433 ce 0.3699 | auroc 0.714 floor False | 1 s
+is_this_a_good_customer_R30_V500_s0 log2000_ones_pgd_lr4: start (n 900, k 270)
+    it   0  hold ce 0.5922 acc 0.740 | auroc 0.500  log w med pois 0.0 clean 0.0  (0 s)
+is_this_a_good_customer_R30_V500_s0 log2000_ones_pgd_lr4: it 1 of 3 (max_steps) hold ce 0.5279 | test soft+V auc 0.6831 acc 0.8067 ce 0.3853 | auroc 0.741 floor False | 1 s
+is_this_a_good_customer_R30_V500_s0 log2000_ones_sign_lr0.1: start (n 900, k 270)
+    it   0  hold ce 0.5922 acc 0.740 | auroc 0.500  log w med pois 0.0 clean 0.0  (0 s)
+is_this_a_good_customer_R30_V500_s0 log2000_ones_sign_lr0.1: it 3 of 3 (max_steps) hold ce 0.5080 | test soft+V auc 0.7051 acc 0.8467 ce 0.3670 | auroc 0.673 floor False | 1 s
+is_this_a_good_customer_R30_V500_s0 log2000_vfilter_adam_lr0.1: start (n 900, k 270)
+    it   0  hold ce 2.9511 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+is_this_a_good_customer_R30_V500_s0 log2000_vfilter_adam_lr0.1: it 3 of 3 (max_steps) hold ce 2.0213 | test soft+V auc 0.6194 acc 0.4467 ce 1.3368 | auroc 0.891 floor False | 0 s
+is_this_a_good_customer_R30_V500_s0 log2000_vfilter_pgd_lr4: start (n 900, k 270)
+    it   0  hold ce 2.9511 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+is_this_a_good_customer_R30_V500_s0 log2000_vfilter_pgd_lr4: it 3 of 3 (max_steps) hold ce 0.6431 | test soft+V auc 0.6309 acc 0.5067 ce 1.0318 | auroc 0.881 floor False | 0 s
+is_this_a_good_customer_R30_V500_s0 log2000_vfilter_sign_lr0.1: start (n 900, k 270)
+    it   0  hold ce 2.9511 acc 0.150 | auroc 0.927  log w med pois -2.1 clean -0.1  (0 s)
+is_this_a_good_customer_R30_V500_s0 log2000_vfilter_sign_lr0.1: it 3 of 3 (max_steps) hold ce 1.9890 | test soft+V auc 0.6232 acc 0.4467 ce 1.3292 | auroc 0.902 floor False | 0 s
+  numbers: 24 of 24 configurations match the main machine
+  all checks passed

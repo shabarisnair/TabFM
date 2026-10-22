@@ -172,6 +172,7 @@ def plot(runs: dict, refs: dict, arms: list[str], out: Path) -> None:
                 ax.axhline(np.mean([refs[t]["rows"][name][m] for t in tags]), color="#52514e", linestyle=style,
                            linewidth=1.2, label=lab)
             ax.set_xscale("symlog", linthresh=10)
+            ax.set_xlim(0, max(SR.CKPTS) * 1.1)
             ax.set_title(f"{'w in [0, 1], lr 0.05' if form == 'w' else 'log w, lr 0.0625'}: {title}"
                          + (" (lower is better)" if not hi else ""), loc="left", fontsize=11)
             ax.set_xlabel("update")
