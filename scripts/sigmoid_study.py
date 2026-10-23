@@ -10,7 +10,7 @@ with the weighted poisoned rows as the context (attn_form_study.train). Starts:
   vf_hard   the k = R% rows the V-filter finds least plausible at t = -30, the rest at t = 4
   random    t ~ N(0, 1), seeds 0-4: `random` is seed 0; `random_ens` averages the five runs' weights sigmoid(t), each
             at its chosen update
-Adam (betas 0.9, 0.999) at lr 0.01, 0.1, 5 and 10. The held-out 20% of V is scored after every update up to 10, then
+Adam (betas 0.9, 0.999) at lr 0.01, 0.1, 1, 5 and 10. The held-out 20% of V is scored after every update up to 10, then
 every 5; a run stops 50 updates after its held-out log loss last improved by 1e-3 (at most 300), and the update with
 the lowest held-out log loss is deployed: soft + V (the headline: every poisoned row at its weight, all of V at 1) and
 soft (the poisoned rows alone), on the test set.
@@ -51,7 +51,7 @@ R, SEED, HOLDOUT = 30.0, 0, 0.2
 INITS = ("ones", "vf_soft", "vf_hard", "random")
 INIT_ARG = {"ones": "ones", "vf_soft": "vf_raw", "vf_hard": "vf_hard"}  # attn_form_study.init_raw's names
 SEEDS = (0, 1, 2, 3, 4)
-LRS = (0.01, 0.1, 5.0, 10.0)
+LRS = (0.01, 0.1, 1.0, 5.0, 10.0)
 STOP = dict(max_steps=300, dense=10, every=5, patience=50, tol=1e-3)
 # expected updates per run (planning only: early stopping makes runs shorter than 300)
 EXPECTED_UPDATES = 120

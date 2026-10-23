@@ -12,7 +12,7 @@ Code: scripts/sigmoid_study.py (on attn_form_study.train, with the parameterisat
 - **Weights:** w = sigmoid(t), log w = logsigmoid(t) in the attention; w in the label mean and the z-norms. t is never
   clipped.
 - **Loss:** the log loss of the fitted 80% of V, with the weighted poisoned rows as the context. Adam (betas 0.9, 0.999)
-  at lr 0.01, 0.1, 5 and 10.
+  at lr 0.01, 0.1, 1, 5 and 10.
 - **Stopping:** the held-out 20% of V is scored after every update up to 10, then every 5. A run stops 50 updates after
   its held-out log loss last improved by 1e-3 (at most 300 updates). The update with the lowest held-out log loss is
   deployed.
@@ -49,7 +49,7 @@ python scripts/sigmoid_study.py report                    # -> results/tables/si
 The other machines need results/bench_largev/draws, results/bench_tinyv/draws, results/attn_form/preflight_reference
 (for the check) and datasets/.
 
-**Cost:** 294 jobs (18 instances x 4 starts x 4 learning rates; the random job runs 5 seeds and the ensemble; plus 6
-best_soft references), about 45 H100-hours, about 5 hours on each of the 9 scripts. This assumes runs stop at about
+**Cost:** 366 jobs (18 instances x 4 starts x 5 learning rates; the random job runs 5 seeds and the ensemble; plus 6
+best_soft references), about 56 H100-hours, about 6.3 hours on each of the 9 scripts. This assumes runs stop at about
 120 updates on average; the form study's sigmoid runs peaked on the holdout at a median of update 20. On a GPU that
 another busy job shares, it takes two to four times longer.

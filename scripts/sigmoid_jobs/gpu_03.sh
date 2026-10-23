@@ -1,5 +1,5 @@
 #!/bin/bash
-# Sigmoid soft attention weights (scripts/sigmoid_study.py), script 03 of 9: 32 jobs, about 5.0 GPU-hours
+# Sigmoid soft attention weights (scripts/sigmoid_study.py), script 03 of 9: 41 jobs, about 6.3 GPU-hours
 # (H100). Run from a clone of this repository with results/ and datasets/ copied over:
 #   bash scripts/sigmoid_jobs/gpu_03.sh [GPU]        (PY=/path/to/python to use another python than conda env tabfm)
 # It stops before running anything unless the inputs, the model checkpoint, the code and a numeric preflight match
