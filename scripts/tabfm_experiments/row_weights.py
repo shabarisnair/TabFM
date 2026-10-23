@@ -102,7 +102,7 @@ def _check(clf, X_ctx: torch.Tensor, log_w: torch.Tensor) -> None:
 
 def evaluate_weighted(clf, X_ctx: torch.Tensor, y_ctx: torch.Tensor, X_q: torch.Tensor, y_q: torch.Tensor,
                       log_w: torch.Tensor, *, need_grad: bool, batch_size: int | None = None,
-                      grad_channels: str = "all", query_ctx_rows=None):
+                      grad_channels: str = "all", query_ctx_rows=None, query_weights=None):
     """As gate_context.evaluate, with context row j weighted by w_j = exp(log_w[j]).
 
     Returns (mean CE of the query rows, d CE / d log_w or None, query probabilities [n_q, K]).
@@ -114,7 +114,9 @@ def evaluate_weighted(clf, X_ctx: torch.Tensor, y_ctx: torch.Tensor, X_q: torch.
     gradient through the z-norms and the other context-fitted statistics) or "attn" (the label
     mean detached as well): the forward pass is the same, only the gradient changes.
     query_ctx_rows: per query row, the context row it is a copy of (-1: none); a copy does not
-    attend to its own context row (leave-one-out)."""
+    attend to its own context row (leave-one-out).
+    query_weights: per query row, a constant weight on its CE (default 1; no gradient flows
+    through it): the loss is then sum_q weight_q CE_q / n_q."""
     if grad_channels not in ("all", "attn", "attn_label"):
         raise ValueError(f"grad_channels must be all, attn or attn_label, not {grad_channels!r}")
     from .runtime import _forward, _install_recompute
@@ -124,6 +126,7 @@ def evaluate_weighted(clf, X_ctx: torch.Tensor, y_ctx: torch.Tensor, X_q: torch.
     y_q = torch.as_tensor(y_q, dtype=torch.long, device=X_ctx.device)
     n_q = len(y_q)
     bs = min(batch_size or n_q, n_q)
+    qw = None if query_weights is None else torch.as_tensor(query_weights, dtype=torch.float32, device=X_ctx.device).detach()
     total, grad, chunks = 0.0, (torch.zeros_like(log_w) if need_grad else None), []
     for st in range(0, n_q, bs):
         with torch.enable_grad() if need_grad else torch.no_grad():
@@ -137,8 +140,12 @@ def evaluate_weighted(clf, X_ctx: torch.Tensor, y_ctx: torch.Tensor, X_q: torch.
                 with model_weights_installed(clf, lw, label_log_w=lw_label, stats_log_w=lw_stats,
                                              query_ctx_rows=qrows):
                     p = _forward(clf, X_q[st:st + bs], need_grad=need_grad)
-                    loss = F.nll_loss(torch.log(p.clamp_min(1e-12)), y_q[st:st + bs].to(p.device),
-                                      reduction="sum") / n_q
+                    if qw is None:
+                        loss = F.nll_loss(torch.log(p.clamp_min(1e-12)), y_q[st:st + bs].to(p.device),
+                                          reduction="sum") / n_q
+                    else:
+                        loss = (F.nll_loss(torch.log(p.clamp_min(1e-12)), y_q[st:st + bs].to(p.device),
+                                           reduction="none") * qw[st:st + bs].to(p.device)).sum() / n_q
                     if need_grad:
                         grad += torch.autograd.grad(loss, log_w)[0]
         total += float(loss.detach())

@@ -29,6 +29,10 @@ Methods (--methods; default: all):
   label_spread, knn_shapley, emlc, ieg
                 the four strongest label-noise baselines of the earlier tiny-V benchmark (small_v_methods.py);
                 the other six (knn_sanitize, data_oob, cleanlab, simifeat, glc, mwnet) still run if named
+  metasift      Meta-Sift with V on the train side of every batch; tabsift: the same soft split learned through
+  tabsift       TabPFN's row weights (tinyv_sift.py). Each deployed as the top (1 - R)% + V (overall, and class by
+                class as in the poisoned rows) and the top 2% + V (a small clean subset), at its default
+                configuration and V-selected (as the baselines); test metrics recorded along the training
 
 The baselines' hyperparameters. The earlier benchmark tuned them on clean held-out rows of the context
 file with the poisoned rows' identity, which is not allowed here, so each baseline is reported:
@@ -111,7 +115,9 @@ LEARNED = ("attn_topk", "attn_soft", "nan_topk")
 # KNN-Shapley 76.2, EMLC 75.3, label spreading 74.8; the other six 66.7-73.7), run by default
 BASELINES = ("label_spread", "knn_shapley", "emlc", "ieg")
 ALL_BASELINES = ("knn_sanitize", "label_spread", "knn_shapley", "data_oob", "cleanlab", "simifeat", "glc", "mwnet", "emlc", "ieg")
-METHODS = ("refs", *GREEDY, *LEARNED, *BASELINES)
+# sifting with V fixed on the train side (tinyv_sift.py): Meta-Sift, and the same split learned through TabPFN
+SIFT = ("metasift", "tabsift")
+METHODS = ("refs", *GREEDY, *LEARNED, *BASELINES, *SIFT)
 # the attention learners at another update count than tinyv_learned's 20 (scripts/tinyv_iter_study.py): M1 as
 # attn_topk_it<N>, the best soft form (w / V-filter / PGD, deployed soft + V) as attn_wsoft_it<N> (lr 0.8) or
 # attn_wsoft_lr<x>_it<N>
@@ -305,6 +311,86 @@ def run_learned(bd: BenchData, d: dict, method: str, a, log=print) -> tuple[dict
             rows.append({"name": f"{method}_softw", "test": metrics(p, bd.yt), "prec": None, "n_removed": 0})
     cfg = {key: (val if not isinstance(val, float) or np.isfinite(val) else str(val)) for key, val in out["config"].items()}
     return {"rows": rows, "config": cfg}, {"removed": out["removed"]}
+
+
+SIFT_KINDS = (("full", ""), ("full_cb", "_cb"), ("small", "_small"))  # deployment, row-name suffix
+
+
+def run_sift(bd: BenchData, d: dict, method: str, log=print) -> tuple[dict, dict]:
+    """Every configuration of the method's grid (tinyv_sift.GRIDS; for tabsift every checkpoint of it) gives weights
+    on the poisoned rows, deployed three ways with V added: the top (1 - R)% (the k lowest removed), the top (1 - R)%
+    class by class (each given class its share of the poisoned rows: Meta-Sift's rule) and a small clean subset (the
+    top 2% by that rule). Rows: the fixed configurations (tinyv_sift.ROWS; the default first) and the V-selected one
+    (the lowest log loss of V under TabPFN with the kept rows alone as the context, as for the baselines), each
+    deployment separately. While the recorded configurations train (tabsift: both starts; metasift: the default),
+    every few iterations the three deployments' test metrics, the precision of the removed rows and the purity of
+    the kept ones go to the trajectory."""
+    import tinyv_sift as T
+    n, k = d["n"], d["k"]
+
+    def keep_of(w: np.ndarray, kind: str) -> np.ndarray:
+        kept = (np.argsort(-w, kind="stable")[:n - k] if kind == "full"
+                else T.class_proportional(w, d["y_given"], n - k if kind == "full_cb" else int(round(T.SMALL * n))))
+        keep = np.zeros(n, dtype=bool)
+        keep[kept] = True
+        return keep
+
+    def deployed(w: np.ndarray) -> dict:
+        out = {}
+        for kind, _ in SIFT_KINDS:
+            keep = keep_of(w, kind)
+            out[kind] = {"test": test_scores(bd, d, keep), "prec": float(d["pois"][~keep].mean()),
+                         "purity": float(1 - d["pois"][keep].mean()), "n_removed": int(n - keep.sum())}
+        return out
+
+    traj, cands, seconds, used = [], [], {}, {}
+    for name, cfg in T.GRIDS[method].items():
+        recorded = method == "tabsift" or name == T.ROWS[method][""][0]
+
+        def record(weights, name=name, **kw):
+            traj.append({"cfg": name, **kw, "w_mean": float(np.mean(weights)), "deploy": deployed(weights)})
+
+        if method == "metasift":
+            out = T.metasift(d, cfg, log=log, record=record if recorded else None)
+            cands.append((name, None, out["weights"]))
+            if recorded:
+                record(out["weights"], sifter="ensemble", it=None, objective=None, train_loss=None)
+        else:
+            out = T.tabsift(bd.clf, d, cfg, log=log, record=record)
+            cands += [(name, it, ck["w"]) for it, ck in out["ckpts"].items() if it > 0 or cfg["init"] != "ones"]
+        seconds[name] = out["seconds"]
+        used[name] = {key: (list(val) if isinstance(val, tuple) else val) for key, val in out["config"].items()}
+
+    rows, scored, arrays = [], [], {}
+    for kind, suffix in SIFT_KINDS:
+        cache = {}
+        for order, (name, it, w) in enumerate(cands):
+            keep = keep_of(w, kind)
+            key = np.packbits(keep).tobytes()
+            if key not in cache:
+                cache[key] = v_score(bd, d, keep, None)
+            scored.append({"deploy": kind, "cfg": name, "ckpt": it, "v_ce": cache[key][0], "v_acc": cache[key][1],
+                           "order": order})
+
+        def row(label: str, name: str, it, extra: dict) -> dict:
+            w = next(w for nm, i, w in cands if nm == name and i == it)
+            keep = keep_of(w, kind)
+            return {"name": label, "cfg": name, "ckpt": it, "test": test_scores(bd, d, keep),
+                    "prec": float(d["pois"][~keep].mean()), "purity": float(1 - d["pois"][keep].mean()),
+                    "n_removed": int(n - keep.sum()), **extra}
+
+        mine = [s for s in scored if s["deploy"] == kind]
+        for extra, (cname, cit) in T.ROWS[method].items():
+            rows.append(row(f"{method}{suffix}{extra}", cname, cit, {}))
+        best = min(mine, key=lambda s: (s["v_ce"], -s["v_acc"], s["order"]))
+        rows.append(row(f"{method}{suffix}_vsel", best["cfg"], best["ckpt"], {"v_ce": best["v_ce"], "v_acc": best["v_acc"]}))
+        log(f"    {method}{suffix}: V-selected {best['cfg']} at {best['ckpt']} (V log loss {best['v_ce']:.3f}) of "
+            f"{len(mine)} candidates, {len(cache)} distinct kept sets")
+    for name, it, w in cands:
+        arrays[f"{name}" + ("" if it is None else f"_it{it}")] = np.asarray(w, dtype=np.float32)
+    return {"rows": rows, "trajectory": traj, "v_scores": scored, "grid": {nm: cfg for nm, cfg in T.GRIDS[method].items()},
+            "fixed_rows": {key: list(val) for key, val in T.ROWS[method].items()}, "config_used": used,
+            "seconds_per_config": seconds}, arrays
 
 
 class Feats:
@@ -551,7 +637,7 @@ def worker(a, stage: str) -> None:
                          "draws stage and copy the folder here")
     if stage == "grid" and any(m not in ALL_BASELINES for *_, m in todo):
         raise SystemExit("the grid stage is for the baselines only")
-    attn = ("attn_topk", "attn_soft")
+    attn = ("attn_topk", "attn_soft", "tabsift")
     if any(m in attn or ITERS_NAME.fullmatch(m) for *_, m in todo):  # they need the row-weight hooks of this repository's TabPFN copy
         import tabpfn
         try:
@@ -596,6 +682,8 @@ def worker(a, stage: str) -> None:
                 res, arrays_out = run_greedy(bd, d, method, log=log)
             elif method in LEARNED or ITERS_NAME.fullmatch(method):
                 res, arrays_out = run_learned(bd, d, method, a, log=log)
+            elif method in SIFT:
+                res, arrays_out = run_sift(bd, d, method, log=log)
             else:
                 gpath = ROOT / "grids" / tag / f"{method}.json"
                 if gpath.exists():

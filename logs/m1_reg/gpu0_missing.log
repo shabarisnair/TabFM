@@ -1,0 +1,9 @@
+[23:23:51 cuda:0] large_gas-drift_R30_V50_s1 m1_pseudo0.3: start (n 4950, k 1485, V 50)
+[23:24:05 cuda:0]     m1_pseudo0.3 it   0: test+V auc 0.9860 acc 0.8640 ce 0.7225 | V ce 0.7147 | prec 0.784 | shared with V-filter 1.00  (13 s)
+[23:47:05 cuda:0]     m1_pseudo0.3 it  50: test+V auc 0.9833 acc 0.8810 ce 0.7318 | V ce 0.4474 | prec 0.787 | shared with V-filter 0.98  (1393 s)
+[00:08:57 cuda:0]     m1_pseudo0.3 it 100: test+V auc 0.9870 acc 0.8890 ce 0.6696 | V ce 0.3551 | prec 0.790 | shared with V-filter 0.96  (2704 s)
+[00:30:38 cuda:0]     m1_pseudo0.3 it 150: test+V auc 0.9877 acc 0.8950 ce 0.6522 | V ce 0.1024 | prec 0.794 | shared with V-filter 0.95  (4006 s)
+[00:52:20 cuda:0]     m1_pseudo0.3 it 200: test+V auc 0.9875 acc 0.8930 ce 0.6043 | V ce 0.0868 | prec 0.789 | shared with V-filter 0.94  (5307 s)
+[01:07:55 cuda:0]     m1_pseudo0.3 it 250: test+V auc 0.9873 acc 0.8830 ce 0.6564 | V ce 0.0517 | prec 0.787 | shared with V-filter 0.94  (6243 s)
+[01:17:32 cuda:0]     m1_pseudo0.3 it 300: test+V auc 0.9855 acc 0.8890 ce 0.6130 | V ce 0.0408 | prec 0.787 | shared with V-filter 0.93  (6819 s)
+[01:17:32 cuda:0] large_gas-drift_R30_V50_s1 m1_pseudo0.3: done in 6823 s

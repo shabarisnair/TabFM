@@ -1,0 +1,3 @@
+gas-drift: clean auc 1.0000 acc 0.9960 ce 0.0108; R30: auc 0.9994 acc 0.9878; R40: auc 0.9990 acc 0.9842; R45: auc 0.9989 acc 0.9826  (27 s)
+coil2000_insurance_policies: clean auc 0.7371 acc 0.9410 ce 0.2025; R30: auc 0.6619 acc 0.9410; R40: auc 0.5688 acc 0.9412; R45: auc 0.5759 acc 0.9412  (16 s)
+students_dropout: clean auc 0.9087 acc 0.8160 ce 0.5195; R30: auc 0.8885 acc 0.7740; R40: auc 0.8806 acc 0.7624; R45: auc 0.8638 acc 0.7364  (3 s)

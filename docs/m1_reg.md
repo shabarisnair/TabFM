@@ -54,3 +54,6 @@ memory; at most 9 GiB elsewhere). On a GPU shared with other jobs a gas-drift ru
 second pass retries it, and rerunning the script resumes.
 
 Code: scripts/m1_reg_study.py (draws, work, plan, status), scripts/report_m1_reg.py.
+
+Results (2026-10-23): results/tables/m1_reg/findings.md (summary), results/tables/m1_reg/report.md (full tables),
+results/plots/m1_reg/curves.png.

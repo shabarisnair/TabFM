@@ -1,0 +1,3 @@
+heloc: clean auc 0.8045 acc 0.7460 ce 0.5413; R30: auc 0.7842 acc 0.7262; R40: auc 0.7499 acc 0.6844; R45: auc 0.6841 acc 0.6250  (14 s)
+ecommerce_shipping: clean auc 0.7682 acc 0.6870 ce 0.4939; R30: auc 0.7398 acc 0.6694; R40: auc 0.7234 acc 0.6234; R45: auc 0.6105 acc 0.5892  (6 s)
+is_this_a_good_customer: clean auc 0.7944 acc 0.8867 ce 0.3061; R30: auc 0.6322 acc 0.8867; R40: auc 0.5680 acc 0.8867; R45: auc 0.5018 acc 0.8867  (2 s)

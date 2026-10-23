@@ -59,7 +59,8 @@ R, V, SEED = 30.0, 500, 0
 PARAMS = ("w", "sigmoid", "log", "log2000")
 INITS = ("ones", "vfilter")
 OPTS = ("adam", "pgd", "sign")
-FLOOR = {"w": 0.0, "sigmoid": -1000.0, "log": -1000.0, "log2000": -2000.0}
+FLOOR = {"w": 0.0, "sigmoid": -1000.0, "log": -1000.0, "log2000": -2000.0,
+         "sigmoid_free": -math.inf}  # sigmoid_free: sigmoid with t unbounded (scripts/sigmoid_study.py)
 T0, T_MAX = 4.0, 20.0
 LR_GRID = {("w", "adam"): (0.0025, 0.01, 0.04), ("w", "pgd"): (0.0125, 0.05, 0.2), ("w", "sign"): (0.0025, 0.01, 0.04),
            ("sigmoid", "adam"): (0.05, 0.2, 0.8), ("sigmoid", "pgd"): (1.0, 4.0, 16.0),
@@ -217,18 +218,37 @@ def all_jobs() -> tuple[list[dict], bool]:
 # ---------------------------------------------------------------- one run
 
 def init_raw(param: str, init: str, d: dict, clf, device) -> torch.Tensor:
-    """The starting raw parameter: the same w in every parameterisation (sigmoid capped at sigmoid(T0))."""
+    """The starting raw parameter: the same w in every parameterisation (sigmoid capped at sigmoid(T0)). Sigmoid only:
+    vf_raw (sigmoid(t) = p(given label | V), no division by its max; p kept in [1e-12, 1 - 1e-6]), vf_hard (the k rows
+    the V-filter finds least plausible at t = -30, the rest at T0) and random<seed> (t ~ N(0, 1))."""
     from tabfm_experiments.row_weights import evaluate_weighted
     n = d["n"]
+    sig = param in ("sigmoid", "sigmoid_free")
     if init == "ones":
-        return torch.full((n,), {"w": 1.0, "sigmoid": T0}.get(param, 0.0), device=device)
+        return torch.full((n,), T0 if sig else {"w": 1.0}.get(param, 0.0), device=device)
+    if init.startswith("random"):
+        if not sig:
+            raise ValueError("the random start is for the sigmoid forms")
+        g = torch.Generator().manual_seed(int(init[len("random"):]))
+        return torch.randn(n, generator=g).to(device)
     p = evaluate_weighted(clf, d["Xf"], d["yf"], d["Xc"], d["yp"], torch.zeros(len(d["yf"]), device=device),
                           need_grad=False)[2]
     s = torch.as_tensor(np.log(np.clip(p[np.arange(n), d["yp"]], 1e-12, None)), dtype=torch.float64, device=device)
     b = (s - s.max()).clamp(-1000.0, 0.0)  # log w at the start
+    if init == "vf_raw":  # sigmoid only: sigmoid(t) = p(given label | V) itself, not divided by its max
+        if not sig:
+            raise ValueError("the raw V-filter start is for the sigmoid forms")
+        q = torch.as_tensor(p[np.arange(n), d["yp"]], dtype=torch.float64, device=device).clamp(1e-12, 1 - 1e-6)
+        return (torch.log(q) - torch.log1p(-q)).float()
+    if init == "vf_hard":
+        if not sig:
+            raise ValueError("the hard V-filter start is for the sigmoid forms")
+        raw = torch.full((n,), T0, dtype=torch.float64, device=device)
+        raw[torch.as_tensor(np.argsort(s.cpu().numpy(), kind="stable")[:d["k"]], device=device)] = -30.0
+        return raw.float()
     if param == "w":
         raw = b.exp()
-    elif param == "sigmoid":  # t = logit(e^b) = b - log(1 - e^b)
+    elif sig:  # t = logit(e^b) = b - log(1 - e^b)
         raw = (b - torch.log(-torch.expm1(b.clamp(max=-1e-12)))).clamp(max=T0)
     else:
         raw = b
@@ -241,10 +261,10 @@ def train(job: dict, data, d: dict, stop: dict, log=print, track_test: bool = Fa
     from sklearn.metrics import roc_auc_score
     from tabfm_experiments.row_weights import evaluate_weighted
     clf, dev = data.clf, data.device
-    kind = "log" if job["param"] == "log2000" else job["param"]
+    kind = {"log2000": "log", "sigmoid_free": "sigmoid"}.get(job["param"], job["param"])
     floor = FLOOR[job["param"]]
     c = A.DEFAULTS | dict(param=kind, opt={"pgd": "pgd-linf"}.get(job["opt"], job["opt"]), lr=job["lr"], floor=floor,
-                          t_max=T_MAX, t0=T0)
+                          t_max=math.inf if job["param"] == "sigmoid_free" else T_MAX, t0=T0)
     p = A.Param(kind, init_raw(job["param"], job["init"], d, clf, dev), c, d["k"])
     p.project()
     st = A.Stepper(p, c)
@@ -271,7 +291,7 @@ def train(job: dict, data, d: dict, stop: dict, log=print, track_test: bool = Fa
             out[f"n_le{th}_clean"] = int((lw[~pois_t] <= -th).sum())
         return out
 
-    evals, snaps, t0 = [], {}, time.time()
+    evals, snaps, raws, t0 = [], {}, {}, time.time()
     best_stop, it_best_stop, stopped = math.inf, 0, "max_steps"
     for it in range(stop["max_steps"] + 1):
         if it < stop["dense"] or it % stop["every"] == 0 or it == stop["max_steps"]:
@@ -283,6 +303,7 @@ def train(job: dict, data, d: dict, stop: dict, log=print, track_test: bool = Fa
                 e["test"] = test(lw)
             evals.append(e)
             snaps[it] = lw.clone()
+            raws[it] = p.raw.detach().clone()
             if it % 50 == 0:
                 log(f"    it {it:3d}  hold ce {hold['ce']:.4f} acc {hold['acc']:.3f} | auroc {e['auroc']:.3f}  log w med "
                     f"pois {e['logw_med_pois']:.1f} clean {e['logw_med_clean']:.1f}  ({e['sec']:.0f} s)")
@@ -324,7 +345,8 @@ def train(job: dict, data, d: dict, stop: dict, log=print, track_test: bool = Fa
            "last_it": evals[-1]["it"], "floor_hit": floor_hit, "seconds": round(time.time() - t0, 1), "sel": sel,
            "start": start, "evals": evals, "stop": stop, "host": socket.gethostname(), "device": dev}
     it_ce = sel["ce"]["it"]
-    arrays = {"logw_sel": snaps[it_ce].clamp(min=-1e4).cpu().numpy().astype(np.float32),
+    arrays = {"raw_sel": raws[it_ce].cpu().numpy().astype(np.float32), "raw_start": raws[0].cpu().numpy().astype(np.float32),
+              "logw_sel": snaps[it_ce].clamp(min=-1e4).cpu().numpy().astype(np.float32),
               "logw_start": snaps[0].clamp(min=-1e4).cpu().numpy().astype(np.float32), "pois": pois}
     return res, arrays
 
