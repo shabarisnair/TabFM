@@ -30,10 +30,12 @@ Methods (--methods; default: all):
                 the four strongest label-noise baselines of the earlier tiny-V benchmark (small_v_methods.py);
                 the other six (knn_sanitize, data_oob, cleanlab, simifeat, glc, mwnet) still run if named
   metasift      Meta-Sift with V on the train side of every batch; tabsift: the same soft split learned through
-  tabsift       TabPFN's row weights (tinyv_sift.py; w = sigmoid(t) from the hard V-filter split, Adam lr 5). Each
-                deployed as the top (1 - R)% + V (overall, and class by class as in the poisoned rows) and the top
-                2% + V (a small clean subset), at its default configuration and V-selected (as the baselines); test
-                metrics recorded along the training
+  tabsift       TabPFN's row weights (tinyv_sift.py; w = sigmoid(t) from the hard V-filter split, Adam lr 5);
+  tabsift_m1    tabsift_m1: the same split in M1's form (hard top-k split of free scores from the V-filter's log p,
+                the gradient at the relaxed point 0.05, PGD-L-inf lr 0.2). Each deployed as the top (1 - R)% + V
+                (overall, and class by class as in the poisoned rows) and the top 2% + V (a small clean subset), at
+                its default configuration and V-selected (as the baselines); test metrics recorded along the
+                training, and with --wandb-mode online sent to W&B as well (one run per job, <method>_<instance>)
 
 The baselines' hyperparameters. The earlier benchmark tuned them on clean held-out rows of the context
 file with the poisoned rows' identity, which is not allowed here, so each baseline is reported:
@@ -70,6 +72,7 @@ and grids/ folders afterwards). Finished jobs are skipped.
     python scripts/bench_tinyv.py run --device cuda:1 --methods refs vfilter greedy_pct10 greedy_pct1
     python scripts/bench_tinyv.py run --device cuda:2 --methods greedy_m1 --datasets gas-drift heloc
     python scripts/bench_tinyv.py run --device cuda:1 --methods attn_topk attn_soft nan_topk --shard 0/2
+    python scripts/bench_tinyv.py run --device cuda:1 --methods tabsift_m1 --Rs 30 --wandb-mode online
     python scripts/bench_tinyv.py status
     python scripts/report_bench_tinyv.py
 
@@ -80,6 +83,7 @@ docs/bench_tinyv.md has the breakdown.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import os
 import re
@@ -116,8 +120,9 @@ LEARNED = ("attn_topk", "attn_soft", "nan_topk")
 # KNN-Shapley 76.2, EMLC 75.3, label spreading 74.8; the other six 66.7-73.7), run by default
 BASELINES = ("label_spread", "knn_shapley", "emlc", "ieg")
 ALL_BASELINES = ("knn_sanitize", "label_spread", "knn_shapley", "data_oob", "cleanlab", "simifeat", "glc", "mwnet", "emlc", "ieg")
-# sifting with V fixed on the train side (tinyv_sift.py): Meta-Sift, and the same split learned through TabPFN
-SIFT = ("metasift", "tabsift")
+# sifting with V fixed on the train side (tinyv_sift.py): Meta-Sift, and the same split learned through TabPFN (the
+# sigmoid form, and M1's)
+SIFT = ("metasift", "tabsift", "tabsift_m1")
 METHODS = ("refs", *GREEDY, *LEARNED, *BASELINES, *SIFT)
 # the attention learners at another update count than tinyv_learned's 20 (scripts/tinyv_iter_study.py): M1 as
 # attn_topk_it<N>, the best soft form (w / V-filter / PGD, deployed soft + V) as attn_wsoft_it<N> (lr 0.8) or
@@ -317,17 +322,22 @@ def run_learned(bd: BenchData, d: dict, method: str, a, log=print) -> tuple[dict
 SIFT_KINDS = (("full", ""), ("full_cb", "_cb"), ("small", "_small"))  # deployment, row-name suffix
 
 
-def run_sift(bd: BenchData, d: dict, method: str, log=print) -> tuple[dict, dict]:
+def run_sift(bd: BenchData, d: dict, method: str, log=print, run=None) -> tuple[dict, dict]:
     """Every configuration of the method's grid (tinyv_sift.GRIDS; for tabsift every checkpoint of it) gives weights
     on the poisoned rows, deployed three ways with V added: the top (1 - R)% (the k lowest removed), the top (1 - R)%
     class by class (each given class its share of the poisoned rows: Meta-Sift's rule) and a small clean subset (the
     top 2% by that rule). Rows: the fixed configurations (tinyv_sift.ROWS; the default first) and the V-selected one
     (the lowest log loss of V under TabPFN with the kept rows alone as the context, as for the baselines), each
-    deployment separately. While the recorded configurations train (tabsift: both starts; metasift: the default),
-    every few iterations the three deployments' test metrics, the precision of the removed rows and the purity of
-    the kept ones go to the trajectory."""
+    deployment separately. While the recorded configurations train (tabsift: every configuration; metasift: the
+    default), every few iterations the three deployments' test metrics, the precision of the removed rows, the purity
+    of the kept ones and the AUROC of the weights against the poisoned rows go to the trajectory, and to the W&B run
+    `run` if one is given (wandb_keys; at the end wandb_summary)."""
     import tinyv_sift as T
+    from sklearn.metrics import roc_auc_score
     n, k = d["n"], d["k"]
+    refs = {} if run is None else {  # W&B's reference lines
+        "poisoned_plus_v": test_scores(bd, d), "oracle_plus_v": test_scores(bd, d, ~d["pois"]),
+        "v_only": metrics(bd.probs(d["Xv"], d["yv"], bd.Xt, bd.yt), bd.yt)}
 
     def keep_of(w: np.ndarray, kind: str) -> np.ndarray:
         kept = (np.argsort(-w, kind="stable")[:n - k] if kind == "full"
@@ -346,10 +356,13 @@ def run_sift(bd: BenchData, d: dict, method: str, log=print) -> tuple[dict, dict
 
     traj, cands, seconds, used = [], [], {}, {}
     for name, cfg in T.GRIDS[method].items():
-        recorded = method == "tabsift" or name == T.ROWS[method][""][0]
+        recorded = method != "metasift" or name == T.ROWS[method][""][0]
 
         def record(weights, name=name, **kw):
-            traj.append({"cfg": name, **kw, "w_mean": float(np.mean(weights)), "deploy": deployed(weights)})
+            traj.append({"cfg": name, **kw, "w_mean": float(np.mean(weights)),
+                         "auroc": float(roc_auc_score(d["pois"], -np.asarray(weights))), "deploy": deployed(weights)})
+            if run is not None and traj[-1]["it"] is not None:  # x-axis: tabsift's step, metasift's record count
+                run.log(wandb_keys(traj[-1]), step=traj[-1]["it"] if method != "metasift" else len(traj))
 
         if method == "metasift":
             out = T.metasift(d, cfg, log=log, record=record if recorded else None)
@@ -389,9 +402,93 @@ def run_sift(bd: BenchData, d: dict, method: str, log=print) -> tuple[dict, dict
             f"{len(mine)} candidates, {len(cache)} distinct kept sets")
     for name, it, w in cands:
         arrays[f"{name}" + ("" if it is None else f"_it{it}")] = np.asarray(w, dtype=np.float32)
+    if run is not None:
+        run.config.update({"config_used": used})
+        wandb_summary(run, method, d, traj, rows, scored, refs)
     return {"rows": rows, "trajectory": traj, "v_scores": scored, "grid": {nm: cfg for nm, cfg in T.GRIDS[method].items()},
             "fixed_rows": {key: list(val) for key, val in T.ROWS[method].items()}, "config_used": used,
             "seconds_per_config": seconds}, arrays
+
+
+# ---------------------------------------------------------------- W&B (sift jobs, --wandb-mode)
+
+WANDB_METRICS = {"acc": "accuracy", "bacc": "balanced_accuracy", "auc": "roc_auc", "ce": "log_loss"}  # W&B sections
+
+
+@contextlib.contextmanager
+def wandb_run(a, method: str, bd: BenchData, d: dict):
+    """The job's W&B run (None with --wandb-mode disabled): project --wandb-project, group --wandb-group (default
+    tinyv_<method>), named <method>_<instance>; marked failed if the job raises."""
+    if a is None or a.wandb_mode == "disabled":
+        yield None
+        return
+    import tinyv_sift as T
+    import wandb
+    ds, R, c, s = parse_tag(d["tag"])
+    config = {"method": method, "instance": d["tag"], "dataset": ds, "R": R, "c": c, "seed": s, "n": d["n"], "k": d["k"],
+              "n_v": len(d["yv"]), "n_classes": bd.K, "device": a.device, "host": socket.gethostname(),
+              "grid": T.GRIDS[method], "fixed_rows": {key: list(val) for key, val in T.ROWS[method].items()}}
+    run = wandb.init(project=a.wandb_project, entity=a.wandb_entity, group=a.wandb_group or f"tinyv_{method}",
+                     job_type=method, name=f"{method}_{d['tag']}", tags=[method, ds, f"c{c}", f"R{R:g}"],
+                     mode=a.wandb_mode, dir=str(ROOT), config=config)
+    try:
+        yield run
+    except BaseException:
+        run.finish(exit_code=1)
+        raise
+    run.finish()
+
+
+def wandb_keys(entry: dict) -> dict:
+    """One trajectory record as W&B keys: a section per measure, with the three deployments side by side in it
+    (accuracy/full, accuracy/full_cb, accuracy/small, ...)."""
+    out = {"weights/mean": entry["w_mean"], "ranking/auroc_poison": entry["auroc"]}
+    for key, name in (("objective", "objective/L"), ("objective_hard", "objective/L_hard"),
+                      ("train_loss", "objective/train_loss"), ("swapped", "ranking/swapped_since_start")):
+        if entry.get(key) is not None:
+            out[name] = entry[key]
+    for kind, dep in entry["deploy"].items():
+        out |= {f"{name}/{kind}": dep["test"][m] for m, name in WANDB_METRICS.items()}
+        out |= {f"precision/{kind}": dep["prec"], f"purity/{kind}": dep["purity"], f"n_removed/{kind}": dep["n_removed"]}
+    return out
+
+
+def wandb_summary(run, method: str, d: dict, traj: list[dict], rows: list[dict], scored: list[dict], refs: dict) -> None:
+    """The result rows (final/<row>/...) and the references (refs/...) as the run summary, both as tables too (with
+    V-selection's candidates); and one chart per test metric overlaying the three deployments' trajectories, the
+    references as flat lines, plus one for the removal precision and one for the objective."""
+    import wandb
+    summary = {}
+    for r in rows:
+        summary |= {f"final/{r['name']}/{name}": r["test"][m] for m, name in WANDB_METRICS.items()}
+        summary |= {f"final/{r['name']}/{key}": r[key] for key in ("prec", "purity", "n_removed", "ckpt") if r.get(key) is not None}
+    for ref, t in refs.items():
+        summary |= {f"refs/{ref}/{name}": t[m] for m, name in WANDB_METRICS.items()}
+    run.summary.update(summary)
+    pts = [(i + 1, e) for i, e in enumerate(traj) if e["it"] is not None]
+    xs = [e["it"] if method != "metasift" else i for i, e in pts]
+
+    def chart(title: str, series: list) -> object:  # series: (label, values), or (label, number) for a flat line
+        return wandb.plot.line_series(xs=[xs if isinstance(v, list) else [xs[0], xs[-1]] for _, v in series],
+                                      ys=[v if isinstance(v, list) else [v, v] for _, v in series],
+                                      keys=[label for label, _ in series], title=title, xname="step")
+
+    charts = {f"overlay/{name}": chart(f"test {name} (V added)", [(kind, [e["deploy"][kind]["test"][m] for _, e in pts])
+                                                                   for kind, _ in SIFT_KINDS]
+                                       + [(f"{ref} (reference)", t[m]) for ref, t in refs.items()])
+              for m, name in WANDB_METRICS.items()}
+    charts["overlay/precision"] = chart("precision of the removed rows", [
+        (kind, [e["deploy"][kind]["prec"] for _, e in pts]) for kind in ("full", "full_cb")] + [("chance (R)", float(d["pois"].mean()))])
+    obj = [(label, [e[key] for _, e in pts]) for key, label in (("objective", "L at the weights"), ("objective_hard", "L at the hard split"))
+           if all(e.get(key) is not None for _, e in pts)]
+    if obj:
+        charts["overlay/objective"] = chart("sift objective", obj)
+    cols = ["name", "cfg", "ckpt", *WANDB_METRICS.values(), "precision", "purity", "n_removed"]
+    charts["tables/rows"] = wandb.Table(columns=cols, data=[
+        [r["name"], r["cfg"], r["ckpt"], *(r["test"][m] for m in WANDB_METRICS), r["prec"], r["purity"], r["n_removed"]] for r in rows])
+    charts["tables/v_selection"] = wandb.Table(columns=["deploy", "cfg", "ckpt", "v_log_loss", "v_accuracy"], data=[
+        [s["deploy"], s["cfg"], s["ckpt"], s["v_ce"], s["v_acc"]] for s in scored])
+    run.log(charts)
 
 
 class Feats:
@@ -638,7 +735,7 @@ def worker(a, stage: str) -> None:
                          "draws stage and copy the folder here")
     if stage == "grid" and any(m not in ALL_BASELINES for *_, m in todo):
         raise SystemExit("the grid stage is for the baselines only")
-    attn = ("attn_topk", "attn_soft", "tabsift")
+    attn = ("attn_topk", "attn_soft", "tabsift", "tabsift_m1")
     if any(m in attn or ITERS_NAME.fullmatch(m) for *_, m in todo):  # they need the row-weight hooks of this repository's TabPFN copy
         import tabpfn
         try:
@@ -684,7 +781,8 @@ def worker(a, stage: str) -> None:
             elif method in LEARNED or ITERS_NAME.fullmatch(method):
                 res, arrays_out = run_learned(bd, d, method, a, log=log)
             elif method in SIFT:
-                res, arrays_out = run_sift(bd, d, method, log=log)
+                with wandb_run(a, method, bd, d) as run:
+                    res, arrays_out = run_sift(bd, d, method, log=log, run=run)
             else:
                 gpath = ROOT / "grids" / tag / f"{method}.json"
                 if gpath.exists():
@@ -751,6 +849,11 @@ def main(argv=None) -> None:
     ap.add_argument("--grid-limit", type=int, default=None, help="testing only: the default + the first N grid configs")
     ap.add_argument("--max-steps", type=int, default=None, help="testing only: override the learned methods' updates")
     ap.add_argument("--restarts", type=int, default=None, help="testing only: override nan_topk's restarts")
+    ap.add_argument("--wandb-mode", default="disabled", choices=["disabled", "offline", "online"],
+                    help="the sift methods' W&B runs (one per job; the API key from WANDB_API_KEY or wandb login)")
+    ap.add_argument("--wandb-project", default="TFM_experiments")
+    ap.add_argument("--wandb-entity", default=None, help="default: the API key's default entity")
+    ap.add_argument("--wandb-group", default=None, help="default: tinyv_<method>")
     a = ap.parse_args(argv)
     if a.stage == "draws":
         stage_draws(a)

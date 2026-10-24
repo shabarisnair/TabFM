@@ -6,8 +6,8 @@ the methods, a line per dataset, and a 7th line (black) is the mean over the 6 d
 rows are left out: the relabel modes and the V-selected EMLC, IEG and label spreading (they chose relabelling in
 almost every instance). Of the learned row filters only M1 (top-k attention weights, 300 updates: the count of
 scripts/tinyv_iter_study.py) and the best soft form (w / V-filter / PGD lr 0.2, 4 updates, deployed soft + V) are
-shown; A3 and the NaN gates are left out. The two sifting methods with V fixed on the train side (tinyv_sift.py:
-Meta-Sift and its TabPFN counterpart) at their default configurations, each as the top (1 - R)% + V (overall, and
+shown; A3 and the NaN gates are left out. The sifting methods with V fixed on the train side (tinyv_sift.py:
+Meta-Sift and its TabPFN counterpart, in the sigmoid form and in M1's) at their default configurations, each as the top (1 - R)% + V (overall, and
 class by class as in the poisoned rows) and the top 2% + V. The same numbers go to a markdown file, one table per V size and metric.
 
     python scripts/plot_bench_tinyv.py [--R 30] [--plots results/plots/bench_tinyv] [--tables results/tables/bench_tinyv]
@@ -33,7 +33,9 @@ PLOTTED = [("v_only", "V only"), ("poisoned_plus_v", "poisoned + V"), ("oracle_p
            ("knn_shapley_vsel", "KNN-Shapley (V-sel.)"), ("emlc", "EMLC"), ("ieg", "IEG"),
            ("metasift", "Meta-Sift, top (1-R)%"), ("metasift_cb", "Meta-Sift, top (1-R)% per class"),
            ("metasift_small", "Meta-Sift, top 2%"), ("tabsift", "TabPFN sift, top (1-R)%"),
-           ("tabsift_cb", "TabPFN sift, top (1-R)% per class"), ("tabsift_small", "TabPFN sift, top 2%")]
+           ("tabsift_cb", "TabPFN sift, top (1-R)% per class"), ("tabsift_small", "TabPFN sift, top 2%"),
+           ("tabsift_m1", "TabPFN sift M1, top (1-R)%"), ("tabsift_m1_cb", "TabPFN sift M1, top (1-R)% per class"),
+           ("tabsift_m1_small", "TabPFN sift M1, top 2%")]
 DATASETS = [("gas-drift", "gas-drift"), ("students_dropout", "students"), ("heloc", "heloc"),
             ("ecommerce_shipping", "ecommerce"), ("is_this_a_good_customer", "good_customer"),
             ("coil2000_insurance_policies", "coil2000")]
@@ -64,7 +66,7 @@ def main(argv=None) -> None:
           "rows are left out (the relabel modes and the V-selected EMLC, IEG and label spreading). Learned row "
           "filters: M1 (top-k attention weights, 300 updates) and the best soft form (w / V-filter / PGD lr 0.2, 4 "
           "updates, deployed soft + V); A3 and the NaN gates are left out. Sifting with V fixed on the train side "
-          "(Meta-Sift, and its TabPFN counterpart), default configurations, kept as the top (1-R)% (overall, or class "
+          "(Meta-Sift, and its TabPFN counterpart: sigmoid form, and M1's form), default configurations, kept as the top (1-R)% (overall, or class "
           "by class as in the poisoned rows) or the top 2% of the poisoned rows, + V. Precision: the share of the removed rows "
           "that were poisoned (for the soft form, the rows it set to w = 0; '–': nothing removed). Bold: the best "
           "entry of the column, oracle + V excluded. Accuracy is degenerate on good_customer and coil2000 (the "

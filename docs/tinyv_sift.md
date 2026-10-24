@@ -4,8 +4,9 @@ Question (2026-10-23): with V = 1, 3 or 5 clean rows per class and R = 30% of th
 do Meta-Sift and a TabPFN version of it do, if V is always trained on and never held out? Compared with the
 benchmark's existing methods and baselines on the same 18 instances (6 datasets x 3 V sizes, seed 0; one run each).
 
-Code: scripts/tinyv_sift.py (the methods), scripts/bench_tinyv.py (methods `metasift` and `tabsift`, run_sift),
-scripts/plan_sift.py (the 9 scripts in scripts/sift_jobs/).
+Code: scripts/tinyv_sift.py (the methods), scripts/bench_tinyv.py (methods `metasift`, `tabsift` and `tabsift_m1`,
+run_sift), scripts/plan_sift.py (the 11 scripts in scripts/sift_jobs/; the 5 tabsift_m1 scripts in
+scripts/sift_m1_jobs/).
 
 ## The two methods
 
@@ -57,6 +58,45 @@ steps, with the sigmoid study's form (results/tables/sigmoid_study):
 - **Checked:** the gradient in t and in w against finite differences, within about 1%. The hard start is exactly
   the V-filter's k least plausible rows.
 
+**tabsift_m1** (added 2026-10-24): the same split and objective in M1's form, the top-k attention weights of the
+benchmark (tinyv_learned.ATTN_CONFIGS["topk"], attn_learn.py --param topk).
+
+- **Scores:** a free score per poisoned row, started at the V-filter's log p(given label | V). The split is hard: the
+  k = R% lowest-scored rows are held out (w = 0 in the context, query weight 1) and the rest are kept (w = 1, query
+  weight 0). Step 0 is the V-filter's split exactly (checked on all 18 instances).
+- **Gradient:** taken at M1's relaxed point: held-out rows at w = 0.05, kept rows at 0.95, query weights 1 - w. The
+  scores move like log-weights: dL/dlog w_j = (the context part) - w_j CE_j / n.
+- **Update:** PGD-L-inf ascent at M1's lr, s += 0.2 g / max|g|, for 100 steps. The scores are the deployed weights.
+- **Differences from the sigmoid form.** Only the ranking matters, so a push shared by every score changes nothing,
+  and a held-out row can come back. In the sigmoid form the held-out rows sat frozen at t = -30.
+- **Checked:** the gradient against central finite differences in log w:
+  - kept rows: within 0.3%;
+  - held-out rows: the objective is strongly curved around w = 0.05, and the differences converge to the gradient
+    only at small steps (within 0.1% at eps = 0.002). At eps = 0.2 one row's difference even has the opposite sign,
+    the probe misalignment the M1 study found.
+- **Also recorded:**
+  - the objective at the hard split itself: the held-out rows' loss, with only the kept rows and V as the context;
+  - the number of rows that have left the start's held-out set.
+
+Every sift trajectory now also records the AUROC of the weights against the poisoned rows (a recording, never used).
+
+**W&B** (`--wandb-mode online`; the tabsift_m1 scripts use it): each sift job is one run in project TFM_experiments.
+- **Naming:** named `<method>_<instance>` (e.g. `tabsift_m1_heloc_R30_c5_s0`), group `tinyv_<method>`, tags method,
+  dataset, c and R. The config holds the instance and the configuration used.
+- **Per record** (x = step):
+  - `accuracy/`, `balanced_accuracy/`, `roc_auc/`, `log_loss/`, `precision/`, `purity/` and `n_removed/`, each with
+    `full`, `full_cb` and `small`;
+  - `objective/L` and `objective/L_hard`;
+  - `ranking/auroc_poison` and `ranking/swapped_since_start`;
+  - `weights/mean`.
+- **At the end:**
+  - the summary: `final/<row>/<metric>` for the default and V-selected rows, and `refs/<poisoned_plus_v | oracle_plus_v |
+    v_only>/<metric>`;
+  - charts overlaying the three deployments with the references as flat lines: `overlay/<metric>`,
+    `overlay/precision` and `overlay/objective`;
+  - the tables `tables/rows` and `tables/v_selection`.
+- **Local files:** the JSON and NPZ results are written as before.
+
 ## Deployments, rows and recording
 
 Each set of weights is deployed three ways, V always added:
@@ -75,13 +115,15 @@ Rows in results/bench_tinyv/runs/<instance>/{metasift,tabsift}.json, for each de
 | metasift_vsel | V-selected among those settings and 3 variants (model lr 3e-4, 10 epochs, v_lr 0.05) |
 | tabsift | sigmoid, hard V-filter start, Adam lr 5, 100 steps (the default) |
 | tabsift_vsel | V-selected among its steps 0 (the hard V-filter split itself), 1, 2, 5, 10, 20, 30, 50, 75 and 100 |
+| tabsift_m1 | M1's form: hard top-k split, gradient at the relaxed point 0.05, PGD-L-inf lr 0.2, 100 steps |
+| tabsift_m1_vsel | V-selected among the same steps (step 0 is the V-filter's split) |
 
 V-selection is the benchmark's rule for baselines: the candidate whose kept rows alone, as TabPFN's context, give V
 the lowest log loss. It uses only V and the poisoned rows.
 
 **Trajectory** (the JSON's `trajectory`), recorded while training:
 
-- tabsift: every 2 steps;
+- tabsift and tabsift_m1: every 2 steps;
 - metasift: every 10 meta-iterations of each sifter (and after its warmup), default settings, with the sifter's
   current weights; plus the final ensemble.
 
@@ -110,3 +152,6 @@ The other machines need these copied over:
 **Cost**: 36 jobs, about 4.3 H100-hours, about 0.4 hours on each of the 11 scripts. The longest jobs are tabsift on
 gas-drift: about 20 minutes each, with about 45 GiB of GPU memory or more for the single pass (it falls back to
 smaller chunks). On a GPU that another busy job shares, expect two to four times longer.
+
+Results (2026-10-24): results/tables/bench_tinyv/sift_findings.md (summary), R30_by_v.md (per dataset),
+results/plots/bench_tinyv/R30_V{1,3,5}.png.
