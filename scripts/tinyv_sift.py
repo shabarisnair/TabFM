@@ -18,12 +18,14 @@ the deployments' test metrics and precision there).
              (their code loads the AdamW state into it, which replaces the nominal meta lr 0.1).
   tabsift    the same split with TabPFN: every poisoned row is in the context, row j weighted by w_j through the
              row-weight mechanism (tabfm_experiments/row_weights.py), and is a query, weighted by 1 - w_j; V is
-             in the context at weight 1. w in [0, 1] (start: all 1, or the soft V-filter weights) is moved by
-             PGD-L-inf ascent steps on  L(w) = mean_j (1 - w_j) CE_j  over all poisoned rows (full gradient; the
-             queries go through in chunks only to fit in memory). `holdout`: "self" (default) masks each query from
-             its own context copy, so it cannot read its label straight off it, the rows' only exclusion; "none"
-             keeps even that; "chunk" holds each chunk of queries out of the context entirely. `mass`: also
-             project onto sum(w) = (1 - R) n (default off).
+             in the context at weight 1. Ascent on  L(w) = mean_j (1 - w_j) CE_j  over all poisoned rows (full
+             gradient; the queries go through in chunks only to fit in memory). Default (the sigmoid study's
+             choice): w = sigmoid(t), t unbounded, started from the hard V-filter split (the k rows the V-filter
+             finds least plausible at t = -30, the rest at t = 4), Adam at lr 5. param "w" is the earlier form:
+             w in [0, 1] itself (start: all 1, or the soft V-filter weights) by PGD-L-inf steps, clipped (`mass`:
+             projected onto sum(w) = (1 - R) n). `holdout`: "self" (default) masks each query from its own context
+             copy, so it cannot read its label straight off it, the rows' only exclusion; "none" keeps even that;
+             "chunk" holds each chunk of queries out of the context entirely.
 """
 from __future__ import annotations
 
@@ -39,15 +41,17 @@ METASIFT = dict(num_sifter=5, warmup_epochs=1, res_epochs=5, batch_size=128, v_l
                 top_k=6, num_act=4, momentum=0.9, nesterov=True, noise_sigma=0.1, model_lr=1e-3, record_every=10)
 # chunk: query rows per refit of the context (None: all at once, halved on running out of GPU memory; the objective is
 # the same for any chunk, except with holdout "chunk")
-TABSIFT = dict(init="ones", init_temp=1.0, lr=0.05, steps=100, mass=False, holdout="self", chunk=None, record_every=2,
-               ckpts=(0, 1, 2, 5, 10, 20, 30, 50, 75, 100))
+TABSIFT = dict(param="sigmoid", init="vf_hard", t_kept=4.0, t_removed=-30.0, opt="adam", lr=5.0, steps=100, mass=False,
+               holdout="self", chunk=None, record_every=2, ckpts=(0, 1, 2, 5, 10, 20, 30, 50, 75, 100))
+# the earlier form (w in [0, 1], PGD-L-inf at lr 0.05, start all 1), for reference: TABSIFT | TABSIFT_W
+TABSIFT_W = dict(param="w", init="ones", init_temp=1.0, opt="pgd", lr=0.05)
 SMALL = 0.02  # the small clean subset: this share of the poisoned rows
 # the configurations each method is run at (bench_tinyv.run_sift): the default, and the grid V-selection picks from
 GRIDS = {"metasift": {"tuned": {}, "model_lr3e-4": dict(model_lr=3e-4), "res_epochs10": dict(res_epochs=10),
                       "v_lr0.05": dict(v_lr=0.05)},
-         "tabsift": {"ones": dict(init="ones"), "vfilter": dict(init="vfilter")}}
+         "tabsift": {"sig_hard": {}}}
 # the fixed configurations reported as rows (row name suffix: (configuration, checkpoint)); "" is the default
-ROWS = {"metasift": {"": ("tuned", None)}, "tabsift": {"": ("ones", 100), "_vfinit": ("vfilter", 100)}}
+ROWS = {"metasift": {"": ("tuned", None)}, "tabsift": {"": ("sig_hard", 100)}}
 
 
 # ---------------------------------------------------------------- selection
@@ -212,9 +216,8 @@ def project_mass(w: torch.Tensor, mass: float | None) -> torch.Tensor:
 
 def sift_objective(clf, d: dict, w: torch.Tensor, *, chunk: int, holdout: str = "self", need_grad: bool = True):
     """L = mean over the poisoned rows j of (1 - w_j) CE_j, every poisoned row in the context at weight w_j and V at
-    weight 1 (holdout: see the module docstring). Returns (L, dL/dw or None, the rows' CE). The context channel's
-    gradient comes through log w (dL/dw = dL/dlog w / w; a row at w = 0 gets none, as for the soft form); the query
-    channel's is -CE_j / n."""
+    weight 1 (holdout: see the module docstring). Returns (L, dL/dlog w through the context or None, the rows' CE);
+    the query channel's gradient is -CE_j / n in w (ascent_direction combines the two for a parameterisation)."""
     from tabfm_experiments.row_weights import evaluate_weighted, log_weights
     n, nv = d["n"], len(d["yv"])
     rows = np.arange(n)
@@ -240,11 +243,25 @@ def sift_objective(clf, d: dict, w: torch.Tensor, *, chunk: int, holdout: str = 
         ce[st:en] = -np.log(np.clip(p[np.arange(len(q)), d["y_given"][q]], 1e-12, None))
     if not need_grad:
         return total, None, ce
-    g = torch.zeros(n, device=w.device)
-    pos = w.detach() > 0
-    g[pos] = g_ctx[:n][pos] / w.detach()[pos]
-    g -= torch.as_tensor(ce, dtype=torch.float32, device=w.device) / n
-    return total, torch.nan_to_num(g, nan=0.0, posinf=0.0, neginf=0.0), ce
+    return total, torch.nan_to_num(g_ctx[:n], nan=0.0, posinf=0.0, neginf=0.0), ce
+
+
+def ascent_direction(param: str, w: torch.Tensor, g_logw: torch.Tensor, ce: np.ndarray) -> torch.Tensor:
+    """dL/dw (param "w": the context part dL/dlog w / w, none for a row at w = 0, as for the soft form) or dL/dt for
+    w = sigmoid(t) (dlog w/dt = 1 - w, dw/dt = w (1 - w)); the query channel is -CE_j / n in w."""
+    w = w.detach()
+    q = torch.as_tensor(ce, dtype=torch.float32, device=w.device) / len(ce)
+    if param == "w":
+        return torch.where(w > 0, g_logw / w.clamp_min(1e-30), torch.zeros_like(w)) - q
+    return g_logw * (1 - w) - q * w * (1 - w)
+
+
+def vfilter_scores(clf, d: dict) -> np.ndarray:
+    """log p(given label | V as the context), per poisoned row."""
+    from tabfm_experiments.row_weights import evaluate_weighted
+    p = evaluate_weighted(clf, d["Xv"], d["yv"], d["Xc"], d["y_given"], torch.zeros(len(d["yv"]), device=d["Xc"].device),
+                          need_grad=False)[2]
+    return np.log(np.clip(p[np.arange(d["n"]), d["y_given"]], 1e-12, None))
 
 
 def tabsift(clf, d: dict, cfg: dict | None = None, log=print, record=None) -> dict:
@@ -254,20 +271,33 @@ def tabsift(clf, d: dict, cfg: dict | None = None, log=print, record=None) -> di
     c = dict(TABSIFT) | (cfg or {})
     device = d["Xc"].device
     n, k = d["n"], d["k"]
-    mass = float(n - k) if c["mass"] else None
-    if c["init"] == "ones":
+    sig = c["param"] == "sigmoid"
+    mass = float(n - k) if c["mass"] and not sig else None
+    if sig:  # t unbounded, w = sigmoid(t)
+        if c["init"] == "vf_hard":  # the V-filter's k least plausible rows at t_removed, the rest at t_kept
+            t = torch.full((n,), c["t_kept"], device=device)
+            t[torch.as_tensor(np.argsort(vfilter_scores(clf, d), kind="stable")[:k], device=device)] = c["t_removed"]
+        elif c["init"] == "ones":
+            t = torch.full((n,), c["t_kept"], device=device)
+        else:
+            raise ValueError(f"unknown start {c['init']!r} for the sigmoid form")
+        t.requires_grad_(True)
+        adam = torch.optim.Adam([t], lr=c["lr"], maximize=True)
+        w = torch.sigmoid(t.detach())
+    elif c["init"] == "ones":
         w = torch.ones(n, device=device)
     else:  # the soft V-filter start: p(given label | V) / its max, sharpened by init_temp
         dd = {"n": n, "Xc": d["Xc"], "yp": d["y_given"], "Xf": d["Xv"], "yf": d["yv"]}
         w = A.init_raw({"param": "w", "init": "vfilter", "init_temp": c["init_temp"], "floor": -1000.0}, dd, clf, device)
-    w = project_mass(w.float(), mass)
+    if not sig:
+        w = project_mass(w.float(), mass)
     chunk = c["chunk"] or (512 if c["holdout"] == "chunk" else n)
     ckpts, t0 = {}, time.time()
     for it in range(c["steps"] + 1):
         last = it == c["steps"]
         while True:
             try:
-                loss, g, _ = sift_objective(clf, d, w, chunk=chunk, holdout=c["holdout"], need_grad=not last)
+                loss, g_logw, ce = sift_objective(clf, d, w, chunk=chunk, holdout=c["holdout"], need_grad=not last)
                 break
             except torch.OutOfMemoryError:
                 if c["chunk"] or chunk <= 256:
@@ -282,8 +312,14 @@ def tabsift(clf, d: dict, cfg: dict | None = None, log=print, record=None) -> di
             record(it=it, weights=w.detach().cpu().numpy().copy(), objective=float(loss))
         if last:
             break
-        w = project_mass(w + c["lr"] * g / g.abs().max().clamp_min(1e-30), mass)
+        g = ascent_direction(c["param"], w, g_logw, ce)
+        if sig:
+            t.grad = g
+            adam.step()
+            w = torch.sigmoid(t.detach())
+        else:
+            w = project_mass(w + c["lr"] * g / g.abs().max().clamp_min(1e-30), mass)
         if it % 10 == 0:
-            log(f"      tabsift {c['init']} it {it}: objective {loss:.4f}  w mean {float(w.mean()):.3f} at 0 "
-                f"{int((w == 0).sum())} at 1 {int((w == 1).sum())}  ({time.time() - t0:.0f} s)")
+            log(f"      tabsift {c['param']} {c['init']} it {it}: objective {loss:.4f}  w mean {float(w.mean()):.3f} "
+                f"below 0.5 {int((w < 0.5).sum())} of {n}  ({time.time() - t0:.0f} s)")
     return {"ckpts": ckpts, "config": c, "seconds": round(time.time() - t0, 1)}

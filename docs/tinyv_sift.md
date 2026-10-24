@@ -30,9 +30,20 @@ rows predicts flipped labels badly). V has weight 1 on the train side and is nev
 
 **tabsift**: the same split with TabPFN, through the row-weight mechanism of the attention methods
 (tabfm_experiments/row_weights.py). Every poisoned row is in the context with weight w_j and is a query with loss
-weight 1 - w_j; V is in the context at weight 1. PGD-L-inf ascent on L(w) = mean_j (1 - w_j) CE_j, w in [0, 1]
-(clipped), lr 0.05, 100 full-gradient steps. Two starts: all 1 (the default, the Meta-Sift analogue: trust
-everything first) and the soft V-filter weights p(given label | V) / max.
+weight 1 - w_j; V is in the context at weight 1. Ascent on L(w) = mean_j (1 - w_j) CE_j over 100 full-gradient
+steps, with the sigmoid study's form (results/tables/sigmoid_study):
+
+- **Weights:** w = sigmoid(t), t unbounded (never clipped).
+- **Start:** the hard V-filter split. The k rows the V-filter (TabPFN with V as the context) finds least plausible
+  start at t = -30 (w about 1e-13), the rest at t = 4 (w = 0.982).
+- **Update:** Adam at lr 5.
+- **Earlier form:** param "w" (w in [0, 1] itself, clipped, PGD-L-inf at lr 0.05, start all 1) is still available
+  (tinyv_sift.TABSIFT_W).
+- **What the first steps do.** Adam's first steps move every t by about the learning rate, according to its
+  gradient's sign. The ascent gradient is negative for most rows: raising a row's query weight 1 - w adds its loss.
+  So one step at lr 5 drops many of the kept rows towards 0. On a development draw (good_customer, 1 row per class),
+  rows below w = 0.5 went from 419 to 934 after step 1. After that the split settled at about 630 of 1,398 rows near
+  0 and stayed there through step 100.
 
 - **Self-mask only.** Each query is masked from its own copy in the context and nothing else is excluded. Without
   the mask TabPFN reads a row's label straight off the identical context row: flipping a row's own label moved its
@@ -43,7 +54,8 @@ everything first) and the soft V-filter weights p(given label | V) / max.
 - **Queries in one pass.** All poisoned rows go through as queries in a single refit of the context; the chunk is
   halved only on running out of GPU memory, which leaves the objective unchanged. Per step this is several times
   cheaper than 512-row chunks (heloc: 7 against 45 seconds on a shared GPU).
-- **Checked:** the gradient against finite differences, within about 1%.
+- **Checked:** the gradient in t and in w against finite differences, within about 1%. The hard start is exactly
+  the V-filter's k least plausible rows.
 
 ## Deployments, rows and recording
 
@@ -61,16 +73,15 @@ Rows in results/bench_tinyv/runs/<instance>/{metasift,tabsift}.json, for each de
 |---|---|
 | metasift | the earlier Meta-Sift baseline's settings (above) |
 | metasift_vsel | V-selected among those settings and 3 variants (model lr 3e-4, 10 epochs, v_lr 0.05) |
-| tabsift | all-1 start, 100 steps (the default) |
-| tabsift_vfinit | V-filter start, 100 steps |
-| tabsift_vsel | V-selected among both starts at steps 1, 2, 5, 10, 20, 30, 50, 75, 100 (and the V-filter start itself) |
+| tabsift | sigmoid, hard V-filter start, Adam lr 5, 100 steps (the default) |
+| tabsift_vsel | V-selected among its steps 0 (the hard V-filter split itself), 1, 2, 5, 10, 20, 30, 50, 75 and 100 |
 
 V-selection is the benchmark's rule for baselines: the candidate whose kept rows alone, as TabPFN's context, give V
 the lowest log loss. It uses only V and the poisoned rows.
 
 **Trajectory** (the JSON's `trajectory`), recorded while training:
 
-- tabsift: every 2 steps, both starts;
+- tabsift: every 2 steps;
 - metasift: every 10 meta-iterations of each sifter (and after its warmup), default settings, with the sifter's
   current weights; plus the final ensemble.
 
@@ -85,7 +96,7 @@ show whether 100 steps with V behave the same.
 ## Running
 
 ```
-bash scripts/sift_jobs/gpu_0N.sh [GPU]                # N = 0..8; checks the machine first, resumes when rerun
+bash scripts/sift_jobs/gpu_NN.sh [GPU]                # NN = 00..10; checks the machine first, resumes when rerun
 bash scripts/sift_jobs/merge.sh <host>:<repo path>    # bring the runs back
 python scripts/plot_bench_tinyv.py                    # -> results/plots/bench_tinyv/R30_V*.png, results/tables/bench_tinyv/R30_by_v.md
 ```
@@ -96,6 +107,6 @@ The other machines need these copied over:
 - datasets/;
 - the Meta-Sift/ folder. It is not a working git submodule: a clone or pull leaves it empty.
 
-**Cost**: 36 jobs, about 6.6 H100-hours, about 0.75 hours on each of the 9 scripts. The longest jobs are tabsift on
-gas-drift: about 40 minutes each, with about 45 GiB of GPU memory or more for the single pass (it falls back to
+**Cost**: 36 jobs, about 4.3 H100-hours, about 0.4 hours on each of the 11 scripts. The longest jobs are tabsift on
+gas-drift: about 20 minutes each, with about 45 GiB of GPU memory or more for the single pass (it falls back to
 smaller chunks). On a GPU that another busy job shares, expect two to four times longer.

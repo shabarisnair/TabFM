@@ -30,9 +30,10 @@ Methods (--methods; default: all):
                 the four strongest label-noise baselines of the earlier tiny-V benchmark (small_v_methods.py);
                 the other six (knn_sanitize, data_oob, cleanlab, simifeat, glc, mwnet) still run if named
   metasift      Meta-Sift with V on the train side of every batch; tabsift: the same soft split learned through
-  tabsift       TabPFN's row weights (tinyv_sift.py). Each deployed as the top (1 - R)% + V (overall, and class by
-                class as in the poisoned rows) and the top 2% + V (a small clean subset), at its default
-                configuration and V-selected (as the baselines); test metrics recorded along the training
+  tabsift       TabPFN's row weights (tinyv_sift.py; w = sigmoid(t) from the hard V-filter split, Adam lr 5). Each
+                deployed as the top (1 - R)% + V (overall, and class by class as in the poisoned rows) and the top
+                2% + V (a small clean subset), at its default configuration and V-selected (as the baselines); test
+                metrics recorded along the training
 
 The baselines' hyperparameters. The earlier benchmark tuned them on clean held-out rows of the context
 file with the poisoned rows' identity, which is not allowed here, so each baseline is reported:
@@ -357,7 +358,7 @@ def run_sift(bd: BenchData, d: dict, method: str, log=print) -> tuple[dict, dict
                 record(out["weights"], sifter="ensemble", it=None, objective=None, train_loss=None)
         else:
             out = T.tabsift(bd.clf, d, cfg, log=log, record=record)
-            cands += [(name, it, ck["w"]) for it, ck in out["ckpts"].items() if it > 0 or cfg["init"] != "ones"]
+            cands += [(name, it, ck["w"]) for it, ck in out["ckpts"].items() if it > 0 or out["config"]["init"] != "ones"]
         seconds[name] = out["seconds"]
         used[name] = {key: (list(val) if isinstance(val, tuple) else val) for key, val in out["config"].items()}
 

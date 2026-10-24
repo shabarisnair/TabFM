@@ -319,7 +319,9 @@ def train(job: dict, data, d: dict, stop: dict, log=print, track_test: bool = Fa
             break
         lw = p.log_w()
         lw_d = lw.detach().requires_grad_(True)
-        _, g, _ = evaluate_weighted(clf, d["Xc"], d["yp"], d["Xf"], d["yf"], lw_d, need_grad=True)
+        train_ce, g, _ = evaluate_weighted(clf, d["Xc"], d["yp"], d["Xf"], d["yf"], lw_d, need_grad=True)
+        if evals and evals[-1]["it"] == it:  # the fitted rows' log loss at the weights just evaluated (the objective)
+            evals[-1]["train_ce"] = float(train_ce)
         p.raw.grad = None
         lw.backward(g)
         st.step(torch.nan_to_num(p.raw.grad.detach().clone(), nan=0.0, posinf=0.0, neginf=0.0))

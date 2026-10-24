@@ -53,3 +53,6 @@ The other machines need results/bench_largev/draws, results/bench_tinyv/draws, r
 best_soft references), about 56 H100-hours, about 6.3 hours on each of the 9 scripts. This assumes runs stop at about
 120 updates on average; the form study's sigmoid runs peaked on the holdout at a median of update 20. On a GPU that
 another busy job shares, it takes two to four times longer.
+
+Results (2026-10-24): results/tables/sigmoid_study/findings.md (summary), report.md (all configurations),
+paired.txt (paired differences and weight diagnostics; scripts/analyze_sigmoid_study.py).
