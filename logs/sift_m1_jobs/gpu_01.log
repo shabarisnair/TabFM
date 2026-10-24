@@ -1,0 +1,58 @@
+run gas-drift_R30_c3_s0 tabsift_m1: start (n 4982, k 1495, V 18)
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+wandb: Currently logged in as: shabari_ut (shabari_ut-university-of-texas-at-austin) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run mrfhrfvw
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261024_111637-mrfhrfvw
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_m1_gas-drift_R30_c3_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/mrfhrfvw
+      tabsift topk it 0: objective (relaxed) 0.2619  0 of the 1495 held-out rows swapped since the start  (15 s)
+      tabsift topk it 10: objective (relaxed) 0.2914  5 of the 1495 held-out rows swapped since the start  (144 s)
+      tabsift topk it 20: objective (relaxed) 0.3274  11 of the 1495 held-out rows swapped since the start  (275 s)
+      tabsift topk it 30: objective (relaxed) 0.3437  17 of the 1495 held-out rows swapped since the start  (406 s)
+      tabsift topk it 40: objective (relaxed) 0.3458  17 of the 1495 held-out rows swapped since the start  (537 s)
+      tabsift topk it 50: objective (relaxed) 0.3575  22 of the 1495 held-out rows swapped since the start  (668 s)
+      tabsift topk it 60: objective (relaxed) 0.4187  31 of the 1495 held-out rows swapped since the start  (799 s)
+      tabsift topk it 70: objective (relaxed) 0.4478  35 of the 1495 held-out rows swapped since the start  (930 s)
+      tabsift topk it 80: objective (relaxed) 0.4765  44 of the 1495 held-out rows swapped since the start  (1061 s)
+      tabsift topk it 90: objective (relaxed) 0.5406  47 of the 1495 held-out rows swapped since the start  (1191 s)
+    tabsift_m1: V-selected m1 at 10 (V log loss 0.181) of 10 candidates, 10 distinct kept sets
+    tabsift_m1_cb: V-selected m1 at 100 (V log loss 0.140) of 10 candidates, 10 distinct kept sets
+    tabsift_m1_small: V-selected m1 at 50 (V log loss 0.186) of 10 candidates, 10 distinct kept sets
+wandb: updating run metadata; uploading artifact run-mrfhrfvw-tablesrows-zSF8vQ; uploading artifact run-mrfhrfvw-tablesv_selection-xjPdZw; uploading artifact run-mrfhrfvw-overlayaccuracy_table-t-phMQ; uploading artifact run-mrfhrfvw-overlaybalanced_accuracy_table-z-6ghA (+ 4 more)
+wandb: uploading artifact run-mrfhrfvw-tablesrows-zSF8vQ; uploading artifact run-mrfhrfvw-tablesv_selection-xjPdZw; uploading artifact run-mrfhrfvw-overlayaccuracy_table-t-phMQ; uploading artifact run-mrfhrfvw-overlaybalanced_accuracy_table-z-6ghA; uploading artifact run-mrfhrfvw-overlayroc_auc_table-hGlbNA (+ 3 more)
+wandb: uploading artifact run-mrfhrfvw-overlayprecision_table-eLdEWQ; uploading artifact run-mrfhrfvw-overlayobjective_table-pyJpNQ
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▆▆▆▆▇▅▅▆▄▃▅▄▆▆▄▃▆▄▃▆▂▁▄▄▃▆▇▆▅▅▆█▅▆▃▅▅▂▇▆
+wandb:          accuracy/full_cb ▁▁▁▂▂▂▂▄▅▅▄▃▅▅▅▇▇▆▅▅▅▆▅▇▇▇▇█▅▄▇▅▇▆▅▆▅▆▆▆
+wandb:            accuracy/small ▁▁▂▂▂▂▁▂▃▃▄▄▄▄▄▆▇▆▆▇▆▇▆▆▆▆▆▆▇▆▇▇▇▇▇▇████
+wandb:    balanced_accuracy/full ▅▅▅▅▆▄▄▆▅▃▄▄▅▃▅▄▃▅▄▃█▁▁▄▃▅▅▇▅▄▅█▄▃▃▄▄▁▆▅
+wandb: balanced_accuracy/full_cb ▂▁▁▂▂▁▂▃▄▄▃▂▃▃▃▅▅▄▄▄▄▅▄▆▆▆█▅▄▆▅▆▅▅▄▅▄▅▅▆
+wandb:   balanced_accuracy/small ▁▁▁▂▂▂▁▂▃▄▄▅▅▄▅▆▆▆▆▆▆▆▆▆▅▆▆▆▇▇▇▇▇▇▇▇█▇██
+wandb:             log_loss/full ▆▆▆▆▆▆▆▅▅▅▆▆▆▆▆▆▆▆▆▆▆▆▇▇▇██▇▇▇▇▇▇▇▇▇▇█▂▁
+wandb:          log_loss/full_cb ▃▂▂▃▂▂▂▂▂▂▁▁▁▁▁▁▂▂▅▄▆▆▆▆▆▇█▇▆▆▅▅▅▅▆▅▆▆▆▆
+wandb:            log_loss/small ▅▆▅▄▄▅██▅▅▅▅▅▆▆▅▄▄▃▃▂▂▃▂▂▂▃▂▂▃▁▁▁▁▁▁▁▂▁▁
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +16 ...
+wandb: 
+wandb: Run summary:
+wandb:                      accuracy/full 0.825
+wandb:                   accuracy/full_cb 0.84
+wandb:                     accuracy/small 0.828
+wandb:             balanced_accuracy/full 0.83067
+wandb:          balanced_accuracy/full_cb 0.84017
+wandb:            balanced_accuracy/small 0.84237
+wandb:          final/tabsift_m1/accuracy 0.825
+wandb: final/tabsift_m1/balanced_accuracy 0.83067
+wandb:              final/tabsift_m1/ckpt 100
+wandb:          final/tabsift_m1/log_loss 0.80601
+wandb:                                +76 ...
+wandb: 
+wandb: 🚀 View run tabsift_m1_gas-drift_R30_c3_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/mrfhrfvw
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 16 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261024_111637-mrfhrfvw/logs
+run gas-drift_R30_c3_s0 tabsift_m1: done in 1340 s  tabsift_m1: acc 82.5 auc 97.8 ce 0.806 prec 0.664  tabsift_m1_vsel: acc 82.6 auc 97.7 ce 0.948 prec 0.647  tabsift_m1_cb: acc 84.0 auc 98.2 ce 0.737 prec 0.678  tabsift_m1_cb_vsel: acc 84.0 auc 98.2 ce 0.737 prec 0.678  tabsift_m1_small: acc 82.8 auc 98.1 ce 0.647 prec 0.305  tabsift_m1_small_vsel: acc 78.8 auc 97.7 ce 0.705 prec 0.305

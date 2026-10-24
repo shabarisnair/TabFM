@@ -1,0 +1,74 @@
+  inputs: ok (inputs.sha256: datasets' split files and draws)
+  model: /home/ssn899/.cache/tabpfn/tabpfn-v2-classifier-finetuned-zk73skhh.ckpt  code: tabpfn from /home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn
+is_this_a_good_customer_R30_V500_s0 w_ones_adam_lr0.01: start (n 900, k 270)
+    it   0  hold ce 0.5922 acc 0.740 | auroc 0.500  log w med pois 0.0 clean 0.0  (0 s)
+is_this_a_good_customer_R30_V500_s0 w_ones_adam_lr0.01: it 3 of 3 (max_steps) hold ce 0.5809 | test soft+V auc 0.6768 acc 0.8300 ce 0.3918 | auroc 0.695 floor False | 1 s
+is_this_a_good_customer_R30_V500_s0 w_ones_pgd_lr0.05: start (n 900, k 270)
+    it   0  hold ce 0.5922 acc 0.740 | auroc 0.500  log w med pois 0.0 clean 0.0  (0 s)
+is_this_a_good_customer_R30_V500_s0 w_ones_pgd_lr0.05: it 3 of 3 (max_steps) hold ce 0.5840 | test soft+V auc 0.6759 acc 0.8300 ce 0.3935 | auroc 0.681 floor False | 1 s
+is_this_a_good_customer_R30_V500_s0 w_ones_sign_lr0.01: start (n 900, k 270)
+    it   0  hold ce 0.5922 acc 0.740 | auroc 0.500  log w med pois 0.0 clean 0.0  (0 s)
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/attn_form_jobs/check_remote.py", line 101, in <module>
+    main()
+  File "/home/ssn899/Desktop/TabFM/scripts/attn_form_jobs/check_remote.py", line 93, in main
+    bad += numbers(a.device)
+           ^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/attn_form_jobs/check_remote.py", line 47, in numbers
+    S.smoke(device)
+  File "/home/ssn899/Desktop/TabFM/scripts/attn_form_study.py", line 472, in smoke
+    run_one(dict(ds="is_this_a_good_customer", param=param, init=init, opt=opt, lr=grid(param, opt)[1]), sets, stop)
+  File "/home/ssn899/Desktop/TabFM/scripts/attn_form_study.py", line 389, in run_one
+    res, arrays = train(job, data, d, stop, log=log)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/attn_form_study.py", line 345, in train
+    start = tests[0] if 0 in tests else test(snaps[0])
+                                        ^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/attn_form_study.py", line 278, in test
+    soft_v = A.metrics(evaluate_weighted(clf, Xcv, ycv, d["Xt"], d["yt"], torch.cat([lw, zeros_v]),
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 137, in evaluate_weighted
+    clf.fit_with_differentiable_input(X_ctx, y_ctx)
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/classifier.py", line 1210, in fit_with_differentiable_input
+    self.executor_ = InferenceEngineCachePreprocessing(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/inference.py", line 685, in __init__
+    ensemble_preprocessor.fit_transform_ensemble_members(
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/preprocessing/ensemble.py", line 327, in fit_transform_ensemble_members
+    return list(
+           ^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/preprocessing/ensemble.py", line 288, in fit_transform_ensemble_members_iterator
+    for (
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/preprocessing/transform.py", line 203, in fit_preprocessing
+    yield from executor(  # type: ignore[misc]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/joblib/parallel.py", line 2012, in __call__
+
+CondaError: KeyboardInterrupt
+
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/joblib/parallel.py", line 1940, in _get_sequential_output
+    res = func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/preprocessing/transform.py", line 76, in _fit_preprocessing_one
+    res = pipeline.fit_transform(X_train, feature_schema)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/preprocessing/pipeline_interface.py", line 390, in fit_transform
+    X, feature_schema = self._process_steps(X, feature_schema, is_fitting=True)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/preprocessing/pipeline_interface.py", line 506, in _process_steps
+    step.fit_transform(X, feature_schema)
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/preprocessing/pipeline_interface.py", line 249, in fit_transform
+    self.feature_schema_updated_ = self._fit(X, feature_schema)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/preprocessing/steps/shuffle_features_step.py", line 61, in _fit
+    return feature_schema.apply_permutation(index_permutation)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/preprocessing/datamodel.py", line 352, in apply_permutation
+    _validate_permutation(permutation)
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/preprocessing/datamodel.py", line 360, in _validate_permutation
+    if any(i < 0 or i >= len(permutation) for i in permutation):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/TabPFN/src/tabpfn/preprocessing/datamodel.py", line 360, in <genexpr>
+    if any(i < 0 or i >= len(permutation) for i in permutation):
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

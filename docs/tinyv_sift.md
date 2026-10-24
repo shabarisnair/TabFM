@@ -78,6 +78,27 @@ benchmark (tinyv_learned.ATTN_CONFIGS["topk"], attn_learn.py --param topk).
   - the objective at the hard split itself: the held-out rows' loss, with only the kept rows and V as the context;
   - the number of rows that have left the start's held-out set.
 
+**tabsift_m1_rand_s0..s4 and tabsift_m1_rand_ens** (added 2026-10-24): tabsift_m1 from a random start.
+- **Start:** random N(0, 1) scores drawn with seed i (attn_learn's random topk start) instead of the V-filter's log p.
+  V stays in the context at weight 1.
+- **Training:** 300 steps, each seed recorded every 5 steps (its own trajectory, like tabsift_m1's).
+- **V-selection candidates:** steps 0, 10, 20, 50, 100, 150, 200, 250 and 300 (their scores are saved).
+- **The ensemble** (`tabsift_m1_rand_ens`; bench_tinyv.run_sift_ensemble) runs once after its 5 seeds finish. Each
+  row's weight is its hard weight (1 kept, 0 held out) averaged over the seeds' chosen checkpoints; ties are broken by
+  the row's mean score rank. It has no trajectory.
+  - The default rows vote over the seeds' last steps.
+  - The `_vsel` rows vote over each seed's V-selected checkpoint for that deployment.
+  - Each row also gives the share of rows on which all 5 seeds agree.
+- **Run-to-run noise:** two runs of the same seed are bit-identical for about 185 steps. Then GPU rounding flips a
+  near-tied swap, and by step 300 their held-out sets overlap on about 70% of the rows (good_customer development
+  draw: ROC-AUC 0.590 vs 0.607).
+- **Runs:** `bash scripts/sift_m1_rand_jobs/gpu_NN.sh [GPU]` (NN = 00..03, one script per GPU), then `merge.sh`. Each
+  instance's 5 seeds and their vote are in the same script, so the scripts need no shared disk.
+- **W&B:** group `tinyv_tabsift_m1_rand_v2`. Every run has its result files as an artifact.
+  The stopped first version (the vote at every step; seeds 1-4 recorded every 25) left runs in group
+  `tinyv_tabsift_m1_rand`. Its result files are in results/bench_tinyv/superseded/sift_m1_rand_v1/.
+- **Cost:** 108 jobs, about 33.6 H100-hours, 8.3-8.5 per script.
+
 Every sift trajectory now also records the AUROC of the weights against the poisoned rows (a recording, never used).
 
 **W&B** (`--wandb-mode online`; the tabsift_m1 scripts use it): each sift job is one run in project TFM_experiments.
@@ -153,5 +174,13 @@ The other machines need these copied over:
 gas-drift: about 20 minutes each, with about 45 GiB of GPU memory or more for the single pass (it falls back to
 smaller chunks). On a GPU that another busy job shares, expect two to four times longer.
 
-Results (2026-10-24): results/tables/bench_tinyv/sift_findings.md (summary), R30_by_v.md (per dataset),
-results/plots/bench_tinyv/R30_V{1,3,5}.png.
+**tabsift_m1**:
+- **Run:** `bash scripts/sift_m1_jobs/gpu_NN.sh [GPU]` (NN = 00..04), each logging to W&B online, then
+  `bash scripts/sift_m1_jobs/merge.sh <host>:<repo path>`.
+- **Cost:** 18 jobs, about 2.9 H100-hours, at most 0.6 h per script.
+- **Memory:** two gas-drift jobs on one GPU run out of memory. Give each its own GPU.
+
+Results (2026-10-24):
+- results/tables/bench_tinyv/sift_findings.md (Meta-Sift and the sigmoid form) and sift_m1_findings.md (M1's form);
+- R30_by_v.md (per dataset);
+- results/plots/bench_tinyv/R30_V{1,3,5}.png.

@@ -1,0 +1,615 @@
+run is_this_a_good_customer_R30_c1_s0 tabsift_m1_rand_s0: start (n 1398, k 419, V 2)
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+wandb: Currently logged in as: shabari_ut (shabari_ut-university-of-texas-at-austin) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run r3dyx4vu
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261024_133402-r3dyx4vu
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_m1_rand_s0_is_this_a_good_customer_R30_c1_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/r3dyx4vu
+      tabsift topk it 0: objective (relaxed) 0.1629  0 of the 419 held-out rows swapped since the start  (0 s)
+      tabsift topk it 10: objective (relaxed) 0.1878  24 of the 419 held-out rows swapped since the start  (2 s)
+      tabsift topk it 20: objective (relaxed) 0.2121  36 of the 419 held-out rows swapped since the start  (4 s)
+      tabsift topk it 30: objective (relaxed) 0.2172  44 of the 419 held-out rows swapped since the start  (6 s)
+      tabsift topk it 40: objective (relaxed) 0.2444  61 of the 419 held-out rows swapped since the start  (8 s)
+      tabsift topk it 50: objective (relaxed) 0.2510  74 of the 419 held-out rows swapped since the start  (10 s)
+      tabsift topk it 60: objective (relaxed) 0.2690  81 of the 419 held-out rows swapped since the start  (12 s)
+      tabsift topk it 70: objective (relaxed) 0.2660  90 of the 419 held-out rows swapped since the start  (14 s)
+      tabsift topk it 80: objective (relaxed) 0.2620  87 of the 419 held-out rows swapped since the start  (16 s)
+      tabsift topk it 90: objective (relaxed) 0.2775  100 of the 419 held-out rows swapped since the start  (18 s)
+      tabsift topk it 100: objective (relaxed) 0.2698  105 of the 419 held-out rows swapped since the start  (19 s)
+      tabsift topk it 110: objective (relaxed) 0.2641  111 of the 419 held-out rows swapped since the start  (21 s)
+      tabsift topk it 120: objective (relaxed) 0.2777  114 of the 419 held-out rows swapped since the start  (23 s)
+      tabsift topk it 130: objective (relaxed) 0.2879  121 of the 419 held-out rows swapped since the start  (25 s)
+      tabsift topk it 140: objective (relaxed) 0.2765  127 of the 419 held-out rows swapped since the start  (27 s)
+      tabsift topk it 150: objective (relaxed) 0.2739  132 of the 419 held-out rows swapped since the start  (29 s)
+      tabsift topk it 160: objective (relaxed) 0.2888  136 of the 419 held-out rows swapped since the start  (31 s)
+      tabsift topk it 170: objective (relaxed) 0.2927  147 of the 419 held-out rows swapped since the start  (33 s)
+      tabsift topk it 180: objective (relaxed) 0.2897  154 of the 419 held-out rows swapped since the start  (35 s)
+      tabsift topk it 190: objective (relaxed) 0.3201  156 of the 419 held-out rows swapped since the start  (36 s)
+      tabsift topk it 200: objective (relaxed) 0.2997  165 of the 419 held-out rows swapped since the start  (39 s)
+      tabsift topk it 210: objective (relaxed) 0.2971  173 of the 419 held-out rows swapped since the start  (40 s)
+      tabsift topk it 220: objective (relaxed) 0.3062  177 of the 419 held-out rows swapped since the start  (42 s)
+      tabsift topk it 230: objective (relaxed) 0.3073  173 of the 419 held-out rows swapped since the start  (44 s)
+      tabsift topk it 240: objective (relaxed) 0.2949  184 of the 419 held-out rows swapped since the start  (46 s)
+      tabsift topk it 250: objective (relaxed) 0.3165  179 of the 419 held-out rows swapped since the start  (48 s)
+      tabsift topk it 260: objective (relaxed) 0.2795  178 of the 419 held-out rows swapped since the start  (50 s)
+      tabsift topk it 270: objective (relaxed) 0.2824  188 of the 419 held-out rows swapped since the start  (52 s)
+      tabsift topk it 280: objective (relaxed) 0.3228  186 of the 419 held-out rows swapped since the start  (54 s)
+      tabsift topk it 290: objective (relaxed) 0.2982  185 of the 419 held-out rows swapped since the start  (56 s)
+    tabsift_m1_rand_s0: V-selected rand_s0 at 100 (V log loss 0.289) of 9 candidates, 9 distinct kept sets
+    tabsift_m1_rand_s0_cb: V-selected rand_s0 at 100 (V log loss 0.287) of 9 candidates, 9 distinct kept sets
+    tabsift_m1_rand_s0_small: V-selected rand_s0 at 250 (V log loss 0.351) of 9 candidates, 9 distinct kept sets
+wandb: updating run metadata; uploading artifact run-r3dyx4vu-tablesrows-7EGosA; uploading artifact run-r3dyx4vu-tablesv_selection-r_ddiA; uploading artifact run-r3dyx4vu-overlayaccuracy_table-QzvgaQ; uploading artifact run-r3dyx4vu-overlaybalanced_accuracy_table-GkKVUA (+ 5 more)
+wandb: uploading artifact run-r3dyx4vu-tablesrows-7EGosA; uploading artifact run-r3dyx4vu-tablesv_selection-r_ddiA; uploading artifact run-r3dyx4vu-overlayaccuracy_table-QzvgaQ; uploading artifact run-r3dyx4vu-overlaybalanced_accuracy_table-GkKVUA; uploading artifact run-r3dyx4vu-overlayroc_auc_table-gV1SIg (+ 3 more)
+wandb: uploading artifact run-r3dyx4vu-overlayobjective_table-wmZhcg
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full █▇█▅▆▃▄▆▄▆▆▆▅▆▄▅▆▅▆▆▂▄▁▃▄▆▄▄▅▃▇▄█▅▄▇▅▆▅▁
+wandb:          accuracy/full_cb ▆▇▆▅▄▂▄▄▃▄▂▂▃▄▆▅▃▂▄▂▅▅▄▂▂▃▃▂▅▃█▂▃▄▅▅▄▄▅▁
+wandb:            accuracy/small █████▆▇▇█▇▅▅▆▅▆▄▃▄▄▄▁▃▃▁▁▁▁▁▃▁▂▁▂▂▃▃▃▃▄▄
+wandb:    balanced_accuracy/full ▆▇▇▇▅▇▅▄▄▂▅▅▄▅▄▆▅▆▅▅▅▄▇▆▂▆▄▃▃▆▁▅▅▆█▆▇▅▅▇
+wandb: balanced_accuracy/full_cb ▄▇▄▆▄▆▃▅▆▃▃█▆▅▄▇▅▄▃▆▄▅▄▆▃▅▁▃▆▃▄▅█▂▆▆▆▄▄▄
+wandb:   balanced_accuracy/small ▃▃▃▃▃▇▃▆█▆▇▆▆▆▅▄▄▆▅▁▆▅▄▃▄▄▄▅▁▂▄▅▅▅▅▅▄▄▄▄
+wandb:             log_loss/full ▁▁▁▂▃▃▃▄▅▆▃▄▄▄▄▃▃▃▄▄▅▄▄▅▅▅▅▅█▅▇▄▆▅▅▄▅▅▄▃
+wandb:          log_loss/full_cb ▁▁▂▃▂▃▄▄▅▆▄▃▅▅▅▃▄▄▄▅▆▄▅▃▆▄▇▇▆▆▇▄▇█▄▅▄▆▅▄
+wandb:            log_loss/small ▁▁▁▁▁▁▁▁▁▁▃▃▂▂▂▄▄▄▄▄█▆███▇▆▇██▆▆▅▅▅▅▄▄▄▄
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +16 ...
+wandb: 
+wandb: Run summary:
+wandb:                              accuracy/full 0.71
+wandb:                           accuracy/full_cb 0.70667
+wandb:                             accuracy/small 0.70333
+wandb:                     balanced_accuracy/full 0.56712
+wandb:                  balanced_accuracy/full_cb 0.59089
+wandb:                    balanced_accuracy/small 0.52488
+wandb:          final/tabsift_m1_rand_s0/accuracy 0.71
+wandb: final/tabsift_m1_rand_s0/balanced_accuracy 0.56712
+wandb:              final/tabsift_m1_rand_s0/ckpt 300
+wandb:          final/tabsift_m1_rand_s0/log_loss 0.61863
+wandb:                                        +76 ...
+wandb: 
+wandb: 🚀 View run tabsift_m1_rand_s0_is_this_a_good_customer_R30_c1_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/r3dyx4vu
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 16 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261024_133402-r3dyx4vu/logs
+run is_this_a_good_customer_R30_c1_s0 tabsift_m1_rand_s0: done in 64 s  tabsift_m1_rand_s0: acc 71.0 auc 61.6 ce 0.619 prec 0.329  tabsift_m1_rand_s0_vsel: acc 71.7 auc 60.9 ce 0.616 prec 0.334  tabsift_m1_rand_s0_cb: acc 70.7 auc 62.2 ce 0.629 prec 0.285  tabsift_m1_rand_s0_cb_vsel: acc 72.3 auc 60.2 ce 0.628 prec 0.287  tabsift_m1_rand_s0_small: acc 70.3 auc 53.0 ce 0.576 prec 0.299  tabsift_m1_rand_s0_small_vsel: acc 63.3 auc 58.5 ce 0.610 prec 0.299
+run is_this_a_good_customer_R30_c1_s0 tabsift_m1_rand_s3: start (n 1398, k 419, V 2)
+wandb: setting up run acqvkh3e
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261024_133505-acqvkh3e
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_m1_rand_s3_is_this_a_good_customer_R30_c1_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/acqvkh3e
+      tabsift topk it 0: objective (relaxed) 0.1997  0 of the 419 held-out rows swapped since the start  (0 s)
+      tabsift topk it 10: objective (relaxed) 0.2148  17 of the 419 held-out rows swapped since the start  (2 s)
+      tabsift topk it 20: objective (relaxed) 0.2241  32 of the 419 held-out rows swapped since the start  (4 s)
+      tabsift topk it 30: objective (relaxed) 0.2326  40 of the 419 held-out rows swapped since the start  (5 s)
+      tabsift topk it 40: objective (relaxed) 0.2447  48 of the 419 held-out rows swapped since the start  (7 s)
+      tabsift topk it 50: objective (relaxed) 0.2579  63 of the 419 held-out rows swapped since the start  (9 s)
+      tabsift topk it 60: objective (relaxed) 0.2784  74 of the 419 held-out rows swapped since the start  (11 s)
+      tabsift topk it 70: objective (relaxed) 0.2830  84 of the 419 held-out rows swapped since the start  (13 s)
+      tabsift topk it 80: objective (relaxed) 0.2635  90 of the 419 held-out rows swapped since the start  (14 s)
+      tabsift topk it 90: objective (relaxed) 0.2600  93 of the 419 held-out rows swapped since the start  (16 s)
+      tabsift topk it 100: objective (relaxed) 0.2582  106 of the 419 held-out rows swapped since the start  (18 s)
+      tabsift topk it 110: objective (relaxed) 0.2562  105 of the 419 held-out rows swapped since the start  (20 s)
+      tabsift topk it 120: objective (relaxed) 0.2959  109 of the 419 held-out rows swapped since the start  (21 s)
+      tabsift topk it 130: objective (relaxed) 0.2775  102 of the 419 held-out rows swapped since the start  (23 s)
+      tabsift topk it 140: objective (relaxed) 0.2973  111 of the 419 held-out rows swapped since the start  (25 s)
+      tabsift topk it 150: objective (relaxed) 0.2980  123 of the 419 held-out rows swapped since the start  (26 s)
+      tabsift topk it 160: objective (relaxed) 0.3077  124 of the 419 held-out rows swapped since the start  (28 s)
+      tabsift topk it 170: objective (relaxed) 0.2507  127 of the 419 held-out rows swapped since the start  (30 s)
+      tabsift topk it 180: objective (relaxed) 0.2899  138 of the 419 held-out rows swapped since the start  (32 s)
+      tabsift topk it 190: objective (relaxed) 0.2809  133 of the 419 held-out rows swapped since the start  (33 s)
+      tabsift topk it 200: objective (relaxed) 0.2566  143 of the 419 held-out rows swapped since the start  (35 s)
+      tabsift topk it 210: objective (relaxed) 0.2923  143 of the 419 held-out rows swapped since the start  (37 s)
+      tabsift topk it 220: objective (relaxed) 0.3198  145 of the 419 held-out rows swapped since the start  (39 s)
+      tabsift topk it 230: objective (relaxed) 0.3013  152 of the 419 held-out rows swapped since the start  (41 s)
+      tabsift topk it 240: objective (relaxed) 0.3252  152 of the 419 held-out rows swapped since the start  (42 s)
+      tabsift topk it 250: objective (relaxed) 0.3324  152 of the 419 held-out rows swapped since the start  (44 s)
+      tabsift topk it 260: objective (relaxed) 0.2685  155 of the 419 held-out rows swapped since the start  (46 s)
+      tabsift topk it 270: objective (relaxed) 0.3064  163 of the 419 held-out rows swapped since the start  (47 s)
+      tabsift topk it 280: objective (relaxed) 0.2949  170 of the 419 held-out rows swapped since the start  (49 s)
+      tabsift topk it 290: objective (relaxed) 0.2744  173 of the 419 held-out rows swapped since the start  (51 s)
+    tabsift_m1_rand_s3: V-selected rand_s3 at 200 (V log loss 0.355) of 9 candidates, 9 distinct kept sets
+    tabsift_m1_rand_s3_cb: V-selected rand_s3 at 200 (V log loss 0.330) of 9 candidates, 9 distinct kept sets
+    tabsift_m1_rand_s3_small: V-selected rand_s3 at 300 (V log loss 0.418) of 9 candidates, 9 distinct kept sets
+wandb: updating run metadata; uploading artifact run-acqvkh3e-tablesrows-hCFvqw; uploading artifact run-acqvkh3e-tablesv_selection-oWMTEQ; uploading artifact run-acqvkh3e-overlayaccuracy_table-C-KMlA; uploading artifact run-acqvkh3e-overlaybalanced_accuracy_table-J-_K_g (+ 4 more)
+wandb: uploading artifact run-acqvkh3e-tablesrows-hCFvqw; uploading artifact run-acqvkh3e-tablesv_selection-oWMTEQ; uploading artifact run-acqvkh3e-overlayaccuracy_table-C-KMlA; uploading artifact run-acqvkh3e-overlaybalanced_accuracy_table-J-_K_g; uploading artifact run-acqvkh3e-overlayroc_auc_table-6gfkhQ (+ 3 more)
+wandb: uploading artifact run-acqvkh3e-overlayprecision_table-3rcb0w; uploading artifact run-acqvkh3e-overlayobjective_table-ASI2vw
+wandb: uploading media/table/overlay/accuracy_table_300_adf36648a09412cbe8e4.table.json; uploading media/table/overlay/roc_auc_table_300_250dddfeb7935c3ecb40.table.json; uploading media/table/overlay/log_loss_table_300_b0b0c609712ccd27b06e.table.json; uploading media/table/tables/v_selection_300_b1c6e85d4d4a7fba69a1.table.json; uploading media/table/overlay/balanced_accuracy_table_300_baeae4b22611d57fce26.table.json (+ 2 more)
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▅▂▂▄▅▁█▂▅▇▄▄▃
+wandb:          accuracy/full_cb █▅▅▅█▃▇▂█▄▁▅▅
+wandb:            accuracy/small ▆▇█▅▂▂▁▂▂▃▂▂▂
+wandb:    balanced_accuracy/full ▂▁▃▂▂▂█▁▅▃▅▂▃
+wandb: balanced_accuracy/full_cb ▄▁▅▁▄▂█▂█▆▃▇▇
+wandb:   balanced_accuracy/small ▁▂▄▂▄▃▇▄▄▂▄▃█
+wandb:             log_loss/full ▁▃▅▅▃▇▄█▄▅▆▅▅
+wandb:          log_loss/full_cb ▁▄▅▆▄█▅▇▅▆██▅
+wandb:            log_loss/small ▃▂▁▂▆█▅▅▅▆▆▇▇
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +16 ...
+wandb: 
+wandb: Run summary:
+wandb:                              accuracy/full 0.72333
+wandb:                           accuracy/full_cb 0.71667
+wandb:                             accuracy/small 0.63
+wandb:                     balanced_accuracy/full 0.58746
+wandb:                  balanced_accuracy/full_cb 0.60935
+wandb:                    balanced_accuracy/small 0.63744
+wandb:          final/tabsift_m1_rand_s3/accuracy 0.72333
+wandb: final/tabsift_m1_rand_s3/balanced_accuracy 0.58746
+wandb:              final/tabsift_m1_rand_s3/ckpt 300
+wandb:          final/tabsift_m1_rand_s3/log_loss 0.64562
+wandb:                                        +76 ...
+wandb: 
+wandb: 🚀 View run tabsift_m1_rand_s3_is_this_a_good_customer_R30_c1_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/acqvkh3e
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 16 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261024_133505-acqvkh3e/logs
+run is_this_a_good_customer_R30_c1_s0 tabsift_m1_rand_s3: done in 56 s  tabsift_m1_rand_s3: acc 72.3 auc 61.4 ce 0.646 prec 0.341  tabsift_m1_rand_s3_vsel: acc 73.3 auc 62.6 ce 0.634 prec 0.334  tabsift_m1_rand_s3_cb: acc 71.7 auc 61.8 ce 0.667 prec 0.280  tabsift_m1_rand_s3_cb_vsel: acc 73.3 auc 62.4 ce 0.652 prec 0.301  tabsift_m1_rand_s3_small: acc 63.0 auc 63.9 ce 0.691 prec 0.299  tabsift_m1_rand_s3_small_vsel: acc 63.0 auc 63.9 ce 0.691 prec 0.299
+run is_this_a_good_customer_R30_c1_s0 tabsift_m1_rand_ens: waiting for its members
+run is_this_a_good_customer_R30_c3_s0 tabsift_m1_rand_s0: start (n 1394, k 418, V 6)
+wandb: setting up run v42l67sl
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261024_133602-v42l67sl
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_m1_rand_s0_is_this_a_good_customer_R30_c3_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/v42l67sl
+      tabsift topk it 0: objective (relaxed) 0.1943  0 of the 418 held-out rows swapped since the start  (0 s)
+      tabsift topk it 10: objective (relaxed) 0.2095  20 of the 418 held-out rows swapped since the start  (2 s)
+      tabsift topk it 20: objective (relaxed) 0.2212  26 of the 418 held-out rows swapped since the start  (4 s)
+      tabsift topk it 30: objective (relaxed) 0.2148  44 of the 418 held-out rows swapped since the start  (6 s)
+      tabsift topk it 40: objective (relaxed) 0.2426  43 of the 418 held-out rows swapped since the start  (8 s)
+      tabsift topk it 50: objective (relaxed) 0.2398  55 of the 418 held-out rows swapped since the start  (10 s)
+      tabsift topk it 60: objective (relaxed) 0.2344  61 of the 418 held-out rows swapped since the start  (12 s)
+      tabsift topk it 70: objective (relaxed) 0.2707  71 of the 418 held-out rows swapped since the start  (14 s)
+      tabsift topk it 80: objective (relaxed) 0.2591  71 of the 418 held-out rows swapped since the start  (15 s)
+      tabsift topk it 90: objective (relaxed) 0.2925  81 of the 418 held-out rows swapped since the start  (17 s)
+      tabsift topk it 100: objective (relaxed) 0.2582  86 of the 418 held-out rows swapped since the start  (19 s)
+      tabsift topk it 110: objective (relaxed) 0.2711  92 of the 418 held-out rows swapped since the start  (21 s)
+      tabsift topk it 120: objective (relaxed) 0.3096  99 of the 418 held-out rows swapped since the start  (23 s)
+      tabsift topk it 130: objective (relaxed) 0.2924  103 of the 418 held-out rows swapped since the start  (25 s)
+      tabsift topk it 140: objective (relaxed) 0.3024  115 of the 418 held-out rows swapped since the start  (27 s)
+      tabsift topk it 150: objective (relaxed) 0.3033  117 of the 418 held-out rows swapped since the start  (29 s)
+      tabsift topk it 160: objective (relaxed) 0.3130  130 of the 418 held-out rows swapped since the start  (31 s)
+      tabsift topk it 170: objective (relaxed) 0.2765  132 of the 418 held-out rows swapped since the start  (33 s)
+      tabsift topk it 180: objective (relaxed) 0.3177  142 of the 418 held-out rows swapped since the start  (34 s)
+      tabsift topk it 190: objective (relaxed) 0.2903  141 of the 418 held-out rows swapped since the start  (36 s)
+      tabsift topk it 200: objective (relaxed) 0.3380  147 of the 418 held-out rows swapped since the start  (38 s)
+      tabsift topk it 210: objective (relaxed) 0.3004  149 of the 418 held-out rows swapped since the start  (40 s)
+      tabsift topk it 220: objective (relaxed) 0.3202  161 of the 418 held-out rows swapped since the start  (42 s)
+      tabsift topk it 230: objective (relaxed) 0.3500  170 of the 418 held-out rows swapped since the start  (44 s)
+      tabsift topk it 240: objective (relaxed) 0.2999  166 of the 418 held-out rows swapped since the start  (46 s)
+      tabsift topk it 250: objective (relaxed) 0.3338  182 of the 418 held-out rows swapped since the start  (48 s)
+      tabsift topk it 260: objective (relaxed) 0.3221  191 of the 418 held-out rows swapped since the start  (50 s)
+      tabsift topk it 270: objective (relaxed) 0.3486  185 of the 418 held-out rows swapped since the start  (52 s)
+      tabsift topk it 280: objective (relaxed) 0.3424  195 of the 418 held-out rows swapped since the start  (54 s)
+      tabsift topk it 290: objective (relaxed) 0.3650  201 of the 418 held-out rows swapped since the start  (55 s)
+    tabsift_m1_rand_s0: V-selected rand_s0 at 10 (V log loss 0.947) of 9 candidates, 9 distinct kept sets
+    tabsift_m1_rand_s0_cb: V-selected rand_s0 at 10 (V log loss 0.983) of 9 candidates, 9 distinct kept sets
+    tabsift_m1_rand_s0_small: V-selected rand_s0 at 0 (V log loss 0.662) of 9 candidates, 8 distinct kept sets
+wandb: updating run metadata; uploading artifact run-v42l67sl-tablesrows-OY-F2Q; uploading artifact run-v42l67sl-tablesv_selection-TURdRw; uploading artifact run-v42l67sl-overlayaccuracy_table-7PlgFg; uploading artifact run-v42l67sl-overlaybalanced_accuracy_table-1asxFw (+ 4 more)
+wandb: uploading artifact run-v42l67sl-tablesv_selection-TURdRw; uploading artifact run-v42l67sl-overlayaccuracy_table-7PlgFg; uploading artifact run-v42l67sl-overlaybalanced_accuracy_table-1asxFw; uploading artifact run-v42l67sl-overlayroc_auc_table-ScZhiw; uploading artifact run-v42l67sl-overlaylog_loss_table-j-JBNg (+ 2 more)
+wandb: uploading artifact run-v42l67sl-overlayobjective_table-AnPPXw
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full █▇▅▅▇▇▇▅▄▄▆▇▇▄▄▆▄▄▄▂▆▅▅▁▂▄▄▅▃▄▅▄▆▆▄▆▄▅▇▆
+wandb:          accuracy/full_cb ▇▇▇█▆▆▇▆▇▇█▆▇█▆▃▄▅▆▄▄▄▃▂▄▂▄▃▅▁▄▃▄▂▄▃▅▃▂▂
+wandb:            accuracy/small ▃▁▂▂▃▂▄▄▂▄▇▇▇▄▄▆▅▅▅▆▆▆▆████▇▇▇▇▅▅▅▅▅▆▆▆▆
+wandb:    balanced_accuracy/full ▆▅▅▄▆▄▄▅▄▄▆▄▅▄█▃▆▄▇▃▆▄▁▇▇▆▅▃▅▅▂▆▆▇▄▅▇▆▄▅
+wandb: balanced_accuracy/full_cb ▅▃▅▇▄▄▃▆▅▄▇▆█▆▇▄▄▅▆▄▅▃▂▆▃▅▄▆▁▅▅▅▂▂▄▃▄▇▄▂
+wandb:   balanced_accuracy/small ▂▁▁▁▁▄▄▄▁▃▂▂▃▃▄▆▃▅▅▅▅▃▃▃▃▄▄▄▄▄▅▅▅▆▆▇▇▇▇█
+wandb:             log_loss/full ▁▁▂▄▁▂▁▂▄▄▄▂▅▅▇▄▂▂▅▅▅▅▄▆█▅▇▅▅▅▆▅▅▅▄▂▄▄▆▆
+wandb:          log_loss/full_cb ▁▁▂▂▂▂▂▃▃▄▃▅▅▄▅▅▆▅▇▅▆▇█▆▆▆▇▇▇▇▅▅▇▆█▆▆█▇▇
+wandb:            log_loss/small ▅█▇▇▇▅▅▆▄▄▄▄▄▄▄▄▃▃▃▄▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▂▁
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +16 ...
+wandb: 
+wandb: Run summary:
+wandb:                              accuracy/full 0.74667
+wandb:                           accuracy/full_cb 0.70333
+wandb:                             accuracy/small 0.78
+wandb:                     balanced_accuracy/full 0.60062
+wandb:                  balanced_accuracy/full_cb 0.58901
+wandb:                    balanced_accuracy/small 0.67072
+wandb:          final/tabsift_m1_rand_s0/accuracy 0.74667
+wandb: final/tabsift_m1_rand_s0/balanced_accuracy 0.60062
+wandb:              final/tabsift_m1_rand_s0/ckpt 300
+wandb:          final/tabsift_m1_rand_s0/log_loss 0.57181
+wandb:                                        +76 ...
+wandb: 
+wandb: 🚀 View run tabsift_m1_rand_s0_is_this_a_good_customer_R30_c3_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/v42l67sl
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 16 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261024_133602-v42l67sl/logs
+run is_this_a_good_customer_R30_c3_s0 tabsift_m1_rand_s0: done in 62 s  tabsift_m1_rand_s0: acc 74.7 auc 64.4 ce 0.572 prec 0.435  tabsift_m1_rand_s0_vsel: acc 75.0 auc 65.0 ce 0.524 prec 0.335  tabsift_m1_rand_s0_cb: acc 70.3 auc 64.4 ce 0.657 prec 0.324  tabsift_m1_rand_s0_cb_vsel: acc 73.0 auc 65.0 ce 0.553 prec 0.307  tabsift_m1_rand_s0_small: acc 78.0 auc 69.6 ce 0.486 prec 0.302  tabsift_m1_rand_s0_small_vsel: acc 64.3 auc 49.0 ce 0.590 prec 0.300
+run is_this_a_good_customer_R30_c3_s0 tabsift_m1_rand_s2: start (n 1394, k 418, V 6)
+wandb: setting up run 0z26cr5c
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261024_133703-0z26cr5c
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_m1_rand_s2_is_this_a_good_customer_R30_c3_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/0z26cr5c
+      tabsift topk it 0: objective (relaxed) 0.1844  0 of the 418 held-out rows swapped since the start  (0 s)
+      tabsift topk it 10: objective (relaxed) 0.2012  11 of the 418 held-out rows swapped since the start  (2 s)
+      tabsift topk it 20: objective (relaxed) 0.2148  21 of the 418 held-out rows swapped since the start  (4 s)
+      tabsift topk it 30: objective (relaxed) 0.2197  27 of the 418 held-out rows swapped since the start  (5 s)
+      tabsift topk it 40: objective (relaxed) 0.2285  39 of the 418 held-out rows swapped since the start  (7 s)
+      tabsift topk it 50: objective (relaxed) 0.2441  44 of the 418 held-out rows swapped since the start  (9 s)
+      tabsift topk it 60: objective (relaxed) 0.2572  54 of the 418 held-out rows swapped since the start  (11 s)
+      tabsift topk it 70: objective (relaxed) 0.2522  58 of the 418 held-out rows swapped since the start  (12 s)
+      tabsift topk it 80: objective (relaxed) 0.2672  68 of the 418 held-out rows swapped since the start  (14 s)
+      tabsift topk it 90: objective (relaxed) 0.2510  79 of the 418 held-out rows swapped since the start  (16 s)
+      tabsift topk it 100: objective (relaxed) 0.2749  85 of the 418 held-out rows swapped since the start  (18 s)
+      tabsift topk it 110: objective (relaxed) 0.2756  87 of the 418 held-out rows swapped since the start  (19 s)
+      tabsift topk it 120: objective (relaxed) 0.2616  93 of the 418 held-out rows swapped since the start  (21 s)
+      tabsift topk it 130: objective (relaxed) 0.2518  97 of the 418 held-out rows swapped since the start  (23 s)
+      tabsift topk it 140: objective (relaxed) 0.2843  105 of the 418 held-out rows swapped since the start  (25 s)
+      tabsift topk it 150: objective (relaxed) 0.2673  104 of the 418 held-out rows swapped since the start  (26 s)
+      tabsift topk it 160: objective (relaxed) 0.2664  117 of the 418 held-out rows swapped since the start  (28 s)
+      tabsift topk it 170: objective (relaxed) 0.2574  106 of the 418 held-out rows swapped since the start  (30 s)
+      tabsift topk it 180: objective (relaxed) 0.2613  120 of the 418 held-out rows swapped since the start  (32 s)
+      tabsift topk it 190: objective (relaxed) 0.2914  126 of the 418 held-out rows swapped since the start  (33 s)
+      tabsift topk it 200: objective (relaxed) 0.2786  125 of the 418 held-out rows swapped since the start  (35 s)
+      tabsift topk it 210: objective (relaxed) 0.2638  130 of the 418 held-out rows swapped since the start  (37 s)
+      tabsift topk it 220: objective (relaxed) 0.2806  136 of the 418 held-out rows swapped since the start  (39 s)
+      tabsift topk it 230: objective (relaxed) 0.2766  134 of the 418 held-out rows swapped since the start  (40 s)
+      tabsift topk it 240: objective (relaxed) 0.2931  144 of the 418 held-out rows swapped since the start  (42 s)
+      tabsift topk it 250: objective (relaxed) 0.2876  147 of the 418 held-out rows swapped since the start  (44 s)
+      tabsift topk it 260: objective (relaxed) 0.2356  155 of the 418 held-out rows swapped since the start  (46 s)
+      tabsift topk it 270: objective (relaxed) 0.2814  162 of the 418 held-out rows swapped since the start  (47 s)
+      tabsift topk it 280: objective (relaxed) 0.2844  171 of the 418 held-out rows swapped since the start  (49 s)
+      tabsift topk it 290: objective (relaxed) 0.2815  174 of the 418 held-out rows swapped since the start  (51 s)
+    tabsift_m1_rand_s2: V-selected rand_s2 at 300 (V log loss 0.811) of 9 candidates, 9 distinct kept sets
+    tabsift_m1_rand_s2_cb: V-selected rand_s2 at 50 (V log loss 0.827) of 9 candidates, 9 distinct kept sets
+    tabsift_m1_rand_s2_small: V-selected rand_s2 at 100 (V log loss 0.623) of 9 candidates, 9 distinct kept sets
+wandb: updating run metadata; uploading artifact run-0z26cr5c-tablesrows-_G3Ygg; uploading artifact run-0z26cr5c-tablesv_selection-zwFxqA; uploading artifact run-0z26cr5c-overlayaccuracy_table-3QrXsA; uploading artifact run-0z26cr5c-overlaybalanced_accuracy_table-BJbhgw (+ 4 more)
+wandb: uploading artifact run-0z26cr5c-tablesrows-_G3Ygg; uploading artifact run-0z26cr5c-tablesv_selection-zwFxqA; uploading artifact run-0z26cr5c-overlayaccuracy_table-3QrXsA; uploading artifact run-0z26cr5c-overlaybalanced_accuracy_table-BJbhgw; uploading artifact run-0z26cr5c-overlayroc_auc_table-1P8oJQ (+ 3 more)
+wandb: uploading artifact run-0z26cr5c-overlayroc_auc_table-1P8oJQ; uploading artifact run-0z26cr5c-overlaylog_loss_table-vhH2kA; uploading artifact run-0z26cr5c-overlayprecision_table-4mIXWQ; uploading artifact run-0z26cr5c-overlayobjective_table-Pfc6NQ
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▆▆▃▅▆▆█▁▆▂▄▆▆
+wandb:          accuracy/full_cb █▅▄▁▄▇▇▆▄▂▁▄▃
+wandb:            accuracy/small ▆▅▄▄▁▆▆██▇▇▆▃
+wandb:    balanced_accuracy/full ▆▆▃▅▆▆█▁▇▆▅█▇
+wandb: balanced_accuracy/full_cb ▅▃▆▁▃██▄▆▅▄▆▅
+wandb:   balanced_accuracy/small ▁█▄▃▂▅▅▃▃█▅▃▃
+wandb:             log_loss/full ▂▁▃▄▁▅▃▅▅█▆▄▇
+wandb:          log_loss/full_cb ▁▁▂▄▂▅▂▄▅▇▆▆█
+wandb:            log_loss/small ▂▂▃▃█▂▂▁▁▁▁▂▅
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +16 ...
+wandb: 
+wandb: Run summary:
+wandb:                              accuracy/full 0.74667
+wandb:                           accuracy/full_cb 0.72667
+wandb:                             accuracy/small 0.64667
+wandb:                     balanced_accuracy/full 0.62627
+wandb:                  balanced_accuracy/full_cb 0.61499
+wandb:                    balanced_accuracy/small 0.55705
+wandb:          final/tabsift_m1_rand_s2/accuracy 0.74667
+wandb: final/tabsift_m1_rand_s2/balanced_accuracy 0.62627
+wandb:              final/tabsift_m1_rand_s2/ckpt 300
+wandb:          final/tabsift_m1_rand_s2/log_loss 0.59979
+wandb:                                        +76 ...
+wandb: 
+wandb: 🚀 View run tabsift_m1_rand_s2_is_this_a_good_customer_R30_c3_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/0z26cr5c
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 16 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261024_133703-0z26cr5c/logs
+run is_this_a_good_customer_R30_c3_s0 tabsift_m1_rand_s2: done in 56 s  tabsift_m1_rand_s2: acc 74.7 auc 63.2 ce 0.600 prec 0.366  tabsift_m1_rand_s2_vsel: acc 74.7 auc 63.2 ce 0.600 prec 0.366  tabsift_m1_rand_s2_cb: acc 72.7 auc 63.7 ce 0.641 prec 0.307  tabsift_m1_rand_s2_cb_vsel: acc 73.0 auc 63.2 ce 0.581 prec 0.295  tabsift_m1_rand_s2_small: acc 64.7 auc 58.5 ce 0.594 prec 0.299  tabsift_m1_rand_s2_small_vsel: acc 60.7 auc 56.9 ce 0.674 prec 0.299
+run is_this_a_good_customer_R30_c3_s0 tabsift_m1_rand_s4: start (n 1394, k 418, V 6)
+wandb: setting up run fv1x4elt
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261024_133759-fv1x4elt
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_m1_rand_s4_is_this_a_good_customer_R30_c3_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/fv1x4elt
+      tabsift topk it 0: objective (relaxed) 0.1842  0 of the 418 held-out rows swapped since the start  (0 s)
+      tabsift topk it 10: objective (relaxed) 0.2117  15 of the 418 held-out rows swapped since the start  (2 s)
+      tabsift topk it 20: objective (relaxed) 0.2152  20 of the 418 held-out rows swapped since the start  (4 s)
+      tabsift topk it 30: objective (relaxed) 0.2272  25 of the 418 held-out rows swapped since the start  (5 s)
+      tabsift topk it 40: objective (relaxed) 0.2439  37 of the 418 held-out rows swapped since the start  (7 s)
+      tabsift topk it 50: objective (relaxed) 0.2613  37 of the 418 held-out rows swapped since the start  (9 s)
+      tabsift topk it 60: objective (relaxed) 0.2606  48 of the 418 held-out rows swapped since the start  (11 s)
+      tabsift topk it 70: objective (relaxed) 0.2623  53 of the 418 held-out rows swapped since the start  (12 s)
+      tabsift topk it 80: objective (relaxed) 0.2487  63 of the 418 held-out rows swapped since the start  (14 s)
+      tabsift topk it 90: objective (relaxed) 0.2597  68 of the 418 held-out rows swapped since the start  (16 s)
+      tabsift topk it 100: objective (relaxed) 0.2756  75 of the 418 held-out rows swapped since the start  (18 s)
+      tabsift topk it 110: objective (relaxed) 0.2564  74 of the 418 held-out rows swapped since the start  (19 s)
+      tabsift topk it 120: objective (relaxed) 0.2515  84 of the 418 held-out rows swapped since the start  (21 s)
+      tabsift topk it 130: objective (relaxed) 0.2293  95 of the 418 held-out rows swapped since the start  (23 s)
+      tabsift topk it 140: objective (relaxed) 0.2776  95 of the 418 held-out rows swapped since the start  (25 s)
+      tabsift topk it 150: objective (relaxed) 0.2646  103 of the 418 held-out rows swapped since the start  (26 s)
+      tabsift topk it 160: objective (relaxed) 0.2883  111 of the 418 held-out rows swapped since the start  (28 s)
+      tabsift topk it 170: objective (relaxed) 0.2971  115 of the 418 held-out rows swapped since the start  (30 s)
+      tabsift topk it 180: objective (relaxed) 0.2961  117 of the 418 held-out rows swapped since the start  (32 s)
+      tabsift topk it 190: objective (relaxed) 0.2843  128 of the 418 held-out rows swapped since the start  (33 s)
+      tabsift topk it 200: objective (relaxed) 0.2830  133 of the 418 held-out rows swapped since the start  (35 s)
+      tabsift topk it 210: objective (relaxed) 0.2931  136 of the 418 held-out rows swapped since the start  (37 s)
+      tabsift topk it 220: objective (relaxed) 0.3186  139 of the 418 held-out rows swapped since the start  (39 s)
+      tabsift topk it 230: objective (relaxed) 0.3048  144 of the 418 held-out rows swapped since the start  (40 s)
+      tabsift topk it 240: objective (relaxed) 0.2801  140 of the 418 held-out rows swapped since the start  (42 s)
+      tabsift topk it 250: objective (relaxed) 0.3228  143 of the 418 held-out rows swapped since the start  (44 s)
+      tabsift topk it 260: objective (relaxed) 0.3016  152 of the 418 held-out rows swapped since the start  (46 s)
+      tabsift topk it 270: objective (relaxed) 0.2883  163 of the 418 held-out rows swapped since the start  (47 s)
+      tabsift topk it 280: objective (relaxed) 0.3198  154 of the 418 held-out rows swapped since the start  (49 s)
+      tabsift topk it 290: objective (relaxed) 0.2797  174 of the 418 held-out rows swapped since the start  (51 s)
+    tabsift_m1_rand_s4: V-selected rand_s4 at 200 (V log loss 0.897) of 9 candidates, 9 distinct kept sets
+    tabsift_m1_rand_s4_cb: V-selected rand_s4 at 200 (V log loss 0.863) of 9 candidates, 9 distinct kept sets
+    tabsift_m1_rand_s4_small: V-selected rand_s4 at 100 (V log loss 0.664) of 9 candidates, 9 distinct kept sets
+wandb: updating run metadata; uploading artifact run-fv1x4elt-tablesrows-EbcqGA; uploading artifact run-fv1x4elt-tablesv_selection-O7Me1Q; uploading artifact run-fv1x4elt-overlayaccuracy_table-a_fZ0w; uploading artifact run-fv1x4elt-overlaybalanced_accuracy_table-vcjloQ (+ 4 more)
+wandb: uploading artifact run-fv1x4elt-tablesrows-EbcqGA; uploading artifact run-fv1x4elt-tablesv_selection-O7Me1Q; uploading artifact run-fv1x4elt-overlayaccuracy_table-a_fZ0w; uploading artifact run-fv1x4elt-overlaybalanced_accuracy_table-vcjloQ; uploading artifact run-fv1x4elt-overlayroc_auc_table-T9x2Gg (+ 3 more)
+wandb: uploading artifact run-fv1x4elt-overlayprecision_table-Nm_atQ
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▃▁▂▄▅█▆▃▄▆▇█▃
+wandb:          accuracy/full_cb ▆▇▃▃▄▆█▁▄█▆▆▁
+wandb:            accuracy/small ██▇▅▂▆▂▁▂▆▅▂▂
+wandb:    balanced_accuracy/full █▁▃▆▅▄▇▆▆▅▅▆▂
+wandb: balanced_accuracy/full_cb ██▆▄▃█▆▃▅▄▁▁▁
+wandb:   balanced_accuracy/small ▃▂▂▁▄▅▆██▃▁▄▄
+wandb:             log_loss/full ▂▁▄▆▂▁▅▄▄▅▃▅█
+wandb:          log_loss/full_cb ▁▁▃▆▄▂▃▆█▅▆▇█
+wandb:            log_loss/small ▂▂▂▆▃▂▅▅█▁▃▅▅
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +16 ...
+wandb: 
+wandb: Run summary:
+wandb:                              accuracy/full 0.73667
+wandb:                           accuracy/full_cb 0.71333
+wandb:                             accuracy/small 0.79667
+wandb:                     balanced_accuracy/full 0.58215
+wandb:                  balanced_accuracy/full_cb 0.58182
+wandb:                    balanced_accuracy/small 0.51338
+wandb:          final/tabsift_m1_rand_s4/accuracy 0.73667
+wandb: final/tabsift_m1_rand_s4/balanced_accuracy 0.58215
+wandb:              final/tabsift_m1_rand_s4/ckpt 300
+wandb:          final/tabsift_m1_rand_s4/log_loss 0.60362
+wandb:                                        +76 ...
+wandb: 
+wandb: 🚀 View run tabsift_m1_rand_s4_is_this_a_good_customer_R30_c3_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/fv1x4elt
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 16 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261024_133759-fv1x4elt/logs
+run is_this_a_good_customer_R30_c3_s0 tabsift_m1_rand_s4: done in 56 s  tabsift_m1_rand_s4: acc 73.7 auc 63.3 ce 0.604 prec 0.371  tabsift_m1_rand_s4_vsel: acc 74.0 auc 64.5 ce 0.575 prec 0.359  tabsift_m1_rand_s4_cb: acc 71.3 auc 64.0 ce 0.630 prec 0.312  tabsift_m1_rand_s4_cb_vsel: acc 72.7 auc 64.2 ce 0.625 prec 0.321  tabsift_m1_rand_s4_small: acc 79.7 auc 56.4 ce 0.520 prec 0.297  tabsift_m1_rand_s4_small_vsel: acc 80.7 auc 64.7 ce 0.506 prec 0.299
+run is_this_a_good_customer_R30_c3_s0 tabsift_m1_rand_ens: start (n 1394, k 418, V 6)
+wandb: setting up run 9u662nr2
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261024_133855-9u662nr2
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_m1_rand_ens_is_this_a_good_customer_R30_c3_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/9u662nr2
+      vote of 5 at step 0: 16% of the rows unanimous  (0 s)
+      vote of 5 at step 50: 18% of the rows unanimous  (1 s)
+      vote of 5 at step 100: 18% of the rows unanimous  (2 s)
+      vote of 5 at step 150: 20% of the rows unanimous  (3 s)
+      vote of 5 at step 200: 21% of the rows unanimous  (4 s)
+      vote of 5 at step 250: 23% of the rows unanimous  (5 s)
+      vote of 5 at step 300: 26% of the rows unanimous  (6 s)
+    tabsift_m1_rand_ens: V-selected vote at 300 (V log loss 0.687) of 9 candidates, 9 distinct kept sets
+    tabsift_m1_rand_ens_cb: V-selected vote at 300 (V log loss 0.681) of 9 candidates, 9 distinct kept sets
+    tabsift_m1_rand_ens_small: V-selected vote at 300 (V log loss 0.638) of 9 candidates, 9 distinct kept sets
+wandb: updating run metadata; uploading artifact run-9u662nr2-tablesrows-2yioJQ; uploading artifact run-9u662nr2-tablesv_selection-69nRNw; uploading artifact run-9u662nr2-overlayaccuracy_table-lLPQ5A; uploading artifact run-9u662nr2-overlaybalanced_accuracy_table-vFepNw (+ 4 more)
+wandb: uploading artifact run-9u662nr2-tablesv_selection-69nRNw; uploading artifact run-9u662nr2-overlayaccuracy_table-lLPQ5A; uploading artifact run-9u662nr2-overlaybalanced_accuracy_table-vFepNw; uploading artifact run-9u662nr2-overlayroc_auc_table-BL8xww; uploading artifact run-9u662nr2-overlaylog_loss_table-96jxxA (+ 2 more)
+wandb: uploading artifact run-9u662nr2-overlayprecision_table-ji07sw; uploading artifact run-9u662nr2-overlayobjective_table-UbgW3w
+wandb: uploading output.log; uploading config.yaml; uploading media/table/tables/rows_300_a69571142a4283a76cd3.table.json; uploading media/table/tables/v_selection_300_21732b4324b9f42446cc.table.json; uploading media/table/overlay/roc_auc_table_300_a4d5f80e7f3bd73e534a.table.json (+ 6 more)
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▄▃▁▃▁▃▃▂▃▄▆▅▃▅▄▄▆▅▄▆▂▅▄▃▁▂▅▅█▅▅▅▃▆▂▃▄▄▄▂
+wandb:          accuracy/full_cb ▇▆█▅▄▆▆▅▅▅▆▆▇▅▄▇▂▆▆▂▄▄▁▄▄▄▆▄▂▅▄▅▂▆▆▆▂▇▄▄
+wandb:            accuracy/small █▆▄▇▄▆▂▆▄▆▆▇▆▆▄▆▆▆▅▆▆▇▆▆▆▆▆▆▆▂▅▃▆▆▅▁▂▂▁▂
+wandb:    balanced_accuracy/full ▃▅▃▃▂▃▄▄▂▆▅▄▄▅▆▁▂▆▂▅▄▅▆▆▃▆▄█▆▂▄▃▄▃▃▅▅▄▅▅
+wandb: balanced_accuracy/full_cb ▄▁▄▅▁▆▃▃▆▃▆▅█▃▇▁▅▅▃▄▅█▄▇▁▅▇█▅▃▅▄▃▅▆▇▂▆▇▄
+wandb:   balanced_accuracy/small ▄▅▄▂▃▂▄▁▃▄▃▅▅▅▅▆▇▆████▆▆█▆▇▇█▇▅▅▆▆▇▇▆▆▅▅
+wandb:             log_loss/full ▁▁▂▁▁▂▂▂▂▂▂▃▄▃▂▂▃▃▄▄▃▅▆▆▅▅▇▇█▅▆▅▄▇▆▆▅▄▆█
+wandb:          log_loss/full_cb ▁▁▁▂▂▂▂▂▂▃▃▃▃▄▄▃▃▃▃▄▄▄▄▅▅▅▆▅▄▆█▆▆▆▅▇▆▆▆▇
+wandb:            log_loss/small ▁▂▃▃▄▂▂▃▁▁▂▂▂▂▃▃▄▄▄▄▄▁▁▂▂▃▄▂▂▃▆▆▅▃▃▅▇▆██
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +15 ...
+wandb: 
+wandb: Run summary:
+wandb:                               accuracy/full 0.72667
+wandb:                            accuracy/full_cb 0.71
+wandb:                              accuracy/small 0.55
+wandb:                      balanced_accuracy/full 0.60217
+wandb:                   balanced_accuracy/full_cb 0.59277
+wandb:                     balanced_accuracy/small 0.5282
+wandb:          final/tabsift_m1_rand_ens/accuracy 0.72667
+wandb: final/tabsift_m1_rand_ens/balanced_accuracy 0.60217
+wandb:              final/tabsift_m1_rand_ens/ckpt 300
+wandb:          final/tabsift_m1_rand_ens/log_loss 0.7232
+wandb:                                         +75 ...
+wandb: 
+wandb: 🚀 View run tabsift_m1_rand_ens_is_this_a_good_customer_R30_c3_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/9u662nr2
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 16 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261024_133855-9u662nr2/logs
+run is_this_a_good_customer_R30_c3_s0 tabsift_m1_rand_ens: done in 10 s  tabsift_m1_rand_ens: acc 72.7 auc 62.7 ce 0.723 prec 0.390  tabsift_m1_rand_ens_vsel: acc 72.7 auc 62.7 ce 0.723 prec 0.390  tabsift_m1_rand_ens_cb: acc 71.0 auc 61.2 ce 0.748 prec 0.312  tabsift_m1_rand_ens_cb_vsel: acc 71.0 auc 61.2 ce 0.748 prec 0.312  tabsift_m1_rand_ens_small: acc 55.0 auc 54.1 ce 0.814 prec 0.300  tabsift_m1_rand_ens_small_vsel: acc 55.0 auc 54.1 ce 0.814 prec 0.300
+run is_this_a_good_customer_R30_c5_s0 tabsift_m1_rand_s1: start (n 1390, k 417, V 10)
+wandb: setting up run 4utoqf2l
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261024_133906-4utoqf2l
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_m1_rand_s1_is_this_a_good_customer_R30_c5_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/4utoqf2l
+      tabsift topk it 0: objective (relaxed) 0.1779  0 of the 417 held-out rows swapped since the start  (0 s)
+      tabsift topk it 10: objective (relaxed) 0.2004  14 of the 417 held-out rows swapped since the start  (2 s)
+      tabsift topk it 20: objective (relaxed) 0.2107  25 of the 417 held-out rows swapped since the start  (4 s)
+      tabsift topk it 30: objective (relaxed) 0.2162  37 of the 417 held-out rows swapped since the start  (5 s)
+      tabsift topk it 40: objective (relaxed) 0.2307  44 of the 417 held-out rows swapped since the start  (7 s)
+      tabsift topk it 50: objective (relaxed) 0.2334  50 of the 417 held-out rows swapped since the start  (9 s)
+      tabsift topk it 60: objective (relaxed) 0.2447  53 of the 417 held-out rows swapped since the start  (11 s)
+      tabsift topk it 70: objective (relaxed) 0.2415  53 of the 417 held-out rows swapped since the start  (12 s)
+      tabsift topk it 80: objective (relaxed) 0.2406  61 of the 417 held-out rows swapped since the start  (14 s)
+      tabsift topk it 90: objective (relaxed) 0.2540  60 of the 417 held-out rows swapped since the start  (16 s)
+      tabsift topk it 100: objective (relaxed) 0.2475  69 of the 417 held-out rows swapped since the start  (18 s)
+      tabsift topk it 110: objective (relaxed) 0.2749  71 of the 417 held-out rows swapped since the start  (19 s)
+      tabsift topk it 120: objective (relaxed) 0.2739  77 of the 417 held-out rows swapped since the start  (21 s)
+      tabsift topk it 130: objective (relaxed) 0.2729  81 of the 417 held-out rows swapped since the start  (23 s)
+      tabsift topk it 140: objective (relaxed) 0.2519  88 of the 417 held-out rows swapped since the start  (25 s)
+      tabsift topk it 150: objective (relaxed) 0.2731  87 of the 417 held-out rows swapped since the start  (26 s)
+      tabsift topk it 160: objective (relaxed) 0.2686  94 of the 417 held-out rows swapped since the start  (28 s)
+      tabsift topk it 170: objective (relaxed) 0.2780  96 of the 417 held-out rows swapped since the start  (30 s)
+      tabsift topk it 180: objective (relaxed) 0.2756  100 of the 417 held-out rows swapped since the start  (32 s)
+      tabsift topk it 190: objective (relaxed) 0.2783  106 of the 417 held-out rows swapped since the start  (33 s)
+      tabsift topk it 200: objective (relaxed) 0.2942  104 of the 417 held-out rows swapped since the start  (35 s)
+      tabsift topk it 210: objective (relaxed) 0.2860  111 of the 417 held-out rows swapped since the start  (37 s)
+      tabsift topk it 220: objective (relaxed) 0.2845  113 of the 417 held-out rows swapped since the start  (39 s)
+      tabsift topk it 230: objective (relaxed) 0.2951  117 of the 417 held-out rows swapped since the start  (40 s)
+      tabsift topk it 240: objective (relaxed) 0.2569  118 of the 417 held-out rows swapped since the start  (42 s)
+      tabsift topk it 250: objective (relaxed) 0.2883  128 of the 417 held-out rows swapped since the start  (44 s)
+      tabsift topk it 260: objective (relaxed) 0.2871  130 of the 417 held-out rows swapped since the start  (46 s)
+      tabsift topk it 270: objective (relaxed) 0.2925  131 of the 417 held-out rows swapped since the start  (47 s)
+      tabsift topk it 280: objective (relaxed) 0.3054  131 of the 417 held-out rows swapped since the start  (49 s)
+      tabsift topk it 290: objective (relaxed) 0.2785  147 of the 417 held-out rows swapped since the start  (51 s)
+    tabsift_m1_rand_s1: V-selected rand_s1 at 250 (V log loss 0.985) of 9 candidates, 9 distinct kept sets
+    tabsift_m1_rand_s1_cb: V-selected rand_s1 at 100 (V log loss 0.839) of 9 candidates, 9 distinct kept sets
+    tabsift_m1_rand_s1_small: V-selected rand_s1 at 300 (V log loss 0.681) of 9 candidates, 9 distinct kept sets
+wandb: updating run metadata; uploading artifact run-4utoqf2l-tablesrows-g2uPgA; uploading artifact run-4utoqf2l-tablesv_selection-9QkdpA; uploading artifact run-4utoqf2l-overlayaccuracy_table-2MQJ9g; uploading artifact run-4utoqf2l-overlaybalanced_accuracy_table-dmaKRQ (+ 4 more)
+wandb: uploading artifact run-4utoqf2l-tablesrows-g2uPgA; uploading artifact run-4utoqf2l-tablesv_selection-9QkdpA; uploading artifact run-4utoqf2l-overlayaccuracy_table-2MQJ9g; uploading artifact run-4utoqf2l-overlaybalanced_accuracy_table-dmaKRQ; uploading artifact run-4utoqf2l-overlayroc_auc_table-GnZ94g (+ 3 more)
+wandb: uploading artifact run-4utoqf2l-overlayobjective_table-ok0QTg
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▃▅▅██▄▆▅▅▁▅▅▄
+wandb:          accuracy/full_cb ▇▅▅▄▅▆▄█▅▁▁▂▄
+wandb:            accuracy/small ▅▄▁▄▆▄▆▄▄▃▆██
+wandb:    balanced_accuracy/full ▁▂▄▅▅▃▄█▆▂▄▄▅
+wandb: balanced_accuracy/full_cb ▂▁▃▄▅▇▄█▇▂▄▄▄
+wandb:   balanced_accuracy/small ▃▄▃▄▂▂▂▁▁▂▄▃█
+wandb:             log_loss/full ▂▁▂▂▁▂▃▂▄▅▄▄█
+wandb:          log_loss/full_cb ▁▁▄▃▄▃▅▃▇▆█▃█
+wandb:            log_loss/small ▄▂█▄▂▃▂▅▅▅▃▁▄
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +16 ...
+wandb: 
+wandb: Run summary:
+wandb:                              accuracy/full 0.75
+wandb:                           accuracy/full_cb 0.73667
+wandb:                             accuracy/small 0.75667
+wandb:                     balanced_accuracy/full 0.6025
+wandb:                  balanced_accuracy/full_cb 0.59498
+wandb:                    balanced_accuracy/small 0.63191
+wandb:          final/tabsift_m1_rand_s1/accuracy 0.75
+wandb: final/tabsift_m1_rand_s1/balanced_accuracy 0.6025
+wandb:              final/tabsift_m1_rand_s1/ckpt 300
+wandb:          final/tabsift_m1_rand_s1/log_loss 0.65559
+wandb:                                        +76 ...
+wandb: 
+wandb: 🚀 View run tabsift_m1_rand_s1_is_this_a_good_customer_R30_c5_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/4utoqf2l
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 16 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261024_133906-4utoqf2l/logs
+run is_this_a_good_customer_R30_c5_s0 tabsift_m1_rand_s1: done in 57 s  tabsift_m1_rand_s1: acc 75.0 auc 63.0 ce 0.656 prec 0.391  tabsift_m1_rand_s1_vsel: acc 75.3 auc 63.6 ce 0.600 prec 0.376  tabsift_m1_rand_s1_cb: acc 73.7 auc 64.1 ce 0.660 prec 0.327  tabsift_m1_rand_s1_cb_vsel: acc 74.3 auc 65.7 ce 0.610 prec 0.320  tabsift_m1_rand_s1_small: acc 75.7 auc 64.8 ce 0.562 prec 0.303  tabsift_m1_rand_s1_small_vsel: acc 75.7 auc 64.8 ce 0.562 prec 0.303
+run is_this_a_good_customer_R30_c5_s0 tabsift_m1_rand_s3: start (n 1390, k 417, V 10)
+wandb: setting up run 35pwexka
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261024_134004-35pwexka
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_m1_rand_s3_is_this_a_good_customer_R30_c5_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/35pwexka
+      tabsift topk it 0: objective (relaxed) 0.1752  0 of the 417 held-out rows swapped since the start  (0 s)
+      tabsift topk it 10: objective (relaxed) 0.1850  11 of the 417 held-out rows swapped since the start  (2 s)
+      tabsift topk it 20: objective (relaxed) 0.1932  26 of the 417 held-out rows swapped since the start  (4 s)
+      tabsift topk it 30: objective (relaxed) 0.2066  35 of the 417 held-out rows swapped since the start  (6 s)
+      tabsift topk it 40: objective (relaxed) 0.2068  43 of the 417 held-out rows swapped since the start  (7 s)
+      tabsift topk it 50: objective (relaxed) 0.2279  49 of the 417 held-out rows swapped since the start  (9 s)
+      tabsift topk it 60: objective (relaxed) 0.2239  55 of the 417 held-out rows swapped since the start  (11 s)
+      tabsift topk it 70: objective (relaxed) 0.2424  61 of the 417 held-out rows swapped since the start  (13 s)
+      tabsift topk it 80: objective (relaxed) 0.2358  63 of the 417 held-out rows swapped since the start  (14 s)
+      tabsift topk it 90: objective (relaxed) 0.2396  69 of the 417 held-out rows swapped since the start  (16 s)
+      tabsift topk it 100: objective (relaxed) 0.2661  76 of the 417 held-out rows swapped since the start  (18 s)
+      tabsift topk it 110: objective (relaxed) 0.2423  75 of the 417 held-out rows swapped since the start  (20 s)
+      tabsift topk it 120: objective (relaxed) 0.2476  90 of the 417 held-out rows swapped since the start  (21 s)
+      tabsift topk it 130: objective (relaxed) 0.2643  91 of the 417 held-out rows swapped since the start  (23 s)
+      tabsift topk it 140: objective (relaxed) 0.2680  97 of the 417 held-out rows swapped since the start  (25 s)
+      tabsift topk it 150: objective (relaxed) 0.2362  96 of the 417 held-out rows swapped since the start  (27 s)
+      tabsift topk it 160: objective (relaxed) 0.2785  109 of the 417 held-out rows swapped since the start  (28 s)
+      tabsift topk it 170: objective (relaxed) 0.2818  119 of the 417 held-out rows swapped since the start  (30 s)
+      tabsift topk it 180: objective (relaxed) 0.2995  119 of the 417 held-out rows swapped since the start  (32 s)
+      tabsift topk it 190: objective (relaxed) 0.2915  130 of the 417 held-out rows swapped since the start  (34 s)
+      tabsift topk it 200: objective (relaxed) 0.3141  133 of the 417 held-out rows swapped since the start  (35 s)
+      tabsift topk it 210: objective (relaxed) 0.2800  127 of the 417 held-out rows swapped since the start  (37 s)
+      tabsift topk it 220: objective (relaxed) 0.2893  137 of the 417 held-out rows swapped since the start  (39 s)
+      tabsift topk it 230: objective (relaxed) 0.2878  137 of the 417 held-out rows swapped since the start  (41 s)
+      tabsift topk it 240: objective (relaxed) 0.3106  146 of the 417 held-out rows swapped since the start  (42 s)
+      tabsift topk it 250: objective (relaxed) 0.2866  147 of the 417 held-out rows swapped since the start  (44 s)
+      tabsift topk it 260: objective (relaxed) 0.3171  150 of the 417 held-out rows swapped since the start  (46 s)
+      tabsift topk it 270: objective (relaxed) 0.2908  157 of the 417 held-out rows swapped since the start  (47 s)
+      tabsift topk it 280: objective (relaxed) 0.3220  162 of the 417 held-out rows swapped since the start  (49 s)
+      tabsift topk it 290: objective (relaxed) 0.3361  169 of the 417 held-out rows swapped since the start  (51 s)
+    tabsift_m1_rand_s3: V-selected rand_s3 at 300 (V log loss 0.697) of 9 candidates, 9 distinct kept sets
+    tabsift_m1_rand_s3_cb: V-selected rand_s3 at 300 (V log loss 0.703) of 9 candidates, 9 distinct kept sets
+    tabsift_m1_rand_s3_small: V-selected rand_s3 at 300 (V log loss 0.720) of 9 candidates, 9 distinct kept sets
+wandb: updating run metadata; uploading artifact run-35pwexka-tablesrows-gLhlXg; uploading artifact run-35pwexka-tablesv_selection-Zcr3Pw; uploading artifact run-35pwexka-overlayaccuracy_table-Bigt7A; uploading artifact run-35pwexka-overlaybalanced_accuracy_table-3oCfOg (+ 4 more)
+wandb: uploading artifact run-35pwexka-tablesv_selection-Zcr3Pw; uploading artifact run-35pwexka-overlayaccuracy_table-Bigt7A; uploading artifact run-35pwexka-overlaybalanced_accuracy_table-3oCfOg; uploading artifact run-35pwexka-overlayroc_auc_table-TcyiDw; uploading artifact run-35pwexka-overlaylog_loss_table-ZTMMzA (+ 2 more)
+wandb: uploading artifact run-35pwexka-overlayobjective_table-X_EFEA
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▆▅▆▇▆▁▆▆▅▃█▂▆
+wandb:          accuracy/full_cb ▇█▄█▆▄▂▂▂▁▃▂▃
+wandb:            accuracy/small ████▂▁▇█▇▇▅▃▁
+wandb:    balanced_accuracy/full ▅▂█▇▆▁█▅▄▂▃▃▆
+wandb: balanced_accuracy/full_cb ▄█▂▄▃▆▅▁▅▁▂█▅
+wandb:   balanced_accuracy/small ▅▅▄▄▆█▆▅▅▄▃▁▃
+wandb:             log_loss/full ▁▁▂▂▄▅▄▂▄▅▃█▇
+wandb:          log_loss/full_cb ▁▁▃▃▂▄▅▄▅▅▅▇█
+wandb:            log_loss/small ▁▁▃▂▇▆▃▄▄▅▆▆█
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +16 ...
+wandb: 
+wandb: Run summary:
+wandb:                              accuracy/full 0.75333
+wandb:                           accuracy/full_cb 0.73333
+wandb:                             accuracy/small 0.70333
+wandb:                     balanced_accuracy/full 0.6172
+wandb:                  balanced_accuracy/full_cb 0.60593
+wandb:                    balanced_accuracy/small 0.47357
+wandb:          final/tabsift_m1_rand_s3/accuracy 0.75333
+wandb: final/tabsift_m1_rand_s3/balanced_accuracy 0.6172
+wandb:              final/tabsift_m1_rand_s3/ckpt 300
+wandb:          final/tabsift_m1_rand_s3/log_loss 0.62958
+wandb:                                        +76 ...
+wandb: 
+wandb: 🚀 View run tabsift_m1_rand_s3_is_this_a_good_customer_R30_c5_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/35pwexka
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 16 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261024_134004-35pwexka/logs
+run is_this_a_good_customer_R30_c5_s0 tabsift_m1_rand_s3: done in 58 s  tabsift_m1_rand_s3: acc 75.3 auc 60.4 ce 0.630 prec 0.362  tabsift_m1_rand_s3_vsel: acc 75.3 auc 60.4 ce 0.630 prec 0.362  tabsift_m1_rand_s3_cb: acc 73.3 auc 60.7 ce 0.660 prec 0.272  tabsift_m1_rand_s3_cb_vsel: acc 73.3 auc 60.7 ce 0.660 prec 0.272  tabsift_m1_rand_s3_small: acc 70.3 auc 46.9 ce 0.566 prec 0.298  tabsift_m1_rand_s3_small_vsel: acc 70.3 auc 46.9 ce 0.566 prec 0.298
+run is_this_a_good_customer_R30_c5_s0 tabsift_m1_rand_ens: waiting for its members
+run ecommerce_shipping_R30_c1_s0 tabsift_m1_rand_s0: start (n 4998, k 1499, V 2)
+wandb: setting up run gihq9mii
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261024_134100-gihq9mii
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_m1_rand_s0_ecommerce_shipping_R30_c1_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/gihq9mii
+      tabsift topk it 0: objective (relaxed) 0.2422  0 of the 1499 held-out rows swapped since the start  (1 s)
+      tabsift topk it 10: objective (relaxed) 0.2674  18 of the 1499 held-out rows swapped since the start  (13 s)
+      tabsift topk it 20: objective (relaxed) 0.2733  28 of the 1499 held-out rows swapped since the start  (25 s)
+      tabsift topk it 30: objective (relaxed) 0.2957  44 of the 1499 held-out rows swapped since the start  (37 s)
+      tabsift topk it 40: objective (relaxed) 0.3052  67 of the 1499 held-out rows swapped since the start  (48 s)
+      tabsift topk it 50: objective (relaxed) 0.3271  83 of the 1499 held-out rows swapped since the start  (60 s)
+      tabsift topk it 60: objective (relaxed) 0.3468  94 of the 1499 held-out rows swapped since the start  (72 s)
+      tabsift topk it 70: objective (relaxed) 0.3210  110 of the 1499 held-out rows swapped since the start  (84 s)
+      tabsift topk it 80: objective (relaxed) 0.3623  130 of the 1499 held-out rows swapped since the start  (96 s)
+      tabsift topk it 90: objective (relaxed) 0.3656  139 of the 1499 held-out rows swapped since the start  (107 s)
+      tabsift topk it 100: objective (relaxed) 0.3812  156 of the 1499 held-out rows swapped since the start  (119 s)
+      tabsift topk it 110: objective (relaxed) 0.4050  162 of the 1499 held-out rows swapped since the start  (131 s)
+      tabsift topk it 120: objective (relaxed) 0.3848  179 of the 1499 held-out rows swapped since the start  (143 s)
+      tabsift topk it 130: objective (relaxed) 0.3791  182 of the 1499 held-out rows swapped since the start  (155 s)
+      tabsift topk it 140: objective (relaxed) 0.3918  194 of the 1499 held-out rows swapped since the start  (166 s)
+Terminated

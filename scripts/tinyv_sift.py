@@ -34,6 +34,10 @@ the deployments' test metrics and precision there).
              ascent steps of lr 0.2 (s += lr g / max|g|), 100 steps. The scores are the deployed weights; the records
              also carry the objective at the hard split itself and the number of rows that have left the start's
              held-out set.
+  tabsift_m1_rand_s<i>, tabsift_m1_rand_ens
+             tabsift_m1 from random N(0, 1) scores (seed i = 0..4) instead of the V-filter's, 300 steps, each recorded
+             every 5 steps; and, once the 5 have finished, their vote: each row's hard weight (1 kept, 0 held out)
+             averaged over the 5 seeds' chosen checkpoints (ties: its mean score rank), deployed once.
 """
 from __future__ import annotations
 
@@ -63,6 +67,17 @@ GRIDS = {"metasift": {"tuned": {}, "model_lr3e-4": dict(model_lr=3e-4), "res_epo
          "tabsift_m1": {"m1": TABSIFT_M1}}
 # the fixed configurations reported as rows (row name suffix: (configuration, checkpoint)); "" is the default
 ROWS = {"metasift": {"": ("tuned", None)}, "tabsift": {"": ("sig_hard", 100)}, "tabsift_m1": {"": ("m1", 100)}}
+# M1's form from a random start (tabsift_m1_rand_s<i>): N(0, 1) scores drawn with seed i (attn_learn's random topk start),
+# 300 steps, recorded every 5; V-selection's candidates at the steps in ckpts
+TABSIFT_M1_RAND = dict(TABSIFT_M1, init="random", init_std=1.0, steps=300, record_every=5,
+                       ckpts=(0, 10, 20, 50, 100, 150, 200, 250, 300))
+RAND_SEEDS = 5
+for _i in range(RAND_SEEDS):
+    GRIDS[f"tabsift_m1_rand_s{_i}"] = {f"rand_s{_i}": TABSIFT_M1_RAND | {"init_seed": _i}}
+    ROWS[f"tabsift_m1_rand_s{_i}"] = {"": (f"rand_s{_i}", 300)}
+# the vote of the 5 seeds after they finished (bench_tinyv.run_sift_ensemble), over each seed's chosen checkpoint: its
+# last step (the default row) or its V-selected one (the _vsel rows, per deployment)
+ENSEMBLES = {"tabsift_m1_rand_ens": [(f"tabsift_m1_rand_s{i}", f"rand_s{i}") for i in range(RAND_SEEDS)]}
 
 
 # ---------------------------------------------------------------- selection
@@ -309,12 +324,16 @@ def tabsift(clf, d: dict, cfg: dict | None = None, log=print, record=None) -> di
     n, k = d["n"], d["k"]
     sig, topk = c["param"] == "sigmoid", c["param"] == "topk"
     mass = float(n - k) if c["mass"] and c["param"] == "w" else None
-    if topk:  # M1: scores from the V-filter's log p; the split and the relaxed point are set in the loop
-        if c["init"] != "vfilter":
-            raise ValueError(f"unknown start {c['init']!r} for the topk form")
+    if topk:  # M1: scores from the V-filter's log p, or random; the split and the relaxed point are set in the loop
         for key in ("t_kept", "t_removed", "mass"):  # the sigmoid and w forms' settings
             c.pop(key)
-        s = torch.as_tensor(vfilter_scores(clf, d), dtype=torch.float32, device=device)
+        if c["init"] == "vfilter":
+            s = torch.as_tensor(vfilter_scores(clf, d), dtype=torch.float32, device=device)
+        elif c["init"] == "random":
+            s = torch.as_tensor(np.random.default_rng(c["init_seed"]).normal(0.0, c["init_std"], n), dtype=torch.float32,
+                                device=device)
+        else:
+            raise ValueError(f"unknown start {c['init']!r} for the topk form")
         held0 = held_out(s, k)
     elif sig:  # t unbounded, w = sigmoid(t)
         if c["init"] == "vf_hard":  # the V-filter's k least plausible rows at t_removed, the rest at t_kept
@@ -376,3 +395,19 @@ def tabsift(clf, d: dict, cfg: dict | None = None, log=print, record=None) -> di
             log(f"      tabsift {c['param']} {c['init']} it {it}: objective {loss:.4f}  w mean {float(w.mean()):.3f} "
                 f"below 0.5 {int((w < 0.5).sum())} of {n}  ({time.time() - t0:.0f} s)")
     return {"ckpts": ckpts, "config": c, "seconds": round(time.time() - t0, 1)}
+
+
+def m1_vote(scores: list[np.ndarray], k: int) -> tuple[np.ndarray, float]:
+    """The members' vote on their hard splits: each row's mean hard weight (1 kept, 0 held out: the k lowest of that
+    member's scores), plus 0.1 x its mean score rank (0 = lowest, 1 = highest) to break ties, so higher = kept; and the
+    share of rows on which every member agrees."""
+    n = len(scores[0])
+    hard, rank = [], []
+    for s in scores:
+        h = np.ones(n)
+        h[np.argsort(-s, kind="stable")[n - k:]] = 0.0
+        hard.append(h)
+        rank.append(np.argsort(np.argsort(s, kind="stable"), kind="stable") / max(n - 1, 1))
+    vote = np.mean(hard, axis=0)
+    return vote + 0.1 * np.mean(rank, axis=0), float(np.mean((vote == 0) | (vote == 1)))
+
