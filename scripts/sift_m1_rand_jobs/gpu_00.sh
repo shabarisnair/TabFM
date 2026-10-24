@@ -1,6 +1,6 @@
 #!/bin/bash
-# Sifting methods on the tiny-V benchmark at R = 30% (scripts/plan_sift.py), script 00 of 4: 12 jobs, about
-# 8.3 GPU-hours (H100). Run from a clone of this repository with results/, datasets/ and Meta-Sift/ copied over:
+# Sifting methods on the tiny-V benchmark at R = 30% (scripts/plan_sift.py), script 00 of 7: 6 jobs, about
+# 4.7 GPU-hours (H100). Run from a clone of this repository with results/, datasets/ and Meta-Sift/ copied over:
 #   bash scripts/sift_m1_rand_jobs/gpu_00.sh [GPU]        (PY=/path/to/python to use another python than conda env tabfm)
 # It stops before running anything unless the inputs, the model checkpoint, the code and a numeric preflight match
 # the main machine (scripts/attn_form_jobs/check_remote.py). Rerunning resumes; logs in logs/sift_m1_rand_jobs/.

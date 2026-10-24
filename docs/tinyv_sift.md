@@ -92,12 +92,12 @@ benchmark (tinyv_learned.ATTN_CONFIGS["topk"], attn_learn.py --param topk).
 - **Run-to-run noise:** two runs of the same seed are bit-identical for about 185 steps. Then GPU rounding flips a
   near-tied swap, and by step 300 their held-out sets overlap on about 70% of the rows (good_customer development
   draw: ROC-AUC 0.590 vs 0.607).
-- **Runs:** `bash scripts/sift_m1_rand_jobs/gpu_NN.sh [GPU]` (NN = 00..03, one script per GPU), then `merge.sh`. Each
+- **Runs:** `bash scripts/sift_m1_rand_jobs/gpu_NN.sh [GPU]` (NN = 00..06, one script per GPU), then `merge.sh`. Each
   instance's 5 seeds and their vote are in the same script, so the scripts need no shared disk.
 - **W&B:** group `tinyv_tabsift_m1_rand_v2`. Every run has its result files as an artifact.
   The stopped first version (the vote at every step; seeds 1-4 recorded every 25) left runs in group
   `tinyv_tabsift_m1_rand`. Its result files are in results/bench_tinyv/superseded/sift_m1_rand_v1/.
-- **Cost:** 108 jobs, about 33.6 H100-hours, 8.3-8.5 per script.
+- **Cost:** 108 jobs, about 33.6 H100-hours, 4.6-5.0 per script (7 scripts).
 
 Every sift trajectory now also records the AUROC of the weights against the poisoned rows (a recording, never used).
 
