@@ -1,0 +1,6 @@
+grad hub-flip-local gas-drift_R30_c1_s0: w = 1: V 0.50 test 0.60 | V-filter split, relaxed (M1's start): V 0.44 test 0.58  (3682 s)
+grad hub-flip-local gas-drift_R30_c3_s0: w = 1: V 0.51 test 0.61 | V-filter split, relaxed (M1's start): V 0.55 test 0.65  (2834 s)
+grad hub-flip-local gas-drift_R30_c5_s0: w = 1: V 0.53 test 0.62 | V-filter split, relaxed (M1's start): V 0.54 test 0.70  (2565 s)
+grad hub-flip-local coil2000_insurance_policies_R30_c1_s0: w = 1: V 0.53 test 0.51 | V-filter split, relaxed (M1's start): V 0.47 test 0.47  (1761 s)
+grad hub-flip-local coil2000_insurance_policies_R30_c3_s0: w = 1: V 0.55 test 0.51 | V-filter split, relaxed (M1's start): V 0.54 test 0.54  (1694 s)
+grad hub-flip-local coil2000_insurance_policies_R30_c5_s0: w = 1: V 0.51 test 0.51 | V-filter split, relaxed (M1's start): V 0.52 test 0.48  (1731 s)

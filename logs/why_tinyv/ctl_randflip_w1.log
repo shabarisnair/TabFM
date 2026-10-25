@@ -1,0 +1,26 @@
+run is_this_a_good_customer_R30_c1_s0 vfilter: start (n 1398, k 419, V 2)
+run is_this_a_good_customer_R30_c1_s0 vfilter: done in 4 s  vfilter: acc 74.0 auc 70.7 ce 0.776 prec 0.420
+run is_this_a_good_customer_R30_c3_s0 refs: start (n 1394, k 418, V 6)
+run is_this_a_good_customer_R30_c3_s0 refs: done in 3 s  v_only: acc 79.0 auc 58.0 ce 0.601  poisoned_plus_v: acc 88.7 auc 66.8 ce 0.468  oracle_plus_v: acc 88.7 auc 79.3 ce 0.309 prec 1.000
+run is_this_a_good_customer_R30_c3_s0 greedy_pct10: start (n 1394, k 418, V 6)
+run is_this_a_good_customer_R30_c3_s0 greedy_pct10: done in 8 s  greedy_pct10: acc 88.7 auc 56.1 ce 0.691 prec 0.761
+run is_this_a_good_customer_R30_c5_s0 greedy_pct10: start (n 1390, k 417, V 10)
+run is_this_a_good_customer_R30_c5_s0 greedy_pct10: done in 8 s  greedy_pct10: acc 66.7 auc 53.5 ce 1.025 prec 0.446
+run ecommerce_shipping_R30_c1_s0 refs: start (n 4998, k 1499, V 2)
+run ecommerce_shipping_R30_c1_s0 refs: done in 13 s  v_only: acc 46.8 auc 57.9 ce 0.743  poisoned_plus_v: acc 66.0 auc 73.1 ce 0.606  oracle_plus_v: acc 68.3 auc 75.9 ce 0.494 prec 1.000
+run ecommerce_shipping_R30_c1_s0 vfilter: start (n 4998, k 1499, V 2)
+run ecommerce_shipping_R30_c1_s0 vfilter: done in 7 s  vfilter: acc 56.0 auc 63.1 ce 1.844 prec 0.309
+run ecommerce_shipping_R30_c1_s0 greedy_pct10: start (n 4998, k 1499, V 2)
+run ecommerce_shipping_R30_c1_s0 greedy_pct10: done in 32 s  greedy_pct10: acc 58.9 auc 66.5 ce 2.259 prec 0.332
+run ecommerce_shipping_R30_c3_s0 refs: start (n 4994, k 1498, V 6)
+run ecommerce_shipping_R30_c3_s0 refs: done in 14 s  v_only: acc 54.5 auc 58.1 ce 0.687  poisoned_plus_v: acc 66.7 auc 73.6 ce 0.608  oracle_plus_v: acc 68.5 auc 76.2 ce 0.495 prec 1.000
+run ecommerce_shipping_R30_c3_s0 greedy_pct1: start (n 4994, k 1498, V 6)
+run ecommerce_shipping_R30_c3_s0 greedy_pct1: done in 295 s  greedy_pct1: acc 56.6 auc 57.1 ce 2.447 prec 0.319
+run students_dropout_R30_c3_s0 greedy_pct1: start (n 2991, k 897, V 9)
+run students_dropout_R30_c3_s0 greedy_pct1: done in 544 s  greedy_pct1: acc 73.6 auc 85.2 ce 1.261 prec 0.621
+run heloc_R30_c5_s0 greedy_pct1: start (n 4990, k 1497, V 10)
+run heloc_R30_c5_s0 greedy_pct1: done in 722 s  greedy_pct1: acc 62.0 auc 63.9 ce 2.034 prec 0.404
+run coil2000_insurance_policies_R30_c3_s0 greedy_pct1: start (n 4994, k 1498, V 6)
+run coil2000_insurance_policies_R30_c3_s0 greedy_pct1: done in 1986 s  greedy_pct1: acc 61.3 auc 54.8 ce 2.238 prec 0.252
+run gas-drift_R30_c3_s0 greedy_pct1: start (n 4982, k 1495, V 18)
+run gas-drift_R30_c3_s0 greedy_pct1: done in 2829 s  greedy_pct1: acc 97.4 auc 99.9 ce 0.131 prec 0.954

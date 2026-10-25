@@ -38,6 +38,14 @@ the deployments' test metrics and precision there).
              tabsift_m1 from random N(0, 1) scores (seed i = 0..4) instead of the V-filter's, 300 steps, each recorded
              every 5 steps; and, once the 5 have finished, their vote: each row's hard weight (1 kept, 0 held out)
              averaged over the 5 seeds' chosen checkpoints (ties: its mean score rank), deployed once.
+  tabsift_zero
+             tabsift (sigmoid, Adam lr 5, 100 steps) started with every poisoned row near w = 0: t = -30 (w about 1e-13)
+             plus a N(0, 0.01) jitter (so that the step-0 split is random, not in file order), V at weight 1 as always.
+             Every poisoned row starts as a query (query weight about 1): the whole poisoned set is the held-out side and
+             the training side is V. The gradients flow at this start (median |dL/dt| about 6e-6, far above Adam's eps);
+             -30 is the start closest to a V-only context (from -4 to -20 the predictions are as far from V-only as at
+             w = 1). Its weights are recorded and deployed as t (rank "t"), the same order as w without ties from
+             float32 underflow (the records' w_mean is then the mean t).
 """
 from __future__ import annotations
 
@@ -67,6 +75,10 @@ GRIDS = {"metasift": {"tuned": {}, "model_lr3e-4": dict(model_lr=3e-4), "res_epo
          "tabsift_m1": {"m1": TABSIFT_M1}}
 # the fixed configurations reported as rows (row name suffix: (configuration, checkpoint)); "" is the default
 ROWS = {"metasift": {"": ("tuned", None)}, "tabsift": {"": ("sig_hard", 100)}, "tabsift_m1": {"": ("m1", 100)}}
+# the sigmoid form started near w = 0 for every poisoned row (tabsift_zero): TABSIFT | TABSIFT_ZERO
+TABSIFT_ZERO = dict(init="zeros", t_start=-30.0, t_jitter=0.01, rank="t")
+GRIDS["tabsift_zero"] = {"sig_zero": TABSIFT_ZERO}
+ROWS["tabsift_zero"] = {"": ("sig_zero", 100)}
 # M1's form from a random start (tabsift_m1_rand_s<i>): N(0, 1) scores drawn with seed i (attn_learn's random topk start),
 # 300 steps, recorded every 5; V-selection's candidates at the steps in ckpts
 TABSIFT_M1_RAND = dict(TABSIFT_M1, init="random", init_std=1.0, steps=300, record_every=5,
@@ -341,6 +353,10 @@ def tabsift(clf, d: dict, cfg: dict | None = None, log=print, record=None) -> di
             t[torch.as_tensor(np.argsort(vfilter_scores(clf, d), kind="stable")[:k], device=device)] = c["t_removed"]
         elif c["init"] == "ones":
             t = torch.full((n,), c["t_kept"], device=device)
+        elif c["init"] == "zeros":  # every poisoned row held out: t_start, jittered so ties break at random (float64:
+            # in float32 a 0.01 jitter at -30 has too few distinct values, and colliding rows would stay tied)
+            t = torch.as_tensor(c["t_start"] + np.random.default_rng(int(d["seed"])).normal(0.0, c["t_jitter"], n),
+                                dtype=torch.float64, device=device)
         else:
             raise ValueError(f"unknown start {c['init']!r} for the sigmoid form")
         t.requires_grad_(True)
@@ -371,7 +387,9 @@ def tabsift(clf, d: dict, cfg: dict | None = None, log=print, record=None) -> di
                 torch.cuda.empty_cache()
                 log(f"      tabsift: out of GPU memory, {chunk} query rows per refit from now on")
         c["chunk_used"] = chunk
-        weights = (s if topk else w).detach().cpu().numpy().copy()
+        # the deployed / recorded weights; rank "t": t itself, the same order as w = sigmoid(t) without float32 underflow
+        # (w is exactly 0 below t of about -104, and log w exactly 0 above about +104, which would tie rows)
+        weights = (s if topk else t.detach() if sig and c.get("rank") == "t" else w).detach().cpu().numpy().copy()
         if it in c["ckpts"] or last:
             ckpts[it] = {"w": weights, "objective": float(loss)}
         if record and (it % c["record_every"] == 0 or last):

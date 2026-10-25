@@ -1,0 +1,36 @@
+run is_this_a_good_customer_R30_c1_s0 greedy_pct10: start (n 1398, k 419, V 2)
+run is_this_a_good_customer_R30_c1_s0 greedy_pct10: done in 11 s  greedy_pct10: acc 72.7 auc 69.0 ce 1.685 prec 0.468
+run is_this_a_good_customer_R30_c5_s0 vfilter: start (n 1390, k 417, V 10)
+run is_this_a_good_customer_R30_c5_s0 vfilter: done in 2 s  vfilter: acc 63.3 auc 59.7 ce 1.133 prec 0.285
+run is_this_a_good_customer_R30_c5_s0 greedy_pct10: start (n 1390, k 417, V 10)
+run is_this_a_good_customer_R30_c5_s0 greedy_pct10: done in 8 s  greedy_pct10: acc 69.0 auc 61.0 ce 1.664 prec 0.448
+run ecommerce_shipping_R30_c3_s0 vfilter: start (n 4994, k 1498, V 6)
+run ecommerce_shipping_R30_c3_s0 vfilter: done in 8 s  vfilter: acc 61.4 auc 68.1 ce 1.394 prec 0.381
+run ecommerce_shipping_R30_c3_s0 greedy_pct10: start (n 4994, k 1498, V 6)
+run ecommerce_shipping_R30_c3_s0 greedy_pct10: done in 32 s  greedy_pct10: acc 62.4 auc 68.6 ce 1.680 prec 0.419
+run students_dropout_R30_c1_s0 vfilter: start (n 2997, k 899, V 3)
+run students_dropout_R30_c1_s0 vfilter: done in 12 s  vfilter: acc 55.6 auc 74.1 ce 1.283 prec 0.296
+run students_dropout_R30_c1_s0 greedy_pct10: start (n 2997, k 899, V 3)
+run students_dropout_R30_c1_s0 greedy_pct10: done in 58 s  greedy_pct10: acc 69.2 auc 82.7 ce 1.229 prec 0.622
+run students_dropout_R30_c5_s0 vfilter: start (n 2985, k 896, V 15)
+run students_dropout_R30_c5_s0 vfilter: done in 13 s  vfilter: acc 62.6 auc 79.0 ce 1.213 prec 0.500
+run students_dropout_R30_c5_s0 greedy_pct10: start (n 2985, k 896, V 15)
+run students_dropout_R30_c5_s0 greedy_pct10: done in 59 s  greedy_pct10: acc 70.6 auc 81.9 ce 1.197 prec 0.653
+run heloc_R30_c3_s0 vfilter: start (n 4994, k 1498, V 6)
+run heloc_R30_c3_s0 vfilter: done in 18 s  vfilter: acc 63.1 auc 68.0 ce 1.107 prec 0.439
+run heloc_R30_c3_s0 greedy_pct10: start (n 4994, k 1498, V 6)
+run heloc_R30_c3_s0 greedy_pct10: done in 76 s  greedy_pct10: acc 67.9 auc 72.7 ce 1.356 prec 0.521
+run coil2000_insurance_policies_R30_c1_s0 vfilter: start (n 4998, k 1499, V 2)
+run coil2000_insurance_policies_R30_c1_s0 vfilter: done in 44 s  vfilter: acc 57.7 auc 53.8 ce 1.473 prec 0.083
+run coil2000_insurance_policies_R30_c3_s0 vfilter: start (n 4994, k 1498, V 6)
+run coil2000_insurance_policies_R30_c3_s0 vfilter: done in 47 s  vfilter: acc 61.7 auc 54.2 ce 1.162 prec 0.282
+run coil2000_insurance_policies_R30_c3_s0 greedy_pct10: start (n 4994, k 1498, V 6)
+run coil2000_insurance_policies_R30_c3_s0 greedy_pct10: done in 213 s  greedy_pct10: acc 56.6 auc 49.6 ce 3.297 prec 0.264
+run gas-drift_R30_c1_s0 vfilter: start (n 4994, k 1498, V 6)
+run gas-drift_R30_c1_s0 vfilter: done in 79 s  vfilter: acc 67.3 auc 92.5 ce 1.772 prec 0.435
+run gas-drift_R30_c1_s0 greedy_pct10: start (n 4994, k 1498, V 6)
+run gas-drift_R30_c1_s0 greedy_pct10: done in 397 s  greedy_pct10: acc 85.9 auc 97.6 ce 1.462 prec 0.763
+run gas-drift_R30_c5_s0 vfilter: start (n 4970, k 1491, V 30)
+run gas-drift_R30_c5_s0 vfilter: done in 94 s  vfilter: acc 84.2 auc 97.6 ce 0.910 prec 0.671
+run gas-drift_R30_c5_s0 greedy_pct10: start (n 4970, k 1491, V 30)
+run gas-drift_R30_c5_s0 greedy_pct10: done in 390 s  greedy_pct10: acc 90.4 auc 98.1 ce 1.015 prec 0.848

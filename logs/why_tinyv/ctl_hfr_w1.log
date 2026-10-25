@@ -1,0 +1,24 @@
+run students_dropout_R30_c1_s0 vfilter: start (n 2997, k 899, V 3)
+run students_dropout_R30_c1_s0 vfilter: done in 13 s  vfilter: acc 56.8 auc 76.3 ce 1.137 prec 0.417
+run students_dropout_R30_c1_s0 greedy_pct10: start (n 2997, k 899, V 3)
+run students_dropout_R30_c1_s0 greedy_pct10: done in 52 s  greedy_pct10: acc 67.8 auc 81.7 ce 1.133 prec 0.655
+run students_dropout_R30_c3_s0 refs: start (n 2991, k 897, V 9)
+run students_dropout_R30_c3_s0 refs: done in 19 s  v_only: acc 58.8 auc 70.7 ce 0.995  poisoned_plus_v: acc 60.2 auc 76.6 ce 0.956  oracle_plus_v: acc 80.8 auc 90.2 ce 0.535 prec 1.000
+run students_dropout_R30_c3_s0 vfilter: start (n 2991, k 897, V 9)
+run students_dropout_R30_c3_s0 vfilter: done in 12 s  vfilter: acc 58.0 auc 73.8 ce 1.263 prec 0.492
+run students_dropout_R30_c3_s0 greedy_pct10: start (n 2991, k 897, V 9)
+run students_dropout_R30_c3_s0 greedy_pct10: done in 49 s  greedy_pct10: acc 73.8 auc 85.9 ce 1.002 prec 0.698
+run students_dropout_R30_c3_s0 greedy_pct1: start (n 2991, k 897, V 9)
+run students_dropout_R30_c3_s0 greedy_pct1: done in 463 s  greedy_pct1: acc 73.8 auc 87.2 ce 1.108 prec 0.722
+run students_dropout_R30_c5_s0 greedy_pct1: start (n 2985, k 896, V 15)
+run students_dropout_R30_c5_s0 greedy_pct1: done in 526 s  greedy_pct1: acc 66.0 auc 80.0 ce 1.625 prec 0.596
+run gas-drift_R30_c1_s0 greedy_pct1: start (n 4994, k 1498, V 6)
+run gas-drift_R30_c1_s0 greedy_pct1: done in 2978 s  greedy_pct1: acc 88.3 auc 99.5 ce 0.515 prec 0.947
+run gas-drift_R30_c5_s0 refs: start (n 4970, k 1491, V 30)
+run gas-drift_R30_c5_s0 refs: done in 139 s  v_only: acc 70.5 auc 94.3 ce 0.885  poisoned_plus_v: acc 75.8 auc 93.3 ce 0.723  oracle_plus_v: acc 99.1 auc 100.0 ce 0.021 prec 1.000
+run gas-drift_R30_c5_s0 vfilter: start (n 4970, k 1491, V 30)
+run gas-drift_R30_c5_s0 vfilter: done in 76 s  vfilter: acc 84.7 auc 97.9 ce 0.720 prec 0.843
+run gas-drift_R30_c5_s0 greedy_pct10: start (n 4970, k 1491, V 30)
+run gas-drift_R30_c5_s0 greedy_pct10: done in 315 s  greedy_pct10: acc 91.5 auc 99.3 ce 0.561 prec 0.956
+run gas-drift_R30_c5_s0 greedy_pct1: start (n 4970, k 1491, V 30)
+run gas-drift_R30_c5_s0 greedy_pct1: done in 2696 s  greedy_pct1: acc 95.1 auc 99.4 ce 0.432 prec 0.982

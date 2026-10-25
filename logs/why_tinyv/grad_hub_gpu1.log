@@ -1,0 +1,88 @@
+[W1025 02:25:01.321829927 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 1 while trying to map 20971520 bytes (free: 5832704, total: 99951706112).
+[W1025 02:25:01.371455750 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 1 while trying to map 20971520 bytes (free: 7929856, total: 99951706112).
+stage_grad hub-flip-local coil2000_insurance_policies c5: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 24.50 GiB. GPU 1 has a total capacity of 93.09 GiB of which 5.91 GiB is free. Process 717123 has 80.38 GiB memory in use. Process 722292 has 518.00 MiB memory in use. Including non-PyTorch memory, this process has 6.11 GiB memory in use. Of the allocated memory 5.33 GiB is allocated by PyTorch, and 56.86 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/why_tinyv.py", line 150, in per_instance
+    fn(b)
+  File "/home/ssn899/Desktop/TabFM/scripts/why_tinyv.py", line 371, in stage_grad
+    lv, gv = grad_logw(clf, d, d["Xv"], d["yv"], lw0, a.chunk)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/why_tinyv.py", line 343, in grad_logw
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], Xq, np.asarray(yq), lw, need_grad=True, batch_size=chunk)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 150, in evaluate_weighted
+    grad += torch.autograd.grad(loss, log_w)[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/__init__.py", line 594, in grad
+    result = _engine_run_backward(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 24.50 GiB. GPU 1 has a total capacity of 93.09 GiB of which 5.91 GiB is free. Process 717123 has 80.38 GiB memory in use. Process 722292 has 518.00 MiB memory in use. Including non-PyTorch memory, this process has 6.11 GiB memory in use. Of the allocated memory 5.33 GiB is allocated by PyTorch, and 56.86 MiB is reserved by PyTorch but unallocated.
+[W1025 02:25:03.691218065 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 1 while trying to map 20971520 bytes (free: 5832704, total: 99951706112).
+[W1025 02:25:03.830303056 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 1 while trying to map 20971520 bytes (free: 7929856, total: 99951706112).
+stage_grad hub-flip-local coil2000_insurance_policies c3: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 24.60 GiB. GPU 1 has a total capacity of 93.09 GiB of which 5.89 GiB is free. Process 717123 has 80.38 GiB memory in use. Process 722292 has 518.00 MiB memory in use. Including non-PyTorch memory, this process has 6.13 GiB memory in use. Of the allocated memory 5.33 GiB is allocated by PyTorch, and 75.25 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/why_tinyv.py", line 150, in per_instance
+    fn(b)
+  File "/home/ssn899/Desktop/TabFM/scripts/why_tinyv.py", line 371, in stage_grad
+    lv, gv = grad_logw(clf, d, d["Xv"], d["yv"], lw0, a.chunk)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/why_tinyv.py", line 343, in grad_logw
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], Xq, np.asarray(yq), lw, need_grad=True, batch_size=chunk)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 150, in evaluate_weighted
+    grad += torch.autograd.grad(loss, log_w)[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/__init__.py", line 594, in grad
+    result = _engine_run_backward(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 24.60 GiB. GPU 1 has a total capacity of 93.09 GiB of which 5.89 GiB is free. Process 717123 has 80.38 GiB memory in use. Process 722292 has 518.00 MiB memory in use. Including non-PyTorch memory, this process has 6.13 GiB memory in use. Of the allocated memory 5.33 GiB is allocated by PyTorch, and 75.25 MiB is reserved by PyTorch but unallocated.
+[W1025 02:25:07.704799367 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 1 while trying to map 20971520 bytes (free: 10027008, total: 99951706112).
+[W1025 02:25:07.994401023 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 1 while trying to map 20971520 bytes (free: 10027008, total: 99951706112).
+stage_grad hub-flip-local gas-drift c5: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 35.93 GiB. GPU 1 has a total capacity of 93.09 GiB of which 3.43 GiB is free. Process 717123 has 80.38 GiB memory in use. Process 722292 has 518.00 MiB memory in use. Including non-PyTorch memory, this process has 8.59 GiB memory in use. Of the allocated memory 7.82 GiB is allocated by PyTorch, and 47.45 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/why_tinyv.py", line 150, in per_instance
+    fn(b)
+  File "/home/ssn899/Desktop/TabFM/scripts/why_tinyv.py", line 371, in stage_grad
+    lv, gv = grad_logw(clf, d, d["Xv"], d["yv"], lw0, a.chunk)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/why_tinyv.py", line 343, in grad_logw
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], Xq, np.asarray(yq), lw, need_grad=True, batch_size=chunk)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 150, in evaluate_weighted
+    grad += torch.autograd.grad(loss, log_w)[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/__init__.py", line 594, in grad
+    result = _engine_run_backward(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 35.93 GiB. GPU 1 has a total capacity of 93.09 GiB of which 3.43 GiB is free. Process 717123 has 80.38 GiB memory in use. Process 722292 has 518.00 MiB memory in use. Including non-PyTorch memory, this process has 8.59 GiB memory in use. Of the allocated memory 7.82 GiB is allocated by PyTorch, and 47.45 MiB is reserved by PyTorch but unallocated.
+[W1025 02:25:11.504989797 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 1 while trying to map 20971520 bytes (free: 3735552, total: 99951706112).
+[W1025 02:25:11.786537836 CUDACachingAllocator.cpp:528] expandable_segments: memory mapping failed with OOM on device 1 while trying to map 20971520 bytes (free: 10027008, total: 99951706112).
+stage_grad hub-flip-local gas-drift c3: FAILED OutOfMemoryError: CUDA out of memory. Tried to allocate 36.13 GiB. GPU 1 has a total capacity of 93.09 GiB of which 3.39 GiB is free. Process 717123 has 80.38 GiB memory in use. Process 722292 has 518.00 MiB memory in use. Including non-PyTorch memory, this process has 8.63 GiB memory in use. Of the allocated memory 7.82 GiB is allocated by PyTorch, and 80.52 MiB is reserved by PyTorch but unallocated.
+Traceback (most recent call last):
+  File "/home/ssn899/Desktop/TabFM/scripts/why_tinyv.py", line 150, in per_instance
+    fn(b)
+  File "/home/ssn899/Desktop/TabFM/scripts/why_tinyv.py", line 371, in stage_grad
+    lv, gv = grad_logw(clf, d, d["Xv"], d["yv"], lw0, a.chunk)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/why_tinyv.py", line 343, in grad_logw
+    loss, g, _ = evaluate_weighted(clf, d["Xc"], d["y_given"], Xq, np.asarray(yq), lw, need_grad=True, batch_size=chunk)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/Desktop/TabFM/scripts/tabfm_experiments/row_weights.py", line 150, in evaluate_weighted
+    grad += torch.autograd.grad(loss, log_w)[0]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/__init__.py", line 594, in grad
+    result = _engine_run_backward(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ssn899/miniforge3/envs/tabfm/lib/python3.11/site-packages/torch/autograd/graph.py", line 1072, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 36.13 GiB. GPU 1 has a total capacity of 93.09 GiB of which 3.39 GiB is free. Process 717123 has 80.38 GiB memory in use. Process 722292 has 518.00 MiB memory in use. Including non-PyTorch memory, this process has 8.63 GiB memory in use. Of the allocated memory 7.82 GiB is allocated by PyTorch, and 80.52 MiB is reserved by PyTorch but unallocated.

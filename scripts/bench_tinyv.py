@@ -33,7 +33,8 @@ Methods (--methods; default: all):
   tabsift       TabPFN's row weights (tinyv_sift.py; w = sigmoid(t) from the hard V-filter split, Adam lr 5);
   tabsift_m1    tabsift_m1: the same split in M1's form (hard top-k split of free scores from the V-filter's log p,
                 the gradient at the relaxed point 0.05, PGD-L-inf lr 0.2); tabsift_m1_rand_s0..s4: from random
-                N(0, 1) scores instead, 300 steps, and tabsift_m1_rand_ens: the vote of those 5 (run after them).
+                N(0, 1) scores instead, 300 steps, and tabsift_m1_rand_ens: the vote of those 5 (run after them);
+                tabsift_zero: tabsift started with every poisoned row near w = 0 (t = -30: all held out).
                 Each deployed as the top (1 - R)% + V
                 (overall, and class by class as in the poisoned rows) and the top 2% + V (a small clean subset), at
                 its default configuration and V-selected (as the baselines); test metrics recorded along the
@@ -123,7 +124,7 @@ BASELINES = ("label_spread", "knn_shapley", "emlc", "ieg")
 ALL_BASELINES = ("knn_sanitize", "label_spread", "knn_shapley", "data_oob", "cleanlab", "simifeat", "glc", "mwnet", "emlc", "ieg")
 # sifting with V fixed on the train side (tinyv_sift.py): Meta-Sift, and the same split learned through TabPFN (the
 # sigmoid form, and M1's)
-SIFT = ("metasift", "tabsift", "tabsift_m1", *(f"tabsift_m1_rand_s{i}" for i in range(5)), "tabsift_m1_rand_ens")
+SIFT = ("metasift", "tabsift", "tabsift_m1", *(f"tabsift_m1_rand_s{i}" for i in range(5)), "tabsift_m1_rand_ens", "tabsift_zero")
 METHODS = ("refs", *GREEDY, *LEARNED, *BASELINES, *SIFT)
 # the attention learners at another update count than tinyv_learned's 20 (scripts/tinyv_iter_study.py): M1 as
 # attn_topk_it<N>, the best soft form (w / V-filter / PGD, deployed soft + V) as attn_wsoft_it<N> (lr 0.8) or
@@ -383,7 +384,7 @@ def run_sift(bd: BenchData, d: dict, method: str, log=print, run=None) -> tuple[
                 record(out["weights"], sifter="ensemble", it=None, objective=None, train_loss=None)
         else:
             out = T.tabsift(bd.clf, d, cfg, log=log, record=record)
-            cands += [(name, it, ck["w"]) for it, ck in out["ckpts"].items() if it > 0 or out["config"]["init"] != "ones"]
+            cands += [(name, it, ck["w"]) for it, ck in out["ckpts"].items() if it > 0 or out["config"]["init"] not in ("ones", "zeros")]
         seconds[name] = out["seconds"]
         used[name] = {key: (list(val) if isinstance(val, tuple) else val) for key, val in out["config"].items()}
 

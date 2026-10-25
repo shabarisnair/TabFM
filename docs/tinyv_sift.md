@@ -68,7 +68,8 @@ benchmark (tinyv_learned.ATTN_CONFIGS["topk"], attn_learn.py --param topk).
   scores move like log-weights: dL/dlog w_j = (the context part) - w_j CE_j / n.
 - **Update:** PGD-L-inf ascent at M1's lr, s += 0.2 g / max|g|, for 100 steps. The scores are the deployed weights.
 - **Differences from the sigmoid form.** Only the ranking matters, so a push shared by every score changes nothing,
-  and a held-out row can come back. In the sigmoid form the held-out rows sat frozen at t = -30.
+  and a held-out row can come back. In the sigmoid form the held-out rows started at t = -30; they were not frozen (96%
+  moved, mostly further down; corrected 2026-10-25), but only 0.6% got back above w = 0.5 within 100 steps.
 - **Checked:** the gradient against central finite differences in log w:
   - kept rows: within 0.3%;
   - held-out rows: the objective is strongly curved around w = 0.05, and the differences converge to the gradient
@@ -77,6 +78,21 @@ benchmark (tinyv_learned.ATTN_CONFIGS["topk"], attn_learn.py --param topk).
 - **Also recorded:**
   - the objective at the hard split itself: the held-out rows' loss, with only the kept rows and V as the context;
   - the number of rows that have left the start's held-out set.
+
+**tabsift_zero** (added 2026-10-25): the sigmoid form (Adam lr 5, 100 steps, records every 2) started with every
+poisoned row near w = 0.
+- **Start:** t = -30 (w about 1e-13) plus a N(0, 0.01) jitter (float64), so the step-0 split is random rather than in
+  file order. V stays at weight 1. Every poisoned row starts as a query (query weight about 1): the whole poisoned set
+  is held out, and the training side is V.
+- **Why -30:** a development-draw check (good_customer and heloc at 5 per class, seed 1):
+  - the gradients flow at every start from +4 to -30 (median |dL/dt| 6e-6 or more, far above Adam's eps);
+  - starts from -4 to -20 leave TabPFN's predictions as far from a V-only context as w = 1 does (mean |dp| 0.24-0.33);
+  - -30 is the closest (0.12-0.13).
+- **Ranking:** the weights are recorded and deployed as t (rank "t"): the same order as w = sigmoid(t), without the
+  ties float32 underflow creates (w is exactly 0 below t of about -104). The records' w_mean is the mean t.
+- **V-selection:** step 0 is excluded, as for the all-ones start.
+- **Runs:** `bash scripts/sift_zero_jobs/gpu_NN.sh [GPU]` (NN = 00..05), W&B group `tinyv_tabsift_zero`. 18 jobs, about
+  2.6 H100-hours, at most 0.44 per script.
 
 **tabsift_m1_rand_s0..s4 and tabsift_m1_rand_ens** (added 2026-10-24): tabsift_m1 from a random start.
 - **Start:** random N(0, 1) scores drawn with seed i (attn_learn's random topk start) instead of the V-filter's log p.
@@ -181,6 +197,7 @@ smaller chunks). On a GPU that another busy job shares, expect two to four times
 - **Memory:** two gas-drift jobs on one GPU run out of memory. Give each its own GPU.
 
 Results (2026-10-24):
-- results/tables/bench_tinyv/sift_findings.md (Meta-Sift and the sigmoid form) and sift_m1_findings.md (M1's form);
+- results/tables/bench_tinyv/sift_findings.md (Meta-Sift and the sigmoid form), sift_m1_findings.md (M1's form) and
+  sift_m1_rand_findings.md (M1's form from random starts, and the 5-seed vote);
 - R30_by_v.md (per dataset);
 - results/plots/bench_tinyv/R30_V{1,3,5}.png.

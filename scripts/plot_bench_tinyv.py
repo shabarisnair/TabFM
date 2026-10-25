@@ -7,7 +7,8 @@ rows are left out: the relabel modes and the V-selected EMLC, IEG and label spre
 almost every instance). Of the learned row filters only M1 (top-k attention weights, 300 updates: the count of
 scripts/tinyv_iter_study.py) and the best soft form (w / V-filter / PGD lr 0.2, 4 updates, deployed soft + V) are
 shown; A3 and the NaN gates are left out. The sifting methods with V fixed on the train side (tinyv_sift.py:
-Meta-Sift and its TabPFN counterpart, in the sigmoid form and in M1's) at their default configurations, each as the top (1 - R)% + V (overall, and
+Meta-Sift and its TabPFN counterpart, in the sigmoid form and in M1's; M1's also from a random start, one seed and the
+vote of 5, top (1 - R)% only) at their default configurations, each as the top (1 - R)% + V (overall, and
 class by class as in the poisoned rows) and the top 2% + V. The same numbers go to a markdown file, one table per V size and metric.
 
     python scripts/plot_bench_tinyv.py [--R 30] [--plots results/plots/bench_tinyv] [--tables results/tables/bench_tinyv]
@@ -35,7 +36,8 @@ PLOTTED = [("v_only", "V only"), ("poisoned_plus_v", "poisoned + V"), ("oracle_p
            ("metasift_small", "Meta-Sift, top 2%"), ("tabsift", "TabPFN sift, top (1-R)%"),
            ("tabsift_cb", "TabPFN sift, top (1-R)% per class"), ("tabsift_small", "TabPFN sift, top 2%"),
            ("tabsift_m1", "TabPFN sift M1, top (1-R)%"), ("tabsift_m1_cb", "TabPFN sift M1, top (1-R)% per class"),
-           ("tabsift_m1_small", "TabPFN sift M1, top 2%")]
+           ("tabsift_m1_small", "TabPFN sift M1, top 2%"), ("tabsift_m1_rand_s0", "TabPFN sift M1 random start, top (1-R)%"),
+           ("tabsift_m1_rand_ens", "TabPFN sift M1 random, 5-seed vote, top (1-R)%")]
 DATASETS = [("gas-drift", "gas-drift"), ("students_dropout", "students"), ("heloc", "heloc"),
             ("ecommerce_shipping", "ecommerce"), ("is_this_a_good_customer", "good_customer"),
             ("coil2000_insurance_policies", "coil2000")]

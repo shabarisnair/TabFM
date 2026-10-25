@@ -1,0 +1,696 @@
+run is_this_a_good_customer_R30_c1_s0 metasift: start (n 1398, k 419, V 2)
+Random seed set as 0
+      metasift sifter 0: 4 s
+      metasift sifter 1: 7 s
+      metasift sifter 2: 9 s
+      metasift sifter 3: 11 s
+      metasift sifter 4: 11 s
+Random seed set as 0
+      metasift sifter 0: 0 s
+      metasift sifter 1: 1 s
+      metasift sifter 2: 2 s
+      metasift sifter 3: 2 s
+      metasift sifter 4: 3 s
+Random seed set as 0
+      metasift sifter 0: 3 s
+      metasift sifter 1: 5 s
+      metasift sifter 2: 6 s
+      metasift sifter 3: 7 s
+      metasift sifter 4: 9 s
+Random seed set as 0
+      metasift sifter 0: 1 s
+      metasift sifter 1: 2 s
+      metasift sifter 2: 4 s
+      metasift sifter 3: 5 s
+      metasift sifter 4: 6 s
+    metasift: V-selected tuned at None (V log loss 0.247) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected model_lr3e-4 at None (V log loss 0.004) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected model_lr3e-4 at None (V log loss 0.008) of 4 candidates, 4 distinct kept sets
+run is_this_a_good_customer_R30_c1_s0 metasift: done in 33 s  metasift: acc 88.0 auc 72.4 ce 0.495 prec 0.766  metasift_vsel: acc 88.0 auc 72.4 ce 0.495 prec 0.766  metasift_cb: acc 70.7 auc 73.1 ce 0.726 prec 0.364  metasift_cb_vsel: acc 69.3 auc 72.5 ce 0.863 prec 0.361  metasift_small: acc 68.0 auc 74.3 ce 0.859 prec 0.300  metasift_small_vsel: acc 62.0 auc 74.4 ce 1.118 prec 0.300
+run is_this_a_good_customer_R30_c3_s0 metasift: start (n 1394, k 418, V 6)
+Random seed set as 0
+      metasift sifter 0: 3 s
+      metasift sifter 1: 6 s
+      metasift sifter 2: 9 s
+      metasift sifter 3: 11 s
+      metasift sifter 4: 14 s
+Random seed set as 0
+      metasift sifter 0: 2 s
+      metasift sifter 1: 3 s
+      metasift sifter 2: 5 s
+      metasift sifter 3: 6 s
+      metasift sifter 4: 8 s
+Random seed set as 0
+      metasift sifter 0: 3 s
+      metasift sifter 1: 6 s
+      metasift sifter 2: 8 s
+      metasift sifter 3: 11 s
+      metasift sifter 4: 14 s
+Random seed set as 0
+      metasift sifter 0: 2 s
+      metasift sifter 1: 3 s
+      metasift sifter 2: 5 s
+      metasift sifter 3: 6 s
+      metasift sifter 4: 7 s
+    metasift: V-selected tuned at None (V log loss 0.392) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected model_lr3e-4 at None (V log loss 0.061) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected model_lr3e-4 at None (V log loss 0.111) of 4 candidates, 4 distinct kept sets
+run is_this_a_good_customer_R30_c3_s0 metasift: done in 44 s  metasift: acc 86.3 auc 66.2 ce 0.480 prec 0.715  metasift_vsel: acc 86.3 auc 66.2 ce 0.480 prec 0.715  metasift_cb: acc 69.7 auc 66.1 ce 0.716 prec 0.353  metasift_cb_vsel: acc 67.0 auc 69.6 ce 0.817 prec 0.341  metasift_small: acc 72.0 auc 69.0 ce 0.626 prec 0.301  metasift_small_vsel: acc 65.3 auc 67.0 ce 0.770 prec 0.301
+run is_this_a_good_customer_R30_c5_s0 metasift: start (n 1390, k 417, V 10)
+Random seed set as 0
+      metasift sifter 0: 3 s
+      metasift sifter 1: 6 s
+      metasift sifter 2: 8 s
+      metasift sifter 3: 11 s
+      metasift sifter 4: 14 s
+Random seed set as 0
+      metasift sifter 0: 1 s
+      metasift sifter 1: 3 s
+      metasift sifter 2: 4 s
+      metasift sifter 3: 6 s
+      metasift sifter 4: 7 s
+Random seed set as 0
+      metasift sifter 0: 3 s
+      metasift sifter 1: 6 s
+      metasift sifter 2: 9 s
+      metasift sifter 3: 11 s
+      metasift sifter 4: 14 s
+Random seed set as 0
+      metasift sifter 0: 2 s
+      metasift sifter 1: 3 s
+      metasift sifter 2: 5 s
+      metasift sifter 3: 6 s
+      metasift sifter 4: 8 s
+    metasift: V-selected tuned at None (V log loss 0.648) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected v_lr0.05 at None (V log loss 0.141) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected model_lr3e-4 at None (V log loss 0.569) of 4 candidates, 4 distinct kept sets
+run is_this_a_good_customer_R30_c5_s0 metasift: done in 45 s  metasift: acc 87.7 auc 52.7 ce 0.442 prec 0.652  metasift_vsel: acc 87.7 auc 52.7 ce 0.442 prec 0.652  metasift_cb: acc 62.0 auc 56.5 ce 0.741 prec 0.296  metasift_cb_vsel: acc 64.0 auc 56.8 ce 0.719 prec 0.298  metasift_small: acc 44.3 auc 45.7 ce 1.159 prec 0.300  metasift_small_vsel: acc 41.3 auc 48.5 ce 1.142 prec 0.300
+run ecommerce_shipping_R30_c1_s0 metasift: start (n 4998, k 1499, V 2)
+Random seed set as 0
+      metasift sifter 0: 17 s
+      metasift sifter 1: 35 s
+      metasift sifter 2: 52 s
+      metasift sifter 3: 69 s
+      metasift sifter 4: 87 s
+Random seed set as 0
+      metasift sifter 0: 5 s
+      metasift sifter 1: 10 s
+      metasift sifter 2: 16 s
+      metasift sifter 3: 21 s
+      metasift sifter 4: 25 s
+Random seed set as 0
+      metasift sifter 0: 10 s
+      metasift sifter 1: 20 s
+      metasift sifter 2: 30 s
+      metasift sifter 3: 40 s
+      metasift sifter 4: 50 s
+Random seed set as 0
+      metasift sifter 0: 5 s
+      metasift sifter 1: 10 s
+      metasift sifter 2: 16 s
+      metasift sifter 3: 21 s
+      metasift sifter 4: 26 s
+    metasift: V-selected model_lr3e-4 at None (V log loss 0.010) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected model_lr3e-4 at None (V log loss 0.007) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected model_lr3e-4 at None (V log loss 0.004) of 4 candidates, 4 distinct kept sets
+run ecommerce_shipping_R30_c1_s0 metasift: done in 193 s  metasift: acc 63.5 auc 71.7 ce 0.947 prec 0.482  metasift_vsel: acc 64.4 auc 71.6 ce 0.928 prec 0.485  metasift_cb: acc 64.5 auc 72.1 ce 0.963 prec 0.499  metasift_cb_vsel: acc 64.3 auc 72.0 ce 0.893 prec 0.498  metasift_small: acc 62.6 auc 69.9 ce 1.427 prec 0.304  metasift_small_vsel: acc 59.0 auc 69.3 ce 1.541 prec 0.303
+run ecommerce_shipping_R30_c3_s0 metasift: start (n 4994, k 1498, V 6)
+Random seed set as 0
+      metasift sifter 0: 17 s
+      metasift sifter 1: 35 s
+      metasift sifter 2: 52 s
+      metasift sifter 3: 69 s
+      metasift sifter 4: 87 s
+Random seed set as 0
+      metasift sifter 0: 5 s
+      metasift sifter 1: 11 s
+      metasift sifter 2: 16 s
+      metasift sifter 3: 21 s
+      metasift sifter 4: 26 s
+Random seed set as 0
+      metasift sifter 0: 10 s
+      metasift sifter 1: 20 s
+      metasift sifter 2: 30 s
+      metasift sifter 3: 39 s
+      metasift sifter 4: 49 s
+Random seed set as 0
+      metasift sifter 0: 5 s
+      metasift sifter 1: 10 s
+      metasift sifter 2: 15 s
+      metasift sifter 3: 21 s
+      metasift sifter 4: 26 s
+    metasift: V-selected model_lr3e-4 at None (V log loss 0.008) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected model_lr3e-4 at None (V log loss 0.008) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected res_epochs10 at None (V log loss 0.540) of 4 candidates, 4 distinct kept sets
+run ecommerce_shipping_R30_c3_s0 metasift: done in 193 s  metasift: acc 64.8 auc 72.3 ce 0.921 prec 0.495  metasift_vsel: acc 63.7 auc 71.3 ce 0.993 prec 0.497  metasift_cb: acc 65.2 auc 72.4 ce 0.929 prec 0.496  metasift_cb_vsel: acc 64.7 auc 71.8 ce 0.976 prec 0.496  metasift_small: acc 64.3 auc 71.0 ce 1.044 prec 0.304  metasift_small_vsel: acc 63.4 auc 70.8 ce 1.195 prec 0.303
+run ecommerce_shipping_R30_c5_s0 metasift: start (n 4990, k 1497, V 10)
+Random seed set as 0
+      metasift sifter 0: 17 s
+      metasift sifter 1: 34 s
+      metasift sifter 2: 50 s
+      metasift sifter 3: 67 s
+      metasift sifter 4: 84 s
+Random seed set as 0
+      metasift sifter 0: 5 s
+      metasift sifter 1: 10 s
+      metasift sifter 2: 15 s
+      metasift sifter 3: 20 s
+      metasift sifter 4: 26 s
+Random seed set as 0
+      metasift sifter 0: 10 s
+      metasift sifter 1: 19 s
+      metasift sifter 2: 29 s
+      metasift sifter 3: 38 s
+      metasift sifter 4: 48 s
+Random seed set as 0
+      metasift sifter 0: 5 s
+      metasift sifter 1: 10 s
+      metasift sifter 2: 15 s
+      metasift sifter 3: 20 s
+      metasift sifter 4: 25 s
+    metasift: V-selected model_lr3e-4 at None (V log loss 0.086) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected model_lr3e-4 at None (V log loss 0.109) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected tuned at None (V log loss 0.788) of 4 candidates, 4 distinct kept sets
+run ecommerce_shipping_R30_c5_s0 metasift: done in 187 s  metasift: acc 62.8 auc 71.0 ce 0.923 prec 0.490  metasift_vsel: acc 62.8 auc 69.4 ce 0.906 prec 0.477  metasift_cb: acc 62.8 auc 69.3 ce 0.935 prec 0.488  metasift_cb_vsel: acc 63.8 auc 69.1 ce 0.927 prec 0.475  metasift_small: acc 60.5 auc 68.0 ce 1.114 prec 0.304  metasift_small_vsel: acc 60.5 auc 68.0 ce 1.114 prec 0.304
+run students_dropout_R30_c1_s0 metasift: start (n 2997, k 899, V 3)
+Random seed set as 0
+      metasift sifter 0: 13 s
+      metasift sifter 1: 26 s
+      metasift sifter 2: 39 s
+      metasift sifter 3: 52 s
+      metasift sifter 4: 65 s
+Random seed set as 0
+      metasift sifter 0: 3 s
+      metasift sifter 1: 7 s
+      metasift sifter 2: 10 s
+      metasift sifter 3: 13 s
+      metasift sifter 4: 16 s
+Random seed set as 0
+      metasift sifter 0: 6 s
+      metasift sifter 1: 12 s
+      metasift sifter 2: 19 s
+      metasift sifter 3: 25 s
+      metasift sifter 4: 31 s
+Random seed set as 0
+      metasift sifter 0: 3 s
+      metasift sifter 1: 6 s
+      metasift sifter 2: 9 s
+      metasift sifter 3: 13 s
+      metasift sifter 4: 16 s
+    metasift: V-selected tuned at None (V log loss 0.207) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected tuned at None (V log loss 0.095) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected res_epochs10 at None (V log loss 0.178) of 4 candidates, 4 distinct kept sets
+run students_dropout_R30_c1_s0 metasift: done in 135 s  metasift: acc 76.8 auc 87.9 ce 0.771 prec 0.710  metasift_vsel: acc 76.8 auc 87.9 ce 0.771 prec 0.710  metasift_cb: acc 74.2 auc 87.3 ce 0.779 prec 0.647  metasift_cb_vsel: acc 74.2 auc 87.3 ce 0.779 prec 0.647  metasift_small: acc 70.4 auc 85.9 ce 1.382 prec 0.304  metasift_small_vsel: acc 67.2 auc 82.3 ce 1.109 prec 0.306
+run students_dropout_R30_c3_s0 metasift: start (n 2991, k 897, V 9)
+Random seed set as 0
+      metasift sifter 0: 13 s
+      metasift sifter 1: 26 s
+      metasift sifter 2: 39 s
+      metasift sifter 3: 53 s
+      metasift sifter 4: 65 s
+Random seed set as 0
+      metasift sifter 0: 3 s
+      metasift sifter 1: 7 s
+      metasift sifter 2: 10 s
+      metasift sifter 3: 13 s
+      metasift sifter 4: 16 s
+Random seed set as 0
+      metasift sifter 0: 6 s
+      metasift sifter 1: 12 s
+      metasift sifter 2: 19 s
+      metasift sifter 3: 25 s
+      metasift sifter 4: 31 s
+Random seed set as 0
+      metasift sifter 0: 3 s
+      metasift sifter 1: 7 s
+      metasift sifter 2: 10 s
+      metasift sifter 3: 13 s
+      metasift sifter 4: 17 s
+    metasift: V-selected v_lr0.05 at None (V log loss 0.155) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected tuned at None (V log loss 0.224) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected res_epochs10 at None (V log loss 0.534) of 4 candidates, 4 distinct kept sets
+run students_dropout_R30_c3_s0 metasift: done in 135 s  metasift: acc 76.8 auc 88.3 ce 0.707 prec 0.716  metasift_vsel: acc 77.6 auc 88.2 ce 0.701 prec 0.706  metasift_cb: acc 75.0 auc 88.8 ce 0.684 prec 0.642  metasift_cb_vsel: acc 75.0 auc 88.8 ce 0.684 prec 0.642  metasift_small: acc 68.0 auc 83.1 ce 1.109 prec 0.305  metasift_small_vsel: acc 73.0 auc 84.8 ce 0.758 prec 0.304
+run students_dropout_R30_c5_s0 metasift: start (n 2985, k 896, V 15)
+Random seed set as 0
+      metasift sifter 0: 13 s
+      metasift sifter 1: 26 s
+      metasift sifter 2: 39 s
+      metasift sifter 3: 52 s
+      metasift sifter 4: 65 s
+Random seed set as 0
+      metasift sifter 0: 3 s
+      metasift sifter 1: 7 s
+      metasift sifter 2: 10 s
+      metasift sifter 3: 13 s
+      metasift sifter 4: 16 s
+Random seed set as 0
+      metasift sifter 0: 6 s
+      metasift sifter 1: 13 s
+      metasift sifter 2: 19 s
+      metasift sifter 3: 26 s
+      metasift sifter 4: 31 s
+Random seed set as 0
+      metasift sifter 0: 3 s
+      metasift sifter 1: 7 s
+      metasift sifter 2: 10 s
+      metasift sifter 3: 13 s
+      metasift sifter 4: 16 s
+    metasift: V-selected model_lr3e-4 at None (V log loss 0.534) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected model_lr3e-4 at None (V log loss 0.417) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected v_lr0.05 at None (V log loss 0.966) of 4 candidates, 4 distinct kept sets
+run students_dropout_R30_c5_s0 metasift: done in 135 s  metasift: acc 77.2 auc 87.2 ce 0.680 prec 0.692  metasift_vsel: acc 75.6 auc 86.7 ce 0.750 prec 0.688  metasift_cb: acc 73.2 auc 87.5 ce 0.698 prec 0.639  metasift_cb_vsel: acc 72.6 auc 86.6 ce 0.821 prec 0.648  metasift_small: acc 68.0 auc 83.9 ce 0.955 prec 0.306  metasift_small_vsel: acc 67.8 auc 84.9 ce 0.811 prec 0.304
+run heloc_R30_c1_s0 metasift: start (n 4998, k 1499, V 2)
+Random seed set as 0
+      metasift sifter 0: 29 s
+      metasift sifter 1: 56 s
+      metasift sifter 2: 85 s
+      metasift sifter 3: 113 s
+      metasift sifter 4: 141 s
+Random seed set as 0
+      metasift sifter 0: 5 s
+      metasift sifter 1: 11 s
+      metasift sifter 2: 16 s
+      metasift sifter 3: 21 s
+      metasift sifter 4: 26 s
+Random seed set as 0
+      metasift sifter 0: 11 s
+      metasift sifter 1: 21 s
+      metasift sifter 2: 31 s
+      metasift sifter 3: 42 s
+      metasift sifter 4: 52 s
+Random seed set as 0
+      metasift sifter 0: 6 s
+      metasift sifter 1: 11 s
+      metasift sifter 2: 16 s
+      metasift sifter 3: 21 s
+      metasift sifter 4: 27 s
+    metasift: V-selected model_lr3e-4 at None (V log loss 0.000) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected model_lr3e-4 at None (V log loss 0.000) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected model_lr3e-4 at None (V log loss 0.000) of 4 candidates, 4 distinct kept sets
+run heloc_R30_c1_s0 metasift: done in 255 s  metasift: acc 71.2 auc 76.8 ce 0.907 prec 0.540  metasift_vsel: acc 71.7 auc 77.7 ce 1.089 prec 0.578  metasift_cb: acc 70.9 auc 77.0 ce 0.911 prec 0.541  metasift_cb_vsel: acc 71.6 auc 77.7 ce 1.093 prec 0.576  metasift_small: acc 69.5 auc 77.5 ce 1.449 prec 0.304  metasift_small_vsel: acc 71.2 auc 78.3 ce 1.358 prec 0.305
+run heloc_R30_c3_s0 metasift: start (n 4994, k 1498, V 6)
+Random seed set as 0
+      metasift sifter 0: 28 s
+      metasift sifter 1: 56 s
+      metasift sifter 2: 85 s
+      metasift sifter 3: 113 s
+      metasift sifter 4: 141 s
+Random seed set as 0
+      metasift sifter 0: 5 s
+      metasift sifter 1: 11 s
+      metasift sifter 2: 16 s
+      metasift sifter 3: 21 s
+      metasift sifter 4: 27 s
+Random seed set as 0
+      metasift sifter 0: 10 s
+      metasift sifter 1: 20 s
+      metasift sifter 2: 31 s
+      metasift sifter 3: 41 s
+      metasift sifter 4: 51 s
+Random seed set as 0
+      metasift sifter 0: 5 s
+      metasift sifter 1: 9 s
+      metasift sifter 2: 13 s
+      metasift sifter 3: 18 s
+      metasift sifter 4: 22 s
+    metasift: V-selected model_lr3e-4 at None (V log loss 0.100) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected model_lr3e-4 at None (V log loss 0.100) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected model_lr3e-4 at None (V log loss 0.377) of 4 candidates, 4 distinct kept sets
+run heloc_R30_c3_s0 metasift: done in 246 s  metasift: acc 71.4 auc 77.9 ce 0.828 prec 0.562  metasift_vsel: acc 70.9 auc 78.1 ce 0.932 prec 0.573  metasift_cb: acc 72.1 auc 78.5 ce 0.780 prec 0.559  metasift_cb_vsel: acc 71.1 auc 78.1 ce 0.930 prec 0.573  metasift_small: acc 70.5 auc 77.4 ce 0.985 prec 0.304  metasift_small_vsel: acc 70.4 auc 77.1 ce 0.953 prec 0.304
+run heloc_R30_c5_s0 metasift: start (n 4990, k 1497, V 10)
+Random seed set as 0
+      metasift sifter 0: 11 s
+      metasift sifter 1: 30 s
+      metasift sifter 2: 55 s
+      metasift sifter 3: 78 s
+      metasift sifter 4: 103 s
+Random seed set as 0
+      metasift sifter 0: 5 s
+      metasift sifter 1: 10 s
+      metasift sifter 2: 15 s
+      metasift sifter 3: 20 s
+      metasift sifter 4: 25 s
+Random seed set as 0
+      metasift sifter 0: 10 s
+      metasift sifter 1: 19 s
+      metasift sifter 2: 28 s
+      metasift sifter 3: 37 s
+      metasift sifter 4: 47 s
+Random seed set as 0
+      metasift sifter 0: 5 s
+      metasift sifter 1: 10 s
+      metasift sifter 2: 15 s
+      metasift sifter 3: 21 s
+      metasift sifter 4: 25 s
+    metasift: V-selected model_lr3e-4 at None (V log loss 0.031) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected model_lr3e-4 at None (V log loss 0.045) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected tuned at None (V log loss 0.086) of 4 candidates, 4 distinct kept sets
+run heloc_R30_c5_s0 metasift: done in 207 s  metasift: acc 68.5 auc 76.4 ce 0.765 prec 0.550  metasift_vsel: acc 69.5 auc 76.4 ce 0.838 prec 0.553  metasift_cb: acc 68.0 auc 76.0 ce 0.748 prec 0.555  metasift_cb_vsel: acc 69.7 auc 76.9 ce 0.769 prec 0.564  metasift_small: acc 70.4 auc 77.1 ce 1.058 prec 0.305  metasift_small_vsel: acc 70.4 auc 77.1 ce 1.058 prec 0.305
+run coil2000_insurance_policies_R30_c1_s0 metasift: start (n 4998, k 1499, V 2)
+Random seed set as 0
+      metasift sifter 0: 63 s
+      metasift sifter 1: 127 s
+      metasift sifter 2: 190 s
+      metasift sifter 3: 253 s
+      metasift sifter 4: 317 s
+Random seed set as 0
+      metasift sifter 0: 6 s
+      metasift sifter 1: 11 s
+      metasift sifter 2: 16 s
+      metasift sifter 3: 22 s
+      metasift sifter 4: 26 s
+Random seed set as 0
+      metasift sifter 0: 10 s
+      metasift sifter 1: 20 s
+      metasift sifter 2: 30 s
+      metasift sifter 3: 40 s
+      metasift sifter 4: 50 s
+Random seed set as 0
+      metasift sifter 0: 6 s
+      metasift sifter 1: 10 s
+      metasift sifter 2: 16 s
+      metasift sifter 3: 21 s
+      metasift sifter 4: 26 s
+    metasift: V-selected v_lr0.05 at None (V log loss 0.498) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected model_lr3e-4 at None (V log loss 0.006) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected model_lr3e-4 at None (V log loss 0.005) of 4 candidates, 4 distinct kept sets
+run coil2000_insurance_policies_R30_c1_s0 metasift: done in 437 s  metasift: acc 93.0 auc 66.0 ce 0.252 prec 0.801  metasift_vsel: acc 92.6 auc 65.0 ce 0.252 prec 0.737  metasift_cb: acc 74.7 auc 66.4 ce 0.549 prec 0.322  metasift_cb_vsel: acc 64.4 auc 68.1 ce 0.873 prec 0.341  metasift_small: acc 79.6 auc 66.6 ce 0.465 prec 0.300  metasift_small_vsel: acc 58.7 auc 68.5 ce 1.305 prec 0.301
+run coil2000_insurance_policies_R30_c3_s0 metasift: start (n 4994, k 1498, V 6)
+Random seed set as 0
+      metasift sifter 0: 64 s
+      metasift sifter 1: 127 s
+      metasift sifter 2: 191 s
+      metasift sifter 3: 254 s
+      metasift sifter 4: 317 s
+Random seed set as 0
+      metasift sifter 0: 5 s
+      metasift sifter 1: 10 s
+      metasift sifter 2: 16 s
+      metasift sifter 3: 21 s
+      metasift sifter 4: 26 s
+Random seed set as 0
+      metasift sifter 0: 10 s
+      metasift sifter 1: 21 s
+      metasift sifter 2: 30 s
+      metasift sifter 3: 41 s
+      metasift sifter 4: 50 s
+Random seed set as 0
+      metasift sifter 0: 5 s
+      metasift sifter 1: 10 s
+      metasift sifter 2: 15 s
+      metasift sifter 3: 20 s
+      metasift sifter 4: 24 s
+    metasift: V-selected model_lr3e-4 at None (V log loss 0.368) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected model_lr3e-4 at None (V log loss 0.045) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected model_lr3e-4 at None (V log loss 0.056) of 4 candidates, 4 distinct kept sets
+run coil2000_insurance_policies_R30_c3_s0 metasift: done in 434 s  metasift: acc 89.1 auc 60.6 ce 0.307 prec 0.748  metasift_vsel: acc 93.0 auc 60.9 ce 0.352 prec 0.847  metasift_cb: acc 75.4 auc 65.5 ce 0.529 prec 0.317  metasift_cb_vsel: acc 70.4 auc 63.4 ce 0.662 prec 0.321  metasift_small: acc 67.7 auc 67.3 ce 0.632 prec 0.300  metasift_small_vsel: acc 58.9 auc 63.7 ce 0.880 prec 0.300
+run coil2000_insurance_policies_R30_c5_s0 metasift: start (n 4990, k 1497, V 10)
+Random seed set as 0
+      metasift sifter 0: 52 s
+      metasift sifter 1: 114 s
+      metasift sifter 2: 193 s
+      metasift sifter 3: 274 s
+      metasift sifter 4: 356 s
+Random seed set as 0
+      metasift sifter 0: 8 s
+      metasift sifter 1: 15 s
+      metasift sifter 2: 23 s
+      metasift sifter 3: 30 s
+      metasift sifter 4: 38 s
+Random seed set as 0
+      metasift sifter 0: 15 s
+      metasift sifter 1: 29 s
+      metasift sifter 2: 44 s
+      metasift sifter 3: 59 s
+      metasift sifter 4: 73 s
+Random seed set as 0
+      metasift sifter 0: 8 s
+      metasift sifter 1: 15 s
+      metasift sifter 2: 23 s
+      metasift sifter 3: 30 s
+      metasift sifter 4: 38 s
+    metasift: V-selected v_lr0.05 at None (V log loss 0.753) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected model_lr3e-4 at None (V log loss 0.171) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected model_lr3e-4 at None (V log loss 0.280) of 4 candidates, 4 distinct kept sets
+run coil2000_insurance_policies_R30_c5_s0 metasift: done in 530 s  metasift: acc 92.4 auc 59.6 ce 0.280 prec 0.773  metasift_vsel: acc 94.0 auc 66.9 ce 0.261 prec 0.539  metasift_cb: acc 72.9 auc 63.6 ce 0.545 prec 0.305  metasift_cb_vsel: acc 66.8 auc 62.4 ce 0.700 prec 0.318  metasift_small: acc 77.9 auc 67.3 ce 0.473 prec 0.300  metasift_small_vsel: acc 75.1 auc 67.4 ce 0.554 prec 0.301
+run gas-drift_R30_c1_s0 metasift: start (n 4994, k 1498, V 6)
+Random seed set as 0
+      metasift sifter 0: 119 s
+      metasift sifter 1: 237 s
+      metasift sifter 2: 350 s
+      metasift sifter 3: 469 s
+      metasift sifter 4: 589 s
+Random seed set as 0
+      metasift sifter 0: 8 s
+      metasift sifter 1: 15 s
+      metasift sifter 2: 23 s
+      metasift sifter 3: 30 s
+      metasift sifter 4: 38 s
+Random seed set as 0
+      metasift sifter 0: 15 s
+      metasift sifter 1: 30 s
+      metasift sifter 2: 44 s
+      metasift sifter 3: 59 s
+      metasift sifter 4: 74 s
+Random seed set as 0
+      metasift sifter 0: 8 s
+      metasift sifter 1: 15 s
+      metasift sifter 2: 23 s
+      metasift sifter 3: 31 s
+      metasift sifter 4: 38 s
+    metasift: V-selected tuned at None (V log loss 0.000) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected tuned at None (V log loss 0.010) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected tuned at None (V log loss 0.239) of 4 candidates, 4 distinct kept sets
+run gas-drift_R30_c1_s0 metasift: done in 776 s  metasift: acc 98.5 auc 100.0 ce 0.071 prec 0.973  metasift_vsel: acc 98.5 auc 100.0 ce 0.071 prec 0.973  metasift_cb: acc 96.1 auc 99.9 ce 0.154 prec 0.888  metasift_cb_vsel: acc 96.1 auc 99.9 ce 0.154 prec 0.888  metasift_small: acc 83.9 auc 97.6 ce 0.551 prec 0.306  metasift_small_vsel: acc 83.9 auc 97.6 ce 0.551 prec 0.306
+run gas-drift_R30_c3_s0 metasift: start (n 4982, k 1495, V 18)
+Random seed set as 0
+      metasift sifter 0: 118 s
+      metasift sifter 1: 237 s
+      metasift sifter 2: 356 s
+      metasift sifter 3: 477 s
+      metasift sifter 4: 598 s
+Random seed set as 0
+      metasift sifter 0: 8 s
+      metasift sifter 1: 15 s
+      metasift sifter 2: 23 s
+      metasift sifter 3: 31 s
+      metasift sifter 4: 39 s
+Random seed set as 0
+      metasift sifter 0: 15 s
+      metasift sifter 1: 29 s
+      metasift sifter 2: 43 s
+      metasift sifter 3: 58 s
+      metasift sifter 4: 72 s
+Random seed set as 0
+      metasift sifter 0: 7 s
+      metasift sifter 1: 15 s
+      metasift sifter 2: 22 s
+      metasift sifter 3: 30 s
+      metasift sifter 4: 37 s
+    metasift: V-selected res_epochs10 at None (V log loss 0.000) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected res_epochs10 at None (V log loss 0.009) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected model_lr3e-4 at None (V log loss 0.355) of 4 candidates, 4 distinct kept sets
+run gas-drift_R30_c3_s0 metasift: done in 782 s  metasift: acc 98.6 auc 100.0 ce 0.049 prec 0.959  metasift_vsel: acc 98.7 auc 100.0 ce 0.030 prec 0.967  metasift_cb: acc 97.9 auc 100.0 ce 0.100 prec 0.908  metasift_cb_vsel: acc 98.6 auc 100.0 ce 0.083 prec 0.905  metasift_small: acc 82.9 auc 98.4 ce 0.547 prec 0.306  metasift_small_vsel: acc 84.2 auc 97.9 ce 0.538 prec 0.306
+run gas-drift_R30_c5_s0 metasift: start (n 4970, k 1491, V 30)
+Random seed set as 0
+      metasift sifter 0: 117 s
+      metasift sifter 1: 234 s
+      metasift sifter 2: 349 s
+      metasift sifter 3: 455 s
+      metasift sifter 4: 560 s
+Random seed set as 0
+      metasift sifter 0: 6 s
+      metasift sifter 1: 13 s
+      metasift sifter 2: 19 s
+      metasift sifter 3: 26 s
+      metasift sifter 4: 33 s
+Random seed set as 0
+      metasift sifter 0: 13 s
+      metasift sifter 1: 29 s
+      metasift sifter 2: 43 s
+      metasift sifter 3: 55 s
+      metasift sifter 4: 63 s
+Random seed set as 0
+      metasift sifter 0: 6 s
+      metasift sifter 1: 12 s
+      metasift sifter 2: 19 s
+      metasift sifter 3: 27 s
+      metasift sifter 4: 34 s
+    metasift: V-selected res_epochs10 at None (V log loss 0.004) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected model_lr3e-4 at None (V log loss 0.031) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected tuned at None (V log loss 0.672) of 4 candidates, 4 distinct kept sets
+run gas-drift_R30_c5_s0 metasift: done in 723 s  metasift: acc 98.8 auc 100.0 ce 0.042 prec 0.970  metasift_vsel: acc 98.9 auc 100.0 ce 0.039 prec 0.970  metasift_cb: acc 97.9 auc 100.0 ce 0.088 prec 0.910  metasift_cb_vsel: acc 97.6 auc 99.9 ce 0.124 prec 0.897  metasift_small: acc 85.5 auc 98.5 ce 0.434 prec 0.306  metasift_small_vsel: acc 85.5 auc 98.5 ce 0.434 prec 0.306
+run students_dropout_R30_c1_s0 metasift: start (n 2997, k 899, V 3)
+Random seed set as 0
+      metasift sifter 0: 18 s
+      metasift sifter 1: 33 s
+      metasift sifter 2: 49 s
+      metasift sifter 3: 64 s
+      metasift sifter 4: 79 s
+Random seed set as 0
+      metasift sifter 0: 5 s
+      metasift sifter 1: 9 s
+      metasift sifter 2: 14 s
+      metasift sifter 3: 19 s
+      metasift sifter 4: 24 s
+Random seed set as 0
+      metasift sifter 0: 9 s
+      metasift sifter 1: 18 s
+      metasift sifter 2: 27 s
+      metasift sifter 3: 37 s
+      metasift sifter 4: 46 s
+Random seed set as 0
+      metasift sifter 0: 5 s
+      metasift sifter 1: 10 s
+      metasift sifter 2: 14 s
+      metasift sifter 3: 19 s
+      metasift sifter 4: 24 s
+    metasift: V-selected model_lr3e-4 at None (V log loss 0.054) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected tuned at None (V log loss 0.031) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected tuned at None (V log loss 0.371) of 4 candidates, 4 distinct kept sets
+run students_dropout_R30_c1_s0 metasift: done in 181 s  metasift: acc 63.6 auc 81.0 ce 1.450 prec 0.485  metasift_vsel: acc 64.0 auc 79.2 ce 1.470 prec 0.461  metasift_cb: acc 63.2 auc 81.6 ce 1.437 prec 0.454  metasift_cb_vsel: acc 63.2 auc 81.6 ce 1.437 prec 0.454  metasift_small: acc 56.8 auc 81.6 ce 2.013 prec 0.306  metasift_small_vsel: acc 56.8 auc 81.6 ce 2.013 prec 0.306
+run students_dropout_R30_c3_s0 metasift: start (n 2991, k 897, V 9)
+Random seed set as 0
+      metasift sifter 0: 16 s
+      metasift sifter 1: 31 s
+      metasift sifter 2: 47 s
+      metasift sifter 3: 63 s
+      metasift sifter 4: 78 s
+Random seed set as 0
+      metasift sifter 0: 5 s
+      metasift sifter 1: 10 s
+      metasift sifter 2: 15 s
+      metasift sifter 3: 19 s
+      metasift sifter 4: 24 s
+Random seed set as 0
+      metasift sifter 0: 9 s
+      metasift sifter 1: 17 s
+      metasift sifter 2: 26 s
+      metasift sifter 3: 35 s
+      metasift sifter 4: 44 s
+Random seed set as 0
+      metasift sifter 0: 5 s
+      metasift sifter 1: 9 s
+      metasift sifter 2: 14 s
+      metasift sifter 3: 18 s
+      metasift sifter 4: 23 s
+    metasift: V-selected model_lr3e-4 at None (V log loss 0.243) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected model_lr3e-4 at None (V log loss 0.479) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected res_epochs10 at None (V log loss 0.464) of 4 candidates, 4 distinct kept sets
+run students_dropout_R30_c3_s0 metasift: done in 176 s  metasift: acc 63.6 auc 79.0 ce 1.544 prec 0.507  metasift_vsel: acc 63.6 auc 79.3 ce 1.534 prec 0.463  metasift_cb: acc 60.6 auc 80.3 ce 1.565 prec 0.459  metasift_cb_vsel: acc 61.2 auc 79.6 ce 1.582 prec 0.455  metasift_small: acc 71.4 auc 86.7 ce 0.792 prec 0.306  metasift_small_vsel: acc 69.4 auc 79.4 ce 0.884 prec 0.306
+run students_dropout_R30_c5_s0 metasift: start (n 2985, k 896, V 15)
+Random seed set as 0
+      metasift sifter 0: 15 s
+      metasift sifter 1: 30 s
+      metasift sifter 2: 45 s
+      metasift sifter 3: 60 s
+      metasift sifter 4: 75 s
+Random seed set as 0
+      metasift sifter 0: 5 s
+      metasift sifter 1: 9 s
+      metasift sifter 2: 14 s
+      metasift sifter 3: 19 s
+      metasift sifter 4: 23 s
+Random seed set as 0
+      metasift sifter 0: 9 s
+      metasift sifter 1: 18 s
+      metasift sifter 2: 27 s
+      metasift sifter 3: 36 s
+      metasift sifter 4: 44 s
+Random seed set as 0
+      metasift sifter 0: 5 s
+      metasift sifter 1: 9 s
+      metasift sifter 2: 14 s
+      metasift sifter 3: 18 s
+      metasift sifter 4: 23 s
+    metasift: V-selected model_lr3e-4 at None (V log loss 0.851) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected model_lr3e-4 at None (V log loss 0.839) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected v_lr0.05 at None (V log loss 0.832) of 4 candidates, 4 distinct kept sets
+run students_dropout_R30_c5_s0 metasift: done in 172 s  metasift: acc 62.0 auc 79.8 ce 1.459 prec 0.490  metasift_vsel: acc 63.8 auc 80.7 ce 1.323 prec 0.503  metasift_cb: acc 59.4 auc 80.3 ce 1.508 prec 0.470  metasift_cb_vsel: acc 60.0 auc 80.2 ce 1.429 prec 0.465  metasift_small: acc 67.8 auc 83.6 ce 0.889 prec 0.306  metasift_small_vsel: acc 69.8 auc 81.7 ce 0.785 prec 0.301
+run gas-drift_R30_c1_s0 metasift: start (n 4994, k 1498, V 6)
+Random seed set as 0
+      metasift sifter 0: 119 s
+      metasift sifter 1: 233 s
+      metasift sifter 2: 352 s
+      metasift sifter 3: 469 s
+      metasift sifter 4: 583 s
+Random seed set as 0
+      metasift sifter 0: 7 s
+      metasift sifter 1: 15 s
+      metasift sifter 2: 22 s
+      metasift sifter 3: 29 s
+      metasift sifter 4: 36 s
+Random seed set as 0
+      metasift sifter 0: 13 s
+      metasift sifter 1: 28 s
+      metasift sifter 2: 43 s
+      metasift sifter 3: 58 s
+      metasift sifter 4: 73 s
+Random seed set as 0
+      metasift sifter 0: 8 s
+      metasift sifter 1: 15 s
+      metasift sifter 2: 23 s
+      metasift sifter 3: 31 s
+      metasift sifter 4: 38 s
+    metasift: V-selected tuned at None (V log loss 0.002) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected tuned at None (V log loss 0.003) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected tuned at None (V log loss 0.923) of 4 candidates, 4 distinct kept sets
+run gas-drift_R30_c1_s0 metasift: done in 765 s  metasift: acc 88.6 auc 99.4 ce 0.431 prec 0.944  metasift_vsel: acc 88.6 auc 99.4 ce 0.431 prec 0.944  metasift_cb: acc 81.3 auc 97.9 ce 1.032 prec 0.875  metasift_cb_vsel: acc 81.3 auc 97.9 ce 1.032 prec 0.875  metasift_small: acc 77.3 auc 94.9 ce 0.790 prec 0.306  metasift_small_vsel: acc 77.3 auc 94.9 ce 0.790 prec 0.306
+run gas-drift_R30_c3_s0 metasift: start (n 4982, k 1495, V 18)
+Random seed set as 0
+      metasift sifter 0: 101 s
+      metasift sifter 1: 205 s
+      metasift sifter 2: 309 s
+      metasift sifter 3: 414 s
+      metasift sifter 4: 521 s
+Random seed set as 0
+      metasift sifter 0: 7 s
+      metasift sifter 1: 15 s
+      metasift sifter 2: 22 s
+      metasift sifter 3: 30 s
+      metasift sifter 4: 38 s
+Random seed set as 0
+      metasift sifter 0: 15 s
+      metasift sifter 1: 29 s
+      metasift sifter 2: 43 s
+      metasift sifter 3: 58 s
+      metasift sifter 4: 72 s
+Random seed set as 0
+      metasift sifter 0: 8 s
+      metasift sifter 1: 15 s
+      metasift sifter 2: 23 s
+      metasift sifter 3: 30 s
+      metasift sifter 4: 38 s
+    metasift: V-selected v_lr0.05 at None (V log loss 0.005) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected res_epochs10 at None (V log loss 0.037) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected tuned at None (V log loss 0.525) of 4 candidates, 4 distinct kept sets
+run gas-drift_R30_c3_s0 metasift: done in 703 s  metasift: acc 90.1 auc 99.6 ce 0.554 prec 0.919  metasift_vsel: acc 92.8 auc 99.7 ce 0.245 prec 0.903  metasift_cb: acc 84.2 auc 97.8 ce 0.746 prec 0.880  metasift_cb_vsel: acc 80.5 auc 96.9 ce 1.050 prec 0.859  metasift_small: acc 76.3 auc 95.9 ce 0.724 prec 0.306  metasift_small_vsel: acc 76.3 auc 95.9 ce 0.724 prec 0.306
+run gas-drift_R30_c5_s0 metasift: start (n 4970, k 1491, V 30)
+Random seed set as 0
+      metasift sifter 0: 109 s
+      metasift sifter 1: 213 s
+      metasift sifter 2: 318 s
+      metasift sifter 3: 423 s
+      metasift sifter 4: 532 s
+Random seed set as 0
+      metasift sifter 0: 7 s
+      metasift sifter 1: 15 s
+      metasift sifter 2: 22 s
+      metasift sifter 3: 29 s
+      metasift sifter 4: 36 s
+Random seed set as 0
+      metasift sifter 0: 14 s
+      metasift sifter 1: 27 s
+      metasift sifter 2: 41 s
+      metasift sifter 3: 55 s
+      metasift sifter 4: 69 s
+Random seed set as 0
+      metasift sifter 0: 7 s
+      metasift sifter 1: 14 s
+      metasift sifter 2: 21 s
+      metasift sifter 3: 29 s
+      metasift sifter 4: 36 s
+    metasift: V-selected tuned at None (V log loss 0.002) of 4 candidates, 4 distinct kept sets
+    metasift_cb: V-selected tuned at None (V log loss 0.043) of 4 candidates, 4 distinct kept sets
+    metasift_small: V-selected res_epochs10 at None (V log loss 0.669) of 4 candidates, 4 distinct kept sets
+run gas-drift_R30_c5_s0 metasift: done in 705 s  metasift: acc 89.5 auc 99.0 ce 0.524 prec 0.927  metasift_vsel: acc 89.5 auc 99.0 ce 0.524 prec 0.927  metasift_cb: acc 82.4 auc 98.1 ce 0.749 prec 0.871  metasift_cb_vsel: acc 82.4 auc 98.1 ce 0.749 prec 0.871  metasift_small: acc 81.1 auc 97.4 ce 0.656 prec 0.306  metasift_small_vsel: acc 78.5 auc 96.1 ce 0.689 prec 0.306
