@@ -86,15 +86,17 @@ never tuned for the sift objective. The sweep replaces the Adam-only `tabsift_lr
   - Adam at lr 0.01, 0.1, 0.5, 1, 5;
   - plain SGD (t += lr dL/dt, no momentum) at lr 1e3, 1e4, 5e4, 1e5, 5e5.
 - **Why SGD's rates are large:** L is a mean over the n poisoned rows, so dL/dt is small. Measured at the hard start of
-  the seed-0 draws, V = 1 and 5 per class:
-  - a kept row's median |dL/dt| is 1.4e-5 to 5.4e-5. The 90th percentile is about 4 times that, and the max is 6e-4
-    to 4e-3;
+  the seed-0 draws, V = 1 and 5 per class, on every dataset but gas-drift (its backward pass needs about 36 GB, and the
+  CPU run was cut off):
+  - a kept row's median |dL/dt| is 1.4e-5 to 5.4e-5, except coil2000 at 5 per class: 4.9e-6. The 90th percentile is
+    about 4 times the median, and the max is 4e-4 to 4e-3;
   - a held-out row's (t = -30) median is about 1e-14, with a few rows up to 1e-2.
 
   So SGD at Adam's rates would move a typical kept row by at most about 0.03 in 100 steps and change no deployment.
-  SGD at 1e3 to 5e5 moves a typical kept row by about 0.014–0.05 (at 1e3) up to 7–27 (at 5e5) per step. That is the
-  range of Adam's steps, about lr per row per step. Matching Adam's median step takes SGD at about
-  lr_adam / median |dL/dt|: 180–730 for Adam's 0.01, and 9e4–3.7e5 for its 5.
+  SGD at 1e3 to 5e5 moves a typical kept row by about 0.014–0.05 (at 1e3) up to 7–27 (at 5e5) per step; on coil2000
+  at 5 per class, 0.005 to 2.5. That is the range of Adam's steps, about lr per row per step. Matching Adam's median
+  step takes SGD at about lr_adam / median |dL/dt|: 180–730 for Adam's 0.01 (2e3 on coil2000 at 5 per class), and
+  9e4–3.7e5 for its 5 (1e6).
 - **How the two differ:**
   - Adam's step is about lr for every row, whatever the gradient's size. The first steps are sign-like, so rows with
     gradients near 0 move as much as the others (the run-to-run noise below).

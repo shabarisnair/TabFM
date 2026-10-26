@@ -69,13 +69,14 @@ $PY -c "import wandb; api = wandb.Api(timeout=60); api.viewer; print('  wandb: l
 """
 MERGE = """#!/bin/bash
 # Bring one machine's finished sifting runs ({out}/gpu_XX.sh: {methods}) into {runs};
-# files already here are kept as they are. Then: python scripts/plot_bench_tinyv.py
+# files already here are kept as they are. The locks and temporary files of jobs still running there are left out (a
+# copied lock would make every run here skip that job). Then: python scripts/plot_bench_tinyv.py
 #   bash {out}/merge.sh <host>:<its repo path>       (or a local path to a copy of that repository)
 set -euo pipefail
 cd "$(dirname "$0")/{up}"
 count() {{ find {runs} {names} | wc -l; }}
 before=$(count)
-rsync -a --ignore-existing --include '*/' {includes} --exclude '*' \\
+rsync -a --ignore-existing --exclude '*.lock' --exclude '*.tmp' --include '*/' {includes} --exclude '*' \\
   "${{1%/}}/{runs}/" {runs}/
 echo "merged $(( $(count) - before )) new result files"
 """
