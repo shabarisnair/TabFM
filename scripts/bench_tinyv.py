@@ -35,6 +35,8 @@ Methods (--methods; default: all):
                 the gradient at the relaxed point 0.05, PGD-L-inf lr 0.2); tabsift_m1_rand_s0..s4: from random
                 N(0, 1) scores instead, 300 steps, and tabsift_m1_rand_ens: the vote of those 5 (run after them);
                 tabsift_zero: tabsift started with every poisoned row near w = 0 (t = -30: all held out).
+                tabsift_adam_lr<x> / tabsift_sgd_lr<x>: tabsift by Adam at lr 0.01, 0.1, 0.5, 1, 5, or by plain
+                SGD at lr 1e3, 1e4, 5e4, 1e5, 5e5 (a sweep).
                 Each deployed as the top (1 - R)% + V
                 (overall, and class by class as in the poisoned rows) and the top 2% + V (a small clean subset), at
                 its default configuration and V-selected (as the baselines); test metrics recorded along the
@@ -124,7 +126,9 @@ BASELINES = ("label_spread", "knn_shapley", "emlc", "ieg")
 ALL_BASELINES = ("knn_sanitize", "label_spread", "knn_shapley", "data_oob", "cleanlab", "simifeat", "glc", "mwnet", "emlc", "ieg")
 # sifting with V fixed on the train side (tinyv_sift.py): Meta-Sift, and the same split learned through TabPFN (the
 # sigmoid form, and M1's)
-SIFT = ("metasift", "tabsift", "tabsift_m1", *(f"tabsift_m1_rand_s{i}" for i in range(5)), "tabsift_m1_rand_ens", "tabsift_zero")
+SIFT = ("metasift", "tabsift", "tabsift_m1", *(f"tabsift_m1_rand_s{i}" for i in range(5)), "tabsift_m1_rand_ens", "tabsift_zero",
+        *(f"tabsift_adam_lr{x}" for x in ("0.01", "0.1", "0.5", "1", "5")),
+        *(f"tabsift_sgd_lr{x}" for x in ("1e3", "1e4", "5e4", "1e5", "5e5")))  # = tinyv_sift.SWEEP
 METHODS = ("refs", *GREEDY, *LEARNED, *BASELINES, *SIFT)
 # the attention learners at another update count than tinyv_learned's 20 (scripts/tinyv_iter_study.py): M1 as
 # attn_topk_it<N>, the best soft form (w / V-filter / PGD, deployed soft + V) as attn_wsoft_it<N> (lr 0.8) or
@@ -410,8 +414,9 @@ def run_sift(bd: BenchData, d: dict, method: str, log=print, run=None) -> tuple[
         rows.append(row(f"{method}{suffix}_vsel", best["cfg"], best["ckpt"], {"v_ce": best["v_ce"], "v_acc": best["v_acc"]}))
         log(f"    {method}{suffix}: V-selected {best['cfg']} at {best['ckpt']} (V log loss {best['v_ce']:.3f}) of "
             f"{len(mine)} candidates, {len(cache)} distinct kept sets")
-    for name, it, w in cands:
-        arrays[f"{name}" + ("" if it is None else f"_it{it}")] = np.asarray(w, dtype=np.float32)
+    for name, it, w in cands:  # float64 weights (tabsift's t in float64) stay float64: in float32 rows would tie again
+        w = np.asarray(w)
+        arrays[f"{name}" + ("" if it is None else f"_it{it}")] = w if w.dtype == np.float64 else w.astype(np.float32)
     if run is not None:
         run.config.update({"config_used": used})
         wandb_summary(run, method, d, traj, rows, scored, refs)

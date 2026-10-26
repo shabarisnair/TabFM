@@ -38,6 +38,15 @@ the deployments' test metrics and precision there).
              tabsift_m1 from random N(0, 1) scores (seed i = 0..4) instead of the V-filter's, 300 steps, each recorded
              every 5 steps; and, once the 5 have finished, their vote: each row's hard weight (1 kept, 0 held out)
              averaged over the 5 seeds' chosen checkpoints (ties: its mean score rank), deployed once.
+  tabsift_adam_lr<x>, tabsift_sgd_lr<x>
+             tabsift (the sigmoid form, hard V-filter start, 100 steps) by Adam at lr x = 0.01, 0.1, 0.5, 1 or 5 (the
+             default tabsift uses Adam at 5), or by plain SGD (t += lr dL/dt, no momentum) at lr x = 1e3, 1e4, 5e4, 1e5
+             or 5e5 (an optimizer x learning-rate sweep), ranked by t (rank "t", as tabsift_zero), t in float64 (in
+             float32, SGD's steps on most held-out rows, about 1e-8, round away and leave a hundred or more rows tied
+             at -30, the top-70% cut among them, broken by file order). SGD's rates are
+             scaled up because the gradients are small (L is a mean over the n poisoned rows): at the start |dL/dt| is
+             about 1e-5 for a typical kept row, so 1e3 to 5e5 move it by about 0.01 to 10 per step, the range of Adam's
+             steps (about lr) at 0.01 to 5
   tabsift_zero
              tabsift (sigmoid, Adam lr 5, 100 steps) started with every poisoned row near w = 0: t = -30 (w about 1e-13)
              plus a N(0, 0.01) jitter (so that the step-0 split is random, not in file order), V at weight 1 as always.
@@ -79,6 +88,12 @@ ROWS = {"metasift": {"": ("tuned", None)}, "tabsift": {"": ("sig_hard", 100)}, "
 TABSIFT_ZERO = dict(init="zeros", t_start=-30.0, t_jitter=0.01, rank="t")
 GRIDS["tabsift_zero"] = {"sig_zero": TABSIFT_ZERO}
 ROWS["tabsift_zero"] = {"": ("sig_zero", 100)}
+# the sigmoid form's optimizer x learning-rate sweep (tabsift_<opt>_lr<x>): TABSIFT by that optimizer at lr x, ranked by t
+SWEEP = {"adam": ("0.01", "0.1", "0.5", "1", "5"), "sgd": ("1e3", "1e4", "5e4", "1e5", "5e5")}
+for _opt, _lrs in SWEEP.items():
+    for _lr in _lrs:
+        GRIDS[f"tabsift_{_opt}_lr{_lr}"] = {f"sig_hard_{_opt}_lr{_lr}": dict(opt=_opt, lr=float(_lr), rank="t", t_float64=True)}
+        ROWS[f"tabsift_{_opt}_lr{_lr}"] = {"": (f"sig_hard_{_opt}_lr{_lr}", 100)}
 # M1's form from a random start (tabsift_m1_rand_s<i>): N(0, 1) scores drawn with seed i (attn_learn's random topk start),
 # 300 steps, recorded every 5; V-selection's candidates at the steps in ckpts
 TABSIFT_M1_RAND = dict(TABSIFT_M1, init="random", init_std=1.0, steps=300, record_every=5,
@@ -348,11 +363,15 @@ def tabsift(clf, d: dict, cfg: dict | None = None, log=print, record=None) -> di
             raise ValueError(f"unknown start {c['init']!r} for the topk form")
         held0 = held_out(s, k)
     elif sig:  # t unbounded, w = sigmoid(t)
+        # t_float64: t (the optimizer's state, and the ranking with rank "t") in float64, so that steps below float32's
+        # resolution at |t| = 30 (about 2e-6: SGD's lr dL/dt for most held-out rows) still move t instead of leaving rows
+        # tied at the start's value (the context's log w and the query weights are float32 either way)
+        dtype = torch.float64 if c.get("t_float64") else torch.float32
         if c["init"] == "vf_hard":  # the V-filter's k least plausible rows at t_removed, the rest at t_kept
-            t = torch.full((n,), c["t_kept"], device=device)
+            t = torch.full((n,), c["t_kept"], dtype=dtype, device=device)
             t[torch.as_tensor(np.argsort(vfilter_scores(clf, d), kind="stable")[:k], device=device)] = c["t_removed"]
         elif c["init"] == "ones":
-            t = torch.full((n,), c["t_kept"], device=device)
+            t = torch.full((n,), c["t_kept"], dtype=dtype, device=device)
         elif c["init"] == "zeros":  # every poisoned row held out: t_start, jittered so ties break at random (float64:
             # in float32 a 0.01 jitter at -30 has too few distinct values, and colliding rows would stay tied)
             t = torch.as_tensor(c["t_start"] + np.random.default_rng(int(d["seed"])).normal(0.0, c["t_jitter"], n),
@@ -360,7 +379,8 @@ def tabsift(clf, d: dict, cfg: dict | None = None, log=print, record=None) -> di
         else:
             raise ValueError(f"unknown start {c['init']!r} for the sigmoid form")
         t.requires_grad_(True)
-        adam = torch.optim.Adam([t], lr=c["lr"], maximize=True)
+        # opt "adam" (the default), or "sgd": plain SGD, t += lr dL/dt (no momentum)
+        optim = {"adam": torch.optim.Adam, "sgd": torch.optim.SGD}[c["opt"]]([t], lr=c["lr"], maximize=True)
         w = torch.sigmoid(t.detach())
     elif c["init"] == "ones":
         w = torch.ones(n, device=device)
@@ -402,7 +422,7 @@ def tabsift(clf, d: dict, cfg: dict | None = None, log=print, record=None) -> di
             s = s + c["lr"] * g / g.abs().max().clamp_min(1e-30)
         elif sig:
             t.grad = g
-            adam.step()
+            optim.step()
             w = torch.sigmoid(t.detach())
         else:
             w = project_mass(w + c["lr"] * g / g.abs().max().clamp_min(1e-30), mass)

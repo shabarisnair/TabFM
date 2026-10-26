@@ -79,6 +79,46 @@ benchmark (tinyv_learned.ATTN_CONFIGS["topk"], attn_learn.py --param topk).
   - the objective at the hard split itself: the held-out rows' loss, with only the kept rows and V as the context;
   - the number of rows that have left the start's held-out set.
 
+**tabsift_adam_lr\<x\> and tabsift_sgd_lr\<x\>** (added 2026-10-25): an optimizer x learning-rate sweep of the sigmoid
+form (hard V-filter start, 100 steps, records every 2). The default `tabsift` uses Adam at lr 5, which was set by hand,
+never tuned for the sift objective. The sweep replaces the Adam-only `tabsift_lr<x>` plan, which never ran.
+- **Grid:**
+  - Adam at lr 0.01, 0.1, 0.5, 1, 5;
+  - plain SGD (t += lr dL/dt, no momentum) at lr 1e3, 1e4, 5e4, 1e5, 5e5.
+- **Why SGD's rates are large:** L is a mean over the n poisoned rows, so dL/dt is small. Measured at the hard start of
+  the seed-0 draws, V = 1 and 5 per class:
+  - a kept row's median |dL/dt| is 1.4e-5 to 5.4e-5. The 90th percentile is about 4 times that, and the max is 6e-4
+    to 4e-3;
+  - a held-out row's (t = -30) median is about 1e-14, with a few rows up to 1e-2.
+
+  So SGD at Adam's rates would move a typical kept row by at most about 0.03 in 100 steps and change no deployment.
+  SGD at 1e3 to 5e5 moves a typical kept row by about 0.014–0.05 (at 1e3) up to 7–27 (at 5e5) per step. That is the
+  range of Adam's steps, about lr per row per step. Matching Adam's median step takes SGD at about
+  lr_adam / median |dL/dt|: 180–730 for Adam's 0.01, and 9e4–3.7e5 for its 5.
+- **How the two differ:**
+  - Adam's step is about lr for every row, whatever the gradient's size. The first steps are sign-like, so rows with
+    gradients near 0 move as much as the others (the run-to-run noise below).
+  - SGD's step is proportional to the gradient. Most held-out rows barely move, and the rows with the largest
+    gradients jump: at 5e5 on a development draw, 774 rows were below w = 0.5 after the first step (417 at the start),
+    and t reached ±5e4 by step 100.
+- **Ranking and precision:** ranked by t (rank "t"). t is kept in float64 (t_float64), and checkpoints are saved in
+  float64 (float64 weights are no longer cast to float32 on saving).
+  - In float32, SGD's steps on most held-out rows (lr times about 1e-14) are below the resolution at t = -30 (about
+    2e-6) and round away. On the development draw, 126–161 rows stayed tied at exactly -30 at lr 5e5. The top-70% cut
+    fell among them, so file order decided which were removed.
+  - The model's log w and query weights are float32 either way.
+- **Runs:** `bash scripts/sift_lr_jobs/gpu_NN.sh [GPU]` (NN = 00..05), W&B group `tinyv_tabsift_opt_lr`.
+  - 180 jobs, about 25.8 H100-hours, 4.3 per script.
+  - One script per GPU: gas-drift's single pass needs about 45 GiB.
+- **Built-in limit of Adam at small rates:** Adam moves each t by at most about lr per step (max |t move| in 100 steps
+  at lr 0.01: 1.5). The hard start puts kept rows at t = 4 and held-out rows at -30, so no row can cross between them
+  within 100 steps unless 100 lr exceeds about 34. At lr 0.01 and 0.1 the top-70% deployment therefore stays the
+  V-filter's split by construction; on the development draw, so did lr 0.5's. Only the per-class and 2% deployments,
+  which rank within groups, can change.
+- **Run-to-run noise at lr 5:** a rerun on another machine diverges from step 2 on (good_customer, 5 per class): 49 rows
+  end more than 0.5 apart in w, and the removed sets share 367 of 417 rows. Adam's sign-like first steps flip rows whose
+  gradient is near 0.
+
 **tabsift_zero** (added 2026-10-25): the sigmoid form (Adam lr 5, 100 steps, records every 2) started with every
 poisoned row near w = 0.
 - **Start:** t = -30 (w about 1e-13) plus a N(0, 0.01) jitter (float64), so the step-0 split is random rather than in
