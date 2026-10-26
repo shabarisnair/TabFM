@@ -55,6 +55,13 @@ the deployments' test metrics and precision there).
              -30 is the start closest to a V-only context (from -4 to -20 the predictions are as far from V-only as at
              w = 1). Its weights are recorded and deployed as t (rank "t"), the same order as w without ties from
              float32 underflow (the records' w_mean is then the mean t).
+  tabsift_zero_lr<x>_it300 (x = 0.01, 0.1, 5), tabsift_adam_lr<x>_it300 (x = 0.01, 0.1)
+             300 steps, recorded every 2: tabsift_zero at Adam lr 0.01, 0.1 and 5, and the hard V-filter start at Adam
+             lr 0.01 and 0.1 (t in float64, ranked by t). The hard start ranks in two blocks (kept rows at t = 4,
+             held-out at -30), so its top-70% set changes only once they meet. The gap of 34 closes from both ends:
+             about 0.24 per step at lr 0.1 (meeting around step 140), and 0.03 at lr 0.01 (not within 300 steps). The
+             order within each block (the per-class and 2% deployments) changes from the first step.
+The objective of tabsift's ascent is also kept at every step, not only at the records (`trace`).
 """
 from __future__ import annotations
 
@@ -94,6 +101,14 @@ for _opt, _lrs in SWEEP.items():
     for _lr in _lrs:
         GRIDS[f"tabsift_{_opt}_lr{_lr}"] = {f"sig_hard_{_opt}_lr{_lr}": dict(opt=_opt, lr=float(_lr), rank="t", t_float64=True)}
         ROWS[f"tabsift_{_opt}_lr{_lr}"] = {"": (f"sig_hard_{_opt}_lr{_lr}", 100)}
+# 300 steps (tabsift_<start>_lr<x>_it300): the zero start at Adam lr 0.01, 0.1 and 5, the hard V-filter start at Adam
+# lr 0.01 and 0.1
+CKPTS_300 = (0, 1, 2, 5, 10, 20, 30, 50, 75, 100, 150, 200, 250, 300)
+LONG = {f"tabsift_zero_lr{_lr}_it300": TABSIFT_ZERO | dict(lr=float(_lr)) for _lr in ("0.01", "0.1", "5")} | \
+       {f"tabsift_adam_lr{_lr}_it300": dict(opt="adam", lr=float(_lr), rank="t", t_float64=True) for _lr in ("0.01", "0.1")}
+for _m, _cfg in LONG.items():
+    GRIDS[_m] = {_m.removeprefix("tabsift_"): _cfg | dict(steps=300, ckpts=CKPTS_300)}
+    ROWS[_m] = {"": (_m.removeprefix("tabsift_"), 300)}
 # M1's form from a random start (tabsift_m1_rand_s<i>): N(0, 1) scores drawn with seed i (attn_learn's random topk start),
 # 300 steps, recorded every 5; V-selection's candidates at the steps in ckpts
 TABSIFT_M1_RAND = dict(TABSIFT_M1, init="random", init_std=1.0, steps=300, record_every=5,
@@ -341,10 +356,11 @@ def vfilter_scores(clf, d: dict) -> np.ndarray:
     return np.log(np.clip(p[np.arange(d["n"]), d["y_given"]], 1e-12, None))
 
 
-def tabsift(clf, d: dict, cfg: dict | None = None, log=print, record=None) -> dict:
+def tabsift(clf, d: dict, cfg: dict | None = None, log=print, record=None, trace=None) -> dict:
     """Ascent on sift_objective: the weights at every checkpoint in cfg['ckpts'] (V-selection's candidates), and
     with `record`, record(it, weights, objective) every record_every steps and at the last (param "topk": the scores
-    are the weights, and the records add objective_hard and swapped)."""
+    are the weights, and the records add objective_hard and swapped); with `trace`, trace(it, objective) at every
+    step (the objective is computed at every step anyway)."""
     import attn_learn as A
     c = dict(TABSIFT) | (cfg or {})
     device = d["Xc"].device
@@ -407,6 +423,8 @@ def tabsift(clf, d: dict, cfg: dict | None = None, log=print, record=None) -> di
                 torch.cuda.empty_cache()
                 log(f"      tabsift: out of GPU memory, {chunk} query rows per refit from now on")
         c["chunk_used"] = chunk
+        if trace:
+            trace(it, float(loss))
         # the deployed / recorded weights; rank "t": t itself, the same order as w = sigmoid(t) without float32 underflow
         # (w is exactly 0 below t of about -104, and log w exactly 0 above about +104, which would tie rows)
         weights = (s if topk else t.detach() if sig and c.get("rank") == "t" else w).detach().cpu().numpy().copy()

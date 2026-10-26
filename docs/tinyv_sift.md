@@ -112,14 +112,26 @@ never tuned for the sift objective. The sweep replaces the Adam-only `tabsift_lr
 - **Runs:** `bash scripts/sift_lr_jobs/gpu_NN.sh [GPU]` (NN = 00..05), W&B group `tinyv_tabsift_opt_lr`.
   - 180 jobs, about 25.8 H100-hours, 4.3 per script.
   - One script per GPU: gas-drift's single pass needs about 45 GiB.
-- **Built-in limit of Adam at small rates:** Adam moves each t by at most about lr per step (max |t move| in 100 steps
-  at lr 0.01: 1.5). The hard start puts kept rows at t = 4 and held-out rows at -30, so no row can cross between them
-  within 100 steps unless 100 lr exceeds about 34. At lr 0.01 and 0.1 the top-70% deployment therefore stays the
-  V-filter's split by construction; on the development draw, so did lr 0.5's. Only the per-class and 2% deployments,
-  which rank within groups, can change.
+- **Built-in limit of Adam at small rates:** the deployment is a ranking, with no threshold. But the hard start ranks in
+  two blocks: kept rows at t = 4, held-out rows at -30.
+  - Small moves reorder rows within a block, and the top 70% is exactly the upper block. The top-70% set changes only
+    once the lowest kept t and the highest held-out t meet.
+  - The gap closes from both ends. Measured on the 18 instances (corrected 2026-10-26), it closes at about 2.4 x lr
+    per step at lr 0.1 and below, and slower than lr per step above that:
+    - lr 0.01: 31.2 at step 100;
+    - lr 0.1: 9.6 at step 100, closed on none of the 18 instances (it should meet around step 140);
+    - lr 0.5: met by about step 50;
+    - lr 1: met by about step 25.
+  - Rows swap only slowly after the blocks meet: by step 100, 2.7 rows per instance at lr 0.5 and 8.7 at lr 1.
+  - So at lr 0.01 and 0.1 the top-70% deployment stays the V-filter's split for 100 steps. The per-class and 2%
+    deployments, which cut inside a block, change from the first step.
 - **Run-to-run noise at lr 5:** a rerun on another machine diverges from step 2 on (good_customer, 5 per class): 49 rows
   end more than 0.5 apart in w, and the removed sets share 367 of 417 rows. Adam's sign-like first steps flip rows whose
   gradient is near 0.
+- **Results (2026-10-26):** results/tables/bench_tinyv/sift_opt_lr_findings.md, with the mean curves in
+  results/plots/bench_tinyv/sift_opt_lr_curves.png.
+  - SGD 1e4 is the best and steadiest rate. On the test metrics it ties Adam 5, the best Adam rate.
+  - No rate improves detection over the V-filter start.
 
 **tabsift_zero** (added 2026-10-25): the sigmoid form (Adam lr 5, 100 steps, records every 2) started with every
 poisoned row near w = 0.
@@ -133,8 +145,34 @@ poisoned row near w = 0.
 - **Ranking:** the weights are recorded and deployed as t (rank "t"): the same order as w = sigmoid(t), without the
   ties float32 underflow creates (w is exactly 0 below t of about -104). The records' w_mean is the mean t.
 - **V-selection:** step 0 is excluded, as for the all-ones start.
-- **Runs:** `bash scripts/sift_zero_jobs/gpu_NN.sh [GPU]` (NN = 00..05), W&B group `tinyv_tabsift_zero`. 18 jobs, about
-  2.6 H100-hours, at most 0.44 per script.
+- **Runs:** none. The 100-step plan in `scripts/sift_zero_jobs/` never ran. The 300-step runs below replace it: Adam
+  has no schedule, so their first 100 steps at lr 5 are this method. sift_zero_jobs' manifest predates later code
+  changes, so its check would now stop it.
+
+**tabsift_zero_lr0.01_it300, tabsift_zero_lr0.1_it300, tabsift_zero_lr5_it300, tabsift_adam_lr0.01_it300,
+tabsift_adam_lr0.1_it300** (added 2026-10-26; lr 0.01 added the same day): 300 steps, recorded every 2.
+- **Runs:** the zero start above at Adam lr 0.01, 0.1 and 5, and the hard V-filter start at Adam lr 0.01 and 0.1 (t
+  in float64, ranked by t).
+- **Checkpoints:** steps 0, 1, 2, 5, 10, 20, 30, 50, 75, 100, 150, 200, 250 and 300. The default row is step 300.
+- **The objective at every step:** tabsift's `trace` keeps every step's objective, which is computed at every step
+  anyway. It goes to the result JSON's `objective_trace` and to W&B `objective/L`. The test metrics, precision and
+  purity are still recorded every 2 steps. This applies to every tabsift method from now on.
+- **Hard start:** the gap of 34 between the blocks closes from both ends. Measured in the 100-step sweep:
+  - at lr 0.1, about 0.24 per step (9.6 left at step 100), so the blocks should meet around step 140 and the top-70%
+    set starts changing after that, slowly at first;
+  - at lr 0.01, about 0.028 per step, about 8 in 300 steps. The top-70% set stays the V-filter's split; on the
+    development draw it did.
+
+  The per-class and 2% deployments change from the first step at both rates.
+- **Zero start at lr 0.01:** the rows start within a 0.01 jitter of each other, so the ranking changes from step 1.
+  The weights stay near 0, though: t moves by at most a few units in 300 steps, so w stays below about 1e-9, and the
+  context stays essentially V alone.
+- **Runs:** `bash scripts/sift_it300_jobs/gpu_NN.sh [GPU]` (NN = 00..04), W&B group `tinyv_tabsift_it300`.
+  - 90 jobs (5 methods x 18 instances), about 35.4 H100-hours, 7.1 per script. Each script runs one method on all 18
+    instances (3 gas-drift and 3 coil2000 jobs each).
+  - One script per GPU. A gas-drift job takes about an hour on a free H100.
+- **Smoke test,** on a development draw (good_customer, 5 per class, seed 1), all 5 methods: about 65 s per job, 151
+  records, and a 301-point objective trace equal to the records' objective. W&B had objective/L at all 301 steps.
 
 **tabsift_m1_rand_s0..s4 and tabsift_m1_rand_ens** (added 2026-10-24): tabsift_m1 from a random start.
 - **Start:** random N(0, 1) scores drawn with seed i (attn_learn's random topk start) instead of the V-filter's log p.
@@ -239,7 +277,8 @@ smaller chunks). On a GPU that another busy job shares, expect two to four times
 - **Memory:** two gas-drift jobs on one GPU run out of memory. Give each its own GPU.
 
 Results (2026-10-24):
-- results/tables/bench_tinyv/sift_findings.md (Meta-Sift and the sigmoid form), sift_m1_findings.md (M1's form) and
-  sift_m1_rand_findings.md (M1's form from random starts, and the 5-seed vote);
+- results/tables/bench_tinyv/sift_findings.md (Meta-Sift and the sigmoid form), sift_m1_findings.md (M1's form),
+  sift_m1_rand_findings.md (M1's form from random starts, and the 5-seed vote) and sift_opt_lr_findings.md (the
+  sigmoid form's optimizer x learning-rate sweep, 2026-10-26);
 - R30_by_v.md (per dataset);
 - results/plots/bench_tinyv/R30_V{1,3,5}.png.

@@ -36,7 +36,9 @@ Methods (--methods; default: all):
                 N(0, 1) scores instead, 300 steps, and tabsift_m1_rand_ens: the vote of those 5 (run after them);
                 tabsift_zero: tabsift started with every poisoned row near w = 0 (t = -30: all held out).
                 tabsift_adam_lr<x> / tabsift_sgd_lr<x>: tabsift by Adam at lr 0.01, 0.1, 0.5, 1, 5, or by plain
-                SGD at lr 1e3, 1e4, 5e4, 1e5, 5e5 (a sweep).
+                SGD at lr 1e3, 1e4, 5e4, 1e5, 5e5 (a sweep). tabsift_zero_lr<x>_it300 (x = 0.01, 0.1, 5) and
+                tabsift_adam_lr<x>_it300 (x = 0.01, 0.1): 300 steps of the zero start and of the hard V-filter
+                start, by Adam at lr x.
                 Each deployed as the top (1 - R)% + V
                 (overall, and class by class as in the poisoned rows) and the top 2% + V (a small clean subset), at
                 its default configuration and V-selected (as the baselines); test metrics recorded along the
@@ -128,7 +130,9 @@ ALL_BASELINES = ("knn_sanitize", "label_spread", "knn_shapley", "data_oob", "cle
 # sigmoid form, and M1's)
 SIFT = ("metasift", "tabsift", "tabsift_m1", *(f"tabsift_m1_rand_s{i}" for i in range(5)), "tabsift_m1_rand_ens", "tabsift_zero",
         *(f"tabsift_adam_lr{x}" for x in ("0.01", "0.1", "0.5", "1", "5")),
-        *(f"tabsift_sgd_lr{x}" for x in ("1e3", "1e4", "5e4", "1e5", "5e5")))  # = tinyv_sift.SWEEP
+        *(f"tabsift_sgd_lr{x}" for x in ("1e3", "1e4", "5e4", "1e5", "5e5")),  # = tinyv_sift.SWEEP
+        *(f"tabsift_zero_lr{x}_it300" for x in ("0.01", "0.1", "5")),
+        *(f"tabsift_adam_lr{x}_it300" for x in ("0.01", "0.1")))  # = tinyv_sift.LONG
 METHODS = ("refs", *GREEDY, *LEARNED, *BASELINES, *SIFT)
 # the attention learners at another update count than tinyv_learned's 20 (scripts/tinyv_iter_study.py): M1 as
 # attn_topk_it<N>, the best soft form (w / V-filter / PGD, deployed soft + V) as attn_wsoft_it<N> (lr 0.8) or
@@ -361,7 +365,8 @@ def run_sift(bd: BenchData, d: dict, method: str, log=print, run=None) -> tuple[
     deployment separately. While the default configuration trains, every few iterations the three deployments' test
     metrics, the precision of the removed rows, the purity of the kept ones and the AUROC of the weights against the
     poisoned rows go to the trajectory, and to the W&B run `run` if one is given (wandb_keys; at the end
-    wandb_summary). An ensemble method (tinyv_sift.ENSEMBLES) goes to run_sift_ensemble."""
+    wandb_summary). tabsift's objective is also kept at every step (objective_trace; W&B objective/L at every step).
+    An ensemble method (tinyv_sift.ENSEMBLES) goes to run_sift_ensemble."""
     import tinyv_sift as T
     from sklearn.metrics import roc_auc_score
     if method in T.ENSEMBLES:
@@ -371,7 +376,7 @@ def run_sift(bd: BenchData, d: dict, method: str, log=print, run=None) -> tuple[
     def deployed(w: np.ndarray) -> dict:
         return {kind: sift_scores(bd, d, sift_keep(d, w, kind)) for kind, _ in SIFT_KINDS}
 
-    traj, cands, seconds, used = [], [], {}, {}
+    traj, cands, seconds, used, traces = [], [], {}, {}, {}
     for name, cfg in T.GRIDS[method].items():
         recorded = name == T.ROWS[method][""][0]
 
@@ -387,7 +392,12 @@ def run_sift(bd: BenchData, d: dict, method: str, log=print, run=None) -> tuple[
             if recorded:
                 record(out["weights"], sifter="ensemble", it=None, objective=None, train_loss=None)
         else:
-            out = T.tabsift(bd.clf, d, cfg, log=log, record=record)
+            def trace(it, objective, name=name, recorded=recorded):
+                traces.setdefault(name, []).append(objective)
+                if run is not None and recorded:  # one configuration per W&B run: its steps only go up
+                    run.log({"objective/L": objective}, step=it)
+
+            out = T.tabsift(bd.clf, d, cfg, log=log, record=record, trace=trace)
             cands += [(name, it, ck["w"]) for it, ck in out["ckpts"].items() if it > 0 or out["config"]["init"] not in ("ones", "zeros")]
         seconds[name] = out["seconds"]
         used[name] = {key: (list(val) if isinstance(val, tuple) else val) for key, val in out["config"].items()}
@@ -422,7 +432,7 @@ def run_sift(bd: BenchData, d: dict, method: str, log=print, run=None) -> tuple[
         wandb_summary(run, method, d, traj, rows, scored, refs)
     return {"rows": rows, "trajectory": traj, "v_scores": scored, "grid": {nm: cfg for nm, cfg in T.GRIDS[method].items()},
             "fixed_rows": {key: list(val) for key, val in T.ROWS[method].items()}, "config_used": used,
-            "seconds_per_config": seconds}, arrays
+            "seconds_per_config": seconds} | ({"objective_trace": traces} if traces else {}), arrays
 
 
 def run_sift_ensemble(bd: BenchData, d: dict, method: str, log=print, run=None) -> tuple[dict, dict]:
