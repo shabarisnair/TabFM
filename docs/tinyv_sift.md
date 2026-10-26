@@ -173,6 +173,11 @@ tabsift_adam_lr0.1_it300** (added 2026-10-26; lr 0.01 added the same day): 300 s
   - One script per GPU. A gas-drift job takes about an hour on a free H100.
 - **Smoke test,** on a development draw (good_customer, 5 per class, seed 1), all 5 methods: about 65 s per job, 151
   records, and a 301-point objective trace equal to the records' objective. W&B had objective/L at all 301 steps.
+- **Results (2026-10-26):** results/tables/bench_tinyv/sift_it300_findings.md, with the curves in
+  results/plots/bench_tinyv/sift_it300_curves.png.
+  - The V-filter start at lr 0.01 and 0.1 barely moves the top-70% set in 300 steps: the blocks met on 12 of 18 by
+    step 300, and 1.4 rows per instance swapped. It stays stable but below lr 5 and SGD 1e4.
+  - The zero start keeps the poison from the first step (precision below chance) at every rate.
 
 **tabsift_m1_rand_s0..s4 and tabsift_m1_rand_ens** (added 2026-10-24): tabsift_m1 from a random start.
 - **Start:** random N(0, 1) scores drawn with seed i (attn_learn's random topk start) instead of the V-filter's log p.
