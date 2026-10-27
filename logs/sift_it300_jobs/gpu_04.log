@@ -1,0 +1,1385 @@
+run is_this_a_good_customer_R30_c1_s0 tabsift_adam_lr0.1_it300: start (n 1398, k 419, V 2)
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+wandb: Currently logged in as: shabari_ut (shabari_ut-university-of-texas-at-austin) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261026_024610-w81zh201
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_adam_lr0.1_it300_is_this_a_good_customer_R30_c1_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/w81zh201
+      tabsift sigmoid vf_hard it 0: objective 0.7567  w mean 0.688 below 0.5 419 of 1398  (0 s)
+      tabsift sigmoid vf_hard it 10: objective 0.8095  w mean 0.682 below 0.5 419 of 1398  (2 s)
+      tabsift sigmoid vf_hard it 20: objective 0.8748  w mean 0.668 below 0.5 419 of 1398  (4 s)
+      tabsift sigmoid vf_hard it 30: objective 1.0479  w mean 0.635 below 0.5 419 of 1398  (6 s)
+      tabsift sigmoid vf_hard it 40: objective 1.2566  w mean 0.598 below 0.5 543 of 1398  (8 s)
+      tabsift sigmoid vf_hard it 50: objective 1.4434  w mean 0.570 below 0.5 587 of 1398  (11 s)
+      tabsift sigmoid vf_hard it 60: objective 1.6279  w mean 0.552 below 0.5 610 of 1398  (13 s)
+      tabsift sigmoid vf_hard it 70: objective 1.7792  w mean 0.537 below 0.5 643 of 1398  (15 s)
+      tabsift sigmoid vf_hard it 80: objective 1.9075  w mean 0.523 below 0.5 657 of 1398  (17 s)
+      tabsift sigmoid vf_hard it 90: objective 1.9997  w mean 0.512 below 0.5 669 of 1398  (19 s)
+      tabsift sigmoid vf_hard it 100: objective 2.0751  w mean 0.504 below 0.5 688 of 1398  (21 s)
+      tabsift sigmoid vf_hard it 110: objective 2.1471  w mean 0.496 below 0.5 702 of 1398  (23 s)
+      tabsift sigmoid vf_hard it 120: objective 2.2061  w mean 0.488 below 0.5 716 of 1398  (25 s)
+      tabsift sigmoid vf_hard it 130: objective 2.2615  w mean 0.480 below 0.5 725 of 1398  (27 s)
+      tabsift sigmoid vf_hard it 140: objective 2.3362  w mean 0.470 below 0.5 745 of 1398  (29 s)
+      tabsift sigmoid vf_hard it 150: objective 2.3782  w mean 0.460 below 0.5 755 of 1398  (31 s)
+      tabsift sigmoid vf_hard it 160: objective 2.4369  w mean 0.453 below 0.5 765 of 1398  (33 s)
+      tabsift sigmoid vf_hard it 170: objective 2.5124  w mean 0.446 below 0.5 779 of 1398  (35 s)
+      tabsift sigmoid vf_hard it 180: objective 2.5744  w mean 0.436 below 0.5 795 of 1398  (37 s)
+      tabsift sigmoid vf_hard it 190: objective 2.6556  w mean 0.426 below 0.5 815 of 1398  (39 s)
+      tabsift sigmoid vf_hard it 200: objective 2.7217  w mean 0.417 below 0.5 834 of 1398  (41 s)
+      tabsift sigmoid vf_hard it 210: objective 2.7893  w mean 0.407 below 0.5 843 of 1398  (43 s)
+      tabsift sigmoid vf_hard it 220: objective 2.8550  w mean 0.394 below 0.5 865 of 1398  (45 s)
+      tabsift sigmoid vf_hard it 230: objective 2.8913  w mean 0.387 below 0.5 881 of 1398  (47 s)
+      tabsift sigmoid vf_hard it 240: objective 2.9456  w mean 0.382 below 0.5 882 of 1398  (49 s)
+      tabsift sigmoid vf_hard it 250: objective 2.9915  w mean 0.377 below 0.5 890 of 1398  (51 s)
+      tabsift sigmoid vf_hard it 260: objective 3.0471  w mean 0.369 below 0.5 903 of 1398  (53 s)
+      tabsift sigmoid vf_hard it 270: objective 3.0932  w mean 0.362 below 0.5 919 of 1398  (55 s)
+      tabsift sigmoid vf_hard it 280: objective 3.1486  w mean 0.355 below 0.5 930 of 1398  (57 s)
+      tabsift sigmoid vf_hard it 290: objective 3.1927  w mean 0.349 below 0.5 945 of 1398  (59 s)
+    tabsift_adam_lr0.1_it300: V-selected adam_lr0.1_it300 at 0 (V log loss 0.001) of 14 candidates, 1 distinct kept sets
+    tabsift_adam_lr0.1_it300_cb: V-selected adam_lr0.1_it300 at 2 (V log loss 0.020) of 14 candidates, 14 distinct kept sets
+    tabsift_adam_lr0.1_it300_small: V-selected adam_lr0.1_it300 at 200 (V log loss 0.022) of 14 candidates, 14 distinct kept sets
+wandb: updating run metadata; uploading artifact run-w81zh201-tablesrows-TuBYjg; uploading artifact run-w81zh201-tablesv_selection-6Bz9Ng; uploading artifact run-w81zh201-overlayaccuracy_table-Mtx6tA; uploading artifact run-w81zh201-overlaybalanced_accuracy_table-RzPd-g (+ 5 more)
+wandb: uploading artifact run-w81zh201-overlayaccuracy_table-Mtx6tA; uploading artifact run-w81zh201-overlaybalanced_accuracy_table-RzPd-g; uploading artifact run-w81zh201-overlayroc_auc_table-10IGZg; uploading artifact run-w81zh201-overlaylog_loss_table-UcdblA; uploading artifact run-w81zh201-overlayprecision_table-5eAF7Q (+ 2 more)
+wandb: uploading artifact run-w81zh201-overlayobjective_table-OnUogQ; uploading artifact tabsift_adam_lr0.1_it300_is_this_a_good_customer_R30_c1_s0
+wandb: uploading media/table/overlay/precision_table_300_12fb78e95306fa27933a.table.json; uploading media/table/overlay/objective_table_300_be8ac02c3d4714bdd699.table.json; uploading output.log; uploading media/table/tables/rows_300_1512d5a9bddbe1fd2f2a.table.json; uploading wandb-summary.json (+ 6 more)
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          accuracy/full_cb ▁▅▃▄▇▇▇▇▇▇▇█▇▇▇▇▇▇▇▇▇▇▇▅▅▅▅▅▆▆▆▆▅▅▄▅▅▅▅▅
+wandb:            accuracy/small ▁▃▃▄▄▅▆▇▇█▂▂▃▃▃▄▃▂▂▄▃▁▁▃▃▄▅▅▅▅▄▄▄▄▄▄▄▅▅▃
+wandb:    balanced_accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: balanced_accuracy/full_cb ▁▄▄▄▅█▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▆▆▆▆▆▆▇▇▇▆▆▆▆▆▆▆▆▆▆
+wandb:   balanced_accuracy/small ▃▂▃▃▆▇█▅▂▃▁▃▂▃▂▂▅▅▄▄▄▄▄▄▄▅▃▃▃▃▃▃▄▄▄▄▂▃▂▂
+wandb:             log_loss/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          log_loss/full_cb ▁▇▇▇▇▅▆▆▆▆▇▇▇▇▇▇▇▇▇▇▇▇███████▇██████████
+wandb:            log_loss/small ▃▅▄▁▁▁▁▂▃▂▂▃▃▅▅▅▄█▄▅▅▅▅▄▃▃▃▃▃▃▂▂▂▂▂▃▄▄▅▆
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +14 ...
+wandb: 
+wandb: Run summary:
+wandb:                                    accuracy/full 0.72333
+wandb:                                 accuracy/full_cb 0.71
+wandb:                                   accuracy/small 0.73667
+wandb:                           balanced_accuracy/full 0.63877
+wandb:                        balanced_accuracy/full_cb 0.63125
+wandb:                          balanced_accuracy/small 0.60781
+wandb:          final/tabsift_adam_lr0.1_it300/accuracy 0.72333
+wandb: final/tabsift_adam_lr0.1_it300/balanced_accuracy 0.63877
+wandb:              final/tabsift_adam_lr0.1_it300/ckpt 300
+wandb:          final/tabsift_adam_lr0.1_it300/log_loss 0.98052
+wandb:                                              +74 ...
+wandb: 
+wandb: 🚀 View run tabsift_adam_lr0.1_it300_is_this_a_good_customer_R30_c1_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/w81zh201
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 19 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261026_024610-w81zh201/logs
+run is_this_a_good_customer_R30_c1_s0 tabsift_adam_lr0.1_it300: done in 68 s  tabsift_adam_lr0.1_it300: acc 72.3 auc 70.0 ce 0.981 prec 0.382  tabsift_adam_lr0.1_it300_vsel: acc 72.3 auc 70.0 ce 0.981 prec 0.382  tabsift_adam_lr0.1_it300_cb: acc 71.0 auc 69.5 ce 0.965 prec 0.330  tabsift_adam_lr0.1_it300_cb_vsel: acc 70.7 auc 70.7 ce 0.950 prec 0.352  tabsift_adam_lr0.1_it300_small: acc 73.7 auc 64.9 ce 0.768 prec 0.300  tabsift_adam_lr0.1_it300_small_vsel: acc 72.7 auc 68.5 ce 0.738 prec 0.299
+run is_this_a_good_customer_R30_c3_s0 tabsift_adam_lr0.1_it300: start (n 1394, k 418, V 6)
+wandb: setting up run m0a2ptwu
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261026_024717-m0a2ptwu
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_adam_lr0.1_it300_is_this_a_good_customer_R30_c3_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/m0a2ptwu
+      tabsift sigmoid vf_hard it 0: objective 1.6164  w mean 0.688 below 0.5 418 of 1394  (0 s)
+      tabsift sigmoid vf_hard it 10: objective 1.7340  w mean 0.683 below 0.5 418 of 1394  (2 s)
+      tabsift sigmoid vf_hard it 20: objective 1.9386  w mean 0.667 below 0.5 418 of 1394  (4 s)
+      tabsift sigmoid vf_hard it 30: objective 2.3126  w mean 0.640 below 0.5 418 of 1394  (6 s)
+      tabsift sigmoid vf_hard it 40: objective 2.6105  w mean 0.617 below 0.5 507 of 1394  (9 s)
+      tabsift sigmoid vf_hard it 50: objective 2.7848  w mean 0.599 below 0.5 542 of 1394  (11 s)
+      tabsift sigmoid vf_hard it 60: objective 2.9548  w mean 0.585 below 0.5 563 of 1394  (13 s)
+      tabsift sigmoid vf_hard it 70: objective 3.1103  w mean 0.570 below 0.5 580 of 1394  (15 s)
+      tabsift sigmoid vf_hard it 80: objective 3.3064  w mean 0.554 below 0.5 612 of 1394  (17 s)
+      tabsift sigmoid vf_hard it 90: objective 3.4383  w mean 0.539 below 0.5 638 of 1394  (19 s)
+      tabsift sigmoid vf_hard it 100: objective 3.4932  w mean 0.530 below 0.5 655 of 1394  (21 s)
+      tabsift sigmoid vf_hard it 110: objective 3.5711  w mean 0.523 below 0.5 663 of 1394  (23 s)
+      tabsift sigmoid vf_hard it 120: objective 3.6699  w mean 0.514 below 0.5 673 of 1394  (25 s)
+      tabsift sigmoid vf_hard it 130: objective 3.7208  w mean 0.505 below 0.5 686 of 1394  (27 s)
+      tabsift sigmoid vf_hard it 140: objective 3.8356  w mean 0.496 below 0.5 699 of 1394  (29 s)
+      tabsift sigmoid vf_hard it 150: objective 3.9411  w mean 0.487 below 0.5 719 of 1394  (31 s)
+      tabsift sigmoid vf_hard it 160: objective 4.0419  w mean 0.478 below 0.5 738 of 1394  (33 s)
+      tabsift sigmoid vf_hard it 170: objective 4.1134  w mean 0.468 below 0.5 753 of 1394  (35 s)
+      tabsift sigmoid vf_hard it 180: objective 4.0993  w mean 0.463 below 0.5 758 of 1394  (37 s)
+      tabsift sigmoid vf_hard it 190: objective 4.1640  w mean 0.458 below 0.5 770 of 1394  (39 s)
+      tabsift sigmoid vf_hard it 200: objective 4.2402  w mean 0.451 below 0.5 779 of 1394  (41 s)
+      tabsift sigmoid vf_hard it 210: objective 4.2916  w mean 0.445 below 0.5 787 of 1394  (43 s)
+      tabsift sigmoid vf_hard it 220: objective 4.3503  w mean 0.438 below 0.5 803 of 1394  (45 s)
+      tabsift sigmoid vf_hard it 230: objective 4.3479  w mean 0.431 below 0.5 818 of 1394  (47 s)
+      tabsift sigmoid vf_hard it 240: objective 4.4077  w mean 0.426 below 0.5 821 of 1394  (49 s)
+      tabsift sigmoid vf_hard it 250: objective 4.4130  w mean 0.420 below 0.5 831 of 1394  (51 s)
+      tabsift sigmoid vf_hard it 260: objective 4.3052  w mean 0.416 below 0.5 838 of 1394  (53 s)
+      tabsift sigmoid vf_hard it 270: objective 4.4514  w mean 0.411 below 0.5 851 of 1394  (55 s)
+      tabsift sigmoid vf_hard it 280: objective 4.5491  w mean 0.406 below 0.5 856 of 1394  (57 s)
+      tabsift sigmoid vf_hard it 290: objective 4.6122  w mean 0.398 below 0.5 870 of 1394  (59 s)
+    tabsift_adam_lr0.1_it300: V-selected adam_lr0.1_it300 at 0 (V log loss 0.007) of 14 candidates, 1 distinct kept sets
+    tabsift_adam_lr0.1_it300_cb: V-selected adam_lr0.1_it300 at 10 (V log loss 0.291) of 14 candidates, 14 distinct kept sets
+    tabsift_adam_lr0.1_it300_small: V-selected adam_lr0.1_it300 at 20 (V log loss 0.256) of 14 candidates, 14 distinct kept sets
+wandb: updating run metadata; uploading artifact run-m0a2ptwu-tablesrows--5_gUA; uploading artifact run-m0a2ptwu-tablesv_selection-tFfdgA; uploading artifact run-m0a2ptwu-overlayaccuracy_table-Q9imAw; uploading artifact run-m0a2ptwu-overlaybalanced_accuracy_table-DrXpig (+ 5 more)
+wandb: uploading artifact run-m0a2ptwu-overlayaccuracy_table-Q9imAw; uploading artifact run-m0a2ptwu-overlaybalanced_accuracy_table-DrXpig; uploading artifact run-m0a2ptwu-overlayroc_auc_table-Yhs4Ig; uploading artifact run-m0a2ptwu-overlaylog_loss_table-IMOHIw; uploading artifact run-m0a2ptwu-overlayprecision_table-sJQnHg (+ 2 more)
+wandb: uploading artifact tabsift_adam_lr0.1_it300_is_this_a_good_customer_R30_c3_s0
+wandb: uploading history steps 293-300, summary, console lines 30-32
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          accuracy/full_cb ▄▁▁▂▃▃▃▃▄▄▃▃▄▅▃▄▆▆▆▅▃▅▅▃▅▄▆▇▇▇██▇██▇▇▇██
+wandb:            accuracy/small ▄█▆▆▃▃▅▆▇▇▆▄▁▁▃▃▃▃▃▇▅▅▄▄▅▅▅▅▅▅▅▅▅▅▄▄▄▃▃▄
+wandb:    balanced_accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: balanced_accuracy/full_cb ▂▆▇▃▅▄▅▁▁▂▂▂▂▃▃▃▅▂▃▃▃▂▃▃▃▂▃▆▆▆▆▆▆▆▆██▆▄▆
+wandb:   balanced_accuracy/small ▃▂▅▇▆▅▅▅▅▄▂▂▂▃▃▂▂▄▃▃▃▃▁▁▁▃▃▃▃▃▃▂█▄▅▅▅▅▅▃
+wandb:             log_loss/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          log_loss/full_cb ▇█▅▅▅▅▆▆▅▅▅▄▄▄▅▄▄▄▄▂▂▂▁▂▂▁▁▂▂▃▂▂▁▃▂▂▂▂▂▂
+wandb:            log_loss/small ▄▁▂▂▃▄▃▃▃▅██▆▆▇▃▃▃▃▃▄▄▄▄▃▃▃▄▄▄▄▄▅▅▅▅▅▅▅▅
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +14 ...
+wandb: 
+wandb: Run summary:
+wandb:                                    accuracy/full 0.85667
+wandb:                                 accuracy/full_cb 0.77667
+wandb:                                   accuracy/small 0.75333
+wandb:                           balanced_accuracy/full 0.56004
+wandb:                        balanced_accuracy/full_cb 0.64319
+wandb:                          balanced_accuracy/small 0.55307
+wandb:          final/tabsift_adam_lr0.1_it300/accuracy 0.85667
+wandb: final/tabsift_adam_lr0.1_it300/balanced_accuracy 0.56004
+wandb:              final/tabsift_adam_lr0.1_it300/ckpt 300
+wandb:          final/tabsift_adam_lr0.1_it300/log_loss 0.64306
+wandb:                                              +74 ...
+wandb: 
+wandb: 🚀 View run tabsift_adam_lr0.1_it300_is_this_a_good_customer_R30_c3_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/m0a2ptwu
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 19 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261026_024717-m0a2ptwu/logs
+run is_this_a_good_customer_R30_c3_s0 tabsift_adam_lr0.1_it300: done in 65 s  tabsift_adam_lr0.1_it300: acc 85.7 auc 64.8 ce 0.643 prec 0.648  tabsift_adam_lr0.1_it300_vsel: acc 85.7 auc 64.8 ce 0.643 prec 0.648  tabsift_adam_lr0.1_it300_cb: acc 77.7 auc 67.2 ce 0.503 prec 0.281  tabsift_adam_lr0.1_it300_cb_vsel: acc 73.3 auc 67.6 ce 0.553 prec 0.278  tabsift_adam_lr0.1_it300_small: acc 75.3 auc 61.6 ce 0.509 prec 0.300  tabsift_adam_lr0.1_it300_small_vsel: acc 72.0 auc 52.8 ce 0.564 prec 0.298
+run is_this_a_good_customer_R30_c5_s0 tabsift_adam_lr0.1_it300: start (n 1390, k 417, V 10)
+wandb: setting up run 2uelh0cq
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261026_024822-2uelh0cq
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_adam_lr0.1_it300_is_this_a_good_customer_R30_c5_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/2uelh0cq
+      tabsift sigmoid vf_hard it 0: objective 0.6958  w mean 0.687 below 0.5 417 of 1390  (0 s)
+      tabsift sigmoid vf_hard it 10: objective 0.7590  w mean 0.680 below 0.5 417 of 1390  (2 s)
+      tabsift sigmoid vf_hard it 20: objective 0.8208  w mean 0.665 below 0.5 417 of 1390  (4 s)
+      tabsift sigmoid vf_hard it 30: objective 0.9664  w mean 0.631 below 0.5 417 of 1390  (6 s)
+      tabsift sigmoid vf_hard it 40: objective 1.1560  w mean 0.584 below 0.5 584 of 1390  (8 s)
+      tabsift sigmoid vf_hard it 50: objective 1.3260  w mean 0.558 below 0.5 626 of 1390  (10 s)
+      tabsift sigmoid vf_hard it 60: objective 1.4579  w mean 0.544 below 0.5 627 of 1390  (12 s)
+      tabsift sigmoid vf_hard it 70: objective 1.5705  w mean 0.531 below 0.5 641 of 1390  (15 s)
+      tabsift sigmoid vf_hard it 80: objective 1.6700  w mean 0.517 below 0.5 656 of 1390  (17 s)
+      tabsift sigmoid vf_hard it 90: objective 1.7704  w mean 0.501 below 0.5 685 of 1390  (19 s)
+      tabsift sigmoid vf_hard it 100: objective 1.8882  w mean 0.482 below 0.5 709 of 1390  (21 s)
+      tabsift sigmoid vf_hard it 110: objective 1.9963  w mean 0.464 below 0.5 748 of 1390  (23 s)
+      tabsift sigmoid vf_hard it 120: objective 2.0791  w mean 0.452 below 0.5 767 of 1390  (25 s)
+      tabsift sigmoid vf_hard it 130: objective 2.1241  w mean 0.442 below 0.5 781 of 1390  (27 s)
+      tabsift sigmoid vf_hard it 140: objective 2.1976  w mean 0.433 below 0.5 799 of 1390  (29 s)
+      tabsift sigmoid vf_hard it 150: objective 2.2647  w mean 0.424 below 0.5 806 of 1390  (31 s)
+      tabsift sigmoid vf_hard it 160: objective 2.3089  w mean 0.415 below 0.5 818 of 1390  (33 s)
+      tabsift sigmoid vf_hard it 170: objective 2.3702  w mean 0.407 below 0.5 828 of 1390  (35 s)
+      tabsift sigmoid vf_hard it 180: objective 2.4186  w mean 0.398 below 0.5 849 of 1390  (37 s)
+      tabsift sigmoid vf_hard it 190: objective 2.4624  w mean 0.388 below 0.5 866 of 1390  (39 s)
+      tabsift sigmoid vf_hard it 200: objective 2.4940  w mean 0.379 below 0.5 879 of 1390  (41 s)
+      tabsift sigmoid vf_hard it 210: objective 2.5226  w mean 0.372 below 0.5 903 of 1390  (43 s)
+      tabsift sigmoid vf_hard it 220: objective 2.4992  w mean 0.367 below 0.5 906 of 1390  (45 s)
+      tabsift sigmoid vf_hard it 230: objective 2.5485  w mean 0.363 below 0.5 911 of 1390  (47 s)
+      tabsift sigmoid vf_hard it 240: objective 2.5731  w mean 0.359 below 0.5 918 of 1390  (49 s)
+      tabsift sigmoid vf_hard it 250: objective 2.5886  w mean 0.354 below 0.5 927 of 1390  (51 s)
+      tabsift sigmoid vf_hard it 260: objective 2.6273  w mean 0.350 below 0.5 926 of 1390  (53 s)
+      tabsift sigmoid vf_hard it 270: objective 2.6542  w mean 0.345 below 0.5 944 of 1390  (55 s)
+      tabsift sigmoid vf_hard it 280: objective 2.6809  w mean 0.339 below 0.5 945 of 1390  (57 s)
+      tabsift sigmoid vf_hard it 290: objective 2.7048  w mean 0.333 below 0.5 956 of 1390  (59 s)
+    tabsift_adam_lr0.1_it300: V-selected adam_lr0.1_it300 at 0 (V log loss 0.144) of 14 candidates, 1 distinct kept sets
+    tabsift_adam_lr0.1_it300_cb: V-selected adam_lr0.1_it300 at 300 (V log loss 0.157) of 14 candidates, 13 distinct kept sets
+    tabsift_adam_lr0.1_it300_small: V-selected adam_lr0.1_it300 at 10 (V log loss 0.500) of 14 candidates, 14 distinct kept sets
+wandb: updating run metadata; uploading artifact run-2uelh0cq-tablesrows-SzNP5w; uploading artifact run-2uelh0cq-tablesv_selection-EWozmA; uploading artifact run-2uelh0cq-overlayaccuracy_table-uV07AA; uploading artifact run-2uelh0cq-overlaybalanced_accuracy_table-7ZqLRQ (+ 5 more)
+wandb: uploading artifact run-2uelh0cq-overlaybalanced_accuracy_table-7ZqLRQ; uploading artifact run-2uelh0cq-overlayroc_auc_table-6LtYPA; uploading artifact run-2uelh0cq-overlaylog_loss_table-2kYaIA; uploading artifact run-2uelh0cq-overlayprecision_table-KWfzOQ; uploading artifact run-2uelh0cq-overlayobjective_table-9vLeVQ (+ 1 more)
+wandb: uploading artifact tabsift_adam_lr0.1_it300_is_this_a_good_customer_R30_c5_s0
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          accuracy/full_cb ▂▄▁▄▄▄▃▃▄▅▆▄█▆▅██▇▇▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▆
+wandb:            accuracy/small █▆▆▆▄▂▄▂▃▃▄▄▄▄▄▄▄▄▄▂▂▁▃▃▃▃▃▃▃▃▃▃▃▂▂▂▂▃▃▃
+wandb:    balanced_accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: balanced_accuracy/full_cb █▁▁▅████▄█▅▆▆▆▆▅▅▇▆▆▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▆▆
+wandb:   balanced_accuracy/small ▇▇█▆█▅▂▆▅▄▃▃▅▄▄▅▅▅▃▃▂▂▁▂▂▂▂▂▂▂▂▃▂▃▃▃▃▄▄▃
+wandb:             log_loss/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          log_loss/full_cb ▂▁▂▆▃▃▄▄▅▅▇▆▆▆█▇▇▇▇▇▆▆▆▆▆▆▆▆▆▆▆▆▆▇▇▇▇▇▇▇
+wandb:            log_loss/small ▅▃▃▃▂▂▁▂▃▂▅▅▄▄▄▃▂▃▃▃▃▃▄▄▄█▆▇▇▅▅▄▄▄▄▆▆▆▆▅
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +14 ...
+wandb: 
+wandb: Run summary:
+wandb:                                    accuracy/full 0.61667
+wandb:                                 accuracy/full_cb 0.65667
+wandb:                                   accuracy/small 0.61
+wandb:                           balanced_accuracy/full 0.56579
+wandb:                        balanced_accuracy/full_cb 0.57552
+wandb:                          balanced_accuracy/small 0.45942
+wandb:          final/tabsift_adam_lr0.1_it300/accuracy 0.61667
+wandb: final/tabsift_adam_lr0.1_it300/balanced_accuracy 0.56579
+wandb:              final/tabsift_adam_lr0.1_it300/ckpt 300
+wandb:          final/tabsift_adam_lr0.1_it300/log_loss 1.20428
+wandb:                                              +74 ...
+wandb: 
+wandb: 🚀 View run tabsift_adam_lr0.1_it300_is_this_a_good_customer_R30_c5_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/2uelh0cq
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 19 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261026_024822-2uelh0cq/logs
+run is_this_a_good_customer_R30_c5_s0 tabsift_adam_lr0.1_it300: done in 65 s  tabsift_adam_lr0.1_it300: acc 61.7 auc 60.4 ce 1.204 prec 0.281  tabsift_adam_lr0.1_it300_vsel: acc 61.7 auc 60.4 ce 1.204 prec 0.281  tabsift_adam_lr0.1_it300_cb: acc 65.7 auc 60.3 ce 0.977 prec 0.298  tabsift_adam_lr0.1_it300_cb_vsel: acc 65.7 auc 60.3 ce 0.977 prec 0.298  tabsift_adam_lr0.1_it300_small: acc 61.0 auc 48.6 ce 0.732 prec 0.299  tabsift_adam_lr0.1_it300_small_vsel: acc 62.3 auc 62.5 ce 0.622 prec 0.300
+run ecommerce_shipping_R30_c1_s0 tabsift_adam_lr0.1_it300: start (n 4998, k 1499, V 2)
+wandb: setting up run xvmwfjmc
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261026_024927-xvmwfjmc
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_adam_lr0.1_it300_ecommerce_shipping_R30_c1_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/xvmwfjmc
+      tabsift sigmoid vf_hard it 0: objective 1.4444  w mean 0.688 below 0.5 1499 of 4998  (1 s)
+      tabsift sigmoid vf_hard it 10: objective 1.5845  w mean 0.683 below 0.5 1499 of 4998  (13 s)
+      tabsift sigmoid vf_hard it 20: objective 1.7835  w mean 0.668 below 0.5 1499 of 4998  (26 s)
+      tabsift sigmoid vf_hard it 30: objective 2.1355  w mean 0.641 below 0.5 1499 of 4998  (38 s)
+      tabsift sigmoid vf_hard it 40: objective 2.4210  w mean 0.618 below 0.5 1759 of 4998  (50 s)
+      tabsift sigmoid vf_hard it 50: objective 2.6947  w mean 0.598 below 0.5 1937 of 4998  (62 s)
+      tabsift sigmoid vf_hard it 60: objective 2.9509  w mean 0.583 below 0.5 2041 of 4998  (74 s)
+      tabsift sigmoid vf_hard it 70: objective 3.2292  w mean 0.566 below 0.5 2112 of 4998  (87 s)
+      tabsift sigmoid vf_hard it 80: objective 3.5229  w mean 0.546 below 0.5 2235 of 4998  (99 s)
+      tabsift sigmoid vf_hard it 90: objective 3.7772  w mean 0.528 below 0.5 2340 of 4998  (111 s)
+      tabsift sigmoid vf_hard it 100: objective 4.0155  w mean 0.514 below 0.5 2439 of 4998  (123 s)
+      tabsift sigmoid vf_hard it 110: objective 4.2380  w mean 0.501 below 0.5 2504 of 4998  (135 s)
+      tabsift sigmoid vf_hard it 120: objective 4.4372  w mean 0.491 below 0.5 2549 of 4998  (148 s)
+      tabsift sigmoid vf_hard it 130: objective 4.6319  w mean 0.481 below 0.5 2612 of 4998  (160 s)
+      tabsift sigmoid vf_hard it 140: objective 4.8548  w mean 0.470 below 0.5 2664 of 4998  (172 s)
+      tabsift sigmoid vf_hard it 150: objective 5.1207  w mean 0.457 below 0.5 2737 of 4998  (184 s)
+      tabsift sigmoid vf_hard it 160: objective 5.3526  w mean 0.446 below 0.5 2799 of 4998  (197 s)
+      tabsift sigmoid vf_hard it 170: objective 5.6009  w mean 0.434 below 0.5 2871 of 4998  (209 s)
+      tabsift sigmoid vf_hard it 180: objective 5.8617  w mean 0.424 below 0.5 2937 of 4998  (221 s)
+      tabsift sigmoid vf_hard it 190: objective 6.1234  w mean 0.412 below 0.5 3005 of 4998  (233 s)
+      tabsift sigmoid vf_hard it 200: objective 6.3772  w mean 0.402 below 0.5 3036 of 4998  (246 s)
+      tabsift sigmoid vf_hard it 210: objective 6.4154  w mean 0.394 below 0.5 3082 of 4998  (258 s)
+      tabsift sigmoid vf_hard it 220: objective 6.6329  w mean 0.390 below 0.5 3096 of 4998  (270 s)
+      tabsift sigmoid vf_hard it 230: objective 6.9293  w mean 0.386 below 0.5 3112 of 4998  (282 s)
+      tabsift sigmoid vf_hard it 240: objective 7.1939  w mean 0.380 below 0.5 3153 of 4998  (295 s)
+      tabsift sigmoid vf_hard it 250: objective 7.4327  w mean 0.373 below 0.5 3189 of 4998  (307 s)
+      tabsift sigmoid vf_hard it 260: objective 7.6739  w mean 0.366 below 0.5 3240 of 4998  (319 s)
+      tabsift sigmoid vf_hard it 270: objective 7.7156  w mean 0.359 below 0.5 3275 of 4998  (331 s)
+      tabsift sigmoid vf_hard it 280: objective 8.0238  w mean 0.356 below 0.5 3274 of 4998  (344 s)
+      tabsift sigmoid vf_hard it 290: objective 8.2948  w mean 0.352 below 0.5 3312 of 4998  (356 s)
+    tabsift_adam_lr0.1_it300: V-selected adam_lr0.1_it300 at 150 (V log loss 0.012) of 14 candidates, 5 distinct kept sets
+    tabsift_adam_lr0.1_it300_cb: V-selected adam_lr0.1_it300 at 300 (V log loss 0.024) of 14 candidates, 14 distinct kept sets
+    tabsift_adam_lr0.1_it300_small: V-selected adam_lr0.1_it300 at 300 (V log loss 0.015) of 14 candidates, 14 distinct kept sets
+wandb: updating run metadata; uploading artifact run-xvmwfjmc-tablesrows-6dbDkw; uploading artifact run-xvmwfjmc-tablesv_selection-Z2mKIg; uploading artifact run-xvmwfjmc-overlayaccuracy_table-k1bXqw; uploading artifact run-xvmwfjmc-overlaybalanced_accuracy_table--yTV8A (+ 5 more)
+wandb: uploading artifact run-xvmwfjmc-overlaybalanced_accuracy_table--yTV8A; uploading artifact run-xvmwfjmc-overlayroc_auc_table-jHxnxw; uploading artifact run-xvmwfjmc-overlaylog_loss_table-8E32iw; uploading artifact run-xvmwfjmc-overlayprecision_table-aEmCtQ; uploading artifact run-xvmwfjmc-overlayobjective_table-t9yv2Q (+ 1 more)
+wandb: uploading artifact tabsift_adam_lr0.1_it300_ecommerce_shipping_R30_c1_s0
+wandb: uploading media/table/overlay/precision_table_300_d34764a2c28ee5ff35f0.table.json; uploading media/table/overlay/objective_table_300_121bd56a05735c588e6c.table.json; uploading wandb-summary.json; uploading media/table/tables/rows_300_7004f859212f84ba0471.table.json; uploading media/table/tables/v_selection_300_73f46d07f29446af7596.table.json (+ 6 more)
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▂▂▂▂▂▂▂▂▂▄▄▄▅▅▅▅▅▅█
+wandb:          accuracy/full_cb ▅▂▅▂▄▂▂█▇▅▅▅▆▅▆▅▅▆▅▆███▅▅▄▅▆▇▆▅▅▄▄▆▄▅▄▂▁
+wandb:            accuracy/small █▆▆▇▇▄▄▃▂▁▁▁▁▂▃▄▄▃▄▄▄▅▅▅▅▄▄▄▄▄▄▅▅▆▆▇▇▇▆▇
+wandb:    balanced_accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▃▃▃▃▃▃▂▂▂▂▂▄▄▄██
+wandb: balanced_accuracy/full_cb ▂▂▁▂▅▄▄▅▁▄▂▃▅▄▂▄▅▅▅▆▆▆▇▇█▃▃▄▃▂▃▄▅▅▅▃▅▄▆▂
+wandb:   balanced_accuracy/small ▅▇▇▇▃▄▃▂▃▁▂▄▃▄▄▆▆▆▆▅▅▅▅▅▅▅▅▅▅▅▆▆▆▇▇████▇
+wandb:             log_loss/full ██████████████████████▇▇▇▇▇▇▇▂▂▂▂▂▂▁▁▁▁▁
+wandb:          log_loss/full_cb ▁▄▄▄▅▅▅▅▅▆▆▆▇███████▇▇▇▇▇▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆
+wandb:            log_loss/small ▃▃▂▁▁▃▄▆▇█▄▄▄▄▄▅▄▄▅▅▅▅▆▆▆▇▆▆▅▆▅▅▅▅▅▅▅▅▅▄
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +14 ...
+wandb: 
+wandb: Run summary:
+wandb:                                    accuracy/full 0.636
+wandb:                                 accuracy/full_cb 0.637
+wandb:                                   accuracy/small 0.614
+wandb:                           balanced_accuracy/full 0.66611
+wandb:                        balanced_accuracy/full_cb 0.63631
+wandb:                          balanced_accuracy/small 0.62148
+wandb:          final/tabsift_adam_lr0.1_it300/accuracy 0.636
+wandb: final/tabsift_adam_lr0.1_it300/balanced_accuracy 0.66611
+wandb:              final/tabsift_adam_lr0.1_it300/ckpt 300
+wandb:          final/tabsift_adam_lr0.1_it300/log_loss 1.22984
+wandb:                                              +74 ...
+wandb: 
+wandb: 🚀 View run tabsift_adam_lr0.1_it300_ecommerce_shipping_R30_c1_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/xvmwfjmc
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 19 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261026_024927-xvmwfjmc/logs
+run ecommerce_shipping_R30_c1_s0 tabsift_adam_lr0.1_it300: done in 373 s  tabsift_adam_lr0.1_it300: acc 63.6 auc 69.8 ce 1.230 prec 0.382  tabsift_adam_lr0.1_it300_vsel: acc 63.2 auc 69.7 ce 1.409 prec 0.383  tabsift_adam_lr0.1_it300_cb: acc 63.7 auc 71.9 ce 0.709 prec 0.409  tabsift_adam_lr0.1_it300_cb_vsel: acc 63.7 auc 71.9 ce 0.709 prec 0.409  tabsift_adam_lr0.1_it300_small: acc 61.4 auc 66.5 ce 1.059 prec 0.301  tabsift_adam_lr0.1_it300_small_vsel: acc 61.4 auc 66.5 ce 1.059 prec 0.301
+run ecommerce_shipping_R30_c3_s0 tabsift_adam_lr0.1_it300: start (n 4994, k 1498, V 6)
+wandb: setting up run 3r7dkuii
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261026_025540-3r7dkuii
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_adam_lr0.1_it300_ecommerce_shipping_R30_c3_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/3r7dkuii
+      tabsift sigmoid vf_hard it 0: objective 1.2717  w mean 0.687 below 0.5 1498 of 4994  (1 s)
+      tabsift sigmoid vf_hard it 10: objective 1.3770  w mean 0.682 below 0.5 1498 of 4994  (13 s)
+      tabsift sigmoid vf_hard it 20: objective 1.4922  w mean 0.667 below 0.5 1498 of 4994  (26 s)
+      tabsift sigmoid vf_hard it 30: objective 1.7060  w mean 0.640 below 0.5 1498 of 4994  (38 s)
+      tabsift sigmoid vf_hard it 40: objective 2.0246  w mean 0.606 below 0.5 1908 of 4994  (50 s)
+      tabsift sigmoid vf_hard it 50: objective 2.2910  w mean 0.579 below 0.5 2073 of 4994  (62 s)
+      tabsift sigmoid vf_hard it 60: objective 2.5596  w mean 0.561 below 0.5 2172 of 4994  (75 s)
+      tabsift sigmoid vf_hard it 70: objective 2.8047  w mean 0.545 below 0.5 2266 of 4994  (87 s)
+      tabsift sigmoid vf_hard it 80: objective 3.0577  w mean 0.531 below 0.5 2343 of 4994  (99 s)
+      tabsift sigmoid vf_hard it 90: objective 3.3521  w mean 0.518 below 0.5 2409 of 4994  (111 s)
+      tabsift sigmoid vf_hard it 100: objective 3.6416  w mean 0.506 below 0.5 2483 of 4994  (124 s)
+      tabsift sigmoid vf_hard it 110: objective 3.9318  w mean 0.491 below 0.5 2560 of 4994  (136 s)
+      tabsift sigmoid vf_hard it 120: objective 4.2409  w mean 0.475 below 0.5 2641 of 4994  (148 s)
+      tabsift sigmoid vf_hard it 130: objective 4.5041  w mean 0.464 below 0.5 2682 of 4994  (161 s)
+      tabsift sigmoid vf_hard it 140: objective 4.7213  w mean 0.453 below 0.5 2748 of 4994  (173 s)
+      tabsift sigmoid vf_hard it 150: objective 4.9269  w mean 0.441 below 0.5 2818 of 4994  (185 s)
+      tabsift sigmoid vf_hard it 160: objective 5.1565  w mean 0.427 below 0.5 2903 of 4994  (197 s)
+      tabsift sigmoid vf_hard it 170: objective 5.4409  w mean 0.414 below 0.5 2969 of 4994  (210 s)
+      tabsift sigmoid vf_hard it 180: objective 5.8536  w mean 0.405 below 0.5 3008 of 4994  (222 s)
+      tabsift sigmoid vf_hard it 190: objective 6.2715  w mean 0.397 below 0.5 3043 of 4994  (234 s)
+      tabsift sigmoid vf_hard it 200: objective 6.6734  w mean 0.384 below 0.5 3118 of 4994  (246 s)
+      tabsift sigmoid vf_hard it 210: objective 6.9770  w mean 0.374 below 0.5 3173 of 4994  (259 s)
+      tabsift sigmoid vf_hard it 220: objective 7.4020  w mean 0.361 below 0.5 3236 of 4994  (271 s)
+      tabsift sigmoid vf_hard it 230: objective 7.8303  w mean 0.347 below 0.5 3308 of 4994  (283 s)
+      tabsift sigmoid vf_hard it 240: objective 8.2080  w mean 0.332 below 0.5 3388 of 4994  (295 s)
+      tabsift sigmoid vf_hard it 250: objective 8.3708  w mean 0.325 below 0.5 3423 of 4994  (308 s)
+      tabsift sigmoid vf_hard it 260: objective 8.6652  w mean 0.316 below 0.5 3470 of 4994  (320 s)
+      tabsift sigmoid vf_hard it 270: objective 8.8938  w mean 0.306 below 0.5 3519 of 4994  (332 s)
+      tabsift sigmoid vf_hard it 280: objective 9.1753  w mean 0.297 below 0.5 3578 of 4994  (345 s)
+      tabsift sigmoid vf_hard it 290: objective 9.4780  w mean 0.285 below 0.5 3651 of 4994  (357 s)
+    tabsift_adam_lr0.1_it300: V-selected adam_lr0.1_it300 at 0 (V log loss 0.001) of 14 candidates, 4 distinct kept sets
+    tabsift_adam_lr0.1_it300_cb: V-selected adam_lr0.1_it300 at 250 (V log loss 0.006) of 14 candidates, 14 distinct kept sets
+    tabsift_adam_lr0.1_it300_small: V-selected adam_lr0.1_it300 at 200 (V log loss 0.018) of 14 candidates, 14 distinct kept sets
+wandb: updating run metadata; uploading artifact run-3r7dkuii-tablesrows-_wcppw; uploading artifact run-3r7dkuii-tablesv_selection-TX1tLQ; uploading artifact run-3r7dkuii-overlayaccuracy_table-ko0fWw; uploading artifact run-3r7dkuii-overlaybalanced_accuracy_table-pgnO8g (+ 5 more)
+wandb: uploading artifact run-3r7dkuii-tablesrows-_wcppw; uploading artifact run-3r7dkuii-tablesv_selection-TX1tLQ; uploading artifact run-3r7dkuii-overlayaccuracy_table-ko0fWw; uploading artifact run-3r7dkuii-overlaybalanced_accuracy_table-pgnO8g; uploading artifact run-3r7dkuii-overlayroc_auc_table-jMWRhg (+ 4 more)
+wandb: uploading artifact tabsift_adam_lr0.1_it300_ecommerce_shipping_R30_c3_s0
+wandb: uploading media/table/overlay/objective_table_300_fc038f8eaadc187e64bf.table.json; uploading output.log; uploading wandb-summary.json; uploading media/table/overlay/balanced_accuracy_table_300_ad5573aae69e8c7c52a5.table.json; uploading media/table/overlay/precision_table_300_48e9b55a8c58e0ff5de3.table.json (+ 6 more)
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▃▃▃▃▃▃▃▃▁▁▁▃▃▃▃███
+wandb:          accuracy/full_cb ▇██▇█▆▆▄▅▄▇▇▂▁▃▂▂▄▆█▅▄▆▇▃▃▂▃▂▁▄▅▅▅▅▄▅▅▃▄
+wandb:            accuracy/small ▁▄█▆▇▄▇▇█▇▆▆▆█▇▄▅▅▅▃▂▄▃▃▄▇▇▆▇▇▆▆▅▇▇▆▇▅▃▃
+wandb:    balanced_accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▃▃▃▃▃▃▁▃▃▃▃▃███
+wandb: balanced_accuracy/full_cb █▃▄▃▃▃▃▃▂▃▃▂▁▁▂▁▁▁▁▂▃▂▃▃▃▃▃▂▂▂▁▁▂▂▂▂▂▂▂▂
+wandb:   balanced_accuracy/small ▁▇▇▆▇▆▇▇██▆▆▆▇▆▆▆▄▄▄▄▄▅▄▄▅▄▄▄▇██▇▆▇▇▇▅▄▅
+wandb:             log_loss/full ███████████████████████▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▁▁
+wandb:          log_loss/full_cb ▁▁▂▁▁▂▂▂▄▄▅▅▅▆▅▆▆▆▆▆▇▇▇▇▇▇▇▇▇▇██████████
+wandb:            log_loss/small ▁▁▃▄▃▃▂▃▃▃▃▄▄▄▄▅▅▅▄▅▆▆▆▆▇▇▇█▇▆▆▅▅▅▅▆▇▇█▇
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +14 ...
+wandb: 
+wandb: Run summary:
+wandb:                                    accuracy/full 0.617
+wandb:                                 accuracy/full_cb 0.619
+wandb:                                   accuracy/small 0.604
+wandb:                           balanced_accuracy/full 0.6119
+wandb:                        balanced_accuracy/full_cb 0.60914
+wandb:                          balanced_accuracy/small 0.59496
+wandb:          final/tabsift_adam_lr0.1_it300/accuracy 0.617
+wandb: final/tabsift_adam_lr0.1_it300/balanced_accuracy 0.6119
+wandb:              final/tabsift_adam_lr0.1_it300/ckpt 300
+wandb:          final/tabsift_adam_lr0.1_it300/log_loss 1.28391
+wandb:                                              +74 ...
+wandb: 
+wandb: 🚀 View run tabsift_adam_lr0.1_it300_ecommerce_shipping_R30_c3_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/3r7dkuii
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 19 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261026_025540-3r7dkuii/logs
+run ecommerce_shipping_R30_c3_s0 tabsift_adam_lr0.1_it300: done in 374 s  tabsift_adam_lr0.1_it300: acc 61.7 auc 68.2 ce 1.284 prec 0.383  tabsift_adam_lr0.1_it300_vsel: acc 61.4 auc 68.0 ce 1.414 prec 0.383  tabsift_adam_lr0.1_it300_cb: acc 61.9 auc 68.4 ce 1.153 prec 0.389  tabsift_adam_lr0.1_it300_cb_vsel: acc 62.0 auc 68.4 ce 1.148 prec 0.387  tabsift_adam_lr0.1_it300_small: acc 60.4 auc 62.0 ce 1.463 prec 0.302  tabsift_adam_lr0.1_it300_small_vsel: acc 60.6 auc 63.8 ce 1.365 prec 0.302
+run ecommerce_shipping_R30_c5_s0 tabsift_adam_lr0.1_it300: start (n 4990, k 1497, V 10)
+wandb: setting up run rdb12a8p
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261026_030153-rdb12a8p
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_adam_lr0.1_it300_ecommerce_shipping_R30_c5_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/rdb12a8p
+      tabsift sigmoid vf_hard it 0: objective 1.4034  w mean 0.687 below 0.5 1497 of 4990  (1 s)
+      tabsift sigmoid vf_hard it 10: objective 1.5195  w mean 0.681 below 0.5 1497 of 4990  (13 s)
+      tabsift sigmoid vf_hard it 20: objective 1.7032  w mean 0.661 below 0.5 1497 of 4990  (26 s)
+      tabsift sigmoid vf_hard it 30: objective 1.9995  w mean 0.626 below 0.5 1497 of 4990  (38 s)
+      tabsift sigmoid vf_hard it 40: objective 2.3172  w mean 0.592 below 0.5 1925 of 4990  (50 s)
+      tabsift sigmoid vf_hard it 50: objective 2.7256  w mean 0.561 below 0.5 2162 of 4990  (62 s)
+      tabsift sigmoid vf_hard it 60: objective 3.0532  w mean 0.542 below 0.5 2283 of 4990  (74 s)
+      tabsift sigmoid vf_hard it 70: objective 3.3185  w mean 0.528 below 0.5 2361 of 4990  (87 s)
+      tabsift sigmoid vf_hard it 80: objective 3.5763  w mean 0.517 below 0.5 2411 of 4990  (99 s)
+      tabsift sigmoid vf_hard it 90: objective 3.8030  w mean 0.508 below 0.5 2451 of 4990  (111 s)
+      tabsift sigmoid vf_hard it 100: objective 3.9652  w mean 0.500 below 0.5 2492 of 4990  (123 s)
+      tabsift sigmoid vf_hard it 110: objective 4.1469  w mean 0.493 below 0.5 2524 of 4990  (136 s)
+      tabsift sigmoid vf_hard it 120: objective 4.3497  w mean 0.481 below 0.5 2581 of 4990  (148 s)
+      tabsift sigmoid vf_hard it 130: objective 4.5681  w mean 0.468 below 0.5 2648 of 4990  (160 s)
+      tabsift sigmoid vf_hard it 140: objective 4.7282  w mean 0.460 below 0.5 2694 of 4990  (172 s)
+      tabsift sigmoid vf_hard it 150: objective 4.7812  w mean 0.453 below 0.5 2727 of 4990  (184 s)
+      tabsift sigmoid vf_hard it 160: objective 4.9488  w mean 0.446 below 0.5 2770 of 4990  (197 s)
+      tabsift sigmoid vf_hard it 170: objective 5.0990  w mean 0.438 below 0.5 2824 of 4990  (209 s)
+      tabsift sigmoid vf_hard it 180: objective 5.2540  w mean 0.429 below 0.5 2872 of 4990  (221 s)
+      tabsift sigmoid vf_hard it 190: objective 5.3328  w mean 0.423 below 0.5 2919 of 4990  (233 s)
+      tabsift sigmoid vf_hard it 200: objective 5.4628  w mean 0.417 below 0.5 2950 of 4990  (246 s)
+      tabsift sigmoid vf_hard it 210: objective 5.5586  w mean 0.410 below 0.5 2991 of 4990  (258 s)
+      tabsift sigmoid vf_hard it 220: objective 5.6741  w mean 0.403 below 0.5 3027 of 4990  (270 s)
+      tabsift sigmoid vf_hard it 230: objective 5.7886  w mean 0.394 below 0.5 3080 of 4990  (282 s)
+      tabsift sigmoid vf_hard it 240: objective 5.8559  w mean 0.386 below 0.5 3108 of 4990  (294 s)
+      tabsift sigmoid vf_hard it 250: objective 5.6199  w mean 0.382 below 0.5 3144 of 4990  (307 s)
+      tabsift sigmoid vf_hard it 260: objective 5.8879  w mean 0.380 below 0.5 3155 of 4990  (319 s)
+      tabsift sigmoid vf_hard it 270: objective 6.0083  w mean 0.376 below 0.5 3163 of 4990  (331 s)
+      tabsift sigmoid vf_hard it 280: objective 6.0865  w mean 0.372 below 0.5 3185 of 4990  (343 s)
+      tabsift sigmoid vf_hard it 290: objective 6.1589  w mean 0.367 below 0.5 3222 of 4990  (355 s)
+    tabsift_adam_lr0.1_it300: V-selected adam_lr0.1_it300 at 300 (V log loss 0.025) of 14 candidates, 2 distinct kept sets
+    tabsift_adam_lr0.1_it300_cb: V-selected adam_lr0.1_it300 at 300 (V log loss 0.025) of 14 candidates, 14 distinct kept sets
+    tabsift_adam_lr0.1_it300_small: V-selected adam_lr0.1_it300 at 250 (V log loss 0.157) of 14 candidates, 14 distinct kept sets
+wandb: updating run metadata; uploading artifact run-rdb12a8p-tablesrows-vcFlOw; uploading artifact run-rdb12a8p-tablesv_selection-Ssc2vw; uploading artifact run-rdb12a8p-overlayaccuracy_table-ZWMktA; uploading artifact run-rdb12a8p-overlaybalanced_accuracy_table-wCk7CA (+ 5 more)
+wandb: uploading artifact run-rdb12a8p-tablesrows-vcFlOw; uploading artifact run-rdb12a8p-tablesv_selection-Ssc2vw; uploading artifact run-rdb12a8p-overlayaccuracy_table-ZWMktA; uploading artifact run-rdb12a8p-overlaybalanced_accuracy_table-wCk7CA; uploading artifact run-rdb12a8p-overlayroc_auc_table-AKkjEg (+ 4 more)
+wandb: uploading artifact run-rdb12a8p-overlaybalanced_accuracy_table-wCk7CA; uploading artifact run-rdb12a8p-overlaylog_loss_table-BngFlA; uploading artifact run-rdb12a8p-overlayprecision_table-5be6sw; uploading artifact run-rdb12a8p-overlayobjective_table-OiKX3w; uploading artifact tabsift_adam_lr0.1_it300_ecommerce_shipping_R30_c5_s0
+wandb: uploading media/table/overlay/log_loss_table_300_1c3960b97ea31a1e34d6.table.json
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ████████████████████████████████████▁▁▁▁
+wandb:          accuracy/full_cb ▃▂▁▄▆▇▇▇▅▄▄▅▃▃▄▄▅▅▇▆▅▅▄▃▃██▆▇▅▅▄▅▄▂▅▅▅▅▆
+wandb:            accuracy/small ▇█▅▅▅▃▂▁▄▄▄▃▅▄▄▅▃▃▅▄▄▅▅▅▆▅▆▆▅▅▄▄▃▃▄▆▅▅▆▆
+wandb:    balanced_accuracy/full ███████████████████████████████████████▁
+wandb: balanced_accuracy/full_cb ▄▄▄▃▁██▇▅▆▇▇▇▆▇▅▆▅▅▄▇▆▅▅▅▇▇▇▆▅▅▅▄▃▆▆▆▆▆▇
+wandb:   balanced_accuracy/small █▅▅▅▃▁▃▃▄▃▄▄▄▄▆▅▇▆▅▇▅▅▅▅▅▅▆▆▄▅▅▅▅▃▃▅▅▅▅▆
+wandb:             log_loss/full ███████████████████████████████████▁▁▁▁▁
+wandb:          log_loss/full_cb ▅▆▇▅▄▁▁▁▁▂▁▁▂▂▂▂▂▂▁▁▂▂▂▂▂▃▃▃▄▄▄▄▄▄▄▇▇▇██
+wandb:            log_loss/small ▄▁▂▁▁▃▃▄▃▃▃▃▃▆▆▆▇▇█▄▄▃▃▃▃▃▄▃▃▃▃▅▅▅▆▆▆▆▅▅
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +14 ...
+wandb: 
+wandb: Run summary:
+wandb:                                    accuracy/full 0.616
+wandb:                                 accuracy/full_cb 0.629
+wandb:                                   accuracy/small 0.609
+wandb:                           balanced_accuracy/full 0.60985
+wandb:                        balanced_accuracy/full_cb 0.61993
+wandb:                          balanced_accuracy/small 0.60157
+wandb:          final/tabsift_adam_lr0.1_it300/accuracy 0.616
+wandb: final/tabsift_adam_lr0.1_it300/balanced_accuracy 0.60985
+wandb:              final/tabsift_adam_lr0.1_it300/ckpt 300
+wandb:          final/tabsift_adam_lr0.1_it300/log_loss 1.62841
+wandb:                                              +74 ...
+wandb: 
+wandb: 🚀 View run tabsift_adam_lr0.1_it300_ecommerce_shipping_R30_c5_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/rdb12a8p
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 19 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261026_030153-rdb12a8p/logs
+run ecommerce_shipping_R30_c5_s0 tabsift_adam_lr0.1_it300: done in 372 s  tabsift_adam_lr0.1_it300: acc 61.6 auc 67.4 ce 1.628 prec 0.373  tabsift_adam_lr0.1_it300_vsel: acc 61.6 auc 67.4 ce 1.628 prec 0.373  tabsift_adam_lr0.1_it300_cb: acc 62.9 auc 68.3 ce 1.261 prec 0.366  tabsift_adam_lr0.1_it300_cb_vsel: acc 62.9 auc 68.3 ce 1.261 prec 0.366  tabsift_adam_lr0.1_it300_small: acc 60.9 auc 63.6 ce 1.075 prec 0.304  tabsift_adam_lr0.1_it300_small_vsel: acc 60.5 auc 63.1 ce 1.125 prec 0.304
+run students_dropout_R30_c1_s0 tabsift_adam_lr0.1_it300: start (n 2997, k 899, V 3)
+wandb: setting up run fm4bscpa
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261026_030807-fm4bscpa
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_adam_lr0.1_it300_students_dropout_R30_c1_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/fm4bscpa
+      tabsift sigmoid vf_hard it 0: objective 0.7526  w mean 0.687 below 0.5 899 of 2997  (2 s)
+      tabsift sigmoid vf_hard it 10: objective 0.8130  w mean 0.678 below 0.5 899 of 2997  (16 s)
+      tabsift sigmoid vf_hard it 20: objective 0.8976  w mean 0.655 below 0.5 899 of 2997  (30 s)
+      tabsift sigmoid vf_hard it 30: objective 1.0381  w mean 0.614 below 0.5 899 of 2997  (44 s)
+      tabsift sigmoid vf_hard it 40: objective 1.2690  w mean 0.569 below 0.5 1276 of 2997  (58 s)
+      tabsift sigmoid vf_hard it 50: objective 1.4821  w mean 0.538 below 0.5 1371 of 2997  (73 s)
+      tabsift sigmoid vf_hard it 60: objective 1.6951  w mean 0.511 below 0.5 1459 of 2997  (87 s)
+      tabsift sigmoid vf_hard it 70: objective 1.9497  w mean 0.487 below 0.5 1526 of 2997  (101 s)
+      tabsift sigmoid vf_hard it 80: objective 2.1991  w mean 0.468 below 0.5 1588 of 2997  (116 s)
+      tabsift sigmoid vf_hard it 90: objective 2.4978  w mean 0.445 below 0.5 1659 of 2997  (130 s)
+      tabsift sigmoid vf_hard it 100: objective 2.7391  w mean 0.426 below 0.5 1721 of 2997  (144 s)
+      tabsift sigmoid vf_hard it 110: objective 2.9528  w mean 0.408 below 0.5 1776 of 2997  (159 s)
+      tabsift sigmoid vf_hard it 120: objective 3.1854  w mean 0.389 below 0.5 1843 of 2997  (173 s)
+      tabsift sigmoid vf_hard it 130: objective 3.4122  w mean 0.371 below 0.5 1922 of 2997  (187 s)
+      tabsift sigmoid vf_hard it 140: objective 3.6759  w mean 0.355 below 0.5 1982 of 2997  (202 s)
+      tabsift sigmoid vf_hard it 150: objective 3.9563  w mean 0.337 below 0.5 2042 of 2997  (216 s)
+      tabsift sigmoid vf_hard it 160: objective 4.2558  w mean 0.321 below 0.5 2080 of 2997  (230 s)
+      tabsift sigmoid vf_hard it 170: objective 4.5130  w mean 0.307 below 0.5 2131 of 2997  (245 s)
+      tabsift sigmoid vf_hard it 180: objective 4.7219  w mean 0.297 below 0.5 2167 of 2997  (259 s)
+      tabsift sigmoid vf_hard it 190: objective 4.9902  w mean 0.285 below 0.5 2211 of 2997  (273 s)
+      tabsift sigmoid vf_hard it 200: objective 5.2450  w mean 0.276 below 0.5 2236 of 2997  (288 s)
+      tabsift sigmoid vf_hard it 210: objective 5.4646  w mean 0.270 below 0.5 2255 of 2997  (302 s)
+      tabsift sigmoid vf_hard it 220: objective 5.7427  w mean 0.265 below 0.5 2265 of 2997  (316 s)
+      tabsift sigmoid vf_hard it 230: objective 6.0270  w mean 0.257 below 0.5 2295 of 2997  (331 s)
+      tabsift sigmoid vf_hard it 240: objective 6.1548  w mean 0.251 below 0.5 2325 of 2997  (345 s)
+      tabsift sigmoid vf_hard it 250: objective 6.4599  w mean 0.246 below 0.5 2345 of 2997  (359 s)
+      tabsift sigmoid vf_hard it 260: objective 6.6015  w mean 0.241 below 0.5 2362 of 2997  (374 s)
+      tabsift sigmoid vf_hard it 270: objective 6.9207  w mean 0.237 below 0.5 2383 of 2997  (388 s)
+      tabsift sigmoid vf_hard it 280: objective 7.0165  w mean 0.233 below 0.5 2399 of 2997  (402 s)
+      tabsift sigmoid vf_hard it 290: objective 7.3916  w mean 0.229 below 0.5 2413 of 2997  (417 s)
+    tabsift_adam_lr0.1_it300: V-selected adam_lr0.1_it300 at 200 (V log loss 0.054) of 14 candidates, 4 distinct kept sets
+    tabsift_adam_lr0.1_it300_cb: V-selected adam_lr0.1_it300 at 30 (V log loss 0.030) of 14 candidates, 14 distinct kept sets
+    tabsift_adam_lr0.1_it300_small: V-selected adam_lr0.1_it300 at 150 (V log loss 0.109) of 14 candidates, 14 distinct kept sets
+wandb: updating run metadata; uploading artifact run-fm4bscpa-tablesrows-fZfPCA; uploading artifact run-fm4bscpa-tablesv_selection-qtVvlQ; uploading artifact run-fm4bscpa-overlayaccuracy_table-EX_seg; uploading artifact run-fm4bscpa-overlaybalanced_accuracy_table-KaIGPQ (+ 5 more)
+wandb: uploading artifact run-fm4bscpa-overlayaccuracy_table-EX_seg; uploading artifact run-fm4bscpa-overlaybalanced_accuracy_table-KaIGPQ; uploading artifact run-fm4bscpa-overlayroc_auc_table-rbN3kQ; uploading artifact run-fm4bscpa-overlaylog_loss_table-cmTNWg; uploading artifact run-fm4bscpa-overlayprecision_table-mR9JzA (+ 2 more)
+wandb: uploading artifact tabsift_adam_lr0.1_it300_students_dropout_R30_c1_s0
+wandb: uploading data
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▃▁▁██
+wandb:          accuracy/full_cb ▆█▇█▇▄▂▅▆▆█▅▆▃▃▃▃▅▄▃▅▄▄▅▁▁▃▃▄▅▆▅▄▄▅▅████
+wandb:            accuracy/small ▃▆█▇▇▆▅█▅▆▃▃▃▃▄▅▇█▇▅▇▆▄▄▄▂▃▃▁▁▂▂▂▂▃▂▂▂▂▂
+wandb:    balanced_accuracy/full ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▁▄▄▄▄▃▃▃▃▂█████
+wandb: balanced_accuracy/full_cb █▄▄▄▆▂▃▅▅▄▂▃▁▁▃▂▃▄▄▂▃▂▁▁▃▂▂▃▂▄▅▄▄▃▂▅▆▅▆▅
+wandb:   balanced_accuracy/small ▃▄▄▄▅▃▆▆▂▃▃▃▃▃▃▃▄▄▆▇██▇▆▆▆▇▄▄▄▂▂▁▄▃▅▅▅▅▅
+wandb:             log_loss/full ███████████████████████████████▆▆▆▆▂▁▁▁▁
+wandb:          log_loss/full_cb ▁▃▄▅▅▆▆▆▅▆▇▇▇█▇▇▆▆▇███▇█▆▆▆▆▆▇▆▆▆▆▆▅▅▆▅▆
+wandb:            log_loss/small ▄▃▂▃█▄▁▁▄▅▄▄▅▄▅▅▄▂▂▁▂▂▃▃▃▄▅▅▆▆▇▇▆▆▅▅▆▆▆▆
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +14 ...
+wandb: 
+wandb: Run summary:
+wandb:                                    accuracy/full 0.558
+wandb:                                 accuracy/full_cb 0.572
+wandb:                                   accuracy/small 0.524
+wandb:                           balanced_accuracy/full 0.55766
+wandb:                        balanced_accuracy/full_cb 0.56627
+wandb:                          balanced_accuracy/small 0.58939
+wandb:          final/tabsift_adam_lr0.1_it300/accuracy 0.558
+wandb: final/tabsift_adam_lr0.1_it300/balanced_accuracy 0.55766
+wandb:              final/tabsift_adam_lr0.1_it300/ckpt 300
+wandb:          final/tabsift_adam_lr0.1_it300/log_loss 1.26094
+wandb:                                              +74 ...
+wandb: 
+wandb: 🚀 View run tabsift_adam_lr0.1_it300_students_dropout_R30_c1_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/fm4bscpa
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 19 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261026_030807-fm4bscpa/logs
+run students_dropout_R30_c1_s0 tabsift_adam_lr0.1_it300: done in 438 s  tabsift_adam_lr0.1_it300: acc 55.8 auc 74.1 ce 1.261 prec 0.294  tabsift_adam_lr0.1_it300_vsel: acc 55.6 auc 74.0 ce 1.281 prec 0.294  tabsift_adam_lr0.1_it300_cb: acc 57.2 auc 76.1 ce 1.048 prec 0.369  tabsift_adam_lr0.1_it300_cb_vsel: acc 56.6 auc 75.6 ce 1.032 prec 0.359  tabsift_adam_lr0.1_it300_small: acc 52.4 auc 79.1 ce 1.194 prec 0.304  tabsift_adam_lr0.1_it300_small_vsel: acc 64.2 auc 80.4 ce 0.911 prec 0.304
+run students_dropout_R30_c3_s0 tabsift_adam_lr0.1_it300: start (n 2991, k 897, V 9)
+wandb: setting up run 4yty5nqt
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261026_031525-4yty5nqt
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_adam_lr0.1_it300_students_dropout_R30_c3_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/4yty5nqt
+      tabsift sigmoid vf_hard it 0: objective 0.8904  w mean 0.687 below 0.5 897 of 2991  (2 s)
+      tabsift sigmoid vf_hard it 10: objective 1.0048  w mean 0.681 below 0.5 897 of 2991  (16 s)
+      tabsift sigmoid vf_hard it 20: objective 1.0805  w mean 0.670 below 0.5 897 of 2991  (30 s)
+      tabsift sigmoid vf_hard it 30: objective 1.2001  w mean 0.645 below 0.5 897 of 2991  (44 s)
+      tabsift sigmoid vf_hard it 40: objective 1.3656  w mean 0.612 below 0.5 1083 of 2991  (58 s)
+      tabsift sigmoid vf_hard it 50: objective 1.5526  w mean 0.584 below 0.5 1211 of 2991  (73 s)
+      tabsift sigmoid vf_hard it 60: objective 1.7571  w mean 0.559 below 0.5 1288 of 2991  (87 s)
+      tabsift sigmoid vf_hard it 70: objective 1.9624  w mean 0.534 below 0.5 1386 of 2991  (101 s)
+      tabsift sigmoid vf_hard it 80: objective 2.1725  w mean 0.513 below 0.5 1439 of 2991  (116 s)
+      tabsift sigmoid vf_hard it 90: objective 2.4030  w mean 0.497 below 0.5 1489 of 2991  (130 s)
+      tabsift sigmoid vf_hard it 100: objective 2.6729  w mean 0.483 below 0.5 1540 of 2991  (144 s)
+      tabsift sigmoid vf_hard it 110: objective 2.9477  w mean 0.470 below 0.5 1574 of 2991  (159 s)
+      tabsift sigmoid vf_hard it 120: objective 3.1350  w mean 0.457 below 0.5 1617 of 2991  (173 s)
+      tabsift sigmoid vf_hard it 130: objective 3.3432  w mean 0.445 below 0.5 1645 of 2991  (187 s)
+      tabsift sigmoid vf_hard it 140: objective 3.5675  w mean 0.430 below 0.5 1706 of 2991  (202 s)
+      tabsift sigmoid vf_hard it 150: objective 3.7117  w mean 0.417 below 0.5 1747 of 2991  (216 s)
+      tabsift sigmoid vf_hard it 160: objective 3.9235  w mean 0.408 below 0.5 1776 of 2991  (230 s)
+      tabsift sigmoid vf_hard it 170: objective 4.1020  w mean 0.397 below 0.5 1809 of 2991  (245 s)
+      tabsift sigmoid vf_hard it 180: objective 4.2609  w mean 0.387 below 0.5 1843 of 2991  (259 s)
+      tabsift sigmoid vf_hard it 190: objective 4.3472  w mean 0.380 below 0.5 1870 of 2991  (273 s)
+      tabsift sigmoid vf_hard it 200: objective 4.5956  w mean 0.373 below 0.5 1896 of 2991  (288 s)
+      tabsift sigmoid vf_hard it 210: objective 4.8090  w mean 0.366 below 0.5 1922 of 2991  (302 s)
+      tabsift sigmoid vf_hard it 220: objective 4.6896  w mean 0.358 below 0.5 1955 of 2991  (316 s)
+      tabsift sigmoid vf_hard it 230: objective 4.8830  w mean 0.355 below 0.5 1961 of 2991  (331 s)
+      tabsift sigmoid vf_hard it 240: objective 5.1576  w mean 0.350 below 0.5 1977 of 2991  (345 s)
+      tabsift sigmoid vf_hard it 250: objective 5.1711  w mean 0.346 below 0.5 1996 of 2991  (359 s)
+      tabsift sigmoid vf_hard it 260: objective 5.4064  w mean 0.342 below 0.5 2001 of 2991  (374 s)
+      tabsift sigmoid vf_hard it 270: objective 5.5112  w mean 0.339 below 0.5 2008 of 2991  (388 s)
+      tabsift sigmoid vf_hard it 280: objective 5.6018  w mean 0.335 below 0.5 2024 of 2991  (402 s)
+      tabsift sigmoid vf_hard it 290: objective 5.7999  w mean 0.330 below 0.5 2036 of 2991  (417 s)
+    tabsift_adam_lr0.1_it300: V-selected adam_lr0.1_it300 at 0 (V log loss 0.217) of 14 candidates, 2 distinct kept sets
+    tabsift_adam_lr0.1_it300_cb: V-selected adam_lr0.1_it300 at 300 (V log loss 0.253) of 14 candidates, 14 distinct kept sets
+    tabsift_adam_lr0.1_it300_small: V-selected adam_lr0.1_it300 at 250 (V log loss 0.462) of 14 candidates, 14 distinct kept sets
+wandb: updating run metadata; uploading artifact run-4yty5nqt-tablesrows-Nd1g9Q; uploading artifact run-4yty5nqt-tablesv_selection-C9WnjQ; uploading artifact run-4yty5nqt-overlayaccuracy_table-ur_HjA; uploading artifact run-4yty5nqt-overlaybalanced_accuracy_table-15S8iw (+ 5 more)
+wandb: uploading artifact run-4yty5nqt-overlayaccuracy_table-ur_HjA; uploading artifact run-4yty5nqt-overlaybalanced_accuracy_table-15S8iw; uploading artifact run-4yty5nqt-overlayroc_auc_table-vKXYvg; uploading artifact run-4yty5nqt-overlaylog_loss_table-2aTmrA; uploading artifact run-4yty5nqt-overlayprecision_table-zWrezg (+ 2 more)
+wandb: uploading artifact run-4yty5nqt-overlayprecision_table-zWrezg; uploading artifact run-4yty5nqt-overlayobjective_table-Ev_zog; uploading artifact tabsift_adam_lr0.1_it300_students_dropout_R30_c3_s0
+wandb: uploading history steps 292-300, summary, console lines 30-32
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          accuracy/full_cb ▁▅▄▅▄▅▄▄▅▅▄▄▅▄▄▃▄▄▄▄▄▄▅▅▅▅▅▅▆▇▆▇▇▆▇▇████
+wandb:            accuracy/small █▃▂▂▁▂▂▃▂▂▃▃▂▂▂▄▃▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:    balanced_accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: balanced_accuracy/full_cb ▁▁▃▅▅▂▂▆▃▃▃▄▂▄▄▃▃▂▁▂▃▃▄▂▅▄▆▇▇▅▆▆▆▆▆█▇██▇
+wandb:   balanced_accuracy/small ▅▂▁▃▄▃▃▃▄▃▃▃▃▃▅██▇▇▇▄▄▄▂▄▅▃▃▃▃▂▁▂▂▂▃▃▃▃▂
+wandb:             log_loss/full ███████████████████▁▁▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃
+wandb:          log_loss/full_cb ▁▂▃▃▃▄▃▃▃▁▂▃▃▄▆▆▆▆▆▆▇█▅▅▅▄▄▄▄▅▄▄▃▄▄▃▄▄▄▄
+wandb:            log_loss/small ▁▃▄▅▄▄▄▅▅▅▃▃▄▃▃▃▃▃▃▃▅▆▅▄▄▄▅▅▅▅▆▆▆██████▇
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +14 ...
+wandb: 
+wandb: Run summary:
+wandb:                                    accuracy/full 0.594
+wandb:                                 accuracy/full_cb 0.594
+wandb:                                   accuracy/small 0.45
+wandb:                           balanced_accuracy/full 0.5404
+wandb:                        balanced_accuracy/full_cb 0.56809
+wandb:                          balanced_accuracy/small 0.46135
+wandb:          final/tabsift_adam_lr0.1_it300/accuracy 0.594
+wandb: final/tabsift_adam_lr0.1_it300/balanced_accuracy 0.5404
+wandb:              final/tabsift_adam_lr0.1_it300/ckpt 300
+wandb:          final/tabsift_adam_lr0.1_it300/log_loss 1.28523
+wandb:                                              +74 ...
+wandb: 
+wandb: 🚀 View run tabsift_adam_lr0.1_it300_students_dropout_R30_c3_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/4yty5nqt
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 19 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261026_031525-4yty5nqt/logs
+run students_dropout_R30_c3_s0 tabsift_adam_lr0.1_it300: done in 437 s  tabsift_adam_lr0.1_it300: acc 59.4 auc 75.3 ce 1.285 prec 0.429  tabsift_adam_lr0.1_it300_vsel: acc 59.4 auc 75.2 ce 1.287 prec 0.430  tabsift_adam_lr0.1_it300_cb: acc 59.4 auc 77.1 ce 1.189 prec 0.360  tabsift_adam_lr0.1_it300_cb_vsel: acc 59.4 auc 77.1 ce 1.189 prec 0.360  tabsift_adam_lr0.1_it300_small: acc 45.0 auc 69.5 ce 1.510 prec 0.302  tabsift_adam_lr0.1_it300_small_vsel: acc 44.8 auc 71.1 ce 1.533 prec 0.302
+run students_dropout_R30_c5_s0 tabsift_adam_lr0.1_it300: start (n 2985, k 896, V 15)
+wandb: setting up run ua2hn75z
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261026_032241-ua2hn75z
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_adam_lr0.1_it300_students_dropout_R30_c5_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/ua2hn75z
+      tabsift sigmoid vf_hard it 0: objective 1.3128  w mean 0.687 below 0.5 896 of 2985  (2 s)
+      tabsift sigmoid vf_hard it 10: objective 1.4166  w mean 0.682 below 0.5 896 of 2985  (16 s)
+      tabsift sigmoid vf_hard it 20: objective 1.5706  w mean 0.666 below 0.5 896 of 2985  (30 s)
+      tabsift sigmoid vf_hard it 30: objective 1.8418  w mean 0.634 below 0.5 896 of 2985  (44 s)
+      tabsift sigmoid vf_hard it 40: objective 2.1810  w mean 0.601 below 0.5 1153 of 2985  (59 s)
+      tabsift sigmoid vf_hard it 50: objective 2.4908  w mean 0.580 below 0.5 1217 of 2985  (73 s)
+      tabsift sigmoid vf_hard it 60: objective 2.7503  w mean 0.566 below 0.5 1267 of 2985  (87 s)
+      tabsift sigmoid vf_hard it 70: objective 3.0130  w mean 0.548 below 0.5 1322 of 2985  (102 s)
+      tabsift sigmoid vf_hard it 80: objective 3.3010  w mean 0.530 below 0.5 1381 of 2985  (116 s)
+      tabsift sigmoid vf_hard it 90: objective 3.5859  w mean 0.510 below 0.5 1448 of 2985  (130 s)
+      tabsift sigmoid vf_hard it 100: objective 3.8612  w mean 0.489 below 0.5 1511 of 2985  (144 s)
+      tabsift sigmoid vf_hard it 110: objective 4.1636  w mean 0.468 below 0.5 1580 of 2985  (159 s)
+      tabsift sigmoid vf_hard it 120: objective 4.5232  w mean 0.446 below 0.5 1653 of 2985  (173 s)
+      tabsift sigmoid vf_hard it 130: objective 4.8461  w mean 0.428 below 0.5 1720 of 2985  (187 s)
+      tabsift sigmoid vf_hard it 140: objective 5.1125  w mean 0.415 below 0.5 1772 of 2985  (202 s)
+      tabsift sigmoid vf_hard it 150: objective 5.3698  w mean 0.404 below 0.5 1811 of 2985  (216 s)
+      tabsift sigmoid vf_hard it 160: objective 5.5721  w mean 0.392 below 0.5 1842 of 2985  (230 s)
+      tabsift sigmoid vf_hard it 170: objective 5.7751  w mean 0.380 below 0.5 1878 of 2985  (245 s)
+      tabsift sigmoid vf_hard it 180: objective 5.9498  w mean 0.367 below 0.5 1921 of 2985  (259 s)
+      tabsift sigmoid vf_hard it 190: objective 6.1500  w mean 0.354 below 0.5 1965 of 2985  (273 s)
+      tabsift sigmoid vf_hard it 200: objective 6.3209  w mean 0.342 below 0.5 2007 of 2985  (288 s)
+      tabsift sigmoid vf_hard it 210: objective 6.4616  w mean 0.332 below 0.5 2041 of 2985  (302 s)
+      tabsift sigmoid vf_hard it 220: objective 6.6932  w mean 0.324 below 0.5 2069 of 2985  (317 s)
+      tabsift sigmoid vf_hard it 230: objective 6.7915  w mean 0.319 below 0.5 2094 of 2985  (331 s)
+      tabsift sigmoid vf_hard it 240: objective 6.9983  w mean 0.315 below 0.5 2113 of 2985  (345 s)
+      tabsift sigmoid vf_hard it 250: objective 7.0910  w mean 0.311 below 0.5 2122 of 2985  (360 s)
+      tabsift sigmoid vf_hard it 260: objective 7.2068  w mean 0.306 below 0.5 2137 of 2985  (374 s)
+      tabsift sigmoid vf_hard it 270: objective 7.3900  w mean 0.302 below 0.5 2152 of 2985  (388 s)
+      tabsift sigmoid vf_hard it 280: objective 7.5679  w mean 0.298 below 0.5 2174 of 2985  (403 s)
+      tabsift sigmoid vf_hard it 290: objective 7.6937  w mean 0.295 below 0.5 2175 of 2985  (417 s)
+    tabsift_adam_lr0.1_it300: V-selected adam_lr0.1_it300 at 0 (V log loss 0.414) of 14 candidates, 3 distinct kept sets
+    tabsift_adam_lr0.1_it300_cb: V-selected adam_lr0.1_it300 at 75 (V log loss 0.497) of 14 candidates, 14 distinct kept sets
+    tabsift_adam_lr0.1_it300_small: V-selected adam_lr0.1_it300 at 200 (V log loss 0.677) of 14 candidates, 14 distinct kept sets
+wandb: updating run metadata; uploading artifact run-ua2hn75z-tablesrows-kz0nLw; uploading artifact run-ua2hn75z-tablesv_selection-Vu9AVA; uploading artifact run-ua2hn75z-overlayaccuracy_table-fT0Eig; uploading artifact run-ua2hn75z-overlaybalanced_accuracy_table-Q8NQAg (+ 5 more)
+wandb: uploading artifact run-ua2hn75z-tablesv_selection-Vu9AVA; uploading artifact run-ua2hn75z-overlaybalanced_accuracy_table-Q8NQAg; uploading artifact run-ua2hn75z-overlayroc_auc_table-6c5qxQ; uploading artifact run-ua2hn75z-overlaylog_loss_table-HiYlqg; uploading artifact run-ua2hn75z-overlayprecision_table-JM75OA (+ 2 more)
+wandb: uploading artifact tabsift_adam_lr0.1_it300_students_dropout_R30_c5_s0
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          accuracy/full_cb ▄▄▅▆▃▁▃▇▃▃▆▆▆▇▆█▇▆▇▇▆▄▆▅▆▃▄▅▄▄▃▃▃▄▃▅▄▅▄▃
+wandb:            accuracy/small ▅▆▄▁▄▃▆▆██▆▇▇▆▆▄▃▃▃▂▂▂▂▆▄▄▂▂▃▂▃▃▃▃▄▄▅▅▄▃
+wandb:    balanced_accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: balanced_accuracy/full_cb ▃▃▂▁▁▄█▆▄▅▆▆▇▇▆▇▇▇▆▇▆▆▆▆▆▅▆▆▅▅▅▅▅▆▄▆▅▄▃▄
+wandb:   balanced_accuracy/small ▃▅▅▆▄▄▃▆▇█▆▅▆▅▇▇▇▇▄▃▁▁▂▂▄▂▃▂▂▃▃▅▄▄▅▄▃▃▃▃
+wandb:             log_loss/full ▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█▁
+wandb:          log_loss/full_cb ▁▃▄▅▄▅▆▇████▇▇▇▆▆▆▆▅▅▅▅▆▆▆▆▅▅▅▅▅▅▅▅▅▅▅▅▅
+wandb:            log_loss/small ▄▃▄▃▂▄▂▁▆▄▁▂▂▂▃▅▅▆▆▄▄▄▅▅▄▆▅▅▄▅▇█▄▃▄▆▆▆▄▅
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +14 ...
+wandb: 
+wandb: Run summary:
+wandb:                                    accuracy/full 0.63
+wandb:                                 accuracy/full_cb 0.608
+wandb:                                   accuracy/small 0.558
+wandb:                           balanced_accuracy/full 0.57388
+wandb:                        balanced_accuracy/full_cb 0.5909
+wandb:                          balanced_accuracy/small 0.53647
+wandb:          final/tabsift_adam_lr0.1_it300/accuracy 0.63
+wandb: final/tabsift_adam_lr0.1_it300/balanced_accuracy 0.57388
+wandb:              final/tabsift_adam_lr0.1_it300/ckpt 300
+wandb:          final/tabsift_adam_lr0.1_it300/log_loss 1.19887
+wandb:                                              +74 ...
+wandb: 
+wandb: 🚀 View run tabsift_adam_lr0.1_it300_students_dropout_R30_c5_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/ua2hn75z
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 19 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261026_032241-ua2hn75z/logs
+run students_dropout_R30_c5_s0 tabsift_adam_lr0.1_it300: done in 436 s  tabsift_adam_lr0.1_it300: acc 63.0 auc 79.2 ce 1.199 prec 0.496  tabsift_adam_lr0.1_it300_vsel: acc 63.0 auc 79.2 ce 1.201 prec 0.496  tabsift_adam_lr0.1_it300_cb: acc 60.8 auc 79.2 ce 1.151 prec 0.396  tabsift_adam_lr0.1_it300_cb_vsel: acc 61.2 auc 78.9 ce 1.183 prec 0.401  tabsift_adam_lr0.1_it300_small: acc 55.8 auc 76.1 ce 0.962 prec 0.302  tabsift_adam_lr0.1_it300_small_vsel: acc 52.6 auc 74.4 ce 1.015 prec 0.301
+run heloc_R30_c1_s0 tabsift_adam_lr0.1_it300: start (n 4998, k 1499, V 2)
+wandb: setting up run wfm3jyde
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261026_032956-wfm3jyde
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_adam_lr0.1_it300_heloc_R30_c1_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/wfm3jyde
+      tabsift sigmoid vf_hard it 0: objective 1.5214  w mean 0.687 below 0.5 1499 of 4998  (3 s)
+      tabsift sigmoid vf_hard it 10: objective 1.9122  w mean 0.681 below 0.5 1499 of 4998  (28 s)
+      tabsift sigmoid vf_hard it 20: objective 2.1890  w mean 0.668 below 0.5 1499 of 4998  (53 s)
+      tabsift sigmoid vf_hard it 30: objective 2.5463  w mean 0.650 below 0.5 1499 of 4998  (79 s)
+      tabsift sigmoid vf_hard it 40: objective 3.0173  w mean 0.628 below 0.5 1740 of 4998  (104 s)
+      tabsift sigmoid vf_hard it 50: objective 3.3883  w mean 0.614 below 0.5 1859 of 4998  (130 s)
+      tabsift sigmoid vf_hard it 60: objective 3.6717  w mean 0.606 below 0.5 1918 of 4998  (155 s)
+      tabsift sigmoid vf_hard it 70: objective 3.8680  w mean 0.599 below 0.5 1944 of 4998  (180 s)
+      tabsift sigmoid vf_hard it 80: objective 4.1127  w mean 0.589 below 0.5 1993 of 4998  (206 s)
+      tabsift sigmoid vf_hard it 90: objective 4.3697  w mean 0.577 below 0.5 2062 of 4998  (231 s)
+      tabsift sigmoid vf_hard it 100: objective 4.6106  w mean 0.565 below 0.5 2125 of 4998  (257 s)
+      tabsift sigmoid vf_hard it 110: objective 4.7058  w mean 0.559 below 0.5 2153 of 4998  (282 s)
+      tabsift sigmoid vf_hard it 120: objective 4.9250  w mean 0.553 below 0.5 2182 of 4998  (307 s)
+      tabsift sigmoid vf_hard it 130: objective 5.1519  w mean 0.543 below 0.5 2242 of 4998  (333 s)
+      tabsift sigmoid vf_hard it 140: objective 5.4385  w mean 0.531 below 0.5 2312 of 4998  (358 s)
+      tabsift sigmoid vf_hard it 150: objective 5.7691  w mean 0.521 below 0.5 2366 of 4998  (384 s)
+      tabsift sigmoid vf_hard it 160: objective 6.0334  w mean 0.512 below 0.5 2418 of 4998  (409 s)
+      tabsift sigmoid vf_hard it 170: objective 5.7987  w mean 0.509 below 0.5 2418 of 4998  (434 s)
+      tabsift sigmoid vf_hard it 180: objective 6.0808  w mean 0.506 below 0.5 2444 of 4998  (460 s)
+      tabsift sigmoid vf_hard it 190: objective 6.2311  w mean 0.502 below 0.5 2461 of 4998  (485 s)
+      tabsift sigmoid vf_hard it 200: objective 6.3617  w mean 0.498 below 0.5 2478 of 4998  (510 s)
+      tabsift sigmoid vf_hard it 210: objective 6.2708  w mean 0.495 below 0.5 2510 of 4998  (536 s)
+      tabsift sigmoid vf_hard it 220: objective 6.4245  w mean 0.491 below 0.5 2515 of 4998  (561 s)
+      tabsift sigmoid vf_hard it 230: objective 6.5240  w mean 0.488 below 0.5 2541 of 4998  (593 s)
+      tabsift sigmoid vf_hard it 240: objective 6.6204  w mean 0.484 below 0.5 2566 of 4998  (618 s)
+      tabsift sigmoid vf_hard it 250: objective 6.7114  w mean 0.480 below 0.5 2585 of 4998  (643 s)
+      tabsift sigmoid vf_hard it 260: objective 6.8035  w mean 0.474 below 0.5 2617 of 4998  (669 s)
+      tabsift sigmoid vf_hard it 270: objective 6.4822  w mean 0.470 below 0.5 2649 of 4998  (694 s)
+      tabsift sigmoid vf_hard it 280: objective 6.7894  w mean 0.466 below 0.5 2663 of 4998  (719 s)
+      tabsift sigmoid vf_hard it 290: objective 6.9015  w mean 0.463 below 0.5 2682 of 4998  (745 s)
+    tabsift_adam_lr0.1_it300: V-selected adam_lr0.1_it300 at 0 (V log loss 0.013) of 14 candidates, 2 distinct kept sets
+    tabsift_adam_lr0.1_it300_cb: V-selected adam_lr0.1_it300 at 1 (V log loss 0.054) of 14 candidates, 14 distinct kept sets
+    tabsift_adam_lr0.1_it300_small: V-selected adam_lr0.1_it300 at 250 (V log loss 0.000) of 14 candidates, 14 distinct kept sets
+wandb: updating run metadata; uploading artifact run-wfm3jyde-tablesrows-VMvM4A; uploading artifact run-wfm3jyde-tablesv_selection-PNc3NQ; uploading artifact run-wfm3jyde-overlayaccuracy_table-FeHehA; uploading artifact run-wfm3jyde-overlaybalanced_accuracy_table-lBgFQg (+ 5 more)
+wandb: uploading artifact run-wfm3jyde-tablesrows-VMvM4A; uploading artifact run-wfm3jyde-tablesv_selection-PNc3NQ; uploading artifact run-wfm3jyde-overlayaccuracy_table-FeHehA; uploading artifact run-wfm3jyde-overlaybalanced_accuracy_table-lBgFQg; uploading artifact run-wfm3jyde-overlayroc_auc_table-6KecFw (+ 4 more)
+wandb: uploading artifact run-wfm3jyde-overlayprecision_table-wx4I5Q; uploading artifact run-wfm3jyde-overlayobjective_table-HIsliQ; uploading artifact tabsift_adam_lr0.1_it300_heloc_R30_c1_s0
+wandb: uploading media/table/overlay/objective_table_300_2447e4bc2ccb3fbe6cdb.table.json; uploading output.log; uploading media/table/tables/v_selection_300_d8fed01aefc6ae6e62c6.table.json; uploading media/table/overlay/accuracy_table_300_93c4bf5c52b4b864ea6e.table.json; uploading media/table/overlay/log_loss_table_300_d5bb1c0ca48d8ce203f1.table.json (+ 6 more)
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█
+wandb:          accuracy/full_cb ▃▁▂▆▅▆▆▆▆▅▅▆▇▇▇▇██▇██▇▇▇▇▇▇▇▇██▇▇▇▇▇▇▇▇▇
+wandb:            accuracy/small ▇▁▇▆▇██▆▇█▇▇███▇▇▇▆▇▆▆▆▆▆▆▆▆▇▇▇▇▆▆▆▇▇▆▇▇
+wandb:    balanced_accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁███
+wandb: balanced_accuracy/full_cb ▃▂▁▁▁▆▆▆▆▆▆▆▅▆▆▇▇▇▇█▇▇▇▇█▇▇▇▇▇███▇█▇▇▇█▇
+wandb:   balanced_accuracy/small ▅▆▅▅▄▇▆▇█▁▄▅█▇▇▇██▇█▅▅▄▅▂▃▄▄▄▄▆▅▅▃▃▃▅▅▄▄
+wandb:             log_loss/full ███████████████████████████████████████▁
+wandb:          log_loss/full_cb ██▇▆▆▄▃▂▃▃▃▂▂▂▃▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▁▁
+wandb:            log_loss/small ▃▂▂▁▁▁▂▂▂▂▂▂▃▃▃▃▂▃▃▃▃▃▃▅▅▅▅▄▅▅▅▆▇█████▇▆
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +14 ...
+wandb: 
+wandb: Run summary:
+wandb:                                    accuracy/full 0.698
+wandb:                                 accuracy/full_cb 0.658
+wandb:                                   accuracy/small 0.684
+wandb:                           balanced_accuracy/full 0.70248
+wandb:                        balanced_accuracy/full_cb 0.65505
+wandb:                          balanced_accuracy/small 0.6875
+wandb:          final/tabsift_adam_lr0.1_it300/accuracy 0.698
+wandb: final/tabsift_adam_lr0.1_it300/balanced_accuracy 0.70248
+wandb:              final/tabsift_adam_lr0.1_it300/ckpt 300
+wandb:          final/tabsift_adam_lr0.1_it300/log_loss 1.04996
+wandb:                                              +74 ...
+wandb: 
+wandb: 🚀 View run tabsift_adam_lr0.1_it300_heloc_R30_c1_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/wfm3jyde
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 19 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261026_032956-wfm3jyde/logs
+run heloc_R30_c1_s0 tabsift_adam_lr0.1_it300: done in 776 s  tabsift_adam_lr0.1_it300: acc 69.8 auc 78.1 ce 1.050 prec 0.586  tabsift_adam_lr0.1_it300_vsel: acc 69.4 auc 78.1 ce 1.122 prec 0.586  tabsift_adam_lr0.1_it300_cb: acc 65.8 auc 74.0 ce 0.631 prec 0.495  tabsift_adam_lr0.1_it300_cb_vsel: acc 63.0 auc 69.5 ce 0.714 prec 0.367  tabsift_adam_lr0.1_it300_small: acc 68.4 auc 76.8 ce 1.445 prec 0.305  tabsift_adam_lr0.1_it300_small_vsel: acc 67.7 auc 76.5 ce 1.567 prec 0.305
+run heloc_R30_c3_s0 tabsift_adam_lr0.1_it300: start (n 4994, k 1498, V 6)
+wandb: setting up run zm79tr7y
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261026_034252-zm79tr7y
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_adam_lr0.1_it300_heloc_R30_c3_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/zm79tr7y
+      tabsift sigmoid vf_hard it 0: objective 1.2686  w mean 0.687 below 0.5 1498 of 4994  (3 s)
+      tabsift sigmoid vf_hard it 10: objective 1.3751  w mean 0.682 below 0.5 1498 of 4994  (28 s)
+      tabsift sigmoid vf_hard it 20: objective 1.4985  w mean 0.667 below 0.5 1498 of 4994  (53 s)
+      tabsift sigmoid vf_hard it 30: objective 1.7005  w mean 0.646 below 0.5 1498 of 4994  (79 s)
+      tabsift sigmoid vf_hard it 40: objective 1.9377  w mean 0.616 below 0.5 1784 of 4994  (104 s)
+      tabsift sigmoid vf_hard it 50: objective 2.1765  w mean 0.589 below 0.5 1990 of 4994  (129 s)
+      tabsift sigmoid vf_hard it 60: objective 2.4227  w mean 0.565 below 0.5 2140 of 4994  (155 s)
+      tabsift sigmoid vf_hard it 70: objective 2.6638  w mean 0.547 below 0.5 2244 of 4994  (180 s)
+      tabsift sigmoid vf_hard it 80: objective 2.8559  w mean 0.534 below 0.5 2298 of 4994  (206 s)
+      tabsift sigmoid vf_hard it 90: objective 2.8681  w mean 0.521 below 0.5 2365 of 4994  (231 s)
+      tabsift sigmoid vf_hard it 100: objective 3.0885  w mean 0.516 below 0.5 2399 of 4994  (256 s)
+      tabsift sigmoid vf_hard it 110: objective 3.2371  w mean 0.510 below 0.5 2436 of 4994  (282 s)
+      tabsift sigmoid vf_hard it 120: objective 3.3682  w mean 0.503 below 0.5 2480 of 4994  (307 s)
+      tabsift sigmoid vf_hard it 130: objective 3.5168  w mean 0.494 below 0.5 2521 of 4994  (332 s)
+      tabsift sigmoid vf_hard it 140: objective 3.6256  w mean 0.487 below 0.5 2574 of 4994  (358 s)
+      tabsift sigmoid vf_hard it 150: objective 3.7751  w mean 0.481 below 0.5 2602 of 4994  (383 s)
+      tabsift sigmoid vf_hard it 160: objective 3.8996  w mean 0.475 below 0.5 2633 of 4994  (409 s)
+      tabsift sigmoid vf_hard it 170: objective 3.9727  w mean 0.470 below 0.5 2662 of 4994  (434 s)
+      tabsift sigmoid vf_hard it 180: objective 4.0503  w mean 0.465 below 0.5 2686 of 4994  (459 s)
+      tabsift sigmoid vf_hard it 190: objective 4.1942  w mean 0.460 below 0.5 2706 of 4994  (485 s)
+      tabsift sigmoid vf_hard it 200: objective 4.3555  w mean 0.454 below 0.5 2732 of 4994  (510 s)
+      tabsift sigmoid vf_hard it 210: objective 4.5253  w mean 0.448 below 0.5 2775 of 4994  (536 s)
+      tabsift sigmoid vf_hard it 220: objective 4.5548  w mean 0.444 below 0.5 2800 of 4994  (561 s)
+      tabsift sigmoid vf_hard it 230: objective 4.6545  w mean 0.440 below 0.5 2820 of 4994  (586 s)
+      tabsift sigmoid vf_hard it 240: objective 4.8397  w mean 0.435 below 0.5 2838 of 4994  (612 s)
+      tabsift sigmoid vf_hard it 250: objective 5.0442  w mean 0.430 below 0.5 2863 of 4994  (637 s)
+      tabsift sigmoid vf_hard it 260: objective 4.7864  w mean 0.426 below 0.5 2883 of 4994  (663 s)
+      tabsift sigmoid vf_hard it 270: objective 5.1297  w mean 0.423 below 0.5 2904 of 4994  (688 s)
+      tabsift sigmoid vf_hard it 280: objective 5.3629  w mean 0.418 below 0.5 2924 of 4994  (713 s)
+      tabsift sigmoid vf_hard it 290: objective 5.4691  w mean 0.413 below 0.5 2950 of 4994  (739 s)
+    tabsift_adam_lr0.1_it300: V-selected adam_lr0.1_it300 at 0 (V log loss 0.002) of 14 candidates, 3 distinct kept sets
+    tabsift_adam_lr0.1_it300_cb: V-selected adam_lr0.1_it300 at 200 (V log loss 0.024) of 14 candidates, 14 distinct kept sets
+    tabsift_adam_lr0.1_it300_small: V-selected adam_lr0.1_it300 at 5 (V log loss 0.045) of 14 candidates, 14 distinct kept sets
+wandb: updating run metadata; uploading artifact run-zm79tr7y-tablesrows-kWz4Yw; uploading artifact run-zm79tr7y-tablesv_selection-mVbfUw; uploading artifact run-zm79tr7y-overlayaccuracy_table-KHkJLg; uploading artifact run-zm79tr7y-overlaybalanced_accuracy_table-jYleHQ (+ 5 more)
+wandb: uploading artifact run-zm79tr7y-overlaybalanced_accuracy_table-jYleHQ; uploading artifact run-zm79tr7y-overlayroc_auc_table-qOXhcg; uploading artifact run-zm79tr7y-overlaylog_loss_table-S2IoDg; uploading artifact run-zm79tr7y-overlayprecision_table-9SDaxA; uploading artifact run-zm79tr7y-overlayobjective_table-KrX3qA (+ 1 more)
+wandb: uploading artifact run-zm79tr7y-overlayobjective_table-KrX3qA; uploading artifact tabsift_adam_lr0.1_it300_heloc_R30_c3_s0
+wandb: uploading history steps 300-300, summary, console lines 31-32
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▁▁▁▁▁██████████
+wandb:          accuracy/full_cb ▅▆█▄▄▅▃▁▁▆▆▇▇▅▅▂▂▃▂▂▂▂▂▁▂▂▃▄▄▄▄▅▅▅▅▅▅▅▅▅
+wandb:            accuracy/small █▃▄▆▅█▅▆▅▅▅▃▅▅▁▅▄▃▃▂▁▁▃▃▃▅▄▄▃▃▂▃▄▄▃▅▆▅▅▇
+wandb:    balanced_accuracy/full ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▁▁▂▂▂█████████
+wandb: balanced_accuracy/full_cb █▅▃▃▄▅▂▂▃▁▃▅▆▅▆▆▅▄▄▄▂▂▂▂▂▂▂▂▂▃▃▅▅▅▅▅▅▅▄▄
+wandb:   balanced_accuracy/small ▄▇▄▂█▅▄▅▅▂▅▃▁▁▄▅▄▂▂▂▁▁▁▂▁▃▄▅▃▂▂▂▃▄▄▅▅▅▅█
+wandb:             log_loss/full ███████████████████████████▂▂▂▂▂▂▁▁▁▁▁▁▁
+wandb:          log_loss/full_cb ▁▇▇▇▇▇▆▇██▇▆▆▅▅▅▆▇█▇█████████▇▇▇▇▇▇▇▇▇▇▇
+wandb:            log_loss/small ▁▅▄▂▂▁▂▂▁▁▂▂▃▄▄▄▄▄▅▆▆▆▆▇▆▇▆▆▆▅▆▆▆▆▇███▅▅
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +14 ...
+wandb: 
+wandb: Run summary:
+wandb:                                    accuracy/full 0.63
+wandb:                                 accuracy/full_cb 0.64
+wandb:                                   accuracy/small 0.668
+wandb:                           balanced_accuracy/full 0.62941
+wandb:                        balanced_accuracy/full_cb 0.63726
+wandb:                          balanced_accuracy/small 0.66707
+wandb:          final/tabsift_adam_lr0.1_it300/accuracy 0.63
+wandb: final/tabsift_adam_lr0.1_it300/balanced_accuracy 0.62941
+wandb:              final/tabsift_adam_lr0.1_it300/ckpt 300
+wandb:          final/tabsift_adam_lr0.1_it300/log_loss 1.0645
+wandb:                                              +74 ...
+wandb: 
+wandb: 🚀 View run tabsift_adam_lr0.1_it300_heloc_R30_c3_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/zm79tr7y
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 19 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261026_034252-zm79tr7y/logs
+run heloc_R30_c3_s0 tabsift_adam_lr0.1_it300: done in 770 s  tabsift_adam_lr0.1_it300: acc 63.0 auc 68.1 ce 1.065 prec 0.441  tabsift_adam_lr0.1_it300_vsel: acc 62.7 auc 68.2 ce 1.105 prec 0.442  tabsift_adam_lr0.1_it300_cb: acc 64.0 auc 68.9 ce 0.923 prec 0.418  tabsift_adam_lr0.1_it300_cb_vsel: acc 63.5 auc 69.1 ce 0.925 prec 0.422  tabsift_adam_lr0.1_it300_small: acc 66.8 auc 72.0 ce 0.997 prec 0.303  tabsift_adam_lr0.1_it300_small_vsel: acc 60.9 auc 66.9 ce 0.917 prec 0.299
+run heloc_R30_c5_s0 tabsift_adam_lr0.1_it300: start (n 4990, k 1497, V 10)
+wandb: setting up run kbts52ye
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261026_035542-kbts52ye
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_adam_lr0.1_it300_heloc_R30_c5_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/kbts52ye
+      tabsift sigmoid vf_hard it 0: objective 1.5169  w mean 0.687 below 0.5 1497 of 4990  (3 s)
+      tabsift sigmoid vf_hard it 10: objective 1.6578  w mean 0.682 below 0.5 1497 of 4990  (28 s)
+      tabsift sigmoid vf_hard it 20: objective 1.8945  w mean 0.669 below 0.5 1497 of 4990  (53 s)
+      tabsift sigmoid vf_hard it 30: objective 2.2697  w mean 0.663 below 0.5 1497 of 4990  (78 s)
+      tabsift sigmoid vf_hard it 40: objective 2.4777  w mean 0.655 below 0.5 1526 of 4990  (104 s)
+      tabsift sigmoid vf_hard it 50: objective 2.6320  w mean 0.647 below 0.5 1594 of 4990  (129 s)
+      tabsift sigmoid vf_hard it 60: objective 2.7810  w mean 0.638 below 0.5 1655 of 4990  (154 s)
+      tabsift sigmoid vf_hard it 70: objective 2.9518  w mean 0.627 below 0.5 1730 of 4990  (180 s)
+      tabsift sigmoid vf_hard it 80: objective 3.1273  w mean 0.612 below 0.5 1794 of 4990  (205 s)
+      tabsift sigmoid vf_hard it 90: objective 3.2685  w mean 0.599 below 0.5 1889 of 4990  (230 s)
+      tabsift sigmoid vf_hard it 100: objective 3.4054  w mean 0.590 below 0.5 1945 of 4990  (255 s)
+      tabsift sigmoid vf_hard it 110: objective 3.5107  w mean 0.583 below 0.5 1986 of 4990  (281 s)
+      tabsift sigmoid vf_hard it 120: objective 3.6109  w mean 0.576 below 0.5 2013 of 4990  (306 s)
+      tabsift sigmoid vf_hard it 130: objective 3.7118  w mean 0.570 below 0.5 2047 of 4990  (331 s)
+      tabsift sigmoid vf_hard it 140: objective 3.8472  w mean 0.564 below 0.5 2088 of 4990  (357 s)
+      tabsift sigmoid vf_hard it 150: objective 3.9614  w mean 0.556 below 0.5 2127 of 4990  (382 s)
+      tabsift sigmoid vf_hard it 160: objective 4.0969  w mean 0.548 below 0.5 2167 of 4990  (407 s)
+      tabsift sigmoid vf_hard it 170: objective 4.2451  w mean 0.540 below 0.5 2221 of 4990  (433 s)
+      tabsift sigmoid vf_hard it 180: objective 4.3584  w mean 0.534 below 0.5 2257 of 4990  (458 s)
+      tabsift sigmoid vf_hard it 190: objective 4.4484  w mean 0.529 below 0.5 2290 of 4990  (483 s)
+      tabsift sigmoid vf_hard it 200: objective 4.5988  w mean 0.524 below 0.5 2315 of 4990  (508 s)
+      tabsift sigmoid vf_hard it 210: objective 4.3467  w mean 0.519 below 0.5 2347 of 4990  (534 s)
+      tabsift sigmoid vf_hard it 220: objective 4.5045  w mean 0.517 below 0.5 2349 of 4990  (559 s)
+      tabsift sigmoid vf_hard it 230: objective 4.7914  w mean 0.515 below 0.5 2368 of 4990  (584 s)
+      tabsift sigmoid vf_hard it 240: objective 4.9733  w mean 0.513 below 0.5 2374 of 4990  (610 s)
+      tabsift sigmoid vf_hard it 250: objective 4.9905  w mean 0.510 below 0.5 2393 of 4990  (635 s)
+      tabsift sigmoid vf_hard it 260: objective 5.1044  w mean 0.508 below 0.5 2410 of 4990  (660 s)
+      tabsift sigmoid vf_hard it 270: objective 5.2432  w mean 0.505 below 0.5 2421 of 4990  (686 s)
+      tabsift sigmoid vf_hard it 280: objective 5.3898  w mean 0.503 below 0.5 2443 of 4990  (711 s)
+      tabsift sigmoid vf_hard it 290: objective 5.4443  w mean 0.500 below 0.5 2457 of 4990  (736 s)
+    tabsift_adam_lr0.1_it300: V-selected adam_lr0.1_it300 at 0 (V log loss 0.014) of 14 candidates, 1 distinct kept sets
+    tabsift_adam_lr0.1_it300_cb: V-selected adam_lr0.1_it300 at 75 (V log loss 0.034) of 14 candidates, 14 distinct kept sets
+    tabsift_adam_lr0.1_it300_small: V-selected adam_lr0.1_it300 at 300 (V log loss 0.079) of 14 candidates, 14 distinct kept sets
+wandb: updating run metadata; uploading artifact run-kbts52ye-tablesrows-hkFIJw; uploading artifact run-kbts52ye-tablesv_selection-x0cZ3w; uploading artifact run-kbts52ye-overlayaccuracy_table-xd61vA; uploading artifact run-kbts52ye-overlaybalanced_accuracy_table-wGUS8Q (+ 5 more)
+wandb: uploading artifact run-kbts52ye-tablesrows-hkFIJw; uploading artifact run-kbts52ye-tablesv_selection-x0cZ3w; uploading artifact run-kbts52ye-overlayaccuracy_table-xd61vA; uploading artifact run-kbts52ye-overlaybalanced_accuracy_table-wGUS8Q; uploading artifact run-kbts52ye-overlayroc_auc_table-t9pT8g (+ 4 more)
+wandb: uploading artifact run-kbts52ye-overlayprecision_table-68yPEA; uploading artifact tabsift_adam_lr0.1_it300_heloc_R30_c5_s0
+wandb: uploading data
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          accuracy/full_cb ▃█▅▅▁▅▅▅▅▅▃▃▃▂▃▃▄▄▄▄▃▄▃▃▂▄▃▃▂▃▃▃▂▂▂▁▂▂▂▃
+wandb:            accuracy/small ▅▅▅▁▅▅▅▆▆▆▇▇███▇▇▇█▇▇▇█▆▇███▇██▇█▇▇▆▆▆▆▆
+wandb:    balanced_accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: balanced_accuracy/full_cb ▄▇█▅▃▁▄▆▆▅▃▃▃▃▃▃▃▄▄▅▅▄▄▃▂▄▅▄▄▂▃▃▂▄▃▃▃▄▄▄
+wandb:   balanced_accuracy/small ▂▅▂▃▁▄▃▅▆▇▇▇▇▆▇█▆▇▇██▇▇▄▅▇▇▇██▇▄▄▄▃▄▃▃▃▄
+wandb:             log_loss/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          log_loss/full_cb ▂▃▄▃▂▁▃▄▄▆▆▆▆▆▇▇▇█▇▆▆▅▅▅▆▆▅▄▄▃▃▄▄▄▄▃▃▃▃▂
+wandb:            log_loss/small ▄▃▂▁▁████▇█▇▆▆▇▅▅▄▅▅▇▇▇▇▆▅▅▅▆▆▅▅▆▅▅▅▆▆▆▆
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +14 ...
+wandb: 
+wandb: Run summary:
+wandb:                                    accuracy/full 0.646
+wandb:                                 accuracy/full_cb 0.639
+wandb:                                   accuracy/small 0.611
+wandb:                           balanced_accuracy/full 0.64183
+wandb:                        balanced_accuracy/full_cb 0.63502
+wandb:                          balanced_accuracy/small 0.60649
+wandb:          final/tabsift_adam_lr0.1_it300/accuracy 0.646
+wandb: final/tabsift_adam_lr0.1_it300/balanced_accuracy 0.64183
+wandb:              final/tabsift_adam_lr0.1_it300/ckpt 300
+wandb:          final/tabsift_adam_lr0.1_it300/log_loss 1.32088
+wandb:                                              +74 ...
+wandb: 
+wandb: 🚀 View run tabsift_adam_lr0.1_it300_heloc_R30_c5_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/kbts52ye
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 19 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261026_035542-kbts52ye/logs
+run heloc_R30_c5_s0 tabsift_adam_lr0.1_it300: done in 767 s  tabsift_adam_lr0.1_it300: acc 64.6 auc 69.4 ce 1.321 prec 0.479  tabsift_adam_lr0.1_it300_vsel: acc 64.6 auc 69.4 ce 1.321 prec 0.479  tabsift_adam_lr0.1_it300_cb: acc 63.9 auc 69.4 ce 0.944 prec 0.458  tabsift_adam_lr0.1_it300_cb_vsel: acc 64.4 auc 69.3 ce 0.972 prec 0.446  tabsift_adam_lr0.1_it300_small: acc 61.1 auc 63.7 ce 1.718 prec 0.302  tabsift_adam_lr0.1_it300_small_vsel: acc 61.1 auc 63.7 ce 1.718 prec 0.302
+run coil2000_insurance_policies_R30_c1_s0 tabsift_adam_lr0.1_it300: start (n 4998, k 1499, V 2)
+wandb: setting up run srjlw872
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261026_040829-srjlw872
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_adam_lr0.1_it300_coil2000_insurance_policies_R30_c1_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/srjlw872
+      tabsift sigmoid vf_hard it 0: objective 0.4067  w mean 0.687 below 0.5 1499 of 4998  (9 s)
+      tabsift sigmoid vf_hard it 10: objective 0.5409  w mean 0.682 below 0.5 1499 of 4998  (92 s)
+      tabsift sigmoid vf_hard it 20: objective 0.6388  w mean 0.675 below 0.5 1499 of 4998  (176 s)
+      tabsift sigmoid vf_hard it 30: objective 0.7705  w mean 0.661 below 0.5 1499 of 4998  (260 s)
+      tabsift sigmoid vf_hard it 40: objective 0.9677  w mean 0.639 below 0.5 1634 of 4998  (343 s)
+      tabsift sigmoid vf_hard it 50: objective 1.2390  w mean 0.615 below 0.5 1828 of 4998  (427 s)
+      tabsift sigmoid vf_hard it 60: objective 1.5332  w mean 0.595 below 0.5 1957 of 4998  (510 s)
+      tabsift sigmoid vf_hard it 70: objective 1.8281  w mean 0.581 below 0.5 2034 of 4998  (594 s)
+      tabsift sigmoid vf_hard it 80: objective 2.0984  w mean 0.568 below 0.5 2087 of 4998  (678 s)
+      tabsift sigmoid vf_hard it 90: objective 2.3350  w mean 0.553 below 0.5 2187 of 4998  (761 s)
+      tabsift sigmoid vf_hard it 100: objective 2.5831  w mean 0.538 below 0.5 2275 of 4998  (845 s)
+      tabsift sigmoid vf_hard it 110: objective 2.8048  w mean 0.525 below 0.5 2341 of 4998  (928 s)
+      tabsift sigmoid vf_hard it 120: objective 3.0018  w mean 0.514 below 0.5 2396 of 4998  (1012 s)
+      tabsift sigmoid vf_hard it 130: objective 3.1994  w mean 0.500 below 0.5 2472 of 4998  (1096 s)
+      tabsift sigmoid vf_hard it 140: objective 3.4493  w mean 0.484 below 0.5 2569 of 4998  (1179 s)
+      tabsift sigmoid vf_hard it 150: objective 3.6556  w mean 0.470 below 0.5 2642 of 4998  (1263 s)
+      tabsift sigmoid vf_hard it 160: objective 3.8484  w mean 0.461 below 0.5 2674 of 4998  (1346 s)
+      tabsift sigmoid vf_hard it 170: objective 4.0329  w mean 0.453 below 0.5 2722 of 4998  (1430 s)
+      tabsift sigmoid vf_hard it 180: objective 4.2593  w mean 0.444 below 0.5 2778 of 4998  (1514 s)
+      tabsift sigmoid vf_hard it 190: objective 4.4458  w mean 0.434 below 0.5 2832 of 4998  (1597 s)
+      tabsift sigmoid vf_hard it 200: objective 4.4462  w mean 0.426 below 0.5 2884 of 4998  (1681 s)
+      tabsift sigmoid vf_hard it 210: objective 4.6615  w mean 0.421 below 0.5 2904 of 4998  (1765 s)
+      tabsift sigmoid vf_hard it 220: objective 4.7866  w mean 0.415 below 0.5 2931 of 4998  (1848 s)
+      tabsift sigmoid vf_hard it 230: objective 4.9351  w mean 0.410 below 0.5 2983 of 4998  (1932 s)
+      tabsift sigmoid vf_hard it 240: objective 5.1038  w mean 0.403 below 0.5 3010 of 4998  (2016 s)
+      tabsift sigmoid vf_hard it 250: objective 5.1233  w mean 0.396 below 0.5 3044 of 4998  (2099 s)
+      tabsift sigmoid vf_hard it 260: objective 5.2717  w mean 0.391 below 0.5 3068 of 4998  (2183 s)
+      tabsift sigmoid vf_hard it 270: objective 5.4455  w mean 0.387 below 0.5 3089 of 4998  (2266 s)
+      tabsift sigmoid vf_hard it 280: objective 5.5869  w mean 0.381 below 0.5 3115 of 4998  (2350 s)
+      tabsift sigmoid vf_hard it 290: objective 5.6672  w mean 0.376 below 0.5 3157 of 4998  (2434 s)
+    tabsift_adam_lr0.1_it300: V-selected adam_lr0.1_it300 at 300 (V log loss 0.003) of 14 candidates, 2 distinct kept sets
+    tabsift_adam_lr0.1_it300_cb: V-selected adam_lr0.1_it300 at 300 (V log loss 0.021) of 14 candidates, 14 distinct kept sets
+    tabsift_adam_lr0.1_it300_small: V-selected adam_lr0.1_it300 at 300 (V log loss 0.008) of 14 candidates, 14 distinct kept sets
+wandb: updating run metadata; uploading artifact run-srjlw872-tablesrows-PknXVA; uploading artifact run-srjlw872-tablesv_selection-HkFaSw; uploading artifact run-srjlw872-overlayaccuracy_table-LHU9IA; uploading artifact run-srjlw872-overlaybalanced_accuracy_table-GP3wag (+ 5 more)
+wandb: uploading artifact run-srjlw872-tablesrows-PknXVA; uploading artifact run-srjlw872-tablesv_selection-HkFaSw; uploading artifact run-srjlw872-overlayaccuracy_table-LHU9IA; uploading artifact run-srjlw872-overlaybalanced_accuracy_table-GP3wag; uploading artifact run-srjlw872-overlayroc_auc_table-f_f69A (+ 4 more)
+wandb: uploading artifact run-srjlw872-overlayobjective_table-zQnWmw; uploading artifact tabsift_adam_lr0.1_it300_coil2000_insurance_policies_R30_c1_s0
+wandb: uploading artifact tabsift_adam_lr0.1_it300_coil2000_insurance_policies_R30_c1_s0
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ████████████████████████████████▁▁▁▁▁▁▁▁
+wandb:          accuracy/full_cb █▆▄▄▄▄▄▄▄▃▄▃▂▁▁▂▂▂▂▂▂▂▂▂▂▃▃▃▃▃▃▃▃▃▂▂▂▂▃▂
+wandb:            accuracy/small ▄▁▃▃▅█▅▅▆▆▄▅▄▆▆▆▆▃▃▂▂▄▄▄▄▄▄▄▅▅▄▅▂▄▃▄▄▄▄▃
+wandb:    balanced_accuracy/full ██████████████████████████████████▁▁▁▁▁▁
+wandb: balanced_accuracy/full_cb ▄▂▇█▆▇▅▆▅▇▁▁▃▂▃▃▃▃▃▄▂▄▃▃▂▃▄▄▄█▅▆▆▆▆▅▄▄▄▅
+wandb:   balanced_accuracy/small ▂▁▅▆▃▂▃▃▅██▇▇██▆█████▅▇▅▆▆▆▇▄▄▄▆▅▅▅▄▅▆▇▇
+wandb:             log_loss/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▂▂▂▂▂█
+wandb:          log_loss/full_cb ▅▄▃▂▁▂▃▄▄▄▅▆▅▆███▆▇▆▆▅▆▆▆▆▅▅▆▆▇▆▇▇▆▇▆▆▇▇
+wandb:            log_loss/small ▁▄▅▅▃▂▂▂▁▂▄▄▅▄▆▆▅▅▅▄▄▆▆█▆█▇▅▅▄▅▅▆▆▇█▇█▇▇
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +14 ...
+wandb: 
+wandb: Run summary:
+wandb:                                    accuracy/full 0.576
+wandb:                                 accuracy/full_cb 0.639
+wandb:                                   accuracy/small 0.526
+wandb:                           balanced_accuracy/full 0.53641
+wandb:                        balanced_accuracy/full_cb 0.46662
+wandb:                          balanced_accuracy/small 0.57339
+wandb:          final/tabsift_adam_lr0.1_it300/accuracy 0.576
+wandb: final/tabsift_adam_lr0.1_it300/balanced_accuracy 0.53641
+wandb:              final/tabsift_adam_lr0.1_it300/ckpt 300
+wandb:          final/tabsift_adam_lr0.1_it300/log_loss 1.45132
+wandb:                                              +74 ...
+wandb: 
+wandb: 🚀 View run tabsift_adam_lr0.1_it300_coil2000_insurance_policies_R30_c1_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/srjlw872
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 19 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261026_040829-srjlw872/logs
+run coil2000_insurance_policies_R30_c1_s0 tabsift_adam_lr0.1_it300: done in 2527 s  tabsift_adam_lr0.1_it300: acc 57.6 auc 54.0 ce 1.451 prec 0.080  tabsift_adam_lr0.1_it300_vsel: acc 57.6 auc 54.0 ce 1.451 prec 0.080  tabsift_adam_lr0.1_it300_cb: acc 63.9 auc 53.1 ce 0.847 prec 0.336  tabsift_adam_lr0.1_it300_cb_vsel: acc 63.9 auc 53.1 ce 0.847 prec 0.336  tabsift_adam_lr0.1_it300_small: acc 52.6 auc 58.7 ce 1.304 prec 0.303  tabsift_adam_lr0.1_it300_small_vsel: acc 52.6 auc 58.7 ce 1.304 prec 0.303
+run coil2000_insurance_policies_R30_c3_s0 tabsift_adam_lr0.1_it300: start (n 4994, k 1498, V 6)
+wandb: setting up run nbvrb7ir
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261026_045036-nbvrb7ir
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_adam_lr0.1_it300_coil2000_insurance_policies_R30_c3_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/nbvrb7ir
+      tabsift sigmoid vf_hard it 0: objective 1.0519  w mean 0.687 below 0.5 1498 of 4994  (9 s)
+      tabsift sigmoid vf_hard it 10: objective 1.1464  w mean 0.682 below 0.5 1498 of 4994  (92 s)
+      tabsift sigmoid vf_hard it 20: objective 1.2442  w mean 0.670 below 0.5 1498 of 4994  (176 s)
+      tabsift sigmoid vf_hard it 30: objective 1.3991  w mean 0.645 below 0.5 1498 of 4994  (260 s)
+      tabsift sigmoid vf_hard it 40: objective 1.6174  w mean 0.612 below 0.5 1879 of 4994  (343 s)
+      tabsift sigmoid vf_hard it 50: objective 1.8514  w mean 0.583 below 0.5 2078 of 4994  (427 s)
+      tabsift sigmoid vf_hard it 60: objective 2.0585  w mean 0.558 below 0.5 2206 of 4994  (511 s)
+      tabsift sigmoid vf_hard it 70: objective 2.2741  w mean 0.537 below 0.5 2317 of 4994  (594 s)
+      tabsift sigmoid vf_hard it 80: objective 2.4671  w mean 0.519 below 0.5 2432 of 4994  (678 s)
+      tabsift sigmoid vf_hard it 90: objective 2.6763  w mean 0.503 below 0.5 2495 of 4994  (761 s)
+      tabsift sigmoid vf_hard it 100: objective 2.8871  w mean 0.488 below 0.5 2573 of 4994  (845 s)
+      tabsift sigmoid vf_hard it 110: objective 3.1168  w mean 0.475 below 0.5 2639 of 4994  (929 s)
+      tabsift sigmoid vf_hard it 120: objective 3.3535  w mean 0.462 below 0.5 2710 of 4994  (1012 s)
+      tabsift sigmoid vf_hard it 130: objective 3.5548  w mean 0.450 below 0.5 2759 of 4994  (1096 s)
+      tabsift sigmoid vf_hard it 140: objective 3.7644  w mean 0.442 below 0.5 2807 of 4994  (1180 s)
+      tabsift sigmoid vf_hard it 150: objective 3.8544  w mean 0.438 below 0.5 2837 of 4994  (1263 s)
+      tabsift sigmoid vf_hard it 160: objective 4.0763  w mean 0.433 below 0.5 2873 of 4994  (1347 s)
+      tabsift sigmoid vf_hard it 170: objective 4.2989  w mean 0.428 below 0.5 2885 of 4994  (1430 s)
+      tabsift sigmoid vf_hard it 180: objective 4.4437  w mean 0.423 below 0.5 2911 of 4994  (1514 s)
+      tabsift sigmoid vf_hard it 190: objective 4.6065  w mean 0.418 below 0.5 2936 of 4994  (1598 s)
+      tabsift sigmoid vf_hard it 200: objective 4.7506  w mean 0.413 below 0.5 2964 of 4994  (1681 s)
+      tabsift sigmoid vf_hard it 210: objective 4.8754  w mean 0.408 below 0.5 2993 of 4994  (1765 s)
+      tabsift sigmoid vf_hard it 220: objective 4.9918  w mean 0.401 below 0.5 3026 of 4994  (1849 s)
+      tabsift sigmoid vf_hard it 230: objective 5.1329  w mean 0.395 below 0.5 3065 of 4994  (1932 s)
+      tabsift sigmoid vf_hard it 240: objective 5.2425  w mean 0.389 below 0.5 3091 of 4994  (2016 s)
+      tabsift sigmoid vf_hard it 250: objective 5.3533  w mean 0.384 below 0.5 3120 of 4994  (2099 s)
+      tabsift sigmoid vf_hard it 260: objective 5.4496  w mean 0.378 below 0.5 3158 of 4994  (2183 s)
+      tabsift sigmoid vf_hard it 270: objective 5.4679  w mean 0.374 below 0.5 3184 of 4994  (2267 s)
+      tabsift sigmoid vf_hard it 280: objective 5.5906  w mean 0.370 below 0.5 3203 of 4994  (2350 s)
+      tabsift sigmoid vf_hard it 290: objective 5.7048  w mean 0.367 below 0.5 3213 of 4994  (2434 s)
+    tabsift_adam_lr0.1_it300: V-selected adam_lr0.1_it300 at 0 (V log loss 0.006) of 14 candidates, 4 distinct kept sets
+    tabsift_adam_lr0.1_it300_cb: V-selected adam_lr0.1_it300 at 2 (V log loss 0.016) of 14 candidates, 14 distinct kept sets
+    tabsift_adam_lr0.1_it300_small: V-selected adam_lr0.1_it300 at 75 (V log loss 0.011) of 14 candidates, 14 distinct kept sets
+wandb: updating run metadata; uploading artifact run-nbvrb7ir-tablesrows-hlgqjA; uploading artifact run-nbvrb7ir-tablesv_selection-qifF6Q; uploading artifact run-nbvrb7ir-overlayaccuracy_table-wvOo1w; uploading artifact run-nbvrb7ir-overlaybalanced_accuracy_table-SoJBlg (+ 5 more)
+wandb: uploading artifact run-nbvrb7ir-tablesrows-hlgqjA; uploading artifact run-nbvrb7ir-tablesv_selection-qifF6Q; uploading artifact run-nbvrb7ir-overlayaccuracy_table-wvOo1w; uploading artifact run-nbvrb7ir-overlaybalanced_accuracy_table-SoJBlg; uploading artifact run-nbvrb7ir-overlayroc_auc_table-9wMh9g (+ 4 more)
+wandb: uploading artifact tabsift_adam_lr0.1_it300_coil2000_insurance_policies_R30_c3_s0
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full █████████████████████████▁▁▁▁▁█████▁▁▁▁▁
+wandb:          accuracy/full_cb ▇▇█▄▁▅▄▆▆▅▄▄▄▆▄▅▅▆▆▆▆▆▆▇▆████▇██▆▆▆▆▆▇▆▇
+wandb:            accuracy/small ▅█▄▄▄▄▄▃▂▁▃▃▂▂▂▃▃▃▃▃▄▄▄▃▃▂▁▃▃▃▃▃▄▄▃▃▄▄▆▅
+wandb:    balanced_accuracy/full ██████████████████████████▁▁█▁▁▁▁▁▁▁▁▁▁▁
+wandb: balanced_accuracy/full_cb ▅▂▆▆▄▁▅▄▅▄▄▄▄█▄▅▅▅▅▅▆▆▆▆▆▅▆▆▅▅▄▄▅▅▅▅▅▅▅▂
+wandb:   balanced_accuracy/small ▄▆▄▁▄▄▇▇█▆▇▅▆▅▅▃▅▆▄▄▆▅▅▄▃▅▄▄▄▃▄▃▃▃▄▃▃▃▃▄
+wandb:             log_loss/full ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇█▆▆▆▆▆▆▆▆▆▆▆▁▁▁▁
+wandb:          log_loss/full_cb ▇▄▃▄█▆▇▆▆▅█▅▅▅▅▇▇▇▆▅▄▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▁▁▁▁
+wandb:            log_loss/small ▁▂▃▃▄▄▄▄▄▄▆▅▅▅▅▅▅▅▅▆▇▇▇▇▇▇█▇▇▇█▇▇▆▇▆▃▆▄▄
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +14 ...
+wandb: 
+wandb: Run summary:
+wandb:                                    accuracy/full 0.626
+wandb:                                 accuracy/full_cb 0.632
+wandb:                                   accuracy/small 0.65
+wandb:                           balanced_accuracy/full 0.53915
+wandb:                        balanced_accuracy/full_cb 0.52645
+wandb:                          balanced_accuracy/small 0.52807
+wandb:          final/tabsift_adam_lr0.1_it300/accuracy 0.626
+wandb: final/tabsift_adam_lr0.1_it300/balanced_accuracy 0.53915
+wandb:              final/tabsift_adam_lr0.1_it300/ckpt 300
+wandb:          final/tabsift_adam_lr0.1_it300/log_loss 1.09695
+wandb:                                              +74 ...
+wandb: 
+wandb: 🚀 View run tabsift_adam_lr0.1_it300_coil2000_insurance_policies_R30_c3_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/nbvrb7ir
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 19 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261026_045036-nbvrb7ir/logs
+run coil2000_insurance_policies_R30_c3_s0 tabsift_adam_lr0.1_it300: done in 2528 s  tabsift_adam_lr0.1_it300: acc 62.6 auc 54.8 ce 1.097 prec 0.280  tabsift_adam_lr0.1_it300_vsel: acc 62.7 auc 54.5 ce 1.142 prec 0.280  tabsift_adam_lr0.1_it300_cb: acc 63.2 auc 54.4 ce 0.914 prec 0.286  tabsift_adam_lr0.1_it300_cb_vsel: acc 63.5 auc 54.2 ce 0.965 prec 0.285  tabsift_adam_lr0.1_it300_small: acc 65.0 auc 57.1 ce 0.950 prec 0.302  tabsift_adam_lr0.1_it300_small_vsel: acc 65.6 auc 58.2 ce 1.089 prec 0.301
+run coil2000_insurance_policies_R30_c5_s0 tabsift_adam_lr0.1_it300: start (n 4990, k 1497, V 10)
+wandb: setting up run 8ztqa2na
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261026_053243-8ztqa2na
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_adam_lr0.1_it300_coil2000_insurance_policies_R30_c5_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/8ztqa2na
+      tabsift sigmoid vf_hard it 0: objective 0.6871  w mean 0.687 below 0.5 1497 of 4990  (9 s)
+      tabsift sigmoid vf_hard it 10: objective 0.7379  w mean 0.682 below 0.5 1497 of 4990  (92 s)
+      tabsift sigmoid vf_hard it 20: objective 0.8279  w mean 0.664 below 0.5 1497 of 4990  (175 s)
+      tabsift sigmoid vf_hard it 30: objective 1.0447  w mean 0.629 below 0.5 1497 of 4990  (258 s)
+      tabsift sigmoid vf_hard it 40: objective 1.2937  w mean 0.597 below 0.5 1968 of 4990  (342 s)
+      tabsift sigmoid vf_hard it 50: objective 1.5158  w mean 0.578 below 0.5 2083 of 4990  (425 s)
+      tabsift sigmoid vf_hard it 60: objective 1.6962  w mean 0.565 below 0.5 2147 of 4990  (508 s)
+      tabsift sigmoid vf_hard it 70: objective 1.8690  w mean 0.551 below 0.5 2220 of 4990  (592 s)
+      tabsift sigmoid vf_hard it 80: objective 2.0016  w mean 0.539 below 0.5 2279 of 4990  (675 s)
+      tabsift sigmoid vf_hard it 90: objective 2.1383  w mean 0.528 below 0.5 2334 of 4990  (758 s)
+      tabsift sigmoid vf_hard it 100: objective 2.2765  w mean 0.516 below 0.5 2411 of 4990  (842 s)
+      tabsift sigmoid vf_hard it 110: objective 2.4072  w mean 0.505 below 0.5 2479 of 4990  (925 s)
+      tabsift sigmoid vf_hard it 120: objective 2.5338  w mean 0.494 below 0.5 2536 of 4990  (1008 s)
+      tabsift sigmoid vf_hard it 130: objective 2.6547  w mean 0.481 below 0.5 2617 of 4990  (1091 s)
+      tabsift sigmoid vf_hard it 140: objective 2.7874  w mean 0.468 below 0.5 2688 of 4990  (1175 s)
+      tabsift sigmoid vf_hard it 150: objective 2.8743  w mean 0.459 below 0.5 2731 of 4990  (1258 s)
+      tabsift sigmoid vf_hard it 160: objective 2.9578  w mean 0.451 below 0.5 2766 of 4990  (1341 s)
+      tabsift sigmoid vf_hard it 170: objective 3.0584  w mean 0.441 below 0.5 2817 of 4990  (1425 s)
+      tabsift sigmoid vf_hard it 180: objective 3.1533  w mean 0.431 below 0.5 2861 of 4990  (1508 s)
+      tabsift sigmoid vf_hard it 190: objective 3.2471  w mean 0.422 below 0.5 2904 of 4990  (1591 s)
+      tabsift sigmoid vf_hard it 200: objective 3.3532  w mean 0.412 below 0.5 2967 of 4990  (1675 s)
+      tabsift sigmoid vf_hard it 210: objective 3.4610  w mean 0.404 below 0.5 3012 of 4990  (1758 s)
+      tabsift sigmoid vf_hard it 220: objective 3.5622  w mean 0.397 below 0.5 3049 of 4990  (1841 s)
+      tabsift sigmoid vf_hard it 230: objective 3.6525  w mean 0.390 below 0.5 3085 of 4990  (1924 s)
+      tabsift sigmoid vf_hard it 240: objective 3.7347  w mean 0.383 below 0.5 3123 of 4990  (2008 s)
+      tabsift sigmoid vf_hard it 250: objective 3.8238  w mean 0.376 below 0.5 3160 of 4990  (2091 s)
+      tabsift sigmoid vf_hard it 260: objective 3.8993  w mean 0.370 below 0.5 3192 of 4990  (2174 s)
+      tabsift sigmoid vf_hard it 270: objective 3.9689  w mean 0.364 below 0.5 3218 of 4990  (2258 s)
+      tabsift sigmoid vf_hard it 280: objective 3.9718  w mean 0.360 below 0.5 3240 of 4990  (2341 s)
+      tabsift sigmoid vf_hard it 290: objective 4.0542  w mean 0.356 below 0.5 3263 of 4990  (2424 s)
+    tabsift_adam_lr0.1_it300: V-selected adam_lr0.1_it300 at 250 (V log loss 0.071) of 14 candidates, 3 distinct kept sets
+    tabsift_adam_lr0.1_it300_cb: V-selected adam_lr0.1_it300 at 150 (V log loss 0.147) of 14 candidates, 14 distinct kept sets
+    tabsift_adam_lr0.1_it300_small: V-selected adam_lr0.1_it300 at 200 (V log loss 0.178) of 14 candidates, 14 distinct kept sets
+wandb: updating run metadata; uploading artifact run-8ztqa2na-tablesrows-7afATw; uploading artifact run-8ztqa2na-tablesv_selection-xk7PlQ; uploading artifact run-8ztqa2na-overlayaccuracy_table-HrbPuA; uploading artifact run-8ztqa2na-overlaybalanced_accuracy_table-YLkgyw (+ 5 more)
+wandb: uploading artifact run-8ztqa2na-tablesrows-7afATw; uploading artifact run-8ztqa2na-overlayaccuracy_table-HrbPuA; uploading artifact run-8ztqa2na-overlaybalanced_accuracy_table-YLkgyw; uploading artifact run-8ztqa2na-overlayroc_auc_table-ZGmB2A; uploading artifact run-8ztqa2na-overlaylog_loss_table-fa3umA (+ 3 more)
+wandb: uploading artifact run-8ztqa2na-tablesrows-7afATw; uploading artifact run-8ztqa2na-overlayaccuracy_table-HrbPuA; uploading artifact run-8ztqa2na-overlayroc_auc_table-ZGmB2A; uploading artifact run-8ztqa2na-overlaylog_loss_table-fa3umA; uploading artifact tabsift_adam_lr0.1_it300_coil2000_insurance_policies_R30_c5_s0
+wandb: uploading artifact run-8ztqa2na-tablesrows-7afATw; uploading artifact run-8ztqa2na-overlayaccuracy_table-HrbPuA; uploading artifact run-8ztqa2na-overlayroc_auc_table-ZGmB2A; uploading artifact run-8ztqa2na-overlaylog_loss_table-fa3umA
+wandb: uploading artifact run-8ztqa2na-tablesrows-7afATw; uploading artifact run-8ztqa2na-overlaylog_loss_table-fa3umA
+wandb: uploading artifact run-8ztqa2na-tablesrows-7afATw
+wandb: uploading history steps 300-300, summary, console lines 30-32
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▃▃▃▃▃▃▃███
+wandb:          accuracy/full_cb █▆▆▆▅▃▄▃▄▃▄▃▂▂▁▂▂▃▃▃▃▃▃▂▃▄▄▃▃▃▄▄▃▃▃▃▃▄▄▄
+wandb:            accuracy/small ▃▄▅▁▄▅▆▄▄▄▅▅▆██▇▆▆▄▄▃▃▃▄▅▅▅▆▅▅▄▄▄▄▃▃▃▃▃▃
+wandb:    balanced_accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▃▃▃▃▃▃▃▃▃█████
+wandb: balanced_accuracy/full_cb ▁▆▇▇█▆▆▅▅▄▅▅▅▅▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆
+wandb:   balanced_accuracy/small ▁▄▃▄▄▅▅▄▄▅▅▅▆▅▆▅▅▄▄▄▄▃▄▄▄▂▃▄▅▆▅▆▇▇▅▇▇█▇▆
+wandb:             log_loss/full ▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆█████████▁▁
+wandb:          log_loss/full_cb ▂▁▁▂▃▃▄▅▅▅▆▆▆▇█▇▇▇▇▇▆▇▇▇▇▇▇▇▇▇█▇▇█▇▇▇▇▇▇
+wandb:            log_loss/small ▂▄▄▂▂▆▆▅▄▄▄▄▄▂▁▁▁▅▆▇▆▇▇▇▇█▇▇▆█▇▇▆▇▅▇▇▇▆▇
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +14 ...
+wandb: 
+wandb: Run summary:
+wandb:                                    accuracy/full 0.624
+wandb:                                 accuracy/full_cb 0.659
+wandb:                                   accuracy/small 0.587
+wandb:                           balanced_accuracy/full 0.5222
+wandb:                        balanced_accuracy/full_cb 0.51697
+wandb:                          balanced_accuracy/small 0.55814
+wandb:          final/tabsift_adam_lr0.1_it300/accuracy 0.624
+wandb: final/tabsift_adam_lr0.1_it300/balanced_accuracy 0.5222
+wandb:              final/tabsift_adam_lr0.1_it300/ckpt 300
+wandb:          final/tabsift_adam_lr0.1_it300/log_loss 1.09121
+wandb:                                              +74 ...
+wandb: 
+wandb: 🚀 View run tabsift_adam_lr0.1_it300_coil2000_insurance_policies_R30_c5_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/8ztqa2na
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 19 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261026_053243-8ztqa2na/logs
+run coil2000_insurance_policies_R30_c5_s0 tabsift_adam_lr0.1_it300: done in 2520 s  tabsift_adam_lr0.1_it300: acc 62.4 auc 55.0 ce 1.091 prec 0.240  tabsift_adam_lr0.1_it300_vsel: acc 62.2 auc 55.0 ce 1.096 prec 0.239  tabsift_adam_lr0.1_it300_cb: acc 65.9 auc 53.8 ce 0.825 prec 0.303  tabsift_adam_lr0.1_it300_cb_vsel: acc 65.6 auc 54.1 ce 0.826 prec 0.300  tabsift_adam_lr0.1_it300_small: acc 58.7 auc 55.8 ce 1.029 prec 0.300  tabsift_adam_lr0.1_it300_small_vsel: acc 62.6 auc 51.4 ce 1.076 prec 0.300
+run gas-drift_R30_c1_s0 tabsift_adam_lr0.1_it300: start (n 4994, k 1498, V 6)
+wandb: setting up run fn5rfunq
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261026_061443-fn5rfunq
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_adam_lr0.1_it300_gas-drift_R30_c1_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/fn5rfunq
+      tabsift sigmoid vf_hard it 0: objective 1.5297  w mean 0.687 below 0.5 1498 of 4994  (13 s)
+      tabsift sigmoid vf_hard it 10: objective 1.6249  w mean 0.682 below 0.5 1498 of 4994  (139 s)
+      tabsift sigmoid vf_hard it 20: objective 1.7394  w mean 0.664 below 0.5 1498 of 4994  (264 s)
+      tabsift sigmoid vf_hard it 30: objective 1.9430  w mean 0.627 below 0.5 1498 of 4994  (390 s)
+      tabsift sigmoid vf_hard it 40: objective 2.1917  w mean 0.579 below 0.5 2107 of 4994  (515 s)
+      tabsift sigmoid vf_hard it 50: objective 2.4585  w mean 0.545 below 0.5 2308 of 4994  (641 s)
+      tabsift sigmoid vf_hard it 60: objective 2.6565  w mean 0.526 below 0.5 2393 of 4994  (766 s)
+      tabsift sigmoid vf_hard it 70: objective 2.8093  w mean 0.512 below 0.5 2463 of 4994  (892 s)
+      tabsift sigmoid vf_hard it 80: objective 2.9447  w mean 0.498 below 0.5 2515 of 4994  (1017 s)
+      tabsift sigmoid vf_hard it 90: objective 3.0531  w mean 0.488 below 0.5 2567 of 4994  (1143 s)
+      tabsift sigmoid vf_hard it 100: objective 3.1478  w mean 0.478 below 0.5 2620 of 4994  (1268 s)
+      tabsift sigmoid vf_hard it 110: objective 3.2342  w mean 0.467 below 0.5 2671 of 4994  (1394 s)
+      tabsift sigmoid vf_hard it 120: objective 3.3157  w mean 0.457 below 0.5 2735 of 4994  (1519 s)
+      tabsift sigmoid vf_hard it 130: objective 3.3933  w mean 0.449 below 0.5 2778 of 4994  (1645 s)
+      tabsift sigmoid vf_hard it 140: objective 3.4542  w mean 0.441 below 0.5 2820 of 4994  (1770 s)
+      tabsift sigmoid vf_hard it 150: objective 3.5135  w mean 0.432 below 0.5 2872 of 4994  (1896 s)
+      tabsift sigmoid vf_hard it 160: objective 3.5842  w mean 0.426 below 0.5 2898 of 4994  (2021 s)
+      tabsift sigmoid vf_hard it 170: objective 3.6587  w mean 0.419 below 0.5 2935 of 4994  (2147 s)
+      tabsift sigmoid vf_hard it 180: objective 3.7448  w mean 0.411 below 0.5 2986 of 4994  (2272 s)
+      tabsift sigmoid vf_hard it 190: objective 3.8083  w mean 0.404 below 0.5 3038 of 4994  (2398 s)
+      tabsift sigmoid vf_hard it 200: objective 3.8257  w mean 0.399 below 0.5 3059 of 4994  (2523 s)
+      tabsift sigmoid vf_hard it 210: objective 3.8886  w mean 0.393 below 0.5 3086 of 4994  (2649 s)
+      tabsift sigmoid vf_hard it 220: objective 3.9788  w mean 0.386 below 0.5 3126 of 4994  (2774 s)
+      tabsift sigmoid vf_hard it 230: objective 4.0615  w mean 0.379 below 0.5 3164 of 4994  (2900 s)
+      tabsift sigmoid vf_hard it 240: objective 4.0993  w mean 0.373 below 0.5 3188 of 4994  (3025 s)
+      tabsift sigmoid vf_hard it 250: objective 4.1937  w mean 0.367 below 0.5 3228 of 4994  (3151 s)
+      tabsift sigmoid vf_hard it 260: objective 4.2400  w mean 0.361 below 0.5 3250 of 4994  (3276 s)
+      tabsift sigmoid vf_hard it 270: objective 4.3192  w mean 0.356 below 0.5 3280 of 4994  (3402 s)
+      tabsift sigmoid vf_hard it 280: objective 4.3991  w mean 0.351 below 0.5 3309 of 4994  (3527 s)
+      tabsift sigmoid vf_hard it 290: objective 4.4900  w mean 0.346 below 0.5 3333 of 4994  (3653 s)
+    tabsift_adam_lr0.1_it300: V-selected adam_lr0.1_it300 at 0 (V log loss 0.267) of 14 candidates, 1 distinct kept sets
+    tabsift_adam_lr0.1_it300_cb: V-selected adam_lr0.1_it300 at 300 (V log loss 0.940) of 14 candidates, 14 distinct kept sets
+    tabsift_adam_lr0.1_it300_small: V-selected adam_lr0.1_it300 at 200 (V log loss 0.060) of 14 candidates, 14 distinct kept sets
+wandb: updating run metadata; uploading artifact run-fn5rfunq-tablesrows-xQoBPg; uploading artifact run-fn5rfunq-tablesv_selection-u9QF7Q; uploading artifact run-fn5rfunq-overlayaccuracy_table-iR87TA; uploading artifact run-fn5rfunq-overlaybalanced_accuracy_table-AtIYqw (+ 5 more)
+wandb: uploading artifact run-fn5rfunq-overlayroc_auc_table-H0T90w; uploading artifact run-fn5rfunq-overlaylog_loss_table-6gQabA; uploading artifact run-fn5rfunq-overlayprecision_table-Vj28gg; uploading artifact run-fn5rfunq-overlayobjective_table-iaiR7g; uploading artifact tabsift_adam_lr0.1_it300_gas-drift_R30_c1_s0
+wandb: uploading artifact tabsift_adam_lr0.1_it300_gas-drift_R30_c1_s0
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          accuracy/full_cb █▅▅█▃▂▁▁▃▅▇▆▆▆▆▆▆█▇▇▇▇▇▇▆▆▆▅▅▆▇▆▆▆▆▅▇▆▇█
+wandb:            accuracy/small ▅▇▄▆█▄▄▃▅▄▄▄▄▂▃▁▂▂▃▂▃▃▃▃▅▄▄▄▄▄▅▄▄▄▂▆▆▅▇█
+wandb:    balanced_accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: balanced_accuracy/full_cb █▄▄▂▅▄▂▁▂▁▁▃▅▅▄▄▄▄▄▄▄▅▅▅▄▄▄▄▄▄▅▄▄▄▃▄▄▄▅▅
+wandb:   balanced_accuracy/small █▅▄▅▃▆▅▇▄▃▄▄▄▃▃▃▃▃▃▁▂▂▃▃▂▃▃▃▃▂▃▃▄▄▄▆▆▅▅▆
+wandb:             log_loss/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          log_loss/full_cb ██▇▇▇▇▇▇▇▆▅▅▄▃▃▃▄▅▄▅▄▄▄▄▄▃▄▄▃▂▂▂▂▂▁▁▁▁▁▁
+wandb:            log_loss/small ▅▁▅▅▆▄▄▄▅▅▅▅▅▆▇▇███▇▇█▇▇▆▆▆▆▆▆▆▆▅▄▄▃▄▄▃▃
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +14 ...
+wandb: 
+wandb: Run summary:
+wandb:                                    accuracy/full 0.673
+wandb:                                 accuracy/full_cb 0.73
+wandb:                                   accuracy/small 0.702
+wandb:                           balanced_accuracy/full 0.64784
+wandb:                        balanced_accuracy/full_cb 0.72075
+wandb:                          balanced_accuracy/small 0.66815
+wandb:          final/tabsift_adam_lr0.1_it300/accuracy 0.673
+wandb: final/tabsift_adam_lr0.1_it300/balanced_accuracy 0.64784
+wandb:              final/tabsift_adam_lr0.1_it300/ckpt 300
+wandb:          final/tabsift_adam_lr0.1_it300/log_loss 1.77154
+wandb:                                              +74 ...
+wandb: 
+wandb: 🚀 View run tabsift_adam_lr0.1_it300_gas-drift_R30_c1_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/fn5rfunq
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 19 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261026_061443-fn5rfunq/logs
+run gas-drift_R30_c1_s0 tabsift_adam_lr0.1_it300: done in 3790 s  tabsift_adam_lr0.1_it300: acc 67.3 auc 92.5 ce 1.772 prec 0.435  tabsift_adam_lr0.1_it300_vsel: acc 67.3 auc 92.5 ce 1.772 prec 0.435  tabsift_adam_lr0.1_it300_cb: acc 73.0 auc 94.4 ce 1.424 prec 0.421  tabsift_adam_lr0.1_it300_cb_vsel: acc 73.0 auc 94.4 ce 1.424 prec 0.421  tabsift_adam_lr0.1_it300_small: acc 70.2 auc 92.3 ce 1.017 prec 0.304  tabsift_adam_lr0.1_it300_small_vsel: acc 65.1 auc 88.0 ce 1.344 prec 0.303
+run gas-drift_R30_c3_s0 tabsift_adam_lr0.1_it300: start (n 4982, k 1495, V 18)
+wandb: setting up run 0cqie1or
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261026_071752-0cqie1or
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_adam_lr0.1_it300_gas-drift_R30_c3_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/0cqie1or
+      tabsift sigmoid vf_hard it 0: objective 2.3702  w mean 0.687 below 0.5 1495 of 4982  (13 s)
+      tabsift sigmoid vf_hard it 10: objective 2.5613  w mean 0.681 below 0.5 1495 of 4982  (138 s)
+      tabsift sigmoid vf_hard it 20: objective 2.7020  w mean 0.670 below 0.5 1495 of 4982  (263 s)
+      tabsift sigmoid vf_hard it 30: objective 2.9017  w mean 0.650 below 0.5 1495 of 4982  (388 s)
+      tabsift sigmoid vf_hard it 40: objective 3.1454  w mean 0.619 below 0.5 1790 of 4982  (513 s)
+      tabsift sigmoid vf_hard it 50: objective 3.3305  w mean 0.596 below 0.5 1938 of 4982  (638 s)
+      tabsift sigmoid vf_hard it 60: objective 3.4768  w mean 0.580 below 0.5 2068 of 4982  (763 s)
+      tabsift sigmoid vf_hard it 70: objective 3.6140  w mean 0.562 below 0.5 2150 of 4982  (888 s)
+      tabsift sigmoid vf_hard it 80: objective 3.7704  w mean 0.546 below 0.5 2258 of 4982  (1013 s)
+      tabsift sigmoid vf_hard it 90: objective 3.9109  w mean 0.529 below 0.5 2352 of 4982  (1138 s)
+      tabsift sigmoid vf_hard it 100: objective 4.0478  w mean 0.513 below 0.5 2433 of 4982  (1263 s)
+      tabsift sigmoid vf_hard it 110: objective 4.1622  w mean 0.501 below 0.5 2501 of 4982  (1388 s)
+      tabsift sigmoid vf_hard it 120: objective 4.1970  w mean 0.491 below 0.5 2550 of 4982  (1513 s)
+      tabsift sigmoid vf_hard it 130: objective 4.2843  w mean 0.487 below 0.5 2556 of 4982  (1638 s)
+      tabsift sigmoid vf_hard it 140: objective 4.3594  w mean 0.482 below 0.5 2589 of 4982  (1763 s)
+      tabsift sigmoid vf_hard it 150: objective 4.4164  w mean 0.477 below 0.5 2629 of 4982  (1888 s)
+      tabsift sigmoid vf_hard it 160: objective 4.4737  w mean 0.469 below 0.5 2662 of 4982  (2013 s)
+      tabsift sigmoid vf_hard it 170: objective 4.5261  w mean 0.460 below 0.5 2725 of 4982  (2138 s)
+      tabsift sigmoid vf_hard it 180: objective 4.5806  w mean 0.451 below 0.5 2772 of 4982  (2263 s)
+      tabsift sigmoid vf_hard it 190: objective 4.6373  w mean 0.444 below 0.5 2816 of 4982  (2388 s)
+      tabsift sigmoid vf_hard it 200: objective 4.5784  w mean 0.438 below 0.5 2837 of 4982  (2513 s)
+      tabsift sigmoid vf_hard it 210: objective 4.6607  w mean 0.435 below 0.5 2853 of 4982  (2638 s)
+      tabsift sigmoid vf_hard it 220: objective 4.7230  w mean 0.431 below 0.5 2873 of 4982  (2763 s)
+      tabsift sigmoid vf_hard it 230: objective 4.7854  w mean 0.425 below 0.5 2899 of 4982  (2888 s)
+      tabsift sigmoid vf_hard it 240: objective 4.6964  w mean 0.419 below 0.5 2927 of 4982  (3013 s)
+      tabsift sigmoid vf_hard it 250: objective 4.7836  w mean 0.416 below 0.5 2947 of 4982  (3138 s)
+      tabsift sigmoid vf_hard it 260: objective 4.8552  w mean 0.413 below 0.5 2958 of 4982  (3263 s)
+      tabsift sigmoid vf_hard it 270: objective 4.9206  w mean 0.408 below 0.5 2985 of 4982  (3388 s)
+      tabsift sigmoid vf_hard it 280: objective 4.7414  w mean 0.403 below 0.5 3014 of 4982  (3513 s)
+      tabsift sigmoid vf_hard it 290: objective 4.7655  w mean 0.401 below 0.5 3033 of 4982  (3638 s)
+    tabsift_adam_lr0.1_it300: V-selected adam_lr0.1_it300 at 0 (V log loss 0.203) of 14 candidates, 1 distinct kept sets
+    tabsift_adam_lr0.1_it300_cb: V-selected adam_lr0.1_it300 at 2 (V log loss 0.058) of 14 candidates, 14 distinct kept sets
+    tabsift_adam_lr0.1_it300_small: V-selected adam_lr0.1_it300 at 300 (V log loss 0.282) of 14 candidates, 14 distinct kept sets
+wandb: updating run metadata; uploading artifact run-0cqie1or-tablesrows--UgKsg; uploading artifact run-0cqie1or-tablesv_selection-Bms5mA; uploading artifact run-0cqie1or-overlayaccuracy_table-LgIKUA; uploading artifact run-0cqie1or-overlaybalanced_accuracy_table-A1EmdQ (+ 5 more)
+wandb: uploading artifact run-0cqie1or-overlaylog_loss_table-TRkrcA; uploading artifact run-0cqie1or-overlayprecision_table-Qpv9_A; uploading artifact run-0cqie1or-overlayobjective_table-nQ7QkA; uploading artifact tabsift_adam_lr0.1_it300_gas-drift_R30_c3_s0
+wandb: uploading artifact tabsift_adam_lr0.1_it300_gas-drift_R30_c3_s0
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          accuracy/full_cb ▃▂▇▃▆▆▆▅▁▁▂▂▄▆▆▇██▆▆▄▃▃▃▄▄▄▃▃▃▃▃▃▃▄▃▃▄▄▄
+wandb:            accuracy/small ▆▄▄▄▁▅▅▅▅▄▅▄▂▂▄▄▅▂▁▅▂▂▂▁▂▃▆▇▆▆▆▆▆▆▆▇▆▆▆█
+wandb:    balanced_accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: balanced_accuracy/full_cb ▃▁▃▇▆▆▆▄▄▄▇▆▇▇▆█▆▅▄▅▅▄▅▇▆▆▆▆▅▆▅▅▅▅▅▆▆▅▆▆
+wandb:   balanced_accuracy/small ▃▄▅▃▁▂▄▅▅▄▅▄▄▃▃▂▄▂▅▅▃▅▅▅▆▆▆▆▆▆▅▅▇▇█▇▆██▄
+wandb:             log_loss/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          log_loss/full_cb █▁▁▂▂▁▁▁▂▂▂▂▂▃▂▃▂▂▂▂▂▂▂▂▂▂▁▁▁▂▂▂▂▂▁▁▂▂▂▂
+wandb:            log_loss/small █▂▁▂▃▅▅▄▃▃▅▄▅▄▄██▄▄▄▂▂▂▂▁▁▁▁▁▁▁▂▃▃▃▂▂▂▂▃
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +14 ...
+wandb: 
+wandb: Run summary:
+wandb:                                    accuracy/full 0.826
+wandb:                                 accuracy/full_cb 0.83
+wandb:                                   accuracy/small 0.816
+wandb:                           balanced_accuracy/full 0.8318
+wandb:                        balanced_accuracy/full_cb 0.83023
+wandb:                          balanced_accuracy/small 0.81647
+wandb:          final/tabsift_adam_lr0.1_it300/accuracy 0.826
+wandb: final/tabsift_adam_lr0.1_it300/balanced_accuracy 0.8318
+wandb:              final/tabsift_adam_lr0.1_it300/ckpt 300
+wandb:          final/tabsift_adam_lr0.1_it300/log_loss 0.94313
+wandb:                                              +74 ...
+wandb: 
+wandb: 🚀 View run tabsift_adam_lr0.1_it300_gas-drift_R30_c3_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/0cqie1or
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 19 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261026_071752-0cqie1or/logs
+run gas-drift_R30_c3_s0 tabsift_adam_lr0.1_it300: done in 3775 s  tabsift_adam_lr0.1_it300: acc 82.6 auc 97.7 ce 0.943 prec 0.647  tabsift_adam_lr0.1_it300_vsel: acc 82.6 auc 97.7 ce 0.943 prec 0.647  tabsift_adam_lr0.1_it300_cb: acc 83.0 auc 97.3 ce 0.862 prec 0.638  tabsift_adam_lr0.1_it300_cb_vsel: acc 82.8 auc 97.7 ce 0.809 prec 0.613  tabsift_adam_lr0.1_it300_small: acc 81.6 auc 98.0 ce 0.617 prec 0.305  tabsift_adam_lr0.1_it300_small_vsel: acc 81.6 auc 98.0 ce 0.617 prec 0.305
+run gas-drift_R30_c5_s0 tabsift_adam_lr0.1_it300: start (n 4970, k 1491, V 30)
+wandb: setting up run 9s2f5lv1
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_tinyv/wandb/run-20261026_082048-9s2f5lv1
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tabsift_adam_lr0.1_it300_gas-drift_R30_c5_s0
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/9s2f5lv1
+      tabsift sigmoid vf_hard it 0: objective 2.0019  w mean 0.687 below 0.5 1491 of 4970  (13 s)
+      tabsift sigmoid vf_hard it 10: objective 2.1845  w mean 0.684 below 0.5 1491 of 4970  (138 s)
+      tabsift sigmoid vf_hard it 20: objective 2.3354  w mean 0.676 below 0.5 1491 of 4970  (263 s)
+      tabsift sigmoid vf_hard it 30: objective 2.5605  w mean 0.658 below 0.5 1491 of 4970  (388 s)
+      tabsift sigmoid vf_hard it 40: objective 2.8367  w mean 0.628 below 0.5 1699 of 4970  (513 s)
+      tabsift sigmoid vf_hard it 50: objective 3.0931  w mean 0.599 below 0.5 1935 of 4970  (638 s)
+      tabsift sigmoid vf_hard it 60: objective 3.3010  w mean 0.574 below 0.5 2102 of 4970  (763 s)
+      tabsift sigmoid vf_hard it 70: objective 3.4856  w mean 0.554 below 0.5 2206 of 4970  (888 s)
+      tabsift sigmoid vf_hard it 80: objective 3.6512  w mean 0.538 below 0.5 2290 of 4970  (1013 s)
+      tabsift sigmoid vf_hard it 90: objective 3.7822  w mean 0.522 below 0.5 2376 of 4970  (1138 s)
+      tabsift sigmoid vf_hard it 100: objective 3.9130  w mean 0.505 below 0.5 2480 of 4970  (1263 s)
+      tabsift sigmoid vf_hard it 110: objective 4.0381  w mean 0.490 below 0.5 2547 of 4970  (1388 s)
+      tabsift sigmoid vf_hard it 120: objective 4.1483  w mean 0.475 below 0.5 2627 of 4970  (1513 s)
+      tabsift sigmoid vf_hard it 130: objective 4.2541  w mean 0.461 below 0.5 2697 of 4970  (1638 s)
+      tabsift sigmoid vf_hard it 140: objective 4.3477  w mean 0.448 below 0.5 2772 of 4970  (1763 s)
+      tabsift sigmoid vf_hard it 150: objective 4.4493  w mean 0.436 below 0.5 2825 of 4970  (1887 s)
+      tabsift sigmoid vf_hard it 160: objective 4.5288  w mean 0.424 below 0.5 2883 of 4970  (2012 s)
+      tabsift sigmoid vf_hard it 170: objective 4.5991  w mean 0.413 below 0.5 2960 of 4970  (2136 s)
+      tabsift sigmoid vf_hard it 180: objective 4.6576  w mean 0.402 below 0.5 3021 of 4970  (2261 s)
+      tabsift sigmoid vf_hard it 190: objective 4.7128  w mean 0.393 below 0.5 3061 of 4970  (2385 s)
+      tabsift sigmoid vf_hard it 200: objective 4.7609  w mean 0.387 below 0.5 3094 of 4970  (2509 s)
+      tabsift sigmoid vf_hard it 210: objective 4.8071  w mean 0.380 below 0.5 3120 of 4970  (2633 s)
+      tabsift sigmoid vf_hard it 220: objective 4.8640  w mean 0.372 below 0.5 3163 of 4970  (2756 s)
+      tabsift sigmoid vf_hard it 230: objective 4.9213  w mean 0.364 below 0.5 3209 of 4970  (2880 s)
+      tabsift sigmoid vf_hard it 240: objective 4.9928  w mean 0.359 below 0.5 3240 of 4970  (3003 s)
+      tabsift sigmoid vf_hard it 250: objective 5.0858  w mean 0.353 below 0.5 3276 of 4970  (3127 s)
+      tabsift sigmoid vf_hard it 260: objective 5.1778  w mean 0.348 below 0.5 3283 of 4970  (3250 s)
+      tabsift sigmoid vf_hard it 270: objective 5.2977  w mean 0.342 below 0.5 3316 of 4970  (3374 s)
+      tabsift sigmoid vf_hard it 280: objective 5.4301  w mean 0.336 below 0.5 3346 of 4970  (3497 s)
+      tabsift sigmoid vf_hard it 290: objective 5.5210  w mean 0.329 below 0.5 3378 of 4970  (3621 s)
+    tabsift_adam_lr0.1_it300: V-selected adam_lr0.1_it300 at 300 (V log loss 0.334) of 14 candidates, 2 distinct kept sets
+    tabsift_adam_lr0.1_it300_cb: V-selected adam_lr0.1_it300 at 10 (V log loss 0.353) of 14 candidates, 14 distinct kept sets
+    tabsift_adam_lr0.1_it300_small: V-selected adam_lr0.1_it300 at 100 (V log loss 0.282) of 14 candidates, 14 distinct kept sets
+wandb: updating run metadata; uploading artifact run-9s2f5lv1-tablesrows-9lIiiA; uploading artifact run-9s2f5lv1-tablesv_selection-k7Tbqg; uploading artifact run-9s2f5lv1-overlayaccuracy_table-WIOArw; uploading artifact run-9s2f5lv1-overlaybalanced_accuracy_table-e_-8tg (+ 5 more)
+wandb: uploading artifact run-9s2f5lv1-tablesrows-9lIiiA; uploading artifact run-9s2f5lv1-tablesv_selection-k7Tbqg; uploading artifact run-9s2f5lv1-overlayaccuracy_table-WIOArw; uploading artifact run-9s2f5lv1-overlaybalanced_accuracy_table-e_-8tg; uploading artifact run-9s2f5lv1-overlayroc_auc_table-OJjvdw (+ 4 more)
+wandb: uploading artifact run-9s2f5lv1-overlaylog_loss_table-O5ihjw; uploading artifact run-9s2f5lv1-overlayobjective_table-sHq-lw; uploading artifact tabsift_adam_lr0.1_it300_gas-drift_R30_c5_s0
+wandb: uploading wandb-summary.json; uploading media/table/overlay/accuracy_table_300_4318d39ed715aaca8402.table.json; uploading media/table/overlay/roc_auc_table_300_a9d8486d5e74c29d44ac.table.json; uploading media/table/overlay/log_loss_table_300_a2354d558444580c7beb.table.json; uploading config.yaml (+ 6 more)
+wandb: 
+wandb: Run history:
+wandb:             accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████
+wandb:          accuracy/full_cb ▅▅▃▂▂▁▃▄▃▃▅▅▅▅▅▆▅▅▄▁▂▃▃▃▃▄▅▄▄▄▅▅▄▄▄▇▇█▆▆
+wandb:            accuracy/small ▁▃▆▇▇▇█▆▆▆█▇▄▅▅▇▆▆▆▅▅▃▄▅▄▄▄▅▅▅▄▅▆▅▆▆▅▅▂▃
+wandb:    balanced_accuracy/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁████
+wandb: balanced_accuracy/full_cb ▄▄▃▂▁▁▂▂▂▃▅▅▄▅▆▆▅▄▄▃▂▄▄▅▄▄▄▄▅▅▄▅▅▅▇▇▇██▆
+wandb:   balanced_accuracy/small ▁█▆▅▆▇▇▇▇▇▆▇▇▆▅▄▅▆▆▅▅▄▄▄▄▄▄▄▅▅▅▃▄▄▆▆▄▃▁▃
+wandb:             log_loss/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁███
+wandb:          log_loss/full_cb █▂▂▁▁▃▃▂▂▂▂▂▂▂▂▂▂▂▂▂▂▃▂▂▂▂▂▂▂▂▂▂▂▂▂▁▁▃▂▂
+wandb:            log_loss/small ▄▃▂▄▃▂▂▃▁▁▂▃▃▁▂▃▃▃▄▄▃▃▃▃▄▄▄▄▄▄▄▄▄▄▅▄▅▅▆█
+wandb:            n_removed/full ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                       +14 ...
+wandb: 
+wandb: Run summary:
+wandb:                                    accuracy/full 0.84
+wandb:                                 accuracy/full_cb 0.833
+wandb:                                   accuracy/small 0.768
+wandb:                           balanced_accuracy/full 0.84652
+wandb:                        balanced_accuracy/full_cb 0.84216
+wandb:                          balanced_accuracy/small 0.76783
+wandb:          final/tabsift_adam_lr0.1_it300/accuracy 0.84
+wandb: final/tabsift_adam_lr0.1_it300/balanced_accuracy 0.84652
+wandb:              final/tabsift_adam_lr0.1_it300/ckpt 300
+wandb:          final/tabsift_adam_lr0.1_it300/log_loss 0.9009
+wandb:                                              +74 ...
+wandb: 
+wandb: 🚀 View run tabsift_adam_lr0.1_it300_gas-drift_R30_c5_s0 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/9s2f5lv1
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 8 media file(s), 19 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_tinyv/wandb/run-20261026_082048-9s2f5lv1/logs
+run gas-drift_R30_c5_s0 tabsift_adam_lr0.1_it300: done in 3758 s  tabsift_adam_lr0.1_it300: acc 84.0 auc 97.6 ce 0.901 prec 0.671  tabsift_adam_lr0.1_it300_vsel: acc 84.0 auc 97.6 ce 0.901 prec 0.671  tabsift_adam_lr0.1_it300_cb: acc 83.3 auc 96.6 ce 0.899 prec 0.653  tabsift_adam_lr0.1_it300_cb_vsel: acc 82.8 auc 97.2 ce 0.840 prec 0.621  tabsift_adam_lr0.1_it300_small: acc 76.8 auc 96.4 ce 0.735 prec 0.303  tabsift_adam_lr0.1_it300_small_vsel: acc 85.3 auc 98.5 ce 0.389 prec 0.305
