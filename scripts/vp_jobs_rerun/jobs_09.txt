@@ -1,0 +1,9 @@
+ecommerce_shipping_hub30_c3_s3 m1
+coil2000_insurance_policies_rand45_c5_s3 sigmoid
+gas-drift_rand45_c3_s0 sigmoid
+gas-drift_hub30_c1_s0 sigmoid
+gas-drift_hub30_c5_s1 sigmoid
+heloc_hub30_c3_s3 m1
+coil2000_insurance_policies_hub30_c3_s3 m1
+gas-drift_rand45_c5_s4 m1
+gas-drift_hub30_c5_s0 m1

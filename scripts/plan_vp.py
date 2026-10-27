@@ -46,7 +46,7 @@ LAUNCHER = """#!/bin/bash
 # It stops before running anything unless the inputs, the model checkpoint, the code and a numeric preflight match
 # the main machine (scripts/attn_form_jobs/check_remote.py), and unless W&B accepts the API key in .env. Each job is
 # one W&B run, named <job>_<instance>, in project TFM_experiments, group {group}, with its result files as an artifact.
-# Rerunning resumes; logs in {logs}/. One script per GPU: a gas-drift or coil2000 attention job needs about 30-40 GiB.
+# Rerunning resumes; logs in {logs}/. One script per GPU, with about 47 GiB free: a gas-drift attention job peaks at 46 GiB.
 GPU=${{1:-0}}
 cd "$(dirname "$0")/{up}" || exit 1
 PY=${{PY:-"conda run -n tabfm --no-capture-output python"}}

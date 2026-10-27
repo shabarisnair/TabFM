@@ -1,0 +1,10 @@
+heloc_rand45_c1_s3 sigmoid
+heloc_hub30_c3_s4 sigmoid
+coil2000_insurance_policies_hub30_c1_s2 sigmoid
+gas-drift_hub30_c1_s1 sigmoid
+gas-drift_hub30_c5_s2 sigmoid
+heloc_rand45_c1_s3 m1
+heloc_hub30_c3_s4 m1
+coil2000_insurance_policies_rand45_c3_s2 m1
+gas-drift_rand45_c3_s2 m1
+gas-drift_hub30_c3_s1 m1

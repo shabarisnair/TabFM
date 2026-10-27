@@ -1,0 +1,8 @@
+heloc_rand45_c1_s4 sigmoid
+coil2000_insurance_policies_hub30_c3_s3 sigmoid
+students_dropout_rand45_c1_s4 m1
+gas-drift_rand45_c3_s1 sigmoid
+gas-drift_hub30_c1_s2 sigmoid
+gas-drift_rand45_c1_s1 m1
+gas-drift_hub30_c1_s0 m1
+gas-drift_hub30_c5_s1 m1

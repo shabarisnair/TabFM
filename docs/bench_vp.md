@@ -6,7 +6,8 @@ ROC-AUC, balanced accuracy and log loss. Removal precision and recall are report
 
 **Code:**
 - scripts/bench_vp.py: the benchmark;
-- scripts/plan_vp.py: the 10 scripts in scripts/vp_jobs/;
+- scripts/plan_vp.py: the 10 scripts in scripts/vp_jobs/, and the 10 in scripts/vp_jobs_rerun/ for the jobs the first
+  run left;
 - scripts/vp_tune.py and scripts/vp_tune_report.py: the tuning on development draws (results/tables/vp_tune/findings.md).
 
 ## Instances
@@ -104,6 +105,12 @@ bash scripts/vp_jobs/gpu_NN.sh [GPU]            # NN = 00..09, one script per GP
 bash scripts/vp_jobs/merge.sh <host>:<repo path> # bring a machine's results back (locks and temporary files left out)
 python scripts/bench_vp.py status
 ```
+
+**Rerun (2026-10-27):** the first run left 84 jobs, all sigmoid or m1.
+- 82 failed in both passes: out of GPU memory, on GPUs shared with other users' jobs. 2 were stopped by hand.
+- `plan_vp.py --scripts 10 --out scripts/vp_jobs_rerun` plans only the jobs without a result. scripts/vp_jobs_rerun/gpu_00-09.sh
+  hold these 84, about 2.7 H100-hours each; logs go to logs/vp_jobs_rerun/.
+- Its inputs.sha256 is the first run's.
 
 **Before running:**
 - Copy over: results/bench_vp/draws, datasets/, and the preflight inputs (results/attn_form/preflight_reference,
