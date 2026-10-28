@@ -8,7 +8,10 @@ ROC-AUC, balanced accuracy and log loss. Removal precision and recall are report
 - scripts/bench_vp.py: the benchmark;
 - scripts/plan_vp.py: the 10 scripts in scripts/vp_jobs/, and the 10 in scripts/vp_jobs_rerun/ for the jobs the first
   run left;
-- scripts/vp_tune.py and scripts/vp_tune_report.py: the tuning on development draws (results/tables/vp_tune/findings.md).
+- scripts/vp_tune.py and scripts/vp_tune_report.py: the tuning on development draws (results/tables/vp_tune/findings.md);
+- scripts/vp_tune_repair.py: the repair methods' (12, 13) development study, and its 7 GPU scripts in
+  scripts/vp_tune_repair_jobs/;
+- scripts/vp_cpu_workers.sh: runs benchmark jobs or that study on this machine's CPU (several workers share a list).
 
 ## Instances
 
@@ -46,6 +49,9 @@ v_acc).
 | 8 | knn_shapley, ieg | baselines | KNN-Shapley with its own rule, IEG with its top R% |
 | 9 | v_plus_p | refs | V + all of P |
 | 10 | oracle | refs | V + P's clean rows |
+| 11 | greedy_thr | greedy_thr | greedy at 1% per step, taking only rows with p(given label) > 0.5; stops when none qualifies |
+| 12 | vrepair | vrepair | P's labels unused: TabPFN(V) labels P, and the rows it is most sure of join V (rule: being tuned) |
+| 13 | grepair | grepair | the iterative form of 12: labelled rows join the trusted set 1% per step (selection and stop: being tuned) |
 
 **Details:**
 - **greedy (methods 4 and 5)** reproduces bench_tinyv's greedy_pct1, and its (1 - R)% set was checked identical to
@@ -78,6 +84,46 @@ v_acc).
   - **knn_shapley:** its own rule, removing the rows of negative KNN-Shapley value.
   - **ieg:** its top R% by score.
   - **Also recorded:** knn_shapley_R and ieg_own (the rows IEG relabels, removed).
+
+## Methods 11-13 (added 2026-10-27, at the user's request)
+
+**Method 11, greedy_thr (specified by the user):**
+- As greedy (methods 4 and 5), but each step takes min(ceil(1% of |P|), the number of pool rows whose given label TabPFN
+  with V + the accepted rows finds more probable than 0.5), most probable first.
+- It stops at the first step where no row qualifies. R is not used.
+- **Expected:** it stops near the agreement collapse that vp_tune found at about 50% (rand45) and 57% (hub30) of P kept.
+  As a stopping rule, that point was the worst there (log loss 3.83).
+
+**Methods 12 and 13, the repair methods:**
+- **They never look at P's given labels.** P is treated as unlabelled, and TabPFN labels it from V.
+- **12, vrepair (one shot):** TabPFN with V alone predicts every row of P. A subset chosen by confidence (max probability)
+  joins V with the predicted labels.
+- **13, grepair (iterative):** the trusted set starts as V. Every step, TabPFN with V + the rows labelled so far predicts
+  the rest of P. The ceil(1% of |P|) rows it is most sure of then join with their predicted labels, which stay fixed.
+- **Identical under both poisonings:** V and P's rows are the same under rand45 and hub30. The second instance of a pair
+  copies the first's result (bench_vp.repair_twin) and recomputes only the poisoning-dependent statistics.
+- **Free choices:** the subset rule of 12, and the selection and stop of 13. They are set from a development study
+  (below) in bench_vp.REPAIR. Until then the two jobs refuse to run (REPAIR_TUNED).
+  - **Why counts rather than thresholds are expected to win:** TabPFN(V)'s confidence is low and uneven (mean max
+    probability 0.38-0.72; almost no row of P above 0.9). Along 13's path, the batches' confidence reaches 1.0 within a
+    few steps, because the context agrees with itself.
+
+**The development study (scripts/vp_tune_repair.py):**
+- **Draws:** vp_tune's 36 development draws, (dataset, c, seed 100/101).
+- **Units:** 72 = each draw x two selections for 13 (global, or split over the predicted classes in proportion). The
+  global unit also scores 12's candidates:
+  - the top 10-100% of P by confidence;
+  - the top 10-70% of each predicted class;
+  - confidence above 0.6-0.9.
+- **13's records:** its path runs until P is used up, with test metrics every 5% of P, so that every stop can be scored.
+- **Running:** scripts/vp_tune_repair_jobs/gpu_00-06.sh, one per GPU, about 11 min each on a free H100.
+  - Copy over: results/vp_tune/draws, scripts/vp_tune_repair.py, scripts/vp_tune_repair_jobs/ and the changed
+    scripts/bench_vp.py.
+  - Results go to results/vp_tune/repair/. merge.sh brings them back.
+  - `python scripts/vp_tune_repair.py report` writes results/tables/vp_tune/report_repair.md.
+- **Status (2026-10-27):** CPU runs of the study and of method 11 were started here and stopped by the user before
+  anything finished; their partial files were removed. The study goes to the user's 7 GPUs. Methods 11-13's benchmark
+  runs follow it.
 
 ## Intermediate records
 

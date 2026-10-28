@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 """Plan the V + P benchmark (scripts/bench_vp.py) as N bash scripts for GPUs on machines that do not share a disk.
 
-Jobs: the 180 instances (6 datasets x rand45 / hub30 x c = 1, 3, 5 x seeds 0-4) x refs, vfilter, greedy, baselines,
-sigmoid and m1. Cost model (seconds on an H100, measured: COST below) per dataset: sigmoid 70 and m1 400 iterations
-at the dataset's seconds per iteration (records included), greedy its measured run, and the one-shot jobs a few
+Jobs: the 180 instances (6 datasets x rand45 / hub30 x c = 1, 3, 5 x seeds 0-4) x bench_vp.JOBS (refs, vfilter,
+greedy, baselines, sigmoid, m1, greedy_thr, vrepair, grepair), only those without a result. Cost model (seconds on an
+H100, measured: COST below) per dataset: sigmoid 70 and m1 400 iterations at the dataset's seconds per iteration
+(records included), greedy its measured run (greedy_thr and grepair scaled from it), and the one-shot jobs a few
 seconds. Jobs are packed longest first onto the least-loaded script; each script runs its cheapest jobs first.
 
 Each gpu_XX.sh takes the GPU index as its argument, checks the machine first (scripts/attn_form_jobs/check_remote.py
@@ -95,6 +96,10 @@ def cost(tag: str, job: str) -> float:
         return V.M1["steps"] * cc["iter"] + 30.0
     if job == "greedy":
         return cc["greedy"] * (0.8 if attack == "rand45" else 1.0)  # rand45 stops at 65 steps, hub30 at 80
+    if job == "greedy_thr":  # stops near the collapse (about 50-57% of P); a step costs in proportion to the context
+        return cc["greedy"] * 0.5
+    if job == "grepair":  # to V.REPAIR's stop, from about 80% for greedy's whole run: cost grows with its square
+        return cc["greedy"] * (V.REPAIR["greedy"]["until"] / 0.8) ** 2 * 1.2
     return cc["oneshot"] / 3 + 10.0
 
 

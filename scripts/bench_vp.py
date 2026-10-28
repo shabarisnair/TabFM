@@ -35,16 +35,33 @@ Jobs (one per instance; the rows each reports, numbered as the benchmark's metho
              iteration (m1_last) and at the held-out choice (m1_sel)
   M1's held-out part of V: c = 3 and 5, one row per class (gate_context.split_holdout); the rest is fitted. c = 1:
   none (a class would lose its only row), so m1_sel is the last iteration there.
+  greedy_thr 11 greedy_thr: greedy at 1% per step with a threshold: every step only the rows whose given label TabPFN
+               with V + the accepted rows finds more probable than 0.5 may join, the ceil(1% of |P|) most probable of
+               them; it stops at the first step where none qualifies. R is not used.
+  The repair methods never look at P's given labels: P is unlabelled, and TabPFN labels it. With V and P's rows the
+  same for both poisonings (build_draw), they give the same context under rand45 and hub30, so the second of the two
+  instances copies the first's result (repair_twin) and recomputes only what depends on the poisoning.
+  vrepair    12 vrepair: TabPFN with V alone as the context predicts every row of P; the rows it is most sure of
+               (REPAIR["one_shot"], tuned on development draws: scripts/vp_tune_repair.py) join V with the predicted
+               labels
+  grepair    13 grepair: the iterative form: the trusted set starts as V; every step TabPFN with V + the rows labelled
+               so far predicts the rest, and the ceil(1% of |P|) it is most sure of join with their predicted labels
+               (REPAIR["greedy"]: how they are chosen and where it stops, tuned on development draws)
 Intermediate records (in the result JSON and, with --wandb-mode, in a W&B run per job):
   greedy     every step: the next batch's and the pool's statistics (TabPFN's probability of the given label, the
              agreement of the given label with its prediction, margin, entropy, the true poisoned shares); the test
              metrics every 2 steps and at both stops
+  greedy_thr as greedy, with the number of pool rows above the threshold; the test metrics every 2 steps and at the stop
+  grepair    every step: the batch's and the pool's confidence, the accuracy of the labels given (against the true
+             labels, never used by the method); the test metrics every REPAIR["greedy"]["test_every"] steps and at
+             the stop
   sigmoid/m1 every iteration up to 10, then every 5: the fitted V's log loss (the training objective), the deployment's
              test metrics, the weights' AUROC against the poison; M1 also its held-out V's log loss / accuracy /
              ROC-AUC, its removal precision and its swaps since its start
 
     python scripts/bench_vp.py draws                                  # once, on the main machine (CPU)
     python scripts/bench_vp.py run --device cuda:0 [--job-list FILE] [--jobs sigmoid m1] [--wandb-mode online]
+    python scripts/bench_vp.py run --device cpu --threads 8 ...      # on CPU: torch threads from --threads
     python scripts/bench_vp.py status
 Results: results/bench_vp/runs/<instance>/<job>.json (+ .npz); BENCH_VP_ROOT moves the root (for tests).
 """
@@ -72,10 +89,18 @@ ATTACKS = {"rand45": ("label-flip-bernoulli", 45.0), "hub30": ("hub-flip-local",
 DATASETS = tuple(B.DATASETS)
 CS = (1, 3, 5)
 SEEDS = (0, 1, 2, 3, 4)
-JOBS = ("refs", "vfilter", "greedy", "baselines", "sigmoid", "m1")
+JOBS = ("refs", "vfilter", "greedy", "baselines", "sigmoid", "m1", "greedy_thr", "vrepair", "grepair")
+REPAIR_JOBS = ("vrepair", "grepair")
 THR = 0.5          # vfilter_thr: p(given label | V) < THR / K removed
 EXTRA_STEPS = 10   # greedy_R10: steps past (1 - R)%
-TEST_EVERY = 2     # greedy: test metrics every this many steps
+TEST_EVERY = 2     # greedy, greedy_thr: test metrics every this many steps
+GREEDY_THR = 0.5   # greedy_thr: a row may join only while p(given label | V + the accepted rows) > GREEDY_THR
+# the repair methods: how the rows TabPFN is most sure of are chosen (by its max probability); to be set from
+# scripts/vp_tune_repair.py's development runs (results/tables/vp_tune/report_repair.md). Until then REPAIR holds
+# placeholders and the two repair jobs refuse to run (REPAIR_TUNED).
+REPAIR = {"one_shot": {"rule": "top", "x": 1.0},
+          "greedy": {"select": "global", "step": 0.01, "until": 1.0, "test_every": 5}}
+REPAIR_TUNED = False
 DENSE, EVERY = 10, 5  # sigmoid / m1: records at every iteration below DENSE, then every EVERY
 SIGMOID = dict(steps=70, lr=0.01, t_kept=4.0, t_removed=-30.0, fixed_it=10)  # fixed_it: the deployed iteration (tuned)
 M1 = dict(steps=400, lr=0.2, probe=0.05)
@@ -201,8 +226,8 @@ class Recorder:
             for r in res.get("rows", []):
                 self.run.summary.update({f"final/{r['name']}/{m}": v for m, v in r["test"].items()})
                 self.run.summary.update({f"final/{r['name']}/{m}": r[m] for m in
-                                         ("prec", "recall", "share_removed", "kept_pois_share", "it", "v_ce", "v_acc", "train_ce")
-                                         if r.get(m) is not None})
+                                         ("prec", "recall", "share_removed", "kept_pois_share", "it", "v_ce", "v_acc", "train_ce",
+                                          "share_kept", "label_acc", "steps") if r.get(m) is not None})
             art = wandb.Artifact(f"vp-{self.run.name}", type="vp-run")
             for f in files:
                 if f.exists():
@@ -280,6 +305,232 @@ def job_greedy(bd: B.BenchData, d: dict, rec: Recorder) -> tuple[dict, dict]:
         if acc_now == stop5:
             rows.append({"name": "greedy_R10", "test": st["test"], "steps": step} | removal_stats(d, ~in_T) | st["train"])
     return {"rows": rows, "steps": steps, "test_start": test0, "m": m, "stops": [stop4, stop5]}, {"pos": pos}
+
+
+def job_greedy_thr(bd: B.BenchData, d: dict, rec: Recorder) -> tuple[dict, dict]:
+    """Method 11: greedy at 1% per step as job_greedy, but each step takes only rows with p(given label) > GREEDY_THR,
+    at most ceil(1% of |P|) of them, and it stops at the first step where none qualifies (or P is used up)."""
+    n, K, yg = d["n"], d["K"], d["y_given"]
+    m = math.ceil(0.01 * n)
+    in_T = np.zeros(n, dtype=bool)
+    pos = np.full(n, n, dtype=np.int64)
+    test0 = B.metrics(bd.probs(d["Xv"], d["yv"], bd.Xt, bd.yt), bd.yt)
+    steps, step, last = [], 0, {"test": test0, "train": v_fit(bd, d, in_T)}
+    rec.log(flat("test", test0) | {"greedy/accepted_share": 0.0}, step=0)
+    while not in_T.all():
+        accepted = int(in_T.sum())
+        pool = np.flatnonzero(~in_T)
+        acc_rows = np.flatnonzero(in_T)
+        X_ctx = torch.cat([d["Xc"][bd.idx(acc_rows)], d["Xv"]])
+        y_ctx = np.concatenate([yg[acc_rows], d["yv"]])
+        probs = bd.probs(X_ctx, y_ctx, d["Xc"][bd.idx(pool)], yg[pool])
+        p = probs[np.arange(len(pool)), yg[pool]]
+        n_above = int((p > GREEDY_THR).sum())
+        size = min(m, n_above)
+        st = {"step": step + 1, "accepted_before": accepted, "n_above": n_above, "size": size,
+              "pool": batch_stats(probs, yg[pool], K), "pool_pois": float(d["pois"][pool].mean())}
+        if size == 0:  # no row left whose given label is more probable than not: stop
+            steps.append(st)
+            break
+        # most probable first, as job_greedy: the rows above the threshold are a prefix of this order
+        order = np.argsort(-np.log(np.clip(p, 1e-12, None)), kind="stable")[:size]
+        batch = pool[order]
+        step += 1
+        st |= {"batch": batch_stats(probs[order], yg[batch], K), "batch_pois": float(d["pois"][batch].mean())}
+        in_T[batch] = True
+        pos[batch] = accepted + np.arange(size)
+        st["kept_pois_share"] = float(d["pois"][in_T].mean())
+        if step % TEST_EVERY == 0:
+            st["test"] = B.test_scores(bd, d, in_T)
+            st["train"] = v_fit(bd, d, in_T)
+            last = {"test": st["test"], "train": st["train"], "step": step}
+        steps.append(st)
+        rec.log({"greedy/accepted_share": float(in_T.mean()), "greedy/kept_pois_share": st["kept_pois_share"],
+                 "greedy/batch_pois": st["batch_pois"], "greedy/n_above": n_above} | flat("batch", st["batch"])
+                | flat("pool", st["pool"]) | (flat("test", st["test"]) | flat("train", st["train"]) if "test" in st else {}),
+                step=step)
+    if last.get("step") != step:  # the test metrics at the stop, unless that state was just scored
+        last = {"test": B.test_scores(bd, d, in_T) if in_T.any() else test0, "train": v_fit(bd, d, in_T), "step": step}
+        rec.log(flat("test", last["test"]) | flat("train", last["train"]), step=step)
+    row = {"name": "greedy_thr", "test": last["test"], "steps": step} | removal_stats(d, ~in_T) | last["train"]
+    return {"rows": [row], "steps": steps, "test_start": test0, "m": m, "threshold": GREEDY_THR}, {"pos": pos}
+
+
+# ---------------------------------------------------------------- the repair methods (P's given labels unused)
+
+def predict_pool(bd: B.BenchData, d: dict, rows: np.ndarray, labels: np.ndarray, pool: np.ndarray) -> np.ndarray:
+    """TabPFN's class probabilities for P's rows `pool`, with V + P's rows `rows` (labelled `labels`) as the context."""
+    X_ctx = torch.cat([d["Xc"][bd.idx(rows)], d["Xv"]])
+    return bd.probs(X_ctx, np.concatenate([np.asarray(labels, dtype=np.int64), d["yv"]]), d["Xc"][bd.idx(pool)])
+
+
+def class_quota(m: int, pred: np.ndarray, K: int) -> np.ndarray:
+    """m split over the predicted classes in proportion to their counts in pred (largest remainder)."""
+    cnt = np.bincount(pred, minlength=K).astype(np.float64)
+    share = m * cnt / max(cnt.sum(), 1.0)
+    q = np.floor(share).astype(np.int64)
+    for j in np.argsort(-(share - q), kind="stable")[: m - int(q.sum())]:
+        q[j] += 1
+    return np.minimum(q, cnt.astype(np.int64))
+
+
+def most_sure(Q: np.ndarray, size: int, select: str) -> np.ndarray:
+    """Positions (into Q's rows) of the `size` rows TabPFN is most sure of (max probability, ties in file order):
+    over all rows (global) or within each predicted class, in proportion to the classes' predicted counts (cls)."""
+    conf, pred = Q.max(1), Q.argmax(1)
+    order = np.argsort(-conf, kind="stable")
+    if select == "global":
+        return order[:size]
+    out = [order[pred[order] == j][:q] for j, q in enumerate(class_quota(size, pred, Q.shape[1]))]
+    return np.concatenate(out) if out else np.zeros(0, dtype=np.int64)
+
+
+def one_shot_select(Q: np.ndarray, rule: str, x: float) -> np.ndarray:
+    """The rows of P (a mask) that the one-shot repair labels: the top x of P by confidence (top), the top x of each
+    predicted class (cls), or the rows with confidence > x (thr)."""
+    n = len(Q)
+    keep = np.zeros(n, dtype=bool)
+    if rule == "thr":
+        return Q.max(1) > x
+    keep[most_sure(Q, int(round(x * n)), "global" if rule == "top" else "cls")] = True
+    return keep
+
+
+def label_acc_stats(d: dict, keep: np.ndarray, labels: np.ndarray) -> dict:
+    """What a repair method puts in the context from P: how many rows, and the accuracy of the labels it gives them
+    (against the true labels, never seen by the method). The same under both poisonings."""
+    ok = labels[keep] == d["y_true"][keep]
+    return {"n_kept": int(keep.sum()), "share_kept": float(keep.mean()),
+            "label_acc": float(ok.mean()) if keep.any() else None,
+            "kept_wrong_share": float(1 - ok.mean()) if keep.any() else None}
+
+
+def label_stats(d: dict, keep: np.ndarray, labels: np.ndarray) -> dict:
+    """label_acc_stats, and against this poisoning: the poisoned share of the kept rows' given labels, and how many
+    poisoned rows got their true label back."""
+    return label_acc_stats(d, keep, labels) | {
+        "kept_pois_share": float(d["pois"][keep].mean()) if keep.any() else None,
+        "repaired": int((keep & d["pois"] & (labels == d["y_true"])).sum())}
+
+
+def repair_path(bd: B.BenchData, d: dict, select: str, step: float, until: float, test_every: int,
+                taus: tuple = (0.5, 0.6, 0.7, 0.8, 0.9), rec: Recorder | None = None) -> dict:
+    """The iterative repair: the trusted set starts as V; every step TabPFN with V + the rows labelled so far predicts
+    the pool (the rest of P), and the m = ceil(step x |P|) rows it is most sure of (most_sure: global or cls) join with
+    their predicted labels, until round(until x |P|) rows are labelled. Test metrics of V + the labelled rows every
+    test_every steps and at the end."""
+    n, K = d["n"], d["K"]
+    m = math.ceil(step * n)
+    target = min(n, int(round(until * n)))
+    in_T = np.zeros(n, dtype=bool)
+    lab = np.full(n, -1, dtype=np.int64)
+    pos = np.full(n, n, dtype=np.int64)
+    states = [{"step": 0, "accepted": 0, "test": B.metrics(bd.probs(d["Xv"], d["yv"], bd.Xt, bd.yt), bd.yt)}]
+    steps, step_no = [], 0
+    while int(in_T.sum()) < target:
+        accepted = int(in_T.sum())
+        pool = np.flatnonzero(~in_T)
+        rows = np.flatnonzero(in_T)
+        Q = predict_pool(bd, d, rows, lab[rows], pool)
+        conf, pred = Q.max(1), Q.argmax(1)
+        size = min(m, target - accepted)
+        pick = most_sure(Q, size, select)
+        batch = pool[pick]
+        step_no += 1
+        y_pool = d["y_true"][pool]
+        st = {"step": step_no, "accepted_before": accepted, "size": int(len(batch)),
+              "batch": {"conf_mean": float(conf[pick].mean()), "conf_min": float(conf[pick].min()),
+                        "label_acc": float((pred[pick] == y_pool[pick]).mean()),
+                        "classes": np.bincount(pred[pick], minlength=K).tolist()},
+              "pool": {"conf_mean": float(conf.mean()), "acc": float((pred == y_pool).mean()),
+                       "classes": np.bincount(pred, minlength=K).tolist()}
+              | {f"above{t:g}": int((conf > t).sum()) for t in taus}}
+        in_T[batch] = True
+        lab[batch] = pred[pick]
+        pos[batch] = accepted + np.arange(len(batch))
+        st["label_acc_T"] = float((lab[in_T] == d["y_true"][in_T]).mean())
+        if step_no % test_every == 0 or int(in_T.sum()) >= target:
+            states.append({"step": step_no, "accepted": int(in_T.sum()), "test": B.test_scores(bd, d, in_T, lab)}
+                          | label_acc_stats(d, in_T, lab))
+        steps.append(st)
+        if rec is not None:
+            rec.log({"repair/accepted_share": float(in_T.mean()), "repair/label_acc_T": st["label_acc_T"],
+                     "repair/batch_label_acc": st["batch"]["label_acc"], "repair/batch_conf": st["batch"]["conf_mean"],
+                     "repair/pool_conf": st["pool"]["conf_mean"], "repair/pool_acc": st["pool"]["acc"]}
+                    | (flat("test", states[-1]["test"]) if states[-1]["step"] == step_no else {}), step=step_no)
+    return {"m": m, "target": target, "steps": steps, "states": states, "in_T": in_T, "lab": lab, "pos": pos}
+
+
+def twin_tag(tag: str) -> str:
+    ds, attack, c, seed = parse_tag(tag)
+    return tag_of(ds, next(a for a in ATTACKS if a != attack), c, seed)
+
+
+def repair_twin(d: dict, job: str) -> tuple[dict, dict] | None:
+    """The other poisoning's finished result of a repair job, when its V and P rows are this instance's: (result,
+    arrays), else None."""
+    other = twin_tag(d["tag"])
+    src = ROOT / "runs" / other / f"{job}.json"
+    if not src.exists() or not src.with_suffix(".npz").exists():
+        return None
+    z = np.load(ROOT / "draws" / f"{other}.npz")
+    if not (np.array_equal(z["v_rows"], d["v_rows"]) and np.array_equal(z["ctx_rows"], d["ctx_rows"])):
+        return None
+    arrays = dict(np.load(src.with_suffix(".npz")))
+    return json.loads(src.read_text()), arrays
+
+
+def require_tuned() -> None:
+    if not REPAIR_TUNED:
+        raise RuntimeError("REPAIR holds placeholders: set it from the development study (scripts/vp_tune_repair.py) "
+                           "and REPAIR_TUNED = True first")
+
+
+def job_vrepair(bd: B.BenchData, d: dict, rec: Recorder) -> tuple[dict, dict]:
+    """Method 12: TabPFN with V alone predicts P; the rows chosen by REPAIR["one_shot"] join V, predicted labels."""
+    require_tuned()
+    cfg = REPAIR["one_shot"]
+    twin = repair_twin(d, "vrepair")
+    if twin is not None:  # the same context as the other poisoning's instance: its test metrics hold here
+        res, arrays = twin
+        keep, lab = arrays["keep"].astype(bool), arrays["labels"].astype(np.int64)
+        row = {"name": "vrepair", "test": res["rows"][0]["test"]} | label_stats(d, keep, lab) | v_fit_labels(bd, d, keep, lab)
+        return {"rows": [row], "config": cfg, "copied_from": twin_tag(d["tag"])}, arrays
+    Q = predict_pool(bd, d, np.zeros(0, dtype=np.int64), np.zeros(0, dtype=np.int64), np.arange(d["n"]))
+    keep = one_shot_select(Q, cfg["rule"], cfg["x"])
+    lab = Q.argmax(1).astype(np.int64)
+    test = B.test_scores(bd, d, keep, lab) if keep.any() else B.metrics(bd.probs(d["Xv"], d["yv"], bd.Xt, bd.yt), bd.yt)
+    row = {"name": "vrepair", "test": test} | label_stats(d, keep, lab) | v_fit_labels(bd, d, keep, lab)
+    rec.log(flat("test", test) | {"repair/share_kept": row["share_kept"], "repair/label_acc": row["label_acc"]}, step=0)
+    return {"rows": [row], "config": cfg}, {"Q": Q.astype(np.float32), "keep": keep, "labels": lab.astype(np.int16)}
+
+
+def job_grepair(bd: B.BenchData, d: dict, rec: Recorder) -> tuple[dict, dict]:
+    """Method 13: the iterative repair (repair_path) with REPAIR["greedy"]."""
+    require_tuned()
+    cfg = REPAIR["greedy"]
+    twin = repair_twin(d, "grepair")
+    if twin is not None:
+        res, arrays = twin
+        keep, lab = arrays["pos"] < d["n"], arrays["labels"].astype(np.int64)
+        row = {"name": "grepair", "test": res["rows"][0]["test"], "steps": res["rows"][0]["steps"]} \
+            | label_stats(d, keep, lab) | v_fit_labels(bd, d, keep, lab)
+        return {"rows": [row], "steps": res["steps"], "states": res["states"], "m": res["m"], "config": cfg,
+                "copied_from": twin_tag(d["tag"])}, arrays
+    path = repair_path(bd, d, cfg["select"], cfg["step"], cfg["until"], cfg["test_every"], rec=rec)
+    keep, lab = path["in_T"], path["lab"]
+    row = {"name": "grepair", "test": path["states"][-1]["test"], "steps": len(path["steps"])} \
+        | label_stats(d, keep, lab) | v_fit_labels(bd, d, keep, lab)
+    return ({"rows": [row], "steps": path["steps"], "states": path["states"], "m": path["m"], "config": cfg},
+            {"pos": path["pos"], "labels": lab.astype(np.int16)})
+
+
+def v_fit_labels(bd: B.BenchData, d: dict, keep: np.ndarray, labels: np.ndarray) -> dict:
+    """v_fit for a repaired subset: V's log loss and accuracy with the labelled rows of P alone as the context."""
+    if not keep.any():
+        return {"v_ce": None, "v_acc": None}
+    ce, acc = B.v_score(bd, d, keep, labels)
+    return {"v_ce": float(ce) if math.isfinite(ce) else None, "v_acc": float(acc)}
 
 
 def job_baselines(bd: B.BenchData, d: dict, rec: Recorder, threads: int) -> tuple[dict, dict]:
@@ -442,7 +693,9 @@ def learn(bd: B.BenchData, d: dict, rec: Recorder, kind: str, steps_override: in
 JOB_CONFIG = {"refs": {}, "vfilter": {"threshold": f"{THR} / K"}, "greedy": {"step": "ceil(1% of |P|)", "extra_steps": EXTRA_STEPS,
               "test_every": TEST_EVERY}, "baselines": {"defaults": {m: B.DEFAULTS[m] for m in BASELINE_PRIMARY},
               "primary_forms": BASELINE_PRIMARY}, "sigmoid": SIGMOID | {"dense": DENSE, "every": EVERY},
-              "m1": M1 | {"dense": DENSE, "every": EVERY}}
+              "m1": M1 | {"dense": DENSE, "every": EVERY},
+              "greedy_thr": {"step": "ceil(1% of |P|)", "threshold": GREEDY_THR, "test_every": TEST_EVERY},
+              "vrepair": REPAIR["one_shot"], "grepair": REPAIR["greedy"]}
 
 
 def run_job(bd: B.BenchData, d: dict, job: str, a) -> tuple[dict, dict]:
@@ -457,6 +710,12 @@ def run_job(bd: B.BenchData, d: dict, job: str, a) -> tuple[dict, dict]:
             res, arrays = job_greedy(bd, d, rec)
         elif job == "baselines":
             res, arrays = job_baselines(bd, d, rec, a.threads)
+        elif job == "greedy_thr":
+            res, arrays = job_greedy_thr(bd, d, rec)
+        elif job == "vrepair":
+            res, arrays = job_vrepair(bd, d, rec)
+        elif job == "grepair":
+            res, arrays = job_grepair(bd, d, rec)
         else:
             res, arrays = learn(bd, d, rec, job, a.steps_override)
     except BaseException:
@@ -488,11 +747,15 @@ def worker(a) -> None:
         todo = [(t, j) for t, j in todo if j in a.jobs]
     if a.datasets:
         todo = [(t, j) for t, j in todo if parse_tag(t)[0] in a.datasets]
+    if a.device == "cpu":
+        torch.set_num_threads(a.threads)
     bd = None
     for tag, job in todo:
         out = ROOT / "runs" / tag / f"{job}.json"
         if out.exists():
             continue
+        if job in REPAIR_JOBS and (ROOT / "runs" / twin_tag(tag) / f"{job}.lock").exists():
+            continue  # the other poisoning's instance is being run: copy it on a later pass instead
         out.parent.mkdir(parents=True, exist_ok=True)
         lock = out.with_suffix(".lock")
         if not B.claim(lock):
@@ -553,7 +816,7 @@ def main(argv=None) -> None:
     ap.add_argument("--job-list", type=Path, default=None, help="lines '<instance> <job>', run in this order")
     ap.add_argument("--jobs", nargs="+", choices=JOBS, default=None)
     ap.add_argument("--datasets", nargs="+", choices=DATASETS, default=None)
-    ap.add_argument("--threads", type=int, default=8, help="CPU threads for the baselines")
+    ap.add_argument("--threads", type=int, default=8, help="CPU threads for the baselines, and for every job on --device cpu")
     ap.add_argument("--steps-override", type=int, default=None, help="testing only: iterations of sigmoid / m1")
     ap.add_argument("--wandb-mode", default="disabled", choices=["disabled", "offline", "online"])
     ap.add_argument("--wandb-project", default="TFM_experiments")

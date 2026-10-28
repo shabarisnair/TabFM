@@ -1,0 +1,368 @@
+run heloc_rand45_c5_s3 sigmoid: start (n 4990, k 2246, V 10, flipped 2266)
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+wandb: Currently logged in as: shabari_ut (shabari_ut-university-of-texas-at-austin) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_vp/wandb/run-20261027_084144-kr3ieudo
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run sigmoid_heloc_rand45_c5_s3
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/kr3ieudo
+      sigmoid it 0: fitted-V CE 0.0033  test auc 0.518  (2 s)
+      sigmoid it 50: fitted-V CE 0.0007  test auc 0.520  (64 s)
+wandb: updating run metadata; uploading artifact vp-sigmoid_heloc_rand45_c5_s3
+wandb: uploading artifact vp-sigmoid_heloc_rand45_c5_s3
+wandb: uploading data
+wandb: 
+wandb: Run history:
+wandb:             test/acc █▄▆▆▄▄▆██▆▆▁▄▃▆▄▁▁▁▁▁▃▁
+wandb:             test/auc ▁▁▂▃▃▄▄▄▄▄▄▅▆▆▆▇███▆▄▄▄
+wandb:            test/bacc █▄▆▆▄▄▆██▆▆▁▅▃▇▅▁▁▁▁▁▃▁
+wandb:              test/ce ▇▇▆▆▅▅▅▄▄▄▃▂▂▁▁▂▂▃▄▇█▇▅
+wandb:      train/fitted_ce ██▇▇▇▇▆▆▆▆▅▄▃▃▂▂▂▂▁▁▁▁▁
+wandb: weights/auroc_poison ▁▇▇▇▇▇█████▇▆▆▅▅▄▄▄▄▄▃▃
+wandb: weights/n_below_half ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: weights/w_share_pois ██▇▇▇▆▆▆▆▅▅▃▂▂▁▁▁▁▁▁▁▂
+wandb: 
+wandb: Run summary:
+wandb:       final/sigmoid/acc 0.506
+wandb:       final/sigmoid/auc 0.51894
+wandb:      final/sigmoid/bacc 0.5024
+wandb:        final/sigmoid/ce 3.89598
+wandb:        final/sigmoid/it 10
+wandb:  final/sigmoid/train_ce 0.00229
+wandb:  final/sigmoid_last/acc 0.503
+wandb:  final/sigmoid_last/auc 0.51888
+wandb: final/sigmoid_last/bacc 0.49976
+wandb:   final/sigmoid_last/ce 3.90456
+wandb:                     +16 ...
+wandb: 
+wandb: 🚀 View run sigmoid_heloc_rand45_c5_s3 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/kr3ieudo
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 0 media file(s), 3 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_vp/wandb/run-20261027_084144-kr3ieudo/logs
+run heloc_rand45_c5_s3 sigmoid: done in 93 s  sigmoid: auc 0.519 bacc 0.502 ce 3.896  sigmoid_last: auc 0.519 bacc 0.500 ce 3.905  sigmoid_start: auc 0.518 bacc 0.503 ce 3.918
+run coil2000_insurance_policies_hub30_c3_s4 sigmoid: start (n 4994, k 1498, V 6, flipped 1498)
+wandb: setting up run w7dll8gi
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_vp/wandb/run-20261027_084316-w7dll8gi
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run sigmoid_coil2000_insurance_policies_hub30_c3_s4
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/w7dll8gi
+      sigmoid it 0: fitted-V CE 0.0060  test auc 0.498  (5 s)
+      sigmoid it 50: fitted-V CE 0.0033  test auc 0.497  (216 s)
+wandb: updating run metadata; uploading artifact vp-sigmoid_coil2000_insurance_policies_hub30_c3_s4
+wandb: uploading artifact vp-sigmoid_coil2000_insurance_policies_hub30_c3_s4
+wandb: uploading history steps 21-22, summary
+wandb: 
+wandb: Run history:
+wandb:             test/acc ▂▂▂▂▄▄▄▅▅▇▅▅▇▇█▇▄▄▂▂▂▂▁
+wandb:             test/auc ▆▇▇▇▇▇▇▆▆▇▇█▇▇▆▆▅▅▅▄▃▂▁
+wandb:            test/bacc ▂▂▂▂▄▄▄▅▅▇▅▅▇▇█▇▄▄▂▂▂▂▁
+wandb:              test/ce ▁▁▁▁▁▁▂▂▂▂▂▂▃▃▄▄▅▅▆▆▇▇█
+wandb:      train/fitted_ce ███▇▇▇▇▇▆▆▆▅▅▄▄▃▃▂▂▂▂▁▁
+wandb: weights/auroc_poison █▇▇▇▇▆▆▅▅▄▃▁▁▂▃▄▅▅▆▆▆▆▇
+wandb: weights/n_below_half ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: weights/w_share_pois ▁▁▂▂▂▂▂▃▃▃▃▅▆▇███▇▆▅▃▁
+wandb: 
+wandb: Run summary:
+wandb:       final/sigmoid/acc 0.725
+wandb:       final/sigmoid/auc 0.49829
+wandb:      final/sigmoid/bacc 0.49643
+wandb:        final/sigmoid/ce 0.7815
+wandb:        final/sigmoid/it 10
+wandb:  final/sigmoid/train_ce 0.00516
+wandb:  final/sigmoid_last/acc 0.722
+wandb:  final/sigmoid_last/auc 0.49624
+wandb: final/sigmoid_last/bacc 0.49484
+wandb:   final/sigmoid_last/ce 0.80498
+wandb:                     +16 ...
+wandb: 
+wandb: 🚀 View run sigmoid_coil2000_insurance_policies_hub30_c3_s4 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/w7dll8gi
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 0 media file(s), 3 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_vp/wandb/run-20261027_084316-w7dll8gi/logs
+run coil2000_insurance_policies_hub30_c3_s4 sigmoid: done in 297 s  sigmoid: auc 0.498 bacc 0.496 ce 0.782  sigmoid_last: auc 0.496 bacc 0.495 ce 0.805  sigmoid_start: auc 0.498 bacc 0.495 ce 0.778
+run students_dropout_rand45_c5_s3 m1: start (n 2985, k 1343, V 15, flipped 1382)
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_vp/wandb/run-20261027_084812-47rfm4jt
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run m1_students_dropout_rand45_c5_s3
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/47rfm4jt
+      m1 it 0: fitted-V CE 2.1051  test auc 0.651  (1 s)
+      m1 it 50: fitted-V CE 1.2480  test auc 0.656  (39 s)
+      m1 it 100: fitted-V CE 0.8894  test auc 0.674  (75 s)
+      m1 it 150: fitted-V CE 0.8059  test auc 0.681  (111 s)
+      m1 it 200: fitted-V CE 0.7475  test auc 0.685  (147 s)
+      m1 it 250: fitted-V CE 0.5195  test auc 0.681  (184 s)
+      m1 it 300: fitted-V CE 0.3284  test auc 0.678  (220 s)
+      m1 it 350: fitted-V CE 0.3072  test auc 0.691  (256 s)
+wandb: updating run metadata; uploading artifact vp-m1_students_dropout_rand45_c5_s3
+wandb: uploading artifact vp-m1_students_dropout_rand45_c5_s3
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: 
+wandb: Run history:
+wandb:        held/acc ▁█████▁█▁▁████████████▁█▁███████████████
+wandb:        held/auc ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁█▁▁
+wandb:       held/bacc ▁███████▁█▁██████████████▁▁▁▁█████████▁█
+wandb:         held/ce █████▇▇▇▇▅▅▄▃▃▃▃▃▂▂▂▃▃▃▃▃▃▃▃▂▂▁▂▁▁▂▂▁▁▁▁
+wandb:    removal/prec ▂▂▂▁▂▂▂▂▄▄▆▆▆▆▆▆▆▇▇█▆▆▄▄▆▅▄▅▅▃▄▄▂▃▄▄▄▁▄▃
+wandb: removal/swapped ▁▁▁▁▁▁▂▂▃▄▄▄▄▅▅▅▅▅▅▅▆▆▆▆▆▆▆▇▇▇▇▇▇█▇▇████
+wandb:        test/acc ▄▃▃▃▄▃▂▄▃▂▄▃▅▃▆▅▆▄▅▃▆▃▁▂▂▆▅▆▄▃▆▆▇▄█▃▆▆▆▆
+wandb:        test/auc ▁▁▁▁▁▂▃▄▃▅▄▄▄▅▅▆▆▅▆▆▅▆▅▆▆▇▆▇▅▇██▇▇██▆▇▇█
+wandb:       test/bacc ▄▁▃▄▄▃▃▃▄▄▂▃▂▃▄▅▃▅▃▃▃▂▂▂▂▄▄▂▄▄▃▃▄▅▅▅▂▆▆█
+wandb:         test/ce ▇▇▇██▇▆▆▅▅▄▄▃▃▃▃▂▂▂▂▂▂▂▂▂▃▂▂▂▂▂▂▂▂▁▁▁▁▁▁
+wandb:              +4 ...
+wandb: 
+wandb: Run summary:
+wandb:             final/m1_last/acc 0.56
+wandb:             final/m1_last/auc 0.70424
+wandb:            final/m1_last/bacc 0.48092
+wandb:              final/m1_last/ce 1.12216
+wandb:              final/m1_last/it 400
+wandb: final/m1_last/kept_pois_share 0.39038
+wandb:            final/m1_last/prec 0.55175
+wandb:          final/m1_last/recall 0.53618
+wandb:   final/m1_last/share_removed 0.44992
+wandb:        final/m1_last/train_ce 0.38378
+wandb:                           +34 ...
+wandb: 
+wandb: 🚀 View run m1_students_dropout_rand45_c5_s3 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/47rfm4jt
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 0 media file(s), 3 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_vp/wandb/run-20261027_084812-47rfm4jt/logs
+run students_dropout_rand45_c5_s3 m1: done in 295 s  m1_sel: auc 0.694 bacc 0.474 ce 1.177  m1_last: auc 0.704 bacc 0.481 ce 1.122  m1_start: auc 0.651 bacc 0.471 ce 1.867
+run gas-drift_rand45_c3_s2 sigmoid: start (n 4982, k 2242, V 18, flipped 2244)
+wandb: setting up run me0rx887
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_vp/wandb/run-20261027_085308-me0rx887
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run sigmoid_gas-drift_rand45_c3_s2
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/me0rx887
+      sigmoid it 0: fitted-V CE 0.1645  test auc 0.984  (7 s)
+      sigmoid it 50: fitted-V CE 0.1334  test auc 0.985  (317 s)
+wandb: updating run metadata; uploading artifact vp-sigmoid_gas-drift_rand45_c3_s2
+wandb: uploading artifact vp-sigmoid_gas-drift_rand45_c3_s2
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: 
+wandb: Run history:
+wandb:             test/acc ▁▁▁▁▂▂▂▂▂▂▃▂▁▂▂▃▄▅▅▅▆▇█
+wandb:             test/auc ▁▁▁▁▂▂▂▂▂▂▂▃▄▄▅▅▆▆▇▇▇██
+wandb:            test/bacc ▁▁▁▁▂▂▂▂▂▂▃▂▂▂▂▃▄▅▅▅▆▇█
+wandb:              test/ce ████▇▇▇▇▇▇▆▆▅▄▄▃▃▃▂▂▂▁▁
+wandb:      train/fitted_ce ████▇▇▇▇▇▇▇▆▆▅▅▄▄▃▃▂▂▁▁
+wandb: weights/auroc_poison ▁█▆▅▄▃▃▂▂▂▂▁▂▂▃▄▄▄▄▄▄▃▃
+wandb: weights/n_below_half ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: weights/w_share_pois █████▇▇▇▇▇▇▆▆▅▅▄▄▃▃▂▂▁
+wandb: 
+wandb: Run summary:
+wandb:       final/sigmoid/acc 0.903
+wandb:       final/sigmoid/auc 0.984
+wandb:      final/sigmoid/bacc 0.90149
+wandb:        final/sigmoid/ce 0.39714
+wandb:        final/sigmoid/it 10
+wandb:  final/sigmoid/train_ce 0.15666
+wandb:  final/sigmoid_last/acc 0.908
+wandb:  final/sigmoid_last/auc 0.9854
+wandb: final/sigmoid_last/bacc 0.90705
+wandb:   final/sigmoid_last/ce 0.38045
+wandb:                     +16 ...
+wandb: 
+wandb: 🚀 View run sigmoid_gas-drift_rand45_c3_s2 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/me0rx887
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 0 media file(s), 3 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_vp/wandb/run-20261027_085308-me0rx887/logs
+run gas-drift_rand45_c3_s2 sigmoid: done in 434 s  sigmoid: auc 0.984 bacc 0.901 ce 0.397  sigmoid_last: auc 0.985 bacc 0.907 ce 0.380  sigmoid_start: auc 0.984 bacc 0.899 ce 0.402
+run gas-drift_hub30_c1_s3 sigmoid: start (n 4994, k 1498, V 6, flipped 1498)
+wandb: setting up run d911deqz
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_vp/wandb/run-20261027_090022-d911deqz
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run sigmoid_gas-drift_hub30_c1_s3
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/d911deqz
+      sigmoid it 0: fitted-V CE 0.7974  test auc 0.950  (7 s)
+      sigmoid it 50: fitted-V CE 0.7077  test auc 0.949  (322 s)
+wandb: updating run metadata; uploading artifact vp-sigmoid_gas-drift_hub30_c1_s3
+wandb: uploading artifact vp-sigmoid_gas-drift_hub30_c1_s3
+wandb: uploading history steps 21-22, summary
+wandb: 
+wandb: Run history:
+wandb:             test/acc ▆▆▆▆████████████▅▃▁▃▁▁▃
+wandb:             test/auc ▇▇▇▇▇▇▇▇▇█████▇▇▇▆▅▃▂▁▁
+wandb:            test/bacc ▆▆▆▆████████████▅▄▂▃▁▁▃
+wandb:              test/ce ███▇▇▇▇▇▇▆▆▅▅▄▄▃▃▂▂▂▂▁▁
+wandb:      train/fitted_ce ██████▇▇▇▇▇▇▆▆▅▅▄▄▃▃▂▂▁
+wandb: weights/auroc_poison ▁▆▆▇▇█████████▇▇▆▆▅▅▅▅▅
+wandb: weights/n_below_half ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: weights/w_share_pois ██████████▇▇▆▆▅▅▄▄▃▂▂▁
+wandb: 
+wandb: Run summary:
+wandb:       final/sigmoid/acc 0.783
+wandb:       final/sigmoid/auc 0.94966
+wandb:      final/sigmoid/bacc 0.77051
+wandb:        final/sigmoid/ce 1.04175
+wandb:        final/sigmoid/it 10
+wandb:  final/sigmoid/train_ce 0.78114
+wandb:  final/sigmoid_last/acc 0.78
+wandb:  final/sigmoid_last/auc 0.94875
+wandb: final/sigmoid_last/bacc 0.76783
+wandb:   final/sigmoid_last/ce 1.02746
+wandb:                     +16 ...
+wandb: 
+wandb: 🚀 View run sigmoid_gas-drift_hub30_c1_s3 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/d911deqz
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 0 media file(s), 3 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_vp/wandb/run-20261027_090022-d911deqz/logs
+run gas-drift_hub30_c1_s3 sigmoid: done in 442 s  sigmoid: auc 0.950 bacc 0.771 ce 1.042  sigmoid_last: auc 0.949 bacc 0.768 ce 1.027  sigmoid_start: auc 0.950 bacc 0.769 ce 1.047
+run gas-drift_rand45_c1_s3 m1: start (n 4994, k 2247, V 6, flipped 2268)
+wandb: setting up run weol6wcz
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_vp/wandb/run-20261027_090744-weol6wcz
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run m1_gas-drift_rand45_c1_s3
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/weol6wcz
+      m1 it 0: fitted-V CE 0.2219  test auc 0.839  (6 s)
+      m1 it 50: fitted-V CE 0.0037  test auc 0.845  (304 s)
+      m1 it 100: fitted-V CE 0.0010  test auc 0.862  (596 s)
+      m1 it 150: fitted-V CE 0.0004  test auc 0.865  (889 s)
+      m1 it 200: fitted-V CE 0.0004  test auc 0.881  (1181 s)
+      m1 it 250: fitted-V CE 0.0002  test auc 0.894  (1474 s)
+      m1 it 300: fitted-V CE 0.0001  test auc 0.898  (1767 s)
+      m1 it 350: fitted-V CE 0.0002  test auc 0.903  (2060 s)
+wandb: updating run metadata; uploading artifact vp-m1_gas-drift_rand45_c1_s3
+wandb: uploading artifact vp-m1_gas-drift_rand45_c1_s3
+wandb: 
+wandb: Run history:
+wandb:         removal/prec ▃▄▃▄▅▆▅▄▆▅▄▂▃▂▂▁▂▂▁▃▃▄▃▃▃▃▆▃▂▃▆▇▇▇▇▇█▆▇▇
+wandb:      removal/swapped ▁▁▁▁▂▃▃▃▃▄▄▄▅▅▅▅▅▅▅▆▆▆▆▆▆▆▆▆▇▇▇▇▇▇██████
+wandb:             test/acc ▁▁▂▂▁▂▂▂▂▃▂▂▂▃▃▂▃▃▃▃▃▄▄▄▄▅▄▅▅▅▄▅▅▅▆▅▆▆▇█
+wandb:             test/auc ▁▁▁▁▁▂▂▂▂▃▃▃▄▄▄▄▅▅▆▅▆▆▆▆▆▆▇▇▇▇█▇█▇▇▇████
+wandb:            test/bacc ▂▁▂▂▁▁▂▂▂▂▂▂▂▃▂▂▃▂▂▂▃▃▂▃▄▅▄▄▅▅▅▆▆▆▆▆█▇██
+wandb:              test/ce ████▇▆▆▆▆▅▅▄▄▄▄▃▃▃▃▃▃▂▂▃▂▂▂▂▂▁▁▂▁▂▁▁▁▁▁▁
+wandb:      train/fitted_ce ▇██▄▃▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: weights/auroc_poison ██████▇▇▇▇▇▇▇▆▆▅▅▅▅▄▄▄▄▄▃▃▃▃▃▃▁▁▁▁▁▁▁▁▁▁
+wandb: weights/n_below_half ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: weights/w_share_pois ▆▆▆▆▆▅▆▅▅▄▆█▇██▇▇▇█▇▆▆▆▇▆▇▆▃▆▄▃▂▃▂▄▂▂▂▁▂
+wandb: 
+wandb: Run summary:
+wandb:             final/m1_last/acc 0.731
+wandb:             final/m1_last/auc 0.90812
+wandb:            final/m1_last/bacc 0.72742
+wandb:              final/m1_last/ce 1.00223
+wandb:              final/m1_last/it 400
+wandb: final/m1_last/kept_pois_share 0.32945
+wandb:            final/m1_last/prec 0.60659
+wandb:          final/m1_last/recall 0.60097
+wandb:   final/m1_last/share_removed 0.44994
+wandb:        final/m1_last/train_ce 0.00026
+wandb:                           +30 ...
+wandb: 
+wandb: 🚀 View run m1_gas-drift_rand45_c1_s3 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/weol6wcz
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 0 media file(s), 3 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_vp/wandb/run-20261027_090744-weol6wcz/logs
+run gas-drift_rand45_c1_s3 m1: done in 2352 s  m1_sel: auc 0.908 bacc 0.727 ce 1.002  m1_last: auc 0.908 bacc 0.727 ce 1.002  m1_start: auc 0.839 bacc 0.658 ce 1.966
+run gas-drift_hub30_c1_s1 m1: start (n 4994, k 1498, V 6, flipped 1498)
+wandb: setting up run xbqgxxe1
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_vp/wandb/run-20261027_094656-xbqgxxe1
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run m1_gas-drift_hub30_c1_s1
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/xbqgxxe1
+      m1 it 0: fitted-V CE 0.0952  test auc 0.919  (7 s)
+      m1 it 50: fitted-V CE 0.0040  test auc 0.920  (308 s)
+      m1 it 100: fitted-V CE 0.0017  test auc 0.926  (603 s)
+      m1 it 150: fitted-V CE 0.0046  test auc 0.922  (898 s)
+      m1 it 200: fitted-V CE 0.2700  test auc 0.933  (1193 s)
+      m1 it 250: fitted-V CE 0.0006  test auc 0.932  (1488 s)
+      m1 it 300: fitted-V CE 0.0004  test auc 0.936  (1783 s)
+      m1 it 350: fitted-V CE 0.0002  test auc 0.936  (2078 s)
+wandb: updating run metadata; uploading artifact vp-m1_gas-drift_hub30_c1_s1
+wandb: uploading artifact vp-m1_gas-drift_hub30_c1_s1
+wandb: 
+wandb: Run history:
+wandb:         removal/prec ▁▁▂▂▁▁▁▁▂▂▂▃▃▃▂▂▃▄▄▄▄▅▄▄▄▅▆▅▆▅▇▇▇██▇█▇▇▆
+wandb:      removal/swapped ▁▁▁▁▁▁▂▂▂▂▃▃▃▃▄▄▄▄▄▄▅▅▅▅▆▆▆▆▆▇▇▇▇▇█▇▇███
+wandb:             test/acc ▁▂▁▁▁▁▃▂▂▃▃▅▅▆▄▄▅▅▅▅▆▆▄▆▆▅▄▅▅▅▆▇▇▇▅▇▆▇█▆
+wandb:             test/auc ▁▅▅▄▄▄▂▅▄▄▃▅▄▅▃▂▂▄▆▃▄▄▇▅▅▆▇▅▆█▇██▆▆▄▆▆▅▅
+wandb:            test/bacc ▂▁▁▁▁▂▂▃▂▃▃▂▄▅▇▅▄▅▆▄▇▃▆█▅▅▄▆▇▅▇▆▇▆█▆▇▆▆▅
+wandb:              test/ce ▇▇▇▆▆▇▅▅█▆▆█▇▆▆▅▆▅▆▇▅▄▅▃▄▄▃▄▁▂▂▂▂▃▁▃▃▃▂▄
+wandb:      train/fitted_ce ▄▂█▁▂▂▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: weights/auroc_poison █████▇▇▇▇▆▄▄▄▄▅▅▅▄▅▅▄▄▄▃▃▃▃▃▂▂▂▂▂▁▁▁▁▁▁▁
+wandb: weights/n_below_half ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: weights/w_share_pois ██▇▇████▇▇▇▇▆▆▇▇▇▆▆▅▆▆▅▅▅▄▂▂▂▂▂▂▁▁▃▂▂▂▃▃
+wandb: 
+wandb: Run summary:
+wandb:             final/m1_last/acc 0.731
+wandb:             final/m1_last/auc 0.92834
+wandb:            final/m1_last/bacc 0.70633
+wandb:              final/m1_last/ce 1.44417
+wandb:              final/m1_last/it 400
+wandb: final/m1_last/kept_pois_share 0.29119
+wandb:            final/m1_last/prec 0.32043
+wandb:          final/m1_last/recall 0.32043
+wandb:   final/m1_last/share_removed 0.29996
+wandb:        final/m1_last/train_ce 0.00196
+wandb:                           +30 ...
+wandb: 
+wandb: 🚀 View run m1_gas-drift_hub30_c1_s1 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/xbqgxxe1
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 0 media file(s), 3 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_vp/wandb/run-20261027_094656-xbqgxxe1/logs
+run gas-drift_hub30_c1_s1 m1: done in 2372 s  m1_sel: auc 0.928 bacc 0.706 ce 1.444  m1_last: auc 0.928 bacc 0.706 ce 1.444  m1_start: auc 0.919 bacc 0.686 ce 1.582
+run gas-drift_hub30_c5_s2 m1: start (n 4970, k 1491, V 30, flipped 1491)
+wandb: setting up run ha0evelt
+wandb: Tracking run with wandb version 0.30.0
+wandb: Run data is saved locally in results/bench_vp/wandb/run-20261027_102628-ha0evelt
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run m1_gas-drift_hub30_c5_s2
+wandb: ⭐️ View project at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: 🚀 View run at https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/ha0evelt
+      m1 it 0: fitted-V CE 0.9485  test auc 0.980  (8 s)
+      m1 it 50: fitted-V CE 0.6636  test auc 0.981  (328 s)
+      m1 it 100: fitted-V CE 0.2876  test auc 0.982  (631 s)
+      m1 it 150: fitted-V CE 0.1782  test auc 0.980  (933 s)
+      m1 it 200: fitted-V CE 0.1055  test auc 0.982  (1236 s)
+      m1 it 250: fitted-V CE 0.0519  test auc 0.980  (1539 s)
+      m1 it 300: fitted-V CE 0.0242  test auc 0.981  (1842 s)
+      m1 it 350: fitted-V CE 0.0272  test auc 0.979  (2144 s)
+wandb: updating run metadata; uploading artifact vp-m1_gas-drift_hub30_c5_s2
+wandb: uploading artifact vp-m1_gas-drift_hub30_c5_s2
+wandb: uploading history steps 87-88, summary
+wandb: 
+wandb: Run history:
+wandb:        held/acc ██████████████▁██▁██▁███████▁█▁▁▁▁▁▁▁▁▁▁
+wandb:        held/auc ▃▃▃▃▃▃▃▆█▆▆▆▃▃▃▃▁▃▃▁▃▃▆▁▁▃▃▆▃▆▆▆▆▆▆▃▆▆▆▃
+wandb:       held/bacc █████████████▁██▁████▁██████▁█▁▁▁▁▁▁▁▁▁▁
+wandb:         held/ce ▂▂▂▂▂▂▂▁▁▂▁▂▂▅▃▃▃▃▁▃▄▂▄▆▃▃▆▂█▇▃▇▅▇▇▆█▆██
+wandb:    removal/prec ███████▇▇▇▆▅▅▅▄▅▅▄▄▅▄▅▅▄▃▁▂▃▂▂▁▁▁▃▂▁▁▁▁▂
+wandb: removal/swapped ▁▁▁▁▁▁▂▂▂▂▃▃▃▃▄▄▄▅▅▅▅▆▆▆▆▇▇▇▇▇▇▇▇▇▇█████
+wandb:        test/acc ▅▅▆▅▅▅▄▄▅▅▄▃▆▆▇█▇▅▆▆▇▆▅▇▅▄▆▅▆▅▄▄▄▂▄▂▃▁▁▃
+wandb:        test/auc ▄▄▄▄▄▅▅▅▅▅██▄▇██▄▃▃▇▆▃▆▆▆▂▃▁▄▇▃▁▃▃▂▄▄▆▄▃
+wandb:       test/bacc ▅▅▅▅▅▆▅▅▃▃▃▇▅▄▅▇█▇▆▆▅▅▆▆▆▅▄▃▄▄▃▂▄▃▄▃▁▁▂▂
+wandb:         test/ce ▆▆▆▆▆▅▅▅▆▅▆▃▇▄▄▃▆▅▄▁▆▅▄▃▃▄▄▃█▅▇▅▆▆▆▆▆███
+wandb:              +4 ...
+wandb: 
+wandb: Run summary:
+wandb:             final/m1_last/acc 0.858
+wandb:             final/m1_last/auc 0.9792
+wandb:            final/m1_last/bacc 0.84312
+wandb:              final/m1_last/ce 0.6381
+wandb:              final/m1_last/it 400
+wandb: final/m1_last/kept_pois_share 0.12647
+wandb:            final/m1_last/prec 0.7049
+wandb:          final/m1_last/recall 0.7049
+wandb:   final/m1_last/share_removed 0.3
+wandb:        final/m1_last/train_ce 0.01582
+wandb:                           +34 ...
+wandb: 
+wandb: 🚀 View run m1_gas-drift_hub30_c5_s2 at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments/runs/ha0evelt
+wandb: ⭐️ View project at: https://wandb.ai/shabari_ut-university-of-texas-at-austin/TFM_experiments
+wandb: Synced 5 W&B file(s), 0 media file(s), 3 artifact file(s) and 0 other file(s)
+wandb: Find logs at: results/bench_vp/wandb/run-20261027_102628-ha0evelt/logs
+run gas-drift_hub30_c5_s2 m1: done in 2445 s  m1_sel: auc 0.981 bacc 0.847 ce 0.618  m1_last: auc 0.979 bacc 0.843 ce 0.638  m1_start: auc 0.980 bacc 0.851 ce 0.614
