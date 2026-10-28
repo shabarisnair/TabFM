@@ -50,8 +50,9 @@ v_acc).
 | 9 | v_plus_p | refs | V + all of P |
 | 10 | oracle | refs | V + P's clean rows |
 | 11 | greedy_thr | greedy_thr | greedy at 1% per step, taking only rows with p(given label) > 0.5; stops when none qualifies |
-| 12 | vrepair | vrepair | P's labels unused: TabPFN(V) labels P, and the rows it is most sure of join V (rule: being tuned) |
-| 13 | grepair | grepair | the iterative form of 12: labelled rows join the trusted set 1% per step (selection and stop: being tuned) |
+| 12 | vrepair | vrepair | P's labels unused: TabPFN(V) labels P, and the rows it gives a max probability > 0.9 join V |
+| 12 (0.5) | vrepair_05 | vrepair | the same at > 0.5 (the user's variant); on binary data this labels all of P |
+| 13 | grepair | grepair | the iterative form of 12: the most confident 1% joins the trusted set per step, labelled; stops at 5% of P |
 
 **Details:**
 - **greedy (methods 4 and 5)** reproduces bench_tinyv's greedy_pct1, and its (1 - R)% set was checked identical to
@@ -102,11 +103,23 @@ v_acc).
   the rest of P. The ceil(1% of |P|) rows it is most sure of then join with their predicted labels, which stay fixed.
 - **Identical under both poisonings:** V and P's rows are the same under rand45 and hub30. The second instance of a pair
   copies the first's result (bench_vp.repair_twin) and recomputes only the poisoning-dependent statistics.
-- **Free choices:** the subset rule of 12, and the selection and stop of 13. They are set from a development study
-  (below) in bench_vp.REPAIR. Until then the two jobs refuse to run (REPAIR_TUNED).
-  - **Why counts rather than thresholds are expected to win:** TabPFN(V)'s confidence is low and uneven (mean max
-    probability 0.38-0.72; almost no row of P above 0.9). Along 13's path, the batches' confidence reaches 1.0 within a
-    few steps, because the context agrees with itself.
+- **Free choices, settled by the development study below** (bench_vp.REPAIR; results/tables/vp_tune/findings_repair.md):
+  - **12:** the rows with max probability > 0.9, the best of 15 rules. It is conservative: on the development draws it
+    labelled no row in 25 of 36, and at most 20 outside gas-drift and students at c = 3 and 5.
+  - **13:** global selection, stopped at 5% of P, the best of 40 stops x selections. The earliest stop recorded was
+    best: every further step lowered ROC-AUC and raised log loss.
+  - **12 at > 0.5 (vrepair_05), added at the user's request (2026-10-28):** recorded by the same job from the same
+    predictions.
+    - **Binary data:** a top probability is at least 0.5, so it labels all of P and equals vrepair_all on the 4 binary
+      datasets.
+    - **Multiclass data:** it labels a subset that swings with V. On students at c = 3 the five benchmark seeds give
+      2-98% of P.
+  - **Reference rows, recorded but not methods:** vrepair_top10 (the top 10% of P by confidence), vrepair_all (all of
+    P labelled by TabPFN(V)), grepair_all (13 run until P is used up).
+- **What the study found:** no repair rule beat V alone (ROC-AUC 0.673, log loss 0.80). Every row added raised log loss,
+  because a context labelled by TabPFN(V) agrees with itself. TabPFN(V) is too unsure to label much of P (mean max
+  probability 0.38-0.72), and along 13's path the batches' confidence reaches 1.0 within a few steps, so a threshold
+  would not stop it.
 
 **The development study (scripts/vp_tune_repair.py):**
 - **Draws:** vp_tune's 36 development draws, (dataset, c, seed 100/101).
@@ -121,9 +134,18 @@ v_acc).
     scripts/bench_vp.py.
   - Results go to results/vp_tune/repair/. merge.sh brings them back.
   - `python scripts/vp_tune_repair.py report` writes results/tables/vp_tune/report_repair.md.
-- **Status (2026-10-27):** CPU runs of the study and of method 11 were started here and stopped by the user before
-  anything finished; their partial files were removed. The study goes to the user's 7 GPUs. Methods 11-13's benchmark
-  runs follow it.
+- **Status:** run on the user's GPUs (ecen-a86553 and -54), all 72 units, 57 GPU-minutes. CPU runs of the study and of
+  method 11 had been started here first and were stopped before anything finished; their partial files were removed.
+
+**The benchmark runs of methods 11-13 (2026-10-27):**
+- **Scripts:** scripts/vp_jobs_11_13/gpu_00-11.sh, from `plan_vp.py --scripts 12 --out scripts/vp_jobs_11_13`.
+  - 540 jobs (the 180 instances x greedy_thr, vrepair, grepair), about 15 min per script on a free H100.
+  - Inference only: about 4 GiB of free GPU memory per script (gas-drift peaks at 2.6 GiB).
+- **Twins:** a repair job and its other-poisoning twin are in the same script, rand45 first, so the second copies the
+  first.
+- **To copy over:** scripts/bench_vp.py and scripts/vp_jobs_11_13/. The rest is unchanged since the last runs.
+- **Logs and results:** W&B group vp_bench; logs in logs/vp_jobs_11_13/; scripts/vp_jobs_11_13/merge.sh brings the
+  results back.
 
 ## Intermediate records
 

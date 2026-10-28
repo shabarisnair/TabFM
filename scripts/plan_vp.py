@@ -38,6 +38,7 @@ COST = {"gas-drift": {"iter": 6.5, "greedy": 60.0, "oneshot": 25.0},
         "students_dropout": {"iter": 0.8, "greedy": 13.0, "oneshot": 12.0},
         "ecommerce_shipping": {"iter": 0.7, "greedy": 10.0, "oneshot": 12.0},
         "is_this_a_good_customer": {"iter": 0.15, "greedy": 3.0, "oneshot": 8.0}}
+COPY = 15.0  # a repair job that copies its twin's result: loading, the train-side V score and W&B
 
 LAUNCHER = """#!/bin/bash
 # The V + P benchmark (scripts/bench_vp.py; planned by scripts/plan_vp.py), script {i:02d} of {N}: {n_jobs} jobs, about
@@ -47,7 +48,7 @@ LAUNCHER = """#!/bin/bash
 # It stops before running anything unless the inputs, the model checkpoint, the code and a numeric preflight match
 # the main machine (scripts/attn_form_jobs/check_remote.py), and unless W&B accepts the API key in .env. Each job is
 # one W&B run, named <job>_<instance>, in project TFM_experiments, group {group}, with its result files as an artifact.
-# Rerunning resumes; logs in {logs}/. One script per GPU, with about 47 GiB free: a gas-drift attention job peaks at 46 GiB.
+# Rerunning resumes; logs in {logs}/. One script per GPU, with {memory}.
 GPU=${{1:-0}}
 cd "$(dirname "$0")/{up}" || exit 1
 PY=${{PY:-"conda run -n tabfm --no-capture-output python"}}
@@ -110,14 +111,25 @@ def main(argv=None) -> None:
     ap.add_argument("--wandb-group", default="vp_bench")
     a = ap.parse_args(argv)
     OUT = a.out
-    units = [(cost(t, j), t, j) for t in V.instances() for j in V.JOBS if not (V.ROOT / "runs" / t / f"{j}.json").exists()]
+    jobs = [(t, j) for t in V.instances() for j in V.JOBS if not (V.ROOT / "runs" / t / f"{j}.json").exists()]
+    # a repair job and its other poisoning's twin go to the same script, rand45 first: the second copies the first
+    # (bench_vp.repair_twin), which needs both on one disk
+    groups: dict = {}
+    for t, j in jobs:
+        ds, attack, c, seed = V.parse_tag(t)
+        groups.setdefault((ds, c, seed, j) if j in V.REPAIR_JOBS else (t, j), []).append((t, j))
+    units = [(cost(*g[0]) + COPY * (len(g) - 1), g) for g in groups.values()]
     units.sort(key=lambda u: -u[0])
     bins, load = [[] for _ in range(a.scripts)], np.zeros(a.scripts)
     for u in units:  # longest first onto the least-loaded script
         i = int(np.argmin(load))
         bins[i].append(u)
         load[i] += u[0]
-    bins = [sorted(b, key=lambda u: u[0]) for b in bins]  # each script runs its cheapest jobs first
+    # each script runs its cheapest jobs first
+    bins = [[(cost(t, j), t, j) for _, g in sorted(b, key=lambda u: u[0]) for t, j in g] for b in bins]
+    attention = any(j in ("sigmoid", "m1") for _, j in jobs)
+    memory = ("about 47 GiB free: a gas-drift attention job peaks at 46 GiB" if attention else
+              "about 4 GiB free: these jobs are TabPFN inference only (gas-drift peaks at 2.6 GiB)")
     OUT.mkdir(parents=True, exist_ok=True)
     for old in list(OUT.glob("gpu_*.sh")) + list(OUT.glob("jobs_*.txt")):
         old.unlink()
@@ -128,7 +140,7 @@ def main(argv=None) -> None:
         (OUT / f"jobs_{i:02d}.txt").write_text("".join(f"{t} {j}\n" for _, t, j in b))
         sh = OUT / f"gpu_{i:02d}.sh"
         sh.write_text(LAUNCHER.format(i=i, N=a.scripts, n_jobs=len(b), hours=load[i] / 3600, out=OUT.as_posix(), up=up,
-                                      logs=logs, group=a.wandb_group))
+                                      logs=logs, group=a.wandb_group, memory=memory))
         os.chmod(sh, 0o755)
         heavy = [(t, j) for _, t, j in b if j in ("sigmoid", "m1") and V.parse_tag(t)[0] in ("gas-drift", "coil2000_insurance_policies")]
         lines.append(f"| gpu_{i:02d}.sh | {len(b)} | {load[i] / 3600:.2f} | {len(heavy)} |")
@@ -142,8 +154,8 @@ def main(argv=None) -> None:
         files += [ctx, test, f"datasets/{ds}/splits/split_info.json"]
     files += [f"{V.ROOT}/draws/{t}.npz" for t in V.instances()]
     (OUT / "inputs.sha256").write_text("".join(f"{sha256(Path(f))}  {f}\n" for f in files))
-    lines += ["", f"{len(units)} jobs, about {load.sum() / 3600:.1f} H100-hours in all, {load.max() / 3600:.2f} on the busiest "
-              "script (on a GPU that another busy job shares, two to four times that)."]
+    lines += ["", f"{len(jobs)} jobs, about {load.sum() / 3600:.1f} H100-hours in all, {load.max() / 3600:.2f} on the busiest "
+              f"script (on a GPU that another busy job shares, two to four times that). Each script needs {memory}."]
     print("\n".join(lines))
     (OUT / "split.md").write_text("\n".join(lines) + "\n")
 

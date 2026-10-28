@@ -287,7 +287,7 @@ def report(a) -> None:
     rows = []
     for name in rk:
         vals = pd.DataFrame([one[k][name] for k in full]).mean()
-        la = np.nanmean([recs[(*k, "global")]["one_shot"][name]["label_acc"] or np.nan for k in full])
+        la = np.nanmean([np.nan if (x := recs[(*k, "global")]["one_shot"][name]["label_acc"]) is None else x for k in full])
         sk = np.mean([recs[(*k, "global")]["one_shot"][name]["share_kept"] for k in full])
         rows.append((name, rk[name], vals["auc"], 100 * vals["bacc"], vals["ce"], sk, la))
     lines += ["## One-shot repair", "", "| candidate | mean rank | ROC-AUC | bal. acc. | log loss | share of P | label acc |",

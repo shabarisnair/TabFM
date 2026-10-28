@@ -41,12 +41,15 @@ Jobs (one per instance; the rows each reports, numbered as the benchmark's metho
   The repair methods never look at P's given labels: P is unlabelled, and TabPFN labels it. With V and P's rows the
   same for both poisonings (build_draw), they give the same context under rand45 and hub30, so the second of the two
   instances copies the first's result (repair_twin) and recomputes only what depends on the poisoning.
-  vrepair    12 vrepair: TabPFN with V alone as the context predicts every row of P; the rows it is most sure of
-               (REPAIR["one_shot"], tuned on development draws: scripts/vp_tune_repair.py) join V with the predicted
-               labels
+  vrepair    12 vrepair: TabPFN with V alone as the context predicts every row of P; the rows it gives a max
+               probability above 0.9 join V with the predicted labels (REPAIR["one_shot"], chosen on development
+               draws: scripts/vp_tune_repair.py; often no row, which leaves V alone); 12 at > 0.5 (vrepair_05, the
+               user's variant: on binary data, all of P); reference rows vrepair_top10 (the top 10% of P by that
+               probability) and vrepair_all (all of P)
   grepair    13 grepair: the iterative form: the trusted set starts as V; every step TabPFN with V + the rows labelled
-               so far predicts the rest, and the ceil(1% of |P|) it is most sure of join with their predicted labels
-               (REPAIR["greedy"]: how they are chosen and where it stops, tuned on development draws)
+               so far predicts the rest, and the ceil(1% of |P|) it is most sure of join with their predicted labels;
+               deployed at 5% of P (REPAIR["greedy"], chosen on development draws); the path goes on to all of P for
+               the reference row grepair_all
 Intermediate records (in the result JSON and, with --wandb-mode, in a W&B run per job):
   greedy     every step: the next batch's and the pool's statistics (TabPFN's probability of the given label, the
              agreement of the given label with its prediction, margin, entropy, the true poisoned shares); the test
@@ -95,12 +98,17 @@ THR = 0.5          # vfilter_thr: p(given label | V) < THR / K removed
 EXTRA_STEPS = 10   # greedy_R10: steps past (1 - R)%
 TEST_EVERY = 2     # greedy, greedy_thr: test metrics every this many steps
 GREEDY_THR = 0.5   # greedy_thr: a row may join only while p(given label | V + the accepted rows) > GREEDY_THR
-# the repair methods: how the rows TabPFN is most sure of are chosen (by its max probability); to be set from
-# scripts/vp_tune_repair.py's development runs (results/tables/vp_tune/report_repair.md). Until then REPAIR holds
-# placeholders and the two repair jobs refuse to run (REPAIR_TUNED).
-REPAIR = {"one_shot": {"rule": "top", "x": 1.0},
-          "greedy": {"select": "global", "step": 0.01, "until": 1.0, "test_every": 5}}
-REPAIR_TUNED = False
+# the repair methods: how the rows TabPFN is most sure of are chosen (by its max probability), set from
+# scripts/vp_tune_repair.py's development runs (results/tables/vp_tune/report_repair.md and findings_repair.md):
+#   one_shot  the rows with max probability > 0.9 (best of 15 rules; there it labelled no row in 25 of 36 draws and
+#             at most 20 outside gas-drift and students); also recorded: the user's variant at > 0.5 (vrepair_05; on
+#             binary data that is all of P), and as reference rows the top 10% (the best count) and all of P
+#   greedy    global selection, 1% per step, deployed at 5% of P (best of 40 stops x selections); the path goes on to
+#             all of P for the reference row grepair_all, with the test metrics every 5 steps
+REPAIR = {"one_shot": {"rule": "thr", "x": 0.9, "also": {"vrepair_05": ["thr", 0.5], "vrepair_top10": ["top", 0.1],
+                                                         "vrepair_all": ["top", 1.0]}},
+          "greedy": {"select": "global", "step": 0.01, "stop": 0.05, "until": 1.0, "test_every": 5}}
+REPAIR_TUNED = True
 DENSE, EVERY = 10, 5  # sigmoid / m1: records at every iteration below DENSE, then every EVERY
 SIGMOID = dict(steps=70, lr=0.01, t_kept=4.0, t_removed=-30.0, fixed_it=10)  # fixed_it: the deployed iteration (tuned)
 M1 = dict(steps=400, lr=0.2, probe=0.05)
@@ -487,42 +495,60 @@ def require_tuned() -> None:
 
 
 def job_vrepair(bd: B.BenchData, d: dict, rec: Recorder) -> tuple[dict, dict]:
-    """Method 12: TabPFN with V alone predicts P; the rows chosen by REPAIR["one_shot"] join V, predicted labels."""
+    """Method 12: TabPFN with V alone predicts P; the rows chosen by REPAIR["one_shot"] join V with the predicted
+    labels (row vrepair), and so do those of the other rules recorded beside it (vrepair_05, vrepair_top10,
+    vrepair_all). A rule that picks no row leaves V alone."""
     require_tuned()
     cfg = REPAIR["one_shot"]
     twin = repair_twin(d, "vrepair")
-    if twin is not None:  # the same context as the other poisoning's instance: its test metrics hold here
+    if twin is not None:  # the same contexts as the other poisoning's instance: its test metrics hold here
         res, arrays = twin
-        keep, lab = arrays["keep"].astype(bool), arrays["labels"].astype(np.int64)
-        row = {"name": "vrepair", "test": res["rows"][0]["test"]} | label_stats(d, keep, lab) | v_fit_labels(bd, d, keep, lab)
-        return {"rows": [row], "config": cfg, "copied_from": twin_tag(d["tag"])}, arrays
+        lab = arrays["labels"].astype(np.int64)
+        rows = [{"name": r["name"], "test": r["test"]} | label_stats(d, arrays[f"keep_{r['name']}"], lab)
+                | v_fit_labels(bd, d, arrays[f"keep_{r['name']}"], lab) for r in res["rows"]]
+        return {"rows": rows, "config": cfg, "copied_from": twin_tag(d["tag"])}, arrays
     Q = predict_pool(bd, d, np.zeros(0, dtype=np.int64), np.zeros(0, dtype=np.int64), np.arange(d["n"]))
-    keep = one_shot_select(Q, cfg["rule"], cfg["x"])
     lab = Q.argmax(1).astype(np.int64)
-    test = B.test_scores(bd, d, keep, lab) if keep.any() else B.metrics(bd.probs(d["Xv"], d["yv"], bd.Xt, bd.yt), bd.yt)
-    row = {"name": "vrepair", "test": test} | label_stats(d, keep, lab) | v_fit_labels(bd, d, keep, lab)
-    rec.log(flat("test", test) | {"repair/share_kept": row["share_kept"], "repair/label_acc": row["label_acc"]}, step=0)
-    return {"rows": [row], "config": cfg}, {"Q": Q.astype(np.float32), "keep": keep, "labels": lab.astype(np.int16)}
+    rules = {"vrepair": (cfg["rule"], cfg["x"])} | {name: tuple(r) for name, r in cfg["also"].items()}
+    rows, arrays, v_only = [], {"Q": Q.astype(np.float32), "labels": lab.astype(np.int16)}, None
+    for name, (rule, x) in rules.items():
+        keep = one_shot_select(Q, rule, x)
+        if keep.any():
+            test = B.test_scores(bd, d, keep, lab)
+        else:
+            v_only = v_only or B.metrics(bd.probs(d["Xv"], d["yv"], bd.Xt, bd.yt), bd.yt)
+            test = v_only
+        rows.append({"name": name, "test": test, "rule": [rule, x]} | label_stats(d, keep, lab) | v_fit_labels(bd, d, keep, lab))
+        arrays[f"keep_{name}"] = keep
+    rec.log(flat("test", rows[0]["test"]) | {"repair/share_kept": rows[0]["share_kept"]}, step=0)
+    return {"rows": rows, "config": cfg}, arrays
 
 
 def job_grepair(bd: B.BenchData, d: dict, rec: Recorder) -> tuple[dict, dict]:
-    """Method 13: the iterative repair (repair_path) with REPAIR["greedy"]."""
+    """Method 13: the iterative repair (repair_path) with REPAIR["greedy"]: row grepair at its stop, and the reference
+    row grepair_all with all of P labelled."""
     require_tuned()
     cfg = REPAIR["greedy"]
+    stop_step = round(cfg["stop"] / cfg["step"])
+    assert stop_step % cfg["test_every"] == 0, "the deployed stop must be a recorded step"
     twin = repair_twin(d, "grepair")
     if twin is not None:
         res, arrays = twin
-        keep, lab = arrays["pos"] < d["n"], arrays["labels"].astype(np.int64)
-        row = {"name": "grepair", "test": res["rows"][0]["test"], "steps": res["rows"][0]["steps"]} \
-            | label_stats(d, keep, lab) | v_fit_labels(bd, d, keep, lab)
-        return {"rows": [row], "steps": res["steps"], "states": res["states"], "m": res["m"], "config": cfg,
+        pos, lab = arrays["pos"], arrays["labels"].astype(np.int64)
+        rows = [{"name": r["name"], "test": r["test"], "steps": r["steps"]} | label_stats(d, pos < r["n_kept"], lab)
+                | v_fit_labels(bd, d, pos < r["n_kept"], lab) for r in res["rows"]]
+        return {"rows": rows, "steps": res["steps"], "states": res["states"], "m": res["m"], "config": cfg,
                 "copied_from": twin_tag(d["tag"])}, arrays
     path = repair_path(bd, d, cfg["select"], cfg["step"], cfg["until"], cfg["test_every"], rec=rec)
-    keep, lab = path["in_T"], path["lab"]
-    row = {"name": "grepair", "test": path["states"][-1]["test"], "steps": len(path["steps"])} \
-        | label_stats(d, keep, lab) | v_fit_labels(bd, d, keep, lab)
-    return ({"rows": [row], "steps": path["steps"], "states": path["states"], "m": path["m"], "config": cfg},
-            {"pos": path["pos"], "labels": lab.astype(np.int16)})
+    pos, lab = path["pos"], path["lab"]
+    stop = next(s for s in path["states"] if s["step"] == stop_step)
+    rows = []
+    for name, st in (("grepair", stop), ("grepair_all", path["states"][-1])):
+        keep = pos < st["accepted"]  # the rows labelled by then (pos: the order they joined in)
+        rows.append({"name": name, "test": st["test"], "steps": st["step"]} | label_stats(d, keep, lab)
+                    | v_fit_labels(bd, d, keep, lab))
+    return ({"rows": rows, "steps": path["steps"], "states": path["states"], "m": path["m"], "config": cfg},
+            {"pos": pos, "labels": lab.astype(np.int16)})
 
 
 def v_fit_labels(bd: B.BenchData, d: dict, keep: np.ndarray, labels: np.ndarray) -> dict:

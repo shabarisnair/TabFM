@@ -20,8 +20,9 @@ import numpy as np
 METHODS = [("v_only", "1 V only"), ("vfilter_R", "2 V-filter, R%"), ("vfilter_thr", "3 V-filter, p < 0.5/K"),
            ("greedy_R", "4 greedy to (1-R)%"), ("greedy_R10", "5 greedy, +10 steps"), ("sigmoid", "6 sigmoid soft, it 10"),
            ("m1_last", "7 M1, last it"), ("m1_sel", "7 M1, held-out choice"), ("knn_shapley", "8 KNN-Shapley"),
-           ("ieg", "8 IEG, top R%"), ("greedy_thr", "11 greedy, while p > 0.5"), ("vrepair", "12 V-repair (P relabelled)"),
-           ("grepair", "13 greedy repair"), ("v_plus_p", "9 V + P (no cleaning)"), ("oracle", "10 oracle (V + clean P)")]
+           ("ieg", "8 IEG, top R%"), ("greedy_thr", "11 greedy, while p > 0.5"), ("vrepair", "12 V-repair, p > 0.9"),
+           ("vrepair_05", "12 V-repair, p > 0.5"), ("grepair", "13 greedy repair, 5% of P"), ("v_plus_p", "9 V + P (no cleaning)"),
+           ("oracle", "10 oracle (V + clean P)")]
 DATASETS = [("gas-drift", "gas-drift"), ("students_dropout", "students"), ("heloc", "heloc"),
             ("ecommerce_shipping", "ecommerce"), ("is_this_a_good_customer", "good_customer"),
             ("coil2000_insurance_policies", "coil2000")]
